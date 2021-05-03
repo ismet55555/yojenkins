@@ -1,0 +1,34 @@
+# -*- mode: yaml -*-
+# vim: set filetype=yaml
+
+---
+
+# TODO: call this file .yo-jenkins.cred
+
+profiles:
+    default:
+        jenkins_server_url: https://retailjenkins.cloud.capitalone.com/
+        username: ezg822
+        api_token: 118f37842bb9b4b949f16cdc5568e959f0
+        active: false
+    home:
+        jenkins_server_url: https://retailjenkins.cloud.capitalone.com/
+        username: ezg822
+        api_token: 118f37842bb9b4b949f16cdc5568e959f0
+        active: true
+    test_bad:
+        jenkins_server_url: https://retailjenkins.cloud.capitalone.com/
+        api_token: 119b39edecd2a23c40ba90c817eb7bb96d
+        active: false
+
+# TODO: Move the section below to different file that is persistant
+#       Name of file: .yo-jenkins.conf
+# audio:
+#     enabled: true
+#     success_sound_effect: "/misc/success.mp3"
+#     failed_sound_effect: "/misc/failed.mp3"
+#     aborted_sound_effect: "/misc/aborted.mp3"
+
+# terminal:
+#     min_height_rows: 40
+#     min_width_columns: 79

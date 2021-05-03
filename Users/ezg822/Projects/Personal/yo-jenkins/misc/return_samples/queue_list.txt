@@ -1,0 +1,97 @@
+{'_class': 'hudson.model.Queue',
+ 'discoverableItems': [],
+ 'items': [{'_class': 'hudson.model.Queue$BlockedItem',
+            'actions': [{'_class': 'hudson.model.CauseAction',
+                         'causes': [{'_class': 'hudson.triggers.TimerTrigger$TimerTriggerCause',
+                                     'shortDescription': 'Started by timer'}]}],
+            'blocked': True,
+            'buildable': False,
+            'buildableStartMilliseconds': 1615042800766,
+            'id': 244405,
+            'inQueueSince': 1615042800765,
+            'params': '',
+            'stuck': False,
+            'task': {'_class': 'hudson.model.FreeStyleProject',
+                     'color': 'red_anime',
+                     'name': 'SOAP-Eratocode',
+                     'url': 'https://retailjenkins.cloud.capitalone.com/job/Non-PAR/job/Non-Prod-Jobs/job/BankApiX/job/Auto-Scheduled-Jobs/job/SOAP/job/SOAP-Eratocode/'},
+            'url': 'queue/item/244405/',
+            'why': 'Build #96 is already in progress (ETA: N/A)'},
+
+        
+           {'_class': 'hudson.model.Queue$BuildableItem',
+            'actions': [{'_class': 'hudson.model.CauseAction',
+                         'causes': [{'_class': 'hudson.model.Cause$UserIdCause',
+                                     'shortDescription': 'Started by user '
+                                                         'Handzic, Ismet '
+                                                         '(CONT)',
+                                     'userId': 'ezg822',
+                                     'userName': 'Handzic, Ismet (CONT)'},
+                                    {'_class': 'com.sonyericsson.rebuild.RebuildCause',
+                                     'shortDescription': 'Rebuilds build #17',
+                                     'upstreamBuild': 17,
+                                     'upstreamProject': 'Non-PAR/Non-Prod-Jobs/Accenture/test_job',
+                                     'upstreamUrl': 'job/Non-PAR/job/Non-Prod-Jobs/job/Accenture/job/test_job/'}]}],
+            'blocked': False,
+            'buildable': True,
+            'buildableStartMilliseconds': 1615075410734,
+            'id': 246284,
+            'inQueueSince': 1615075410734,
+            'params': '',
+            'pending': False,
+            'stuck': False,
+            'task': {'_class': 'hudson.model.FreeStyleProject',
+                     'color': 'aborted',
+                     'name': 'test_job',
+                     'url': 'https://retailjenkins.cloud.capitalone.com/job/Non-PAR/job/Non-Prod-Jobs/job/Accenture/job/test_job/'},
+            'url': 'queue/item/246284/',
+            'why': '‘j2x-ecs-bogie-regular-us-west-2-stable-zb4g8’ is reserved '
+                   'for jobs with matching label expression; '
+                   '‘j2x-ecs-rhel7-regular-us-east-1-stable-kr5pw’ is offline; '
+                   '‘win2012-general-10.21.136.139’ is reserved for jobs with '
+                   'matching label expression; ‘win2012-general-10.21.137.237’ '
+                   'is reserved for jobs with matching label expression; '
+                   '‘win2012-general-10.21.141.232’ is reserved for jobs with '
+                   'matching label expression; ‘win2012-general-10.21.143.207’ '
+                   'is reserved for jobs with matching label expression; '
+                   '‘win2012-general-10.22.130.209’ is reserved for jobs with '
+                   'matching label expression; ‘win2012-general-10.22.131.241’ '
+                   'is reserved for jobs with matching label expression; '
+                   '‘win2012-general-10.22.131.32’ is reserved for jobs with '
+                   'matching label expression; ‘win2012-general-10.22.133.247’ '
+                   'is reserved for jobs with matching label expression; '
+                   '‘win2012-general-10.22.134.218’ is reserved for jobs with '
+                   'matching label expression'},
+
+
+                   
+           {'_class': 'hudson.model.Queue$BuildableItem',
+            'actions': [{'_class': 'hudson.model.CauseAction',
+                         'causes': [{'_class': 'hudson.triggers.TimerTrigger$TimerTriggerCause',
+                                     'shortDescription': 'Started by timer'},
+                                    {'_class': 'hudson.triggers.TimerTrigger$TimerTriggerCause',
+                                     'shortDescription': 'Started by timer'},
+                                    {'_class': 'hudson.triggers.TimerTrigger$TimerTriggerCause',
+                                     'shortDescription': 'Started by timer'},
+                                    {'_class': 'hudson.triggers.TimerTrigger$TimerTriggerCause',
+                                     'shortDescription': 'Started by timer'}]},
+                        {'_class': 'hudson.model.ParametersAction',
+                         'parameters': [{'_class': 'hudson.model.StringParameterValue',
+                                         'name': 'userId',
+                                         'value': 'aws_api'},
+                                        {'_class': 'hudson.model.PasswordParameterValue',
+                                         'name': 'userPwd'}]}],
+            'blocked': False,
+            'buildable': True,
+            'buildableStartMilliseconds': 1614751200651,
+            'id': 168753,
+            'inQueueSince': 1614751200651,
+            'params': '\nuserId=aws_api\nuserPwd=****',
+            'pending': False,
+            'stuck': True,
+            'task': {'_class': 'hudson.model.FreeStyleProject',
+                     'color': 'notbuilt',
+                     'name': 'auto-rehydrate',
+                     'url': 'https://retailjenkins.cloud.capitalone.com/job/Non-PAR/job/Non-Prod-Jobs/job/rdt_em/job/RDTjobs/job/auto-rehydrate/'},
+            'url': 'queue/item/168753/',
+            'why': 'There are no nodes with the label ‘chefdk’'}]}
