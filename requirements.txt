@@ -1,0 +1,10 @@
+Click
+python-jenkins
+pyyaml
+bump2version
+coloredlogs
+json2xml
+windows-curses; platform_system=="Windows"
+
+autopep8
+mypy

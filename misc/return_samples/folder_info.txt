@@ -1,0 +1,182 @@
+{
+    "_class": "org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject",
+    "actions": [
+        {},
+        {
+            "_class": "nectar.plugins.rbac.roles.Roles"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {
+            "_class": "hudson.plugins.jobConfigHistory.JobConfigHistoryProjectAction"
+        },
+        {},
+        {
+            "_class": "org.jenkinsci.plugins.github_branch_source.GitHubRepoMetadataAction"
+        },
+        {
+            "_class": "jenkins.scm.api.metadata.ObjectMetadataAction"
+        },
+        {},
+        {},
+        {},
+        {},
+        {
+            "_class": "com.cloudbees.plugins.credentials.ViewCredentialsAction"
+        }
+    ],
+    "description": null,
+    "displayName": "***REMOVED***-infra",
+    "displayNameOrNull": null,
+    "fullDisplayName": "***REMOVED*** \u00bb ***REMOVED*** \u00bb ***REMOVED***-infra",
+    "fullName": "***REMOVED***/***REMOVED***/***REMOVED***-infra",
+    "healthReport": [
+        {
+            "description": "Worst health: ***REMOVED*** \u00bb ***REMOVED*** \u00bb ***REMOVED***-infra \u00bb PR-15: Build stability: All recent builds failed.",
+            "iconClassName": "icon-health-00to19",
+            "iconUrl": "health-00to19.png",
+            "score": 0
+        },
+        {
+            "description": "Jobs with successful builds: 7 of 8",
+            "iconClassName": "icon-health-80plus",
+            "iconUrl": "health-80plus.png",
+            "score": 87
+        },
+        {
+            "description": "Jobs with failed builds: 1 of 8",
+            "iconClassName": "icon-health-80plus",
+            "iconUrl": "health-80plus.png",
+            "score": 87
+        },
+        {
+            "description": "Average health of 14 items",
+            "iconClassName": "icon-health-80plus",
+            "iconUrl": "health-80plus.png",
+            "score": 88
+        },
+        {
+            "description": "Jobs with builds: 8 of 8",
+            "iconClassName": "icon-health-80plus",
+            "iconUrl": "health-80plus.png",
+            "score": 100
+        },
+        {
+            "description": "Jobs with unstable builds: 0 of 8",
+            "iconClassName": "icon-health-80plus",
+            "iconUrl": "health-80plus.png",
+            "score": 100
+        }
+    ],
+    "jobs": [
+        {
+            "_class": "org.jenkinsci.plugins.workflow.job.WorkflowJob",
+            "color": "notbuilt",
+            "name": "AO-000_-_update-for-funding-and-dep-accts",
+            "url": "https://***REMOVED***.com/job/***REMOVED***/job/***REMOVED***/job/***REMOVED***-infra/job/AO-000_-_update-for-funding-and-dep-accts/"
+        },
+        {
+            "_class": "org.jenkinsci.plugins.workflow.job.WorkflowJob",
+            "color": "notbuilt",
+            "name": "AO-12130",
+            "url": "https://***REMOVED***.com/job/***REMOVED***/job/***REMOVED***/job/***REMOVED***-infra/job/AO-12130/"
+        },
+        {
+            "_class": "org.jenkinsci.plugins.workflow.job.WorkflowJob",
+            "color": "notbuilt",
+            "name": "Instance-update",
+            "url": "https://***REMOVED***.com/job/***REMOVED***/job/***REMOVED***/job/***REMOVED***-infra/job/Instance-update/"
+        },
+        {
+            "_class": "org.jenkinsci.plugins.workflow.job.WorkflowJob",
+            "color": "disabled",
+            "name": "PR-12",
+            "url": "https://***REMOVED***.com/job/***REMOVED***/job/***REMOVED***/job/***REMOVED***-infra/job/PR-12/"
+        },
+        {
+            "_class": "org.jenkinsci.plugins.workflow.job.WorkflowJob",
+            "color": "disabled",
+            "name": "PR-13",
+            "url": "https://***REMOVED***.com/job/***REMOVED***/job/***REMOVED***/job/***REMOVED***-infra/job/PR-13/"
+        },
+        {
+            "_class": "org.jenkinsci.plugins.workflow.job.WorkflowJob",
+            "color": "disabled",
+            "name": "PR-14",
+            "url": "https://***REMOVED***.com/job/***REMOVED***/job/***REMOVED***/job/***REMOVED***-infra/job/PR-14/"
+        },
+        {
+            "_class": "org.jenkinsci.plugins.workflow.job.WorkflowJob",
+            "color": "disabled",
+            "name": "PR-15",
+            "url": "https://***REMOVED***.com/job/***REMOVED***/job/***REMOVED***/job/***REMOVED***-infra/job/PR-15/"
+        },
+        {
+            "_class": "org.jenkinsci.plugins.workflow.job.WorkflowJob",
+            "color": "disabled",
+            "name": "PR-16",
+            "url": "https://***REMOVED***.com/job/***REMOVED***/job/***REMOVED***/job/***REMOVED***-infra/job/PR-16/"
+        },
+        {
+            "_class": "org.jenkinsci.plugins.workflow.job.WorkflowJob",
+            "color": "disabled",
+            "name": "PR-17",
+            "url": "https://***REMOVED***.com/job/***REMOVED***/job/***REMOVED***/job/***REMOVED***-infra/job/PR-17/"
+        },
+        {
+            "_class": "org.jenkinsci.plugins.workflow.job.WorkflowJob",
+            "color": "blue",
+            "name": "avr%2Fprodw2-cluster-831e1d",
+            "url": "https://***REMOVED***.com/job/***REMOVED***/job/***REMOVED***/job/***REMOVED***-infra/job/avr%252Fprodw2-cluster-831e1d/"
+        },
+        {
+            "_class": "org.jenkinsci.plugins.workflow.job.WorkflowJob",
+            "color": "notbuilt",
+            "name": "develop",
+            "url": "https://***REMOVED***.com/job/***REMOVED***/job/***REMOVED***/job/***REMOVED***-infra/job/develop/"
+        },
+        {
+            "_class": "org.jenkinsci.plugins.workflow.job.WorkflowJob",
+            "color": "blue",
+            "name": "master",
+            "url": "https://***REMOVED***.com/job/***REMOVED***/job/***REMOVED***/job/***REMOVED***-infra/job/master/"
+        },
+        {
+            "_class": "org.jenkinsci.plugins.workflow.job.WorkflowJob",
+            "color": "notbuilt",
+            "name": "qae-beef-up",
+            "url": "https://***REMOVED***.com/job/***REMOVED***/job/***REMOVED***/job/***REMOVED***-infra/job/qae-beef-up/"
+        },
+        {
+            "_class": "org.jenkinsci.plugins.workflow.job.WorkflowJob",
+            "color": "notbuilt",
+            "name": "splunk_input",
+            "url": "https://***REMOVED***.com/job/***REMOVED***/job/***REMOVED***/job/***REMOVED***-infra/job/splunk_input/"
+        }
+    ],
+    "name": "***REMOVED***-infra",
+    "primaryView": {
+        "_class": "jenkins.branch.MultiBranchProjectViewHolder$ViewImpl",
+        "name": "default",
+        "url": "https://***REMOVED***.com/job/***REMOVED***/job/***REMOVED***/job/***REMOVED***-infra/"
+    },
+    "sources": [
+        {}
+    ],
+    "url": "https://***REMOVED***.com/job/***REMOVED***/job/***REMOVED***/job/***REMOVED***-infra/",
+    "views": [
+        {
+            "_class": "jenkins.branch.MultiBranchProjectViewHolder$ViewImpl",
+            "name": "change-requests",
+            "url": "https://***REMOVED***.com/job/***REMOVED***/job/***REMOVED***/job/***REMOVED***-infra/view/change-requests/"
+        },
+        {
+            "_class": "jenkins.branch.MultiBranchProjectViewHolder$ViewImpl",
+            "name": "default",
+            "url": "https://***REMOVED***.com/job/***REMOVED***/job/***REMOVED***/job/***REMOVED***-infra/"
+        }
+    ]
+}
