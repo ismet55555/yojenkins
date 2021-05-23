@@ -1,0 +1,9 @@
+Click
+coloredlogs
+requests_futures
+json2xml
+python-jenkins
+pyyaml
+requests-cache
+simpleaudio
+windows-curses; platform_system=="Windows"

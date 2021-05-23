@@ -1,0 +1,22 @@
+                     JOB MONITOR
+
+----------------------  INFO  ------------------------
+Job:        master
+Folder:     ***REMOVED***/***REMOVED***/***REMOVED***
+Server:     https://somejenkinsaddress.com/
+
+---------------------  BUILDS  ----------------------
+#1.     05/08 - 15:31       00:01:150        RUNNING
+#2.     05/08 - 15:31       00:02:455        FAILED
+#3.     05/08 - 15:31       00:01:437        FAILED
+#4.     05/08 - 15:31       00:01:328        ABORTED
+#5.     05/08 - 15:31       00:01:159        SUCCESS
+#6.     05/08 - 15:31       00:02:457        SUCCESS
+#7.     05/08 - 15:31       00:01:438        FAILED
+#8.     05/08 - 15:31       00:01:327        FAILED
+#9.     05/08 - 15:31       00:01:158        FAILED
+
+
+
+ Server Status: Reachable: True, Authenticated: False
+        Press "H" for keyboard shortcuts

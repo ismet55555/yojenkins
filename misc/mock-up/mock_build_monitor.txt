@@ -1,4 +1,4 @@
-                                  BUILD MONITOR
+                                  BUILD MONITOR             ( fx )
 
 --------------------  INFO  ----------------------
 Job:        master
@@ -33,4 +33,4 @@ Status:     RUNNING
 
 
                  Server Status: Reachable: True, Authenticated: False
-                   Press "O" to open in browser | Press "Q" to quit
+                        Press "H" for keyboard shortcuts
