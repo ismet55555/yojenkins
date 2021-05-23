@@ -24,7 +24,7 @@ class YoJenkins:
     All work is done by other, included, objects
     """
 
-    def __init__(self, Auth_obj, REST) -> None:
+    def __init__(self, Auth_obj) -> None:
         """Object constructor method, called at object creation
 
         Args:

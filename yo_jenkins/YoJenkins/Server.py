@@ -2,7 +2,7 @@
 
 import logging
 from pprint import pprint
-from typing import Dict, List, Tuple, Type
+from typing import Dict, List, Tuple
 
 import jenkins
 
