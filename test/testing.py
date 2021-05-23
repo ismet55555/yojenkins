@@ -10,9 +10,9 @@ from datetime import datetime, timedelta
 # NOTE:
 #   Job -> Build -> Stage -> Step
 
-username = "ezg822"
+username = "USERNAME"
 password = ""
-jenkins_server_url = 'https://retailjenkins.cloud.capitalone.com'
+jenkins_server_url = 'base_url'
 
 
 # NOTE: make utility for requests, error checking and all

@@ -21,6 +21,7 @@ class JenkinsItemClasses(Enum):
         "item_type": "views",
         "class_type": [
             'hudson.model.AllView',
+            'hudson.model.ListView',
             'jenkins.branch.MultiBranchProjectViewHolder$ViewImpl'
         ]
     }

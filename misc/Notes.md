@@ -31,39 +31,55 @@
 
 ## Ideas
 
+- Total log bytes indicator on monitor
+- Log size option in logs -b, --bytes
+
+- On creation and deletion of things have --verify flag
+    to make sure the operation works
+        - create
+        - delete
+        - abort
+        - cancel
+
+- Compare passed url with server url ???
+
 - Add click command input validate functions: https://click.palletsprojects.com/en/7.x/options/#callbacks-for-validation
 
 - Store last output into a temp file like .drop.temp
 
-- Add option flag to search for fullpath over name of folder/job
-
 - Some type of stash for key-value info
     - How to plug in values?  Pipe?
 
-- Item operation pass a list of items to run that function on
-
-- Make `--version` work on top level menu
+- Pass list of items for any function to run
+    - Example: yo-jenkins build info [ref1, ref2, ref3]
+    - Get list back
 
 - Input request recognition (last line in logs)
+    - NOTE: Build status will change ... maybe a way to affirm or pick?
 
-- Generate and add link to blue ocean for build and stages
-    - Need to check the plugin
+- Testing
+    - pytest
+    - need some kind of mock jenkins server
+    - create, info, build, delete
+    - folder, job, build
 
-
-
-- Add pytest testing
 - Can we find a public jenkins server to test on?
     - Use terraform to spin up an image to test?
+    - Use docker to spin up a server with pre-defined configs
 
-- Separate thread to execute function - Tested, works fine
+- Run the tool inside docker
+    - Not part of the tool, but part of the setup
 
 - Create separate configuration files:
     - credentials.conf   -> when in home place into `./yo-jenkins` directory
     - yo-jenkins-conf
 
-- PDF output of build results
+- HTML output of build results
 
 - After creation, deletion, build start, etc return job name like docker (maybe if flag is set)
+
+- Recursively show directories/items for specified folder
+    - Something like tree
 
 
 ## STDIN PIPE
@@ -95,13 +111,4 @@ for line in sys.stdin:
     - Script to fix this after pip install?  install script?
     - Consider replacing the errored thing (build or remove) with requests call
 
-
-
-
-
-## Possible Commands
-
-- `yo-jenkins build monitor <build address>`
-    - pulls up curses window
-    - desktop notification
 

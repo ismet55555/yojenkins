@@ -137,11 +137,23 @@ cython_debug/
 # Configuration file
 .*.conf
 
-*.swp
-
+# Settings file
+# .*.settings
 
 # # VSCode configs
 # *.code-workspace  # Uncomment later
 
+# Apple custom folder attribures
+*.DS_Store
+
 # VSCode Code Counter Extension
 .VSCodeCounter
+
+# wily code analysis report
+*.html
+
+# Other
+*.swp
+
+# Cached request session file
+*.sqlite

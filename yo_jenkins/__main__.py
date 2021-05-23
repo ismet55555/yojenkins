@@ -1,32 +1,16 @@
 #!/usr/bin/env python3
 
 import logging
-import os
-import sys
 from pprint import pprint
-from urllib.parse import urlparse
 
 import click
-import coloredlogs
 
-from cli_groups import (cli_auth, cli_build, cli_folder, cli_job, cli_server,
-                        cli_stage, cli_step, cli_decorators)
+from cli import (cli_auth, cli_build, cli_folder, cli_job, cli_server,
+                        cli_stage, cli_step)
+from cli import cli_decorators
+from cli import logger_setup
+from cli.cli_utility import set_debug_log_level
 
-# Turn off info level logging for jons2xml
-logging.getLogger("dicttoxml").setLevel(logging.WARNING)
-
-# Defining the message logger and applying color to the output logs
-logger_root = logging.basicConfig(
-    format='[%(asctime)s][%(levelname)-8s] [%(filename)-25s:%(lineno)4s] %(message)s',
-    datefmt="%H:%M:%S",
-    handlers=[logging.StreamHandler(sys.stdout)]
-)
-coloredlogs.install(
-    level=logging.INFO,
-    fmt='[%(asctime)s][%(levelname)-8s] [%(filename)-25s:%(lineno)4s] %(message)s',
-    datefmt="%H:%M:%S",
-    logger=logger_root
-)
 logger = logging.getLogger()
 
 
@@ -34,20 +18,20 @@ logger = logging.getLogger()
 
 
 MAIN_HELP_TEXT = """
-    \t\t\tYO-JENKINS (Version: 0.1.2)
+    \t\t\t \033[93m YO-JENKINS (Version: 0.0.1) \033[0m
 
     yo-jenkins is a tool that is focused on interfacing with
     Jenkins server from the comfort of the beloved command line. 
     This tool can also be used as a middleware utility, generating and
     passing Jenkins information or automating tasks.
 
-    Quick Start:
+    QUICK START:
 
-        1. Configure profile: yo-jenkins auth configure
+        1. Configure yo profile:  yo-jenkins auth configure
 
-        2. Add a API token: yo-jenkins auth token --profile <PROFILE NAME>
+        2. Add yo API token:      yo-jenkins auth token --profile <PROFILE>
 
-        3. Verify authentication: yo-jenkins auth verify
+        3. Verify yo creds:       yo-jenkins auth verify
 
         4. Explore yo-jenkins
 """
@@ -56,32 +40,9 @@ MAIN_HELP_TEXT = """
 ##############################################################################
 
 
-def set_debug_log_level(debug_flag:bool):
-    """Setting the log DEBUG level
-
-    Args:
-        debug_flag : Boolean flag, True to set to DEBUG, else INFO
-
-    Returns:
-        None
-    """
-    if debug_flag:
-        click.echo(click.style(f'\n[ LOGGING LEVEL ] : DEBUG\n', fg='bright_yellow', bold=True))
-        logging_level = logging.DEBUG
-    else:
-        logging_level = logging.INFO
-    logger.setLevel(logging_level)
-    for handler in logger.handlers:
-        handler.setLevel(logging_level)
-    logger.addHandler(logging.FileHandler("yo-jenkins.log"))
-
-
-##############################################################################
-
-
 @click.group(help=MAIN_HELP_TEXT)
 @click.version_option(
-    '0.1.2', "-v", "--version", message="%(version)s".format(version="version"),
+    '0.0.1', "-v", "--version", message="%(version)s".format(version="version"),
     help="Show the version"
 )
 def main():   
@@ -92,11 +53,10 @@ def main():
 #                             AUTHENTICATE
 ##############################################################################
 
-# @main.group(short_help='\tAuthentication and profile management')
 @main.group(short_help='\tManage authentication and profiles')
 def auth():
     """
-    Top level CLI menu: auth
+    AUTHENTICATION AND PROFILE MANAGEMENT
     """
     pass
 
@@ -142,7 +102,7 @@ def wipe(debug):
 ##############################################################################
 @main.group(short_help='\tManage server')
 def server():
-    """Top level CLI menu: server"""
+    """SERVER MANAGEMENT"""
     pass
 
 @server.command(short_help='\tServer information')
@@ -183,9 +143,10 @@ def plugin(debug, pretty, yaml, xml, profile, list):
 @server.command(short_help='\tCheck if sever is reachable')
 @cli_decorators.debug
 @cli_decorators.profile
-def reachable(debug, profile):
+@click.option('-t', '--timeout', type=int, default=10, required=False, is_flag=False, help='Request timeout value')
+def reachable(debug, profile, timeout):
     set_debug_log_level(debug)
-    cli_server.reachable(profile)
+    cli_server.reachable(profile, timeout)
 
 @server.command(short_help='\tQuite/Un-quite server')
 @cli_decorators.debug
@@ -218,9 +179,9 @@ def shutdown(debug):
 ##############################################################################
 #                             NODE
 ##############################################################################
-@main.group(short_help='\tManage Node')
+@main.group(short_help='\tManage nodes')
 def node():
-    """Top level CLI menu: node"""
+    """NODE MANAGEMENT"""
     pass
     click.echo(click.style('TODO', fg='yellow',))
 
@@ -245,7 +206,7 @@ def info(debug, profile):
 ##############################################################################
 @main.group(short_help='\tManage folders')
 def folder():
-    """Top level CLI menu: folder"""
+    """FOLDER MANAGEMENT"""
     pass
 
 @folder.command(short_help='\tFolder information')
@@ -262,25 +223,25 @@ def info(debug, pretty, yaml, xml, profile, folder):
 @cli_decorators.format_output
 @cli_decorators.profile
 @click.argument('search_pattern', nargs=1, type=str, required=True)
-@click.option('-sf', '--start-folder', type=str, default='', required=False, help='Folder within which to start searching')
+@click.option('-sf', '--search-folder', type=str, default='', required=False, help='Folder within which to search')
 @click.option('-d', '--depth', type=int, default=4, required=False, help='Search depth from root directory')
+@click.option('-fn', '--fullname', type=bool, default=False, required=False, is_flag=True, help='Search entire folder path name')
 @cli_decorators.list
-def search(debug, pretty, yaml, xml, profile, search_pattern, start_folder, depth, list):
+def search(debug, pretty, yaml, xml, profile, search_pattern, search_folder, depth, fullname, list):
     set_debug_log_level(debug)
-    cli_folder.search(pretty, yaml, xml, profile, search_pattern, start_folder, depth, list)
-    # TODO: Add a -fn --fullname option to look into full path instead of name
+    cli_folder.search(pretty, yaml, xml, profile, search_pattern, search_folder, depth, fullname, list)
 
-@folder.command(short_help='\tList subfolders')
+@folder.command(short_help='\tList all subfolders in folder')
 @cli_decorators.debug
 @cli_decorators.format_output
 @cli_decorators.profile
 @click.argument('folder', nargs=1, type=str, required=True)
-@cli_decorators.list
+
 def subfolders(debug, pretty, yaml, xml, profile, folder, list):
     set_debug_log_level(debug)
     cli_folder.subfolders(pretty, yaml, xml, profile, folder, list)
 
-@folder.command(short_help='\tList jobs')
+@folder.command(short_help='\tList all jobs in folder')
 @cli_decorators.debug
 @cli_decorators.format_output
 @cli_decorators.profile
@@ -290,7 +251,7 @@ def jobs(debug, pretty, yaml, xml, profile, folder, list):
     set_debug_log_level(debug)
     cli_folder.jobs(pretty, yaml, xml, profile, folder, list)
 
-@folder.command(short_help='\tList views')
+@folder.command(short_help='\tList all views in folder')
 @cli_decorators.debug
 @cli_decorators.format_output
 @cli_decorators.profile
@@ -310,6 +271,61 @@ def items(debug, pretty, yaml, xml, profile, folder, list):
     set_debug_log_level(debug)
     cli_folder.items(pretty, yaml, xml, profile, folder, list)
 
+@folder.command(short_help='\tOpen folder in web browser')
+@cli_decorators.debug
+@cli_decorators.profile
+@click.argument('folder', nargs=1, type=str, required=True)
+def browser(debug, profile, folder):
+    set_debug_log_level(debug)
+    cli_folder.browser(profile, folder)
+
+@folder.command(short_help='\tFolder XML configuration')
+@cli_decorators.debug
+@cli_decorators.profile
+@click.argument('folder', nargs=1, type=str, required=True)
+@click.option('-f', '--filepath', type=click.Path(), required=False, help='File/Filepath to write configurations to')
+def config(debug, profile, folder, filepath):
+    set_debug_log_level(debug)
+    cli_folder.config(profile, folder, filepath)
+
+@folder.command(short_help='\tCreate an item')
+@cli_decorators.debug
+@cli_decorators.profile
+@click.argument('folder', nargs=1, type=str, required=True)
+@click.argument('name', nargs=1, type=str, required=True)
+@click.option(
+    '--type', 
+    type=click.Choice(['folder', 'view', 'job'], case_sensitive=False), 
+    default='folder', 
+    required=False, 
+    help='Item type created [default: folder]')
+@click.option(
+    '-cf', '--config-file', 
+    type=click.Path(), 
+    required=False, 
+    help='Path to local XML file defining item')
+def create(debug, profile, folder, name, type, config_file):
+    set_debug_log_level(debug)
+    cli_folder.create(profile, folder, name, type, config_file)
+
+@folder.command(short_help='\tCopy an existing item')
+@cli_decorators.debug
+@cli_decorators.profile
+@click.argument('folder', nargs=1, type=str, required=True)
+@click.argument('original', nargs=1, type=str, required=True)
+@click.argument('new', nargs=1, type=str, required=True)
+def copy(debug, profile, folder, original, new):
+    set_debug_log_level(debug)
+    cli_folder.copy(profile, folder, original, new)
+
+@folder.command(short_help='\tDelete folder')
+@cli_decorators.debug
+@cli_decorators.profile
+@click.argument('folder', nargs=1, type=str, required=True)
+def delete(debug, profile, folder):
+    set_debug_log_level(debug)
+    cli_folder.delete(profile, folder)
+
 
 
 ##############################################################################
@@ -317,7 +333,7 @@ def items(debug, pretty, yaml, xml, profile, folder, list):
 ##############################################################################
 @main.group(short_help='\tManage jobs')
 def job():
-    """Top level CLI menu: job"""
+    """JOB MANAGEMENT"""
     pass
 
 @job.command(short_help='\tJob information')
@@ -334,37 +350,37 @@ def info(debug, pretty, yaml, xml, profile, job):
 @cli_decorators.format_output
 @cli_decorators.profile
 @click.argument('search_pattern', nargs=1, type=str, required=True)
-@click.option('-sf', '--start-folder', type=str, default='', required=False, help='Folder within which to start searching')
+@click.option('-sf', '--search-folder', type=str, default='', required=False, help='Folder within which to search')
 @click.option('-d', '--depth', type=int, default=4, required=False, help='Search depth from root directory')
+@click.option('-fn', '--fullname', type=bool, default=False, required=False, is_flag=True, help='Search entire job path name')
 @cli_decorators.list
-def search(debug, pretty, yaml, xml, profile, search_pattern, start_folder, depth, list):
+def search(debug, pretty, yaml, xml, profile, search_pattern, search_folder, depth, fullname, list):
     set_debug_log_level(debug)
-    cli_job.search(pretty, yaml, xml, profile, search_pattern, start_folder, depth, list)
-    # TODO: Add a -fn --fullname option to look into full path instead of name
+    cli_job.search(pretty, yaml, xml, profile, search_pattern, search_folder, depth, fullname, list)
 
-@job.command(short_help='\tList builds for job')
+@job.command(short_help='\tList all builds for job')
 @cli_decorators.debug
 @cli_decorators.format_output
 @cli_decorators.profile
 @click.argument('job', nargs=1, type=str, required=True)
 @cli_decorators.list
-def build_list(debug, pretty, yaml, xml, profile, job, list):
+def list(debug, pretty, yaml, xml, profile, job, list):
     set_debug_log_level(debug)
     cli_job.build_list(pretty, yaml, xml, profile, job, list)
 
-@job.command(short_help='\tGet the next build number')
+@job.command(short_help='\tGet next build number')
 @cli_decorators.debug
 @cli_decorators.profile
 @click.argument('job', nargs=1, type=str, required=True)
-def build_next(debug, profile, job):
+def next(debug, profile, job):
     set_debug_log_level(debug)
     cli_job.build_next(profile, job)
 
-@job.command(short_help='\tGet the previous build number')
+@job.command(short_help='\tGet previous build number')
 @cli_decorators.debug
 @cli_decorators.profile
 @click.argument('job', nargs=1, type=str, required=True)
-def build_last(debug, profile, job):
+def last(debug, profile, job):
     set_debug_log_level(debug)
     cli_job.build_last(profile, job)
 
@@ -373,7 +389,7 @@ def build_last(debug, profile, job):
 @cli_decorators.profile
 @click.argument('job', nargs=1, type=str, required=True)
 @click.argument('build_number', nargs=1, type=int, required=True)
-def build_set(debug, profile, job, build_number):
+def set(debug, profile, job, build_number):
     set_debug_log_level(debug)
     cli_job.build_set(profile, job, build_number)
 
@@ -414,12 +430,73 @@ def queue_cancel(debug, profile, id):
     # cli_job.queue_cancel(profile, id)
     click.echo(click.style('TODO', fg='yellow',))
 
-# TODO:
-#   - Delete Job
-#   - Disable Job
-#   - Enable Job
-#   - Rename Job
-#   - Wipe Job workspace
+@job.command(short_help='\tOpen job in web browser')
+@cli_decorators.debug
+@cli_decorators.profile
+@click.argument('job', nargs=1, type=str, required=True)
+def browser(debug, profile, job):
+    set_debug_log_level(debug)
+    cli_job.browser(profile, job)
+
+@job.command(short_help='\tJob XML configuration')
+@cli_decorators.debug
+@cli_decorators.profile
+@click.argument('job', nargs=1, type=str, required=True)
+@click.option('-f', '--filepath', type=click.Path(), required=False, help='File/Filepath to write configurations to')
+def config(debug, profile, job, filepath):
+    set_debug_log_level(debug)
+    cli_job.config(profile, job, filepath)
+
+@job.command(short_help='\tDisable job')
+@cli_decorators.debug
+@cli_decorators.profile
+@click.argument('job', nargs=1, type=str, required=True)
+def disable(debug, profile, job):
+    set_debug_log_level(debug)
+    cli_job.disable(profile, job)
+
+@job.command(short_help='\tEnable job')
+@cli_decorators.debug
+@cli_decorators.profile
+@click.argument('job', nargs=1, type=str, required=True)
+def enable(debug, profile, job):
+    set_debug_log_level(debug)
+    cli_job.enable(profile, job)
+
+@job.command(short_help='\tRename job')
+@cli_decorators.debug
+@cli_decorators.profile
+@click.argument('job', nargs=1, type=str, required=True)
+@click.argument('name', nargs=1, type=str, required=True)
+def rename(debug, profile, job, name):
+    set_debug_log_level(debug)
+    cli_job.rename(profile, job, name)
+
+@job.command(short_help='\tDelete job')
+@cli_decorators.debug
+@cli_decorators.profile
+@click.argument('job', nargs=1, type=str, required=True)
+def delete(debug, profile, job):
+    set_debug_log_level(debug)
+    cli_job.delete(profile, job)
+
+@job.command(short_help='\tWipe job workspace')
+@cli_decorators.debug
+@cli_decorators.profile
+@click.argument('job', nargs=1, type=str, required=True)
+def wipe(debug, profile, job):
+    set_debug_log_level(debug)
+    cli_job.wipe(profile, job)
+
+@job.command(short_help='\tMonitor UI')
+@cli_decorators.debug
+@cli_decorators.profile
+@click.argument('job', nargs=1, type=str, required=False)
+@click.option('-s', '--sound', type=bool, required=False, is_flag=True, help='Enable sound effects')
+def monitor(debug, profile, job, sound):
+    set_debug_log_level(debug)
+    cli_job.monitor(profile, job, sound)
+
 
 
 
@@ -428,7 +505,7 @@ def queue_cancel(debug, profile, id):
 ##############################################################################
 @main.group(short_help='\tManage builds')
 def build():
-    """Top level CLI menu: build"""
+    """BUILD MANAGEMENT"""
     pass
 
 @build.command(short_help='\tBuild information')
@@ -518,12 +595,12 @@ def stages(ctx, debug, pretty, yaml, xml, profile, list, job, number, url, lates
 @click.option('-n', '--number', type=int, required=False, help='Build number')
 @click.option('-u', '--url', type=str, required=False, help='Build URL (No job info needed)')
 @click.option('--latest', type=str, required=False, is_flag=True, help='Latest build (Replaces --number)')
-@click.option('-d', '--download', type=str, required=False, is_flag=True, help='Download the logs')
+@click.option('-d', '--download_dir', type=str, required=False, is_flag=False, help='Download logs to directory')
 @click.pass_context
-def log(ctx, debug, profile, job, number, url, latest, download):
+def logs(ctx, debug, profile, job, number, url, latest, download_dir):
     set_debug_log_level(debug)
     if job or url:
-        cli_build.log(profile, job, number, url, latest, download)
+        cli_build.logs(profile, job, number, url, latest, download_dir)
     else:
         click.echo(ctx.get_help())
 
@@ -550,12 +627,13 @@ def browser(ctx, debug, profile, job, number, url, latest):
 @click.option('-n', '--number', type=int, required=False, help='Build number')
 @click.option('-u', '--url', type=str, required=False, help='Build URL (No job info needed)')
 @click.option('--latest', type=str, required=False, is_flag=True, help='Latest build (Replaces --number)')
+@click.option('-s', '--sound', type=bool, required=False, is_flag=True, help='Enable sound effects')
 @click.pass_context
-def monitor(ctx, debug, profile, job, number, url, latest):
+def monitor(ctx, debug, profile, job, number, url, latest, sound):
     # TODO: Pass a list of build numbers
     set_debug_log_level(debug)
     if job or url:
-        cli_build.monitor(profile, job, number, url, latest)
+        cli_build.monitor(profile, job, number, url, latest, sound)
     else:
         click.echo(ctx.get_help())
 
@@ -569,7 +647,7 @@ def monitor(ctx, debug, profile, job, number, url, latest):
 ##############################################################################
 @main.group(short_help='\tManage build stages')
 def stage():
-    """Top level CLI menu: stage"""
+    """STAGE MANAGEMENT"""
     pass
 
 @stage.command(short_help='\tStage information')
@@ -631,12 +709,12 @@ def steps(ctx, debug, pretty, yaml, xml, profile, list, name, job, number, url, 
 @click.option('-n', '--number', type=int, required=False, help='Build number')
 @click.option('-u', '--url', type=str, required=False, help='Build URL (No job info needed)')
 @click.option('--latest', type=bool, required=False, is_flag=True, help='Latest build (Replaces --number)')
-@click.option('-d', '--download', type=str, required=False, is_flag=True, help='Download the logs')
+@click.option('-d', '--download_dir', type=str, required=False, is_flag=False, help='Download logs to directory')
 @click.pass_context
-def log(ctx, debug, profile, name, job, number, url, latest, download):
+def logs(ctx, debug, profile, name, job, number, url, latest, download_dir):
     set_debug_log_level(debug)
     if job or url:
-        cli_stage.log(profile, name, job, number, url, latest, download)
+        cli_stage.logs(profile, name, job, number, url, latest, download_dir)
     else:
         click.echo(ctx.get_help())
 
@@ -647,7 +725,7 @@ def log(ctx, debug, profile, name, job, number, url, latest, download):
 ##############################################################################
 @main.group(short_help='\tManage stage steps')
 def step():
-    """Top level CLI menu: step"""
+    """STEP MANAGEMENT"""
     pass
 
 @step.command(short_help='\tStep information')
@@ -679,16 +757,16 @@ if __name__ == "__main__":
     Returns:
         None
     """
-    try:
-        main()
-    except Exception as e:
-        click.echo(click.style(f"Uh-Oh, something is not right. yo-jenkins crashed!\n", fg='red'))
+    # try:
+    main()
+    # except Exception as e:
+    #     click.echo(click.style(f"Uh-Oh, something is not right. yo-jenkins crashed!\n", fg='red'))
 
-        exc_type, exc_obj, exc_tb = sys.exc_info()
-        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+    #     exc_type, exc_obj, exc_tb = sys.exc_info()
+    #     fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
 
-        click.echo(click.style(f"  - ERROR:   {e}", fg='red'))
-        click.echo(click.style(f"  - TYPE:    {exc_type}", fg='red'))
-        click.echo(click.style(f"  - FILE:    {fname}", fg='red'))
-        click.echo(click.style(f"  - LINE:    {exc_tb.tb_lineno}\n", fg='red'))
+    #     click.echo(click.style(f"  - ERROR:   {e}", fg='red'))
+    #     click.echo(click.style(f"  - TYPE:    {exc_type}", fg='red'))
+    #     click.echo(click.style(f"  - FILE:    {fname}", fg='red'))
+    #     click.echo(click.style(f"  - LINE:    {exc_tb.tb_lineno}\n", fg='red'))
 

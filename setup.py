@@ -4,7 +4,7 @@ import os
 import setuptools
 
 # Package version number (Updated via bumpversion)
-__version__ = "0.1.2"
+__version__ = "0.0.1"
 
 
 def read(fname):
@@ -14,7 +14,7 @@ def read(fname):
 
 def requirements():
     """Load packages in requirements.txt"""
-    with open(os.path.join(os.path.dirname(__file__), "requirements.txt")) as handle:
+    with open(os.path.join(os.path.dirname(__file__), "requirements/prod.txt")) as handle:
         packages = handle.readlines()
     packages = [package.strip() for package in packages]
 

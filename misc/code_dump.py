@@ -1,4 +1,5 @@
 # Check if at least one option was selected
+from Monitor.BuildMonitor import BuildMonitor
 from YoJenkins.YoJenkins import YoJenkins
 
 
@@ -125,3 +126,22 @@ if not build_info:
         build_info['isQueuedItem'] = True
 else:
     build_info['isQueuedItem'] = False
+
+
+
+########################################################################
+########################################################################
+
+
+# BuildMonitor.py
+
+scr.idcok(False)
+scr.idlok(False)
+scr.nodelay(True)
+scr.timeout(0)
+scr.immedok(False)
+scr.leaveok(True)
+
+
+curses.napms(10)
+curses.flushinp()

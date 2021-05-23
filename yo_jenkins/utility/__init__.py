@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 
 import logging
-from pathlib import Path
-from typing import Dict, List, Tuple
-from urllib.parse import urlparse, urljoin
 import re
 import webbrowser
+from pathlib import Path
+from typing import Dict, List, Tuple
+from urllib.parse import urljoin, urlparse
 
 import requests
 import yaml
-
+from YoJenkins.JenkinsItemClasses import JenkinsItemClasses
 
 logger = logging.getLogger()
 
@@ -102,25 +102,6 @@ def load_contents_from_remote_yaml_file_url(remote_file_url:str, allow_redirects
     return file_contents
 
 
-def uri_validator(uri:str) -> bool:
-    """Check the passed URI/URL format
-
-    Details: Validating the passed URL to see if it fits the typical URL format
-
-    Args:
-        uri : URI/URL
-
-    Returns:
-        True if valid format, else False
-    """
-    try:
-        result = urlparse(uri)
-        is_valid_uri = all([result.scheme, result.netloc, result.path])
-    except:
-        is_valid_uri = False
-    return is_valid_uri
-
-
 def append_lines_to_beginning_of_file(filepath:str, lines_to_append:List[str]) -> bool:
     """Add lines to the beginning to a text based file
 
@@ -174,21 +155,34 @@ def url_to_name(url:str) -> str:
         url : URL of the item (ie. folder, job, build)
 
     Returns:
-        The name of the item
+        The full name of the item
     """
-    # NOTE: May have issues with urls that have the name "job" in them as item name (ie. test_job)
-
+    # Split url into base componenets
     url_components = urlparse(url)
-    url_converted = url_components.path.strip('/').replace('/job/', '/').strip().strip('/') #.strip('job/')  #.replace('view/', '')
-    logger.debug(f'Converted URL "{url}" to name "{url_converted}"')
-    return url_converted
+
+    # Split and filter out terms
+    # name = url_components.path.strip('/').replace('/job/', '/').strip().strip('/').strip('job/').replace('view/', '').replace('change-requests/', '')
+    url_split = url_components.path.strip().strip('/').split('/')
+    remove_list = ['job', 'view', 'change-requests']
+
+    filtered_list =  []
+    for list_item in url_split:  # TODO: Use list comprehension
+        if list_item not in remove_list: 
+            filtered_list.append(list_item)
+    
+    # Assemble back
+    name = '/'.join(filtered_list)
+
+    logger.debug(f'Converted URL "{url}" to fullname "{name}"')
+    return name
 
 
 def format_name(name:str) -> str:
     """Format / clean up the passed name
 
     Details: The formatting includes it:
-        - remove `job`
+        - /Non-PAR/job/Non-Prod-Jobs/job/Accenture/job/job --> /Non-PAR/Non-Prod-Jobs/Accenture/job
+        - remove `job/`, `view/`, `change-requests/` 
         - remove leading or trailing `/`
 
     Args:
@@ -197,12 +191,31 @@ def format_name(name:str) -> str:
     Returns:
         Formatted item name
     """
-    name_formatted = name.strip().replace('/job/', '/').strip('/').replace('job/', '/').strip('/') #.strip('job/')
+    # Filter out terms
+    name_formatted = name.strip().replace('/job/', '/').strip('/')
+    name_formatted = name_formatted.replace('job/', '/').strip('/').replace('view/', '').replace('change-requests/', '')
+
     logger.debug(f'Formatted "{name}" to "{name_formatted}"')
     return name_formatted
 
 
-def name_to_url(name:str) -> str:
+def fullname_to_name(fullname:str) -> str:
+    """Convert the jenkins item full name to its name only
+
+    Details: Hey/This/Is/A/Full/Job --> Job
+
+    Args:
+        url : Full name of the item (ie. Hey/This/Is/A/Full/Job)
+
+    Returns:
+        The name of the item
+    """
+    name = fullname.strip().strip('/').split('/')[-1]
+    logger.debug(f'Converted fullname "{fullname}" to name "{name}"')
+    return name
+
+
+def name_to_url(server_base_url:str, name:str) -> str:
     """Convert the item name to URL
 
     ** TODO **
@@ -213,7 +226,16 @@ def name_to_url(name:str) -> str:
     Returns:
         Item URL
     """
-    pass
+    a_path = name.strip('/').split('/')
+    if len(a_path) > 1:
+        short_name = 'job/' + '/job/'.join(a_path)
+    else:
+        short_name = ''
+    # short_name = (('job/' + '/job/'.join(a_path[:-1]) + '/') if len(a_path) > 1 else '')
+    url = str(urljoin(server_base_url, short_name))
+    logger.debug(f'Converted name "{name}" to URL "{url}"')
+
+    return url
 
 
 def build_url_to_other_url(build_url:str, target_url:str='job') -> str:
@@ -417,10 +439,83 @@ def browser_open(url:str, new:int=2, autoraise:bool=True) -> str:
         True if successfull, else False
     """
     try:
-        webbrowser.open(url, new, autoraise)
+        webbrowser.open(url.strip('/'), new, autoraise)
     except Exception as e:
-        logger.debug(f'Failed to open web browser for URL: {url}  Exception: {e}')
+        logger.debug(f'Failed to open web browser for URL: {url.strip("/")}  Exception: {e}')
         return False
     return True
 
 
+def has_special_char(text:str, special_chars:str='@!#$%^&*<>?/\|~:') -> bool:
+    """Check if passed text string contains any special characters
+
+    Args:
+        text          : Text to check
+        special_chars : String with all special characters to check
+
+    Returns:
+        True if includes special characters, else False
+    """
+    regex = re.compile('[' + special_chars + ']')
+    includes_special_chars = regex.search(text) != None
+    if includes_special_chars:
+        logger.debug(f'Item "{text}" includes special characters. Special characters: {special_chars}')
+    else:
+        logger.debug(f'Item "{text}" does not include special characters. Special characters: {special_chars}')
+    return includes_special_chars
+
+
+def remove_special_char(text:str, special_chars:str='@!#$%^&*<>?/\|~:') -> str:
+    """Remove any special characters from text string
+
+    Args:
+        text          : Text to remove special characters from
+        special_chars : String with all special characters to remove
+
+    Returns:
+        Text with special characters removed
+    """
+    regex = re.compile('[' + special_chars + ']')
+    text_new = re.sub(regex, '', text)
+    logger.debug(f'Removed special characters "{special_chars}" form string')
+    return text_new
+
+
+def queue_find(all_queue_info:dict, job_name:str='', job_url:str='', first:bool=True) -> list:
+    """Finding job in server build queue
+
+    Args:
+        TODO
+
+    Returns:
+        TODO
+    """
+    if not job_name and not job_url:
+        logger.debug('Failed to get job information. No job name or job url received')
+        return {}
+    job_name = job_name if job_name else url_to_name(job_url)
+
+    queue_item_matches = []
+
+    for i, queue_item in enumerate(all_queue_info['items']):
+        # Check the item type
+        if queue_item['task']['_class'] not in JenkinsItemClasses.job.value['class_type']:
+            logger.debug(f"[ITEM {i+1}/{len(all_queue_info['items'])}] Queued item not a job. Item class: {queue_item['task']['_class']}")
+            continue
+
+        queue_job_url = queue_item['task']['url']
+        logger.debug(f"[ITEM {i+1}/{len(all_queue_info['items'])}] Queue job item: {queue_job_url}")
+
+        queue_job_name = url_to_name(url=queue_job_url)
+
+        # Check for name match
+        if queue_job_name == job_name:
+            logger.debug(f'Successfully found job in server build queue: "{job_name}"')
+            queue_item_matches.append(queue_item)
+            if first:
+                break
+
+    if not queue_item_matches:
+        logger.debug(f'Failed to find job in build queue')
+
+    return queue_item_matches

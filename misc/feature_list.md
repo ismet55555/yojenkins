@@ -45,7 +45,14 @@ yo
     - List jobs - DONE
     - List views - DONE
     - List all items - DONE
-    - Open folder in browser 
+    - Open folder in browser - DONE
+    - Create folder - DONE
+    - Create job - DONE
+    - Create view - DONE
+    - Copy new item - DONE
+    - Check if item exists
+    - Folder XML config.xml - DONE
+
 
 - Job
     - Search - DONE
@@ -58,14 +65,16 @@ yo
     - Check if build exists - DONE
     - Start a build - DONE
     - Check if in queue - DONE
-    - Open Job in browser
-    - Job Parameters 
-    - Disable job
-    - Enable job
-    - Create job
-    - Delete job
-    - Rename job
-    - Wipeout job workspace
+    - Open Job in browser - DONE
+    - Job Parameters/Config - DONE
+    - Disable job - DONE
+    - Enable job - DONE
+    - Create job - DONE
+    - Delete job - DONE
+    - Rename job - DONE
+    - Wipeout job workspace - DONE
+    - Copy job - DONE
+    - Job XML config.xml - DONE
     - Job report
         - Builds over time
         - Builds per user
@@ -99,6 +108,12 @@ yo
 
 - Step
     - Info - DONE
+
+- Creds (Folder)
+    - info
+    - list credentials
+    - create credentials
+    - config credentials
 
 - Logs
     - search - Regex search
