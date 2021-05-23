@@ -11,11 +11,14 @@ class Status(Enum):
         - `if some_text in Status.running.value:`
     """
     running = ['RUNNING', 'IN_PROGRESS']
-    success = ['SUCCESS']
+    success = ['SUCCESS', 'SUCCEEDED']
     failure = ['FAILURE', 'FAILED', 'FAIL']
     queued = ['QUEUED']
     aborted = ['ABORTED']
+    unstable = ['UNSTABLE']
+    paused_input = ['PAUSED_PENDING_INPUT']
     not_found = ['NOT FOUND OR STARTED']
+    not_run = ['NOT_EXECUTED', 'NOT_RUN']
     none = [None]
     unknown = ['UNKNOWN']
 
@@ -33,7 +36,10 @@ class BuildStatus(Enum):
     failure = Status.failure.value[0]
     queued = Status.queued.value[0]
     aborted = Status.aborted.value[0]
+    unstable = Status.unstable.value[0]
+    paused_input = Status.paused_input.value[0]
     not_found = Status.not_found.value[0]
+    not_run = Status.not_run.value[0]
     none = Status.none.value[0]
     unknown = Status.unknown.value[0]
 
@@ -51,7 +57,10 @@ class StageStatus(Enum):
     failure = Status.failure.value[0]
     queued = Status.queued.value[0]
     aborted = Status.aborted.value[0]
+    unstable = Status.unstable.value[0]
+    paused_input = Status.paused_input.value[0]
     not_found = Status.not_found.value[0]
+    not_run = Status.not_run.value[0]
     none = Status.none.value[0]
     unknown = Status.unknown.value[0]
 
@@ -67,7 +76,29 @@ class Color(Enum):
         'failure': 'red',
         'queued': 'normal',
         'aborted': 'magenta',
+        'unstable': 'orange',
+        'paused_input': 'cyan',
         'not_found': 'normal',
+        'not_run': 'grey-dark',
         'none': 'normal',
         'unknown': 'normal'
+    }
+
+class Sound(Enum):
+    """Enum of Jenkins status sound filename
+
+    Usage Examples:  `Color.running.value`
+    """
+    items = {
+        'running': '',
+        'success': 'positive_alert_notification_musical_short_marimba_process_finished.wav',
+        'failure': 'negative_ui_ping_chime_mallet_like_error.wav',
+        'queued': '',
+        'aborted': 'negative_ui_ping_chime_mallet_like.wav',
+        'unstable': '',
+        'paused_input': '',
+        'not_found': '',
+        'not_run': '',
+        'none': '',
+        'unknown': ''
     }

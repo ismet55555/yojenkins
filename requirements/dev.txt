@@ -1,0 +1,15 @@
+Click
+coloredlogs
+json2xml
+python-jenkins
+pyyaml
+requests_futures
+requests-cache
+simpleaudio
+windows-curses; platform_system=="Windows"
+
+black
+bump2version
+isort
+wily
+yapf

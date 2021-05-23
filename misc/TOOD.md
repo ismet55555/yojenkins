@@ -1,11 +1,69 @@
 # TODO
 
-- Bug Fixes
+- BUG FIXES
+
+- yo-jenkins server setup
+    - Copy everything to laptop
+    - Develop there
+    - Copy things back
+    - Commit changes
+
+- Look into scrolling
+    - https://docs.python.org/2/library/curses.html#curses.window.scroll
+
+- For job monitor, also look into server queue
+
+- Remove sound option from job monitor
+    - Sound for new job (halo type) ???
+
+- Build and Job Monitor
+    - I key to stop monitor and output job/build info in yaml format
+
+- Build Monitor:
+    - L - Build logs
+        - L - All logs
+        - S - For certain stage - need a way to pick? (enter text for now?)
+        - B - Last X number of bytes of logs
+
+- For temporary message, look into
+  threading timer
+    - t = threading.Timer(30.0, my_function)
+
+- Folder combine the following:
+    - items
+    - jobs
+    - subfolders
+    - views
+
+- Folder 
+    - View delete
+
+- Also have a create job in jobs section
+
+- Get folder create: JOB working
+    - with the config file
+
+- in __main__.py sort in alphabetical order
+
+- Format everything
+
+- Add pre-commit hook on the code
+    - https://github.com/google/yapf/tree/main/plugins
+
+- In monitor, D key - Debug curses stats
+    - elapsed loop time
+    - curses.boudrate
+    - ... need at least like 4
 
 - Find a way to show user error messages
 
-- Concurrent requests
-    - grequests?
+- Curses scrolling:
+    - Build Monitor - Stages
+    - Job Monitor - Builds
+    - Folder Monitor - Jobs
+
+- Concurrent requests for stage logs
+    - ALREADY WORKS? - TEST ...
     - Separate monitoring object?
     - Use for stage logs
 
@@ -15,22 +73,37 @@
         - Other:
             - https://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
         
- - Saving logs to file: 
-    - https://stackoverflow.com/questions/16694907/download-large-file-in-python-with-requests
-    - Streaming big files: https://www.geeksforgeeks.org/downloading-files-web-using-python/
-        - maybe probe the file first?
-            - https://stackoverflow.com/questions/41546386/check-if-a-large-file-exists-without-downloading-it
+- Maybe probe log files the file first for size?
+    - If large, can we divide it up?
+    - https://stackoverflow.com/questions/41546386/check-if-a-large-file-exists-without-downloading-it
+
+- Clean sensitive data fro repo history
+    - https://www.cidean.com/blog/2019/clean-sensitive-files-from-git-repo/
+    - https://stackoverflow.com/questions/4110652/how-to-substitute-text-from-files-in-git-history
+
+
+
+- yo-jenkins auth wipe [HOLD OFF, DO LATER]
+
+- Waiting spinning thingy [ HOLD OFF, DO LATER ]
+    - OR click progress bar: https://click.palletsprojects.com/en/7.x/utils/#showing-progress-bars
+
+- Add "ey-yo" to "step" -> "'sup" ASCII sign [ HOLD OFF, DO LATER ]
 
 
 
 
 ## ZIP IT UP
-zip -r b.zip /Users/***REMOVED***/Projects/Personal/yo-jenkins -x \
+ZIP_NAME='a-6.zip' && \
+zip -r $ZIP_NAME ./yo-jenkins -x \
     "**/.git/*" \
     "**/.VSCodeCounter/*" \
     "**/env/*" \
-    "**/__pycache__/*" && \
-    du -hs b.zip
+    "**/__pycache__/*" \
+    "**/*.html" \
+    "**/*.sqlite" \
+    "**/*.log" && \
+    du -hs $ZIP_NAME
 
 
 

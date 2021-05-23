@@ -1,0 +1,13 @@
+# -*- mode: yaml -*-
+# vim: set filetype=yaml
+---
+
+audio:
+    enabled: true
+    success_sound_effect: "/misc/success.mp3"
+    failed_sound_effect: "/misc/failed.mp3"
+    aborted_sound_effect: "/misc/aborted.mp3"
+
+terminal:
+    min_height_rows: 40
+    min_width_columns: 79

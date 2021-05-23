@@ -3,32 +3,24 @@
 --------------------------------------------------
 
 
-
-
-
-
-
---------------------------------------------------
-
-
-
-Monitor.py
-
-FIXME: When no estimated time is available we get this:
-    Estimated:   -1 day, 23:59:59.999
-     Fix in YoJenkins.py
-
-
-
-
-Formatting name, issue with word "job" in item name
-https://***REMOVED***.com/job/***REMOVED***/job/Non-Prod-Jobs/job/***REMOVED***/job/test_job/
-
-becomes:
-
-job/***REMOVED***/Non-Prod-Jobs/***REMOVED***/test_job
+When starting a monitor, don't instantly play sound
+at no status change!
 
 
 --------------------------------------------------
 
 
+Derived full folder path: folderFullName
+in Job() object cuts off one too many directories
+
+
+--------------------------------------------------
+
+
+Build monitor SOMETIMES does not update
+    - Maybe threads fail?
+    - Restart if they fail?
+    - Heart beat on the threads
+
+
+--------------------------------------------------
