@@ -6,7 +6,7 @@ from pprint import pprint
 import click
 
 from cli import (cli_auth, cli_build, cli_folder, cli_job, cli_server,
-                        cli_stage, cli_step)
+                        cli_stage, cli_step, cli_setup)
 from cli import cli_decorators
 from cli import logger_setup
 from cli.cli_utility import set_debug_log_level
@@ -173,6 +173,25 @@ def restart(debug):
 def shutdown(debug):
     set_debug_log_level(debug)
     click.echo(click.style('TODO', fg='yellow',))
+
+
+
+
+##############################################################################
+#                             SETUP
+##############################################################################
+@main.group(short_help='\tSetup a server')
+def setup():
+    """SETTING THINGS UP"""
+    pass
+
+@setup.command(short_help='\tSetup a Jenkins server locally')
+@cli_decorators.debug
+def server(debug):
+    set_debug_log_level(debug)
+    cli_setup.server()
+
+
 
 
 
