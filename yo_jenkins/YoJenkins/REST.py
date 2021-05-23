@@ -205,7 +205,10 @@ class REST:
                 response = response.result()
         except requests.exceptions.ProxyError as e:
             logger.debug(f'Failed to make request. Request timeout. Exception: {e}')
-            return {}, {}, False  
+            return {}, {}, False
+        except requests.exceptions.MissingSchema as e:
+            logger.debug(f'Failed to make request. URL error. Exception: {e}')
+            return {}, {}, False
  
         logger.debug('Request info:')
         logger.debug(f'   - Elapsed time: {time() - elapsed_time} seconds')
