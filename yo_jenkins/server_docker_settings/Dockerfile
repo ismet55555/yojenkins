@@ -42,4 +42,4 @@ RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
 
 # Get configuration as code file
 # TODO: Remote URL for configuration as code
-COPY casc.yaml /var/jenkins_home/casc.yaml
+COPY configuration_as_code.yaml /var/jenkins_home/casc.yaml
