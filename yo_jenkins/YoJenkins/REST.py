@@ -209,6 +209,12 @@ class REST:
         except requests.exceptions.MissingSchema as e:
             logger.debug(f'Failed to make request. URL error. Exception: {e}')
             return {}, {}, False
+        except requests.exceptions.SSLError as e:
+            logger.debug(f'Failed to make request. Did you mean to use https?. Exception: {e}')
+            return {}, {}, False
+        except Exception as e:
+            logger.debug(f'Failed to make request. Exception: {e}')
+            return {}, {}, False
  
         logger.debug('Request info:')
         logger.debug(f'   - Elapsed time: {time() - elapsed_time} seconds')
@@ -216,23 +222,20 @@ class REST:
         if self.is_cached:
             logger.debug(f'   - Used request cache: {response.from_cache}')
 
-        # Check the return status code
-        if not response.ok:
-            logger.debug(f'Failed to make {request_type.upper()} request "{request_url}". Server code: {response.status_code}')
-            return {}, {}, False
-        success = True
-
         # Get the return header
-        return_headers: dict = {}
         if response.headers:
-            return_headers = response.headers
-            logger.debug(f'Request return headers: {return_headers}')
+            logger.debug(f'Request return headers: {response.headers}')
         else:
             logger.debug(f'No headers received form {request_type.upper()} request: {request_url}')
 
         # If a head request, only return headers
         if request_type.lower() == 'head':
-            return {}, return_headers, success
+            return {}, response.headers, True
+
+        # Check the return status code
+        if not response.ok:
+            logger.debug(f'Failed to make {request_type.upper()} request "{request_url}". Server code: {response.status_code}')
+            return {}, {}, False
 
         # Get the return content and format it
         return_content = {}
@@ -249,5 +252,5 @@ class REST:
         else:
             logger.debug(f'No content received form {request_type.upper()} request: {request_url}')
 
-        return return_content, return_headers, success
+        return return_content, response.headers, True
 
