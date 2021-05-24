@@ -1,9 +1,10 @@
 Click
 coloredlogs
-requests_futures
+docker
 json2xml
 python-jenkins
 pyyaml
+requests_futures
 requests-cache
 simpleaudio
 windows-curses; platform_system=="Windows"

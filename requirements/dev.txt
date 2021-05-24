@@ -1,5 +1,6 @@
 Click
 coloredlogs
+docker
 json2xml
 python-jenkins
 pyyaml

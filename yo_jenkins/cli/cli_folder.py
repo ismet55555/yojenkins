@@ -212,7 +212,6 @@ def config(profile:str, folder:str, filepath:str) -> None:
     if not data:
         click.echo(click.style(f'failed', fg='bright_red', bold=True))
         sys.exit(1)
-    print(data)
 
     if not write_success:
         click.echo(click.style(f'failed to write', fg='bright_red', bold=True))
