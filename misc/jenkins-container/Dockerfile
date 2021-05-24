@@ -16,11 +16,13 @@ FROM jenkins/jenkins:latest
 LABEL name="Jenkins Server" \
       contact="ismet.handzic@gmail.com"
 
+# Passed build arguments
 ARG PROTOCOL_SCHEMA
 ARG JENKINS_HOSTNAME
 ARG JENKINS_PORT
 ARG JENKINS_ADMIN_ID
 ARG JENKINS_ADMIN_PASSWORD
+
 
 # Environmental Variables
 ENV PROTOCOL_SCHEMA=$PROTOCOL_SCHEMA
@@ -32,9 +34,12 @@ ENV JENKINS_ADMIN_PASSWORD=$JENKINS_ADMIN_PASSWORD
 ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false
 ENV CASC_JENKINS_CONFIG /var/jenkins_home/casc.yaml
 
+
 # Installing Plugins
 COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
 RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
 
+
 # Get configuration as code file
+# TODO: Remote URL for configuration as code
 COPY casc.yaml /var/jenkins_home/casc.yaml
