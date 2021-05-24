@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
 
+import logging
+import os
+import sys
 from pprint import pprint
 from time import time
+
 import docker
-import sys
-import os
-import logging
 
 # Setup a message logging
 log_format = '[%(asctime)s] [%(relativeCreated)-4d] [%(filename)-23s:%(lineno)4s] %(message)s'
 logging.basicConfig(level=logging.INFO, format=log_format, datefmt='%H:%M:%S')
 
-
+logging.info('START')
 
 
 ##############################################################################
@@ -27,7 +28,7 @@ if not client.ping():
 
 
 ##############################################################################
-#                              BUILD IMAGE
+#                         REMOVING EXISTING CONTAINER
 ##############################################################################
 # Check if existing container is already running
 container_name = 'jenkins'
@@ -45,6 +46,15 @@ except:
 #                              BUILD IMAGE
 ##############################################################################
 logging.info('===> BUILDING DOCKER IMAGE ...')
+
+build_args = {
+    "PROTOCOL_SCHEMA": "http",
+    "JENKINS_HOSTNAME": "localhost",
+    "JENKINS_PORT": "8080",
+    "JENKINS_ADMIN_ID": "admin",
+    "JENKINS_ADMIN_PASSWORD": "password"
+}
+
 start_time = time()
 dockerfile_dir = os.path.join(os.getcwd(), 'misc/jenkins-container')
 logging.info(f'DOCKERFILE DIRECTORY: {dockerfile_dir}')
@@ -52,6 +62,7 @@ image = client.images.build(
     path=dockerfile_dir,
     tag='jenkins:jcasc',
     rm=True,
+    buildargs=build_args,
     quiet=False
 )
 logging.info(f'Successfully build image (Elapsed time: {time() - start_time}s)')
@@ -121,10 +132,7 @@ logging.info(f'Number of volumes to be mounted: {len(mounts)}')
 #                             RUN CONTAINER
 ##############################################################################
 logging.info('===> RUNNING THE CONTAINER ...')
-env_vars = [
-    'JENKINS_ADMIN_ID=admin',
-    'JENKINS_ADMIN_PASSWORD=password'
-]
+env_vars = []
 ports = {
     '8080/tcp': 8080,
     '50000/tcp': 50000

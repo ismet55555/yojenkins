@@ -21,7 +21,7 @@
 
 jenkins:
   systemMessage: "ATTENTION: THIS JENKINS SERVER IS FOR DEVELOPMENT AND TESTING ONLY!\n
-      This server was set up by yo-jenkins.\n
+      This server was set up by yo-jenkins\n
       Enjoy responsibly!\n\n"
   numExecutors: 4
   scmCheckoutRetryCount: 2
@@ -37,12 +37,12 @@ jenkins:
   authorizationStrategy:
     globalMatrix:  # Global server permissions
       permissions:
-        - "Overall/Administer:admin"    # Admin permissions to admin user
-        - "Overall/Read:authenticated"  # All other authenticated users
+        - "Overall/Administer:${JENKINS_ADMIN_ID}" # Admin permissions to user
+        - "Overall/Read:authenticated"             # All other authenticated users
 
   remotingSecurity:  # Control what things agent has access to and can do
     enabled: true
 
 unclassified:
   location:  # Jenkins URL path
-    url: http://server_ip:8080/
+    url: ${PROTOCOL_SCHEMA}://${JENKINS_HOSTNAME}:${JENKINS_PORT}/
