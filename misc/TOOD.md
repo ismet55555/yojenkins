@@ -3,7 +3,8 @@
 - BUG FIXES
 
 - yo-jenkins server setup
-    - Implement docker server in yo-jenkins from script
+    - Test DockerJenkinsServer object form scratch
+    - Implement into the CLI
 
 - Look into scrolling
     - https://docs.python.org/2/library/curses.html#curses.window.scroll
