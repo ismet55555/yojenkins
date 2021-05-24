@@ -3,10 +3,7 @@
 - BUG FIXES
 
 - yo-jenkins server setup
-    - Copy everything to laptop
-    - Develop there
-    - Copy things back
-    - Commit changes
+    - Implement docker server in yo-jenkins from script
 
 - Look into scrolling
     - https://docs.python.org/2/library/curses.html#curses.window.scroll
