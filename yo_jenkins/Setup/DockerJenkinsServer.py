@@ -78,15 +78,14 @@ class DockerJenkinsServer():
         Returns:
             TODO
         """
-        self.__container_kill()
-
+        if not self.__container_kill(): return False
         if self.image_rebuild:
-            self.__image_remove()
-        self.__image_build()
+            if not self.__image_remove(): return False
+        if not self.__image_build(): return False
+        if not self.__volumes_create(): return False
+        if not self.__container_run(): return False
 
-        self.__volumes_create()
-
-        self.__container_run()
+        return True
 
 
     def all_clean(self) -> bool:
@@ -100,14 +99,9 @@ class DockerJenkinsServer():
         Returns:
             TODO
         """
-        # Remove existing container that matches name
-        self.__container_kill()
-
-        # Remove the existing volume that matches name
-        self.__volumes_remove()
-
-        # Remove existing images
-        self.__image_remove()
+        if not self.__container_kill(): return False
+        if not self.__volumes_remove(): return False
+        if not self.__image_remove(): return False
 
 
     def __image_build(self) -> bool:
@@ -209,6 +203,7 @@ class DockerJenkinsServer():
             self.volumes_mounts.append(mount)
 
         logger.info(f'Number of volumes to be mounted to container: {len(self.volumes_mounts)}')
+        return True
 
 
     def __volumes_remove(self) -> bool:
@@ -230,6 +225,7 @@ class DockerJenkinsServer():
                 logger.warning(f'    - Volume: {volume_name} - REMOVED')
             except Exception as e:
                 logger.warning(f'    - Volume: {volume_name} - FAILED - Exception: {e}')
+        return True
 
 
     def __container_run(self) -> bool:
@@ -282,6 +278,8 @@ class DockerJenkinsServer():
             logger.warning('Container is stopped')
         except Exception as e:
             logger.warning(f'Failed to stop container matching tag: {self.container_name}. Exception: {e}')
+            return False
+        return True
 
 
     def __container_kill(self) -> bool:
@@ -302,3 +300,5 @@ class DockerJenkinsServer():
             logger.warning('Container is dead')
         except Exception as e:
             logger.warning(f'Failed to kill container matching tag: {self.container_name}. Exception: {e}')
+            return False
+        return True
