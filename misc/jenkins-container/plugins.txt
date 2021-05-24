@@ -1,11 +1,14 @@
 ant:latest
 antisamy-markup-formatter:latest
 authorize-project:latest
+build-pipeline-plugin:latest
 build-timeout:latest
 cloudbees-folder:latest
 configuration-as-code:latest
 credentials-binding:latest
+dashboard-view
 email-ext:latest
+generic-webhook-trigger:latest
 git:latest
 github-branch-source:latest
 gradle:latest
@@ -15,7 +18,7 @@ matrix-auth:latest
 pam-auth:latest
 pipeline-github-lib:latest
 pipeline-stage-view:latest
-build-pipeline-plugin:latest
+slack:latest
 ssh-slaves:latest
 timestamper:latest
 workflow-aggregator:latest

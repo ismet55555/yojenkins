@@ -31,6 +31,8 @@
 
 ## Ideas
 
+- Jenkins dockerized server - URL to configuration as code
+
 - Total log bytes indicator on monitor
 - Log size option in logs -b, --bytes
 
