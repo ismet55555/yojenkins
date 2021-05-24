@@ -2,7 +2,7 @@
 
 import logging
 import sys
-from Setup import JenkinsServerSetup
+from Setup import DockerJenkinsServer
 import click
 
 from . import cli_utility as cu
@@ -23,8 +23,8 @@ def server() -> None:
         TODO
     """
 
-    JSS = JenkinsServerSetup()
-    JSS.test()
+    DJS = DockerJenkinsServer()
+    DJS.test()
     
 
     data = True

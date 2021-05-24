@@ -1,1 +1,1 @@
-from .JenkinsServerSetup import JenkinsServerSetup
+from .DockerJenkinsServer import DockerJenkinsServer
