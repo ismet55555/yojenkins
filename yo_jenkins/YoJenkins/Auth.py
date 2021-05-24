@@ -510,8 +510,8 @@ class Auth:
         self.jenkins_api_token = self.jenkins_profile['api_token']
         self.jenkins_username = self.jenkins_profile['username']
         
-        hidden_token = ''.join([ "*" for i in self.jenkins_api_token[:-6]]) + self.jenkins_api_token[-6:]
-        # hidden_token = ''.join([ "*" for i in self.jenkins_profile['api_token'] ])
+        # hidden_token = ''.join([ "*" for i in self.jenkins_api_token[:-6]]) + self.jenkins_api_token[-6:]
+        hidden_token = ''.join([ "*" for i in self.jenkins_profile['api_token'] ])
         logger.debug(f'    - API Token:           {hidden_token}')
 
         # Creating Jenkins SDK object(Exception handling: jenkins.JenkinsException)

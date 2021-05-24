@@ -115,13 +115,14 @@ class REST:
             is_endpoint=False,
             request_type='head',
             auth_needed=False,
-            timeout=timeout)[2]
+            timeout=timeout)[1]
 
         if request_success:
             logger.debug('Successfully found server is reachable')
+            return True
         else:
             logger.debug('Failed. Server cannot be reached or is offline')
-        return request_success
+            return False
 
 
     def clear_cache(self):
@@ -230,7 +231,7 @@ class REST:
 
         # If a head request, only return headers
         if request_type.lower() == 'head':
-            return {}, response.headers, True
+            return {}, response.headers, response.ok
 
         # Check the return status code
         if not response.ok:

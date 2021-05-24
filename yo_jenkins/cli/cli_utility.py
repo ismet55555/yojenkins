@@ -49,22 +49,21 @@ def config_YoJenkins(profile:str) -> Type[YoJenkins]:
     Returns:
         TODO
     """
-    R = REST()
-    A = Auth(R)
+    Auth_obj = Auth(REST())
 
     # TODO: Rename configurations to credentials
 
     # Get the credential profile
-    if not A.get_configurations(profile):
+    if not Auth_obj.get_configurations(profile):
         click.echo(click.style(f'Failed to find any credentials', fg='bright_red', bold=True))
         sys.exit(1)
 
     # Create authentication
-    if not A.create_auth():
+    if not Auth_obj.create_auth():
         click.echo(click.style(f'Failed authentication', fg='bright_red', bold=True))
         sys.exit(1)
 
-    return YoJenkins(A, R)
+    return YoJenkins(Auth_obj)
 
 
 def standard_out(data:dict, opt_pretty:bool=False, opt_yaml:bool=False, opt_xml:bool=False) -> None:

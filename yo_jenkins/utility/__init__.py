@@ -220,14 +220,19 @@ def name_to_url(server_base_url:str, name:str) -> str:
 
     ** TODO **
 
+    NOTE: Passed '.' will go to base url
+
     Args:
         name : The name of the item
 
     Returns:
         Item URL
     """
+    # FIXME: Fix this workaround
+    cut_off = 1 if name == '.' else 0
+
     a_path = name.strip('/').split('/')
-    if len(a_path) > 1:
+    if len(a_path) > cut_off:
         short_name = 'job/' + '/job/'.join(a_path)
     else:
         short_name = ''

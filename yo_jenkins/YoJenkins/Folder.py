@@ -445,8 +445,6 @@ class Folder():
             data=data,
             headers=headers,
             is_endpoint=False)
-        pprint(return_content)
-        pprint(return_header)
         logger.debug(f'Successfully created item "{name}"' if success else f'Failed to create item "{name}"')
         return success
 
