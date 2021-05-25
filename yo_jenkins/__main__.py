@@ -174,22 +174,35 @@ def shutdown(debug):
     set_debug_log_level(debug)
     click.echo(click.style('TODO', fg='yellow',))
 
-
-
-
-##############################################################################
-#                             SETUP
-##############################################################################
-@main.group(short_help='\tSetup a server')
-def setup():
-    """SETTING THINGS UP"""
-    pass
-
-@setup.command(short_help='\tSetup a Jenkins server locally')
+@server.command(short_help='\tCreate a local development server using Docker')
 @cli_decorators.debug
-def server(debug):
+def server_make(debug):
     set_debug_log_level(debug)
-    cli_setup.server()
+    click.echo(click.style('TODO', fg='yellow',))
+    cli_server.server_make()
+    # (protocol_schema:str='http', hostname:str='localhost', port:int=8080, image_rebuild:bool=False, volumes_renew:bool=False):
+
+@server.command(short_help='\tRemove a local development server')
+@cli_decorators.debug
+def server_remove(debug):
+    set_debug_log_level(debug)
+    click.echo(click.style('TODO', fg='yellow',))
+    cli_server.server_remove()
+
+
+# ##############################################################################
+# #                             SETUP
+# ##############################################################################
+# @main.group(short_help='\tSetup a server')
+# def make_server():
+#     """SETTING THINGS UP"""
+#     pass
+
+# @make_server.command(short_help='\tSetup a Jenkins server locally')
+# @cli_decorators.debug
+# def server(debug):
+#     set_debug_log_level(debug)
+#     cli_spawn.server()
 
 
 
