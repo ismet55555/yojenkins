@@ -190,3 +190,29 @@ def shutdown():
         TODO
     """
     pass
+
+def server_make():
+    """TODO Docstring
+
+    Details: TODO
+
+    Args:
+        TODO
+
+    Returns:
+        TODO
+    """
+    pass
+
+def server_remove():
+    """TODO Docstring
+
+    Details: TODO
+
+    Args:
+        TODO
+
+    Returns:
+        TODO
+    """
+    pass
