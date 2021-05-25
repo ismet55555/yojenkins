@@ -10,18 +10,22 @@
 #
 ##############################################################################
 
-# Base image
-FROM jenkins/jenkins:latest
-
-LABEL name="Jenkins Server" \
-      contact="ismet.handzic@gmail.com"
-
 # Passed build arguments
-ARG PROTOCOL_SCHEMA
-ARG JENKINS_HOSTNAME
-ARG JENKINS_PORT
-ARG JENKINS_ADMIN_ID
-ARG JENKINS_ADMIN_PASSWORD
+ARG JENKINS_BASE_IMAGE='jenkins/jenkins'
+ARG JENKINS_BASE_VERSION='latest'
+ARG PROTOCOL_SCHEMA='http'
+ARG JENKINS_HOSTNAME='localhost'
+ARG JENKINS_PORT='8080'
+ARG JENKINS_ADMIN_ID='admin'
+ARG JENKINS_ADMIN_PASSWORD='password'
+
+# Base image
+FROM $JENKINS_BASE_IMAGE:$JENKINS_BASE_VERSION
+
+# Image labels
+LABEL name="Jenkins Server" 
+LABEL contact="ismet.handzic@gmail.com"
+LABEL description="Jenkins server for development and testing"
 
 
 # Environmental Variables

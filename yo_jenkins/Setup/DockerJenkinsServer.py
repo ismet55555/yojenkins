@@ -16,7 +16,7 @@ logger = logging.getLogger()
 class DockerJenkinsServer():
     """Class managing containerized Jenkins instance"""
 
-    def __init__(self, protocol_schema:str='http', hostname:str='localhost', port:int=8080, docker_registry:str='registry.hub.docker.com/library/', image_rebuild:bool=False, volumes_renew:bool=False):
+    def __init__(self, protocol_schema:str='http', hostname:str='localhost', port:int=8080, image_rebuild:bool=False, volumes_renew:bool=False):
         """Object constructor method, called at object creation
 
         Args:
@@ -25,29 +25,24 @@ class DockerJenkinsServer():
         Returns:
             None
         """
-        # Get the local docker client
-        self.docker_client = docker.from_env()
-
-        # Ping the docker client
-        if not self.docker_client.ping():
-            logger.debug('ERROR: Cannot reach local docker client')
-            return
-        logger.debug('Successfully connected to local docker client/engine')
+        self.docker_client = None
 
         # Image Related
-        self.image_dockerfile_dir = os.path.join(
-            os.getcwd(),
-            'yo_jenkins/server_docker_settings'
-            )
+        self.docker_registry = 'registry.hub.docker.com/library/' # NOT USED
+        self.image_base_image = 'jenkins/jenkins'
+        self.image_base_version = 'latest'
+        self.image_dockerfile_dir = os.path.join(os.getcwd(),'yo_jenkins/server_docker_settings')
         self.image_tag = 'jenkins:jcasc'
+        self.image_rebuild = image_rebuild
         self.image_build_args = {
+            "JENKINS_BASE_IMAGE": f"{self.image_base_image}",
+            "JENKINS_BASE_VERSION": f"{self.image_base_version}",
             "PROTOCOL_SCHEMA": f"{protocol_schema}",
             "JENKINS_HOSTNAME": f"{hostname}",
             "JENKINS_PORT": f"{port}",
             "JENKINS_ADMIN_ID": "admin",
             "JENKINS_ADMIN_PASSWORD": "password"
         }
-        self.image_rebuild = image_rebuild
 
         # Container Related
         self.container_name = 'jenkins'
@@ -67,6 +62,33 @@ class DockerJenkinsServer():
         self.volumes_renew = volumes_renew
 
 
+    def docker_client_init(self) -> bool:
+        """TODO Docstring
+
+        Details: TODO
+
+        Args:
+            TODO
+
+        Returns:
+            TODO
+        """
+        # Get the local docker client
+        try:
+            self.docker_client = docker.from_env()
+        except Exception as e:
+            logger.debug(f'Failed to get docker client/engine handle. Exception: {e}')
+            return False
+
+        # Ping the docker client
+        if not self.docker_client.ping():
+            logger.debug('Failed to ping local docker client')
+            return False
+        logger.debug('Successfully created handle and reached local docker client/engine')
+
+        return True
+
+
     def setup(self) -> bool:
         """TODO Docstring
 
@@ -78,6 +100,11 @@ class DockerJenkinsServer():
         Returns:
             TODO
         """
+        if not self.docker_client:
+            if not self.docker_client_init():
+                logger.debug('Docker client was not initialized. Please run .docker_client_init() first')
+                return False
+
         if not self.__container_kill(): return False
         if self.image_rebuild:
             if not self.__image_remove(): return False
@@ -300,5 +327,4 @@ class DockerJenkinsServer():
             logger.warning('Container is dead')
         except Exception as e:
             logger.warning(f'Failed to kill container matching tag: {self.container_name}. Exception: {e}')
-            return False
         return True
