@@ -2,9 +2,7 @@
 
 - BUG FIXES
 
-- yo-jenkins server setup
-    - Test DockerJenkinsServer object form scratch
-    - Implement into the CLI
+- yo-jenkins server server-teardown - Add options
 
 - Look into scrolling
     - https://docs.python.org/2/library/curses.html#curses.window.scroll
@@ -28,22 +26,29 @@
     - t = threading.Timer(30.0, my_function)
 
 - Folder combine the following:
-    - items
-    - jobs
-    - subfolders
-    - views
+  - items
+  - jobs
+  - subfolders
+  - views
 
 - Folder 
     - View delete
 
-- Also have a create job in jobs section
+- Create job
+  - in folder
+  - in job
 
-- Get folder create: JOB working
-    - with the config file
+- Create job
+  - with blank config file
+  - with specified config file
+  - with interpolated config file
 
-- in __main__.py sort in alphabetical order
+- __main__.py 
+  - sort in alphabetical order
+  - Split into separate files and just import the files (will this work with click?)
 
 - Format everything
+  - yapf
 
 - Add pre-commit hook on the code
     - https://github.com/google/yapf/tree/main/plugins
@@ -81,6 +86,8 @@
 
 
 
+- Use .yo-jenkins directory in home instead of just a file
+
 - yo-jenkins auth wipe [HOLD OFF, DO LATER]
 
 - Waiting spinning thingy [ HOLD OFF, DO LATER ]
@@ -90,8 +97,8 @@
 
 
 
-
-## ZIP IT UP
+# Zipping up stuff
+## Zip For Moving
 ZIP_NAME='a-6.zip' && \
 zip -r $ZIP_NAME ./yo-jenkins -x \
     "**/.git/*" \
@@ -103,6 +110,21 @@ zip -r $ZIP_NAME ./yo-jenkins -x \
     "**/*.log" && \
     du -hs $ZIP_NAME
 
+## Zip for Testing
+ZIP_NAME='for_testing.zip' && \
+zip -r $ZIP_NAME ./yo-jenkins -x \
+    "**/.git/*" \
+    "**/.VSCodeCounter/*" \
+    "**/env/*" \
+    "**/__pycache__/*" \
+    "**/*.html" \
+    "**/*.sqlite" \
+    "**/*.log" \
+    "**/misc/*" \
+    "**/test/*" \
+    "**/.vscode/*" \
+    "README.md" && \
+    du -hs $ZIP_NAME
 
 
 # Docstring format
@@ -119,6 +141,7 @@ zip -r $ZIP_NAME ./yo-jenkins -x \
         This is a description of what is returned.
     """
 
+
 ### Monitoring
 
 - Predefined monitoring file
@@ -129,14 +152,6 @@ zip -r $ZIP_NAME ./yo-jenkins -x \
         - stages
         - builds
 
-- Monitor a running build
-
-- Seperate class
-    - Monitoring thread
-    - Curses rendering
-        - What layout?
-        - Simple text at the beginning
-    - Log text box
 
 
 ### Configuring Profile
@@ -151,7 +166,7 @@ RULE
 
 
 
-
+Reading the profile
 1. If no yo-jenkins.conf file is present, run prompts to create profile
     - yo-jenkins auth configure ---> default
     - yo-jenkins auth configure --profile test-jenkins  ----> test jenkins
