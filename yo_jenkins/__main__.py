@@ -176,35 +176,29 @@ def shutdown(debug):
 
 @server.command(short_help='\tCreate a local development server using Docker')
 @cli_decorators.debug
-def server_make(debug):
+# FIXME: Restrict files and directories instead of just general path
+@click.option('--config-file', default='config_as_code.yaml', type=click.Path(file_okay=True, dir_okay=False), required=False, help='.yml/.yaml file for custom configuration as code for Jenkins server setup')
+@click.option('--plugins-file', default='plugins.txt', type=click.Path(file_okay=True, dir_okay=False), required=False, help='.txt file for custom list of all plugins to be installed on Jenkins server')
+@click.option('--protocol-schema', default='http', type=str, required=False, help='Protocol schema for Jenkins, http, https, etc.')
+@click.option('--host', default='localhost', type=str, required=False, help='Jenkins server host (localhost, 192.168.0.1, etc.)')
+@click.option('--port', default=8080, type=int, required=False, help='Jenkins server port')
+@click.option('--image-base', default='jenkins/jenkins', type=str, required=False, help='Base Jenkins server image (Default: jenkins/jenkins)')
+@click.option('--image-rebuild', default=False, type=bool, required=False, is_flag=True, help='If image exists, rebuild existing docker image')
+@click.option('--new-volume', default=False, type=bool, required=False, is_flag=True, help='Erase existing Docker data volume from previously created servers')
+@click.option('--new-volume-name', default='yo-jenkins-jenkins', type=str, required=False, help='Name of the resulting Docker volume')
+@click.option('--bind-mount-dir', default='', type=click.Path(file_okay=False, dir_okay=True), required=False, help='Local directory to be bound inside container "/tmp/my_things" directory')
+@click.option('--container-name', default='yo-jenkins-jenkins', type=str, required=False, help='Name of the resulting Docker container')
+@click.option('--registry', default='', type=str, required=False, help='Registry to pull base Jenkins image from')
+def server_deploy(debug, config_file, plugins_file, protocol_schema, host, port, image_base, image_rebuild, new_volume, new_volume_name, bind_mount_dir, container_name, registry):
     set_debug_log_level(debug)
-    click.echo(click.style('TODO', fg='yellow',))
-    cli_server.server_make()
-    # (protocol_schema:str='http', hostname:str='localhost', port:int=8080, image_rebuild:bool=False, volumes_renew:bool=False):
+    cli_server.server_deploy(config_file, plugins_file, protocol_schema, host, port, image_base, image_rebuild, new_volume, new_volume_name, bind_mount_dir, container_name, registry)
 
 @server.command(short_help='\tRemove a local development server')
 @cli_decorators.debug
-def server_remove(debug):
+def server_teardown(debug):
     set_debug_log_level(debug)
-    click.echo(click.style('TODO', fg='yellow',))
-    cli_server.server_remove()
-
-
-# ##############################################################################
-# #                             SETUP
-# ##############################################################################
-# @main.group(short_help='\tSetup a server')
-# def make_server():
-#     """SETTING THINGS UP"""
-#     pass
-
-# @make_server.command(short_help='\tSetup a Jenkins server locally')
-# @cli_decorators.debug
-# def server(debug):
-#     set_debug_log_level(debug)
-#     cli_spawn.server()
-
-
+    cli_server.server_teardown()
+    # TODO: Add options
 
 
 
@@ -315,7 +309,7 @@ def browser(debug, profile, folder):
 @cli_decorators.debug
 @cli_decorators.profile
 @click.argument('folder', nargs=1, type=str, required=True)
-@click.option('-f', '--filepath', type=click.Path(), required=False, help='File/Filepath to write configurations to')
+@click.option('-f', '--filepath', type=click.Path(file_okay=True, dir_okay=True), required=False, help='File/Filepath to write configurations to')
 def config(debug, profile, folder, filepath):
     set_debug_log_level(debug)
     cli_folder.config(profile, folder, filepath)
@@ -325,17 +319,8 @@ def config(debug, profile, folder, filepath):
 @cli_decorators.profile
 @click.argument('folder', nargs=1, type=str, required=True)
 @click.argument('name', nargs=1, type=str, required=True)
-@click.option(
-    '--type', 
-    type=click.Choice(['folder', 'view', 'job'], case_sensitive=False), 
-    default='folder', 
-    required=False, 
-    help='Item type created [default: folder]')
-@click.option(
-    '-cf', '--config-file', 
-    type=click.Path(), 
-    required=False, 
-    help='Path to local XML file defining item')
+@click.option('--type', type=click.Choice(['folder', 'view', 'job'], case_sensitive=False), default='folder', required=False, help='Item type created [default: folder]')
+@click.option('-cf', '--config-file', type=click.Path(file_okay=True, dir_okay=False), required=False, help='Path to local XML file defining item')
 def create(debug, profile, folder, name, type, config_file):
     set_debug_log_level(debug)
     cli_folder.create(profile, folder, name, type, config_file)
@@ -474,7 +459,7 @@ def browser(debug, profile, job):
 @cli_decorators.debug
 @cli_decorators.profile
 @click.argument('job', nargs=1, type=str, required=True)
-@click.option('-f', '--filepath', type=click.Path(), required=False, help='File/Filepath to write configurations to')
+@click.option('-f', '--filepath', type=click.Path(file_okay=True, dir_okay=False), required=False, help='File/Filepath to write configurations to')
 def config(debug, profile, job, filepath):
     set_debug_log_level(debug)
     cli_job.config(profile, job, filepath)

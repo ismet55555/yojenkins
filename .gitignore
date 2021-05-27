@@ -157,3 +157,6 @@ cython_debug/
 
 # Cached request session file
 *.sqlite
+
+# Temp last server deployment information file
+last_deploy_info.json

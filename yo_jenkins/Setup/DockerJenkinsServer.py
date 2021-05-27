@@ -16,11 +16,28 @@ logger = logging.getLogger()
 class DockerJenkinsServer():
     """Class managing containerized Jenkins instance"""
 
-    def __init__(self, protocol_schema:str='http', hostname:str='localhost', port:int=8080, image_rebuild:bool=False, volumes_renew:bool=False):
+    def __init__(
+        self,
+        config_file: str = 'server_docker_settings/config_as_code.yaml',
+        plugins_file: str = 'plugins.txt',
+        protocol_schema: str = 'http',
+        host: str = 'localhost',
+        port: int = 8080,
+        image_fullname: str = 'yo-jenkins-jenkins:latest',
+        image_base: str = 'jenkins/jenkins',
+        image_rebuild: bool = False,
+        new_volume: bool = False,
+        new_volume_name: str = 'yo-jenkins-jenkins',
+        bind_mount_dir: str = '',
+        container_name: str = 'yo-jenkins-jenkins',
+        registry: str = ''
+    ):
         """Object constructor method, called at object creation
 
         Args:
             None
+
+        TODO: ADD DEFAULTS BACK IN CLI __main.py__
 
         Returns:
             None
@@ -28,25 +45,27 @@ class DockerJenkinsServer():
         self.docker_client = None
 
         # Image Related
-        self.docker_registry = 'registry.hub.docker.com/library/' # NOT USED
-        self.image_base_image = 'jenkins/jenkins'
+        self.docker_registry = registry
+        self.image_base_image = image_base
         self.image_base_version = 'latest'
         self.image_dockerfile_dir = os.path.join(os.getcwd(),'yo_jenkins/server_docker_settings')
-        self.image_tag = 'jenkins:jcasc'
+        self.image_fullname = image_fullname
         self.image_rebuild = image_rebuild
         self.image_build_args = {
-            "JENKINS_BASE_IMAGE": f"{self.image_base_image}",
-            "JENKINS_BASE_VERSION": f"{self.image_base_version}",
-            "PROTOCOL_SCHEMA": f"{protocol_schema}",
-            "JENKINS_HOSTNAME": f"{hostname}",
+            "JENKINS_BASE_IMAGE": self.image_base_image,
+            "JENKINS_BASE_VERSION": self.image_base_version,
+            "JENKINS_CONFIG_FILE": config_file,
+            "JENKINS_PLUGINS_FILE": plugins_file,
+            "PROTOCOL_SCHEMA": protocol_schema,
+            "JENKINS_HOSTNAME": host,
             "JENKINS_PORT": f"{port}",
             "JENKINS_ADMIN_ID": "admin",
             "JENKINS_ADMIN_PASSWORD": "password"
         }
 
         # Container Related
-        self.container_name = 'jenkins'
-        self.container_address = f"{protocol_schema}//{hostname}:{port}"
+        self.container_name = container_name
+        self.container_address = f"{protocol_schema}://{host}:{port}"
         self.container_ports = {
             '8080/tcp': port,
             '50000/tcp': 50000
@@ -56,10 +75,15 @@ class DockerJenkinsServer():
         self.container_remove = False if self.container_restart_policy else True
 
         # Volume Related
-        self.volumes_bind = {}
-        self.volumes_named = {'jenkins': '/var/jenkins_home'}
+        self.volumes_bind = {} if not bind_mount_dir else {bind_mount_dir: {'bind': '/tmp/my_things', 'mode': 'rw'}}
+        self.volumes_named = {f'{new_volume_name}': '/var/jenkins_home'}
         self.volumes_mounts = []
-        self.volumes_renew = volumes_renew
+        self.new_volume = new_volume
+
+        logger.debug(f'Jenkins server build attributes:')
+        for k, v in vars(self).items():
+            if k in ['image_build_args', 'docker_client', 'container_env_vars']: continue
+            logger.debug(f'    - {k}: {v}')
 
 
     def docker_client_init(self) -> bool:
@@ -73,6 +97,7 @@ class DockerJenkinsServer():
         Returns:
             TODO
         """
+        logger.debug('Connecting to local docker client/engine ...')
         # Get the local docker client
         try:
             self.docker_client = docker.from_env()
@@ -84,12 +109,12 @@ class DockerJenkinsServer():
         if not self.docker_client.ping():
             logger.debug('Failed to ping local docker client')
             return False
-        logger.debug('Successfully created handle and reached local docker client/engine')
+        logger.debug('Successfully connected to local docker client/engine')
 
         return True
 
 
-    def setup(self) -> bool:
+    def setup(self) -> dict:
         """TODO Docstring
 
         Details: TODO
@@ -100,19 +125,36 @@ class DockerJenkinsServer():
         Returns:
             TODO
         """
+        deployed = {}
+
         if not self.docker_client:
             if not self.docker_client_init():
                 logger.debug('Docker client was not initialized. Please run .docker_client_init() first')
-                return False
+                return deployed
 
-        if not self.__container_kill(): return False
+        if not self.__container_kill():
+            return deployed, False
         if self.image_rebuild:
-            if not self.__image_remove(): return False
-        if not self.__image_build(): return False
-        if not self.__volumes_create(): return False
-        if not self.__container_run(): return False
+            if not self.__image_remove():
+                return deployed, False
 
-        return True
+        image_name = self.__image_build()
+        if not image_name:
+            return deployed, False
+        deployed['image'] = image_name
+
+        volume_names = self.__volumes_create()
+        if not volume_names:
+            return deployed, False
+        deployed['volumes'] = volume_names
+
+        container_name, server_address = self.__container_run()
+        if not server_address:
+            return deployed, False
+        deployed['container'] = container_name
+        deployed['address'] = server_address
+
+        return deployed, True
 
 
     def all_clean(self) -> bool:
@@ -126,12 +168,22 @@ class DockerJenkinsServer():
         Returns:
             TODO
         """
-        if not self.__container_kill(): return False
-        if not self.__volumes_remove(): return False
-        if not self.__image_remove(): return False
+        removed = {}
+
+        if not self.__container_kill():
+            return False
+
+        if not self.__volumes_remove():
+            return False
 
 
-    def __image_build(self) -> bool:
+        if not self.__image_remove():
+            return False
+
+        return True
+
+
+    def __image_build(self) -> str:
         """TODO Docstring
 
         Details: TODO
@@ -143,23 +195,23 @@ class DockerJenkinsServer():
             TODO
         """
         start_time = time()
-        logger.info(f'Building image: {self.image_tag} ...')
-        logger.info(f'Dockerfile directory: {self.image_dockerfile_dir}')
+        logger.debug(f'Building image: {self.image_fullname} ...')
+        logger.debug(f'Dockerfile directory: {self.image_dockerfile_dir}')
         try:
             self.docker_client.images.build(
                 path=self.image_dockerfile_dir,
-                tag=self.image_tag,
+                tag=self.image_fullname,
                 rm=True,
                 buildargs=self.image_build_args,
-                quiet=False
+                quiet=False,
+                forcerm=True
             )
         except Exception as e:
-            logger.info(f'Failed to build image: {self.image_tag}. Exception: {e}')
-            return False
-        logger.info(f'Successfully build image: {self.image_tag} (Elapsed time: {time() - start_time}s)')
-        return True
-        # Get the image tag name (same as self.image_tag???)
-        # self.image_tag_name = image[0].tags[0]
+            logger.debug(f'Failed to build image: {self.image_fullname}. Exception: {e}')
+            return ''
+        logger.debug(f'Successfully build image: {self.image_fullname} (Elapsed time: {time() - start_time}s)')
+        return self.image_fullname
+
 
     def __image_remove(self) -> bool:
         """TODO Docstring
@@ -172,17 +224,17 @@ class DockerJenkinsServer():
         Returns:
             TODO
         """
-        logger.info(f'Removing image: {self.image_tag} ...')
+        logger.debug(f'Removing image: {self.image_fullname} ...')
         try:
-            self.docker_client.images.remove(self.image_tag)
+            self.docker_client.images.remove(self.image_fullname)
         except Exception as e:
-            logger.info(f'Failed to remove image: {self.image_tag}. Exception: {e}')
+            logger.debug(f'Failed to remove image: {self.image_fullname}. Exception: {e}')
             return False
-        logger.info(f'Successfully removed image: {self.image_tag}')
+        logger.debug(f'Successfully removed image: {self.image_fullname}')
         return True
 
 
-    def __volumes_create(self) -> bool:
+    def __volumes_create(self) -> list:
         """TODO Docstring
 
         Details: TODO
@@ -194,10 +246,11 @@ class DockerJenkinsServer():
             TODO
         """
         self.volumes_mounts = []
+        volume_mounts_names = []
 
         # Bind Volume Mounts
         for volume_source, volume_target in self.volumes_bind.items():
-            logger.info(f'Adding new local bind volume to mount list: {volume_source} -> {volume_target} ...')
+            logger.debug(f'Adding new local bind volume to mount list: {volume_source} -> {volume_target} ...')
             mount = docker.types.Mount(
                 source=volume_source,
                 target=volume_target,
@@ -205,22 +258,23 @@ class DockerJenkinsServer():
                 read_only=False
             )
             self.volumes_mounts.append(mount)
+            volume_mounts_names.append({'bind': volume_source})
 
         # Named Volume Mounts
         for volume_name, volume_dir in self.volumes_named.items():
             try:
                 volume_handle = self.docker_client.volumes.get(volume_name)
-                if self.volumes_renew:
-                    logger.info(f'Removing found matching/existing named volume: {volume_name} ...')
+                if self.new_volume:
+                    logger.debug(f'Removing found matching/existing named volume: {volume_name} ...')
                     volume_handle.remove(force=True)
                 else:
-                    logger.warning(f'Using found matching/existing named volume: {volume_name}')
+                    logger.debug(f'Using found matching/existing named volume: {volume_name}')
             except:
-                logger.info(f'Creating new named volume: {volume_name}')
+                logger.debug(f'Creating new named volume: {volume_name}')
                 self.docker_client.volumes.create(name=volume_name, driver='local')
-                logger.info('Successfully created!')
+                logger.debug('Successfully created!')
 
-            logger.info(f'Adding named volumes to mount list: {volume_name} ...')
+            logger.debug(f'Adding named volumes to mount list: {volume_name} ...')
             mount = docker.types.Mount(
                 target=volume_dir,
                 source=volume_name,
@@ -228,9 +282,10 @@ class DockerJenkinsServer():
                 read_only=False
             )
             self.volumes_mounts.append(mount)
+            volume_mounts_names.append({'named': volume_name})
 
-        logger.info(f'Number of volumes to be mounted to container: {len(self.volumes_mounts)}')
-        return True
+        logger.debug(f'Number of volumes to be mounted to container: {len(self.volumes_mounts)}')
+        return volume_mounts_names
 
 
     def __volumes_remove(self) -> bool:
@@ -244,18 +299,18 @@ class DockerJenkinsServer():
         Returns:
             TODO
         """
-        logger.warning(f'Removing named volumes: {self.volumes_named.keys()}')
+        logger.debug(f'Removing named volumes: {self.volumes_named.keys()}')
         for volume_name in self.volumes_named:
             try:
                 volume_named = self.docker_client.volumes.get(volume_name)
                 volume_named.remove(force=True)
-                logger.warning(f'    - Volume: {volume_name} - REMOVED')
+                logger.debug(f'    - Volume: {volume_name} - REMOVED')
             except Exception as e:
-                logger.warning(f'    - Volume: {volume_name} - FAILED - Exception: {e}')
+                logger.debug(f'    - Volume: {volume_name} - FAILED - Exception: {e}')
         return True
 
 
-    def __container_run(self) -> bool:
+    def __container_run(self) -> Tuple[str, str]:
         """TODO Docstring
 
         Details: TODO
@@ -266,11 +321,11 @@ class DockerJenkinsServer():
         Returns:
             TODO
         """
-        logger.info(f'Creating and running container: {self.container_name} ...')
+        logger.debug(f'Creating and running container: {self.container_name} ...')
         try:
             self.docker_client.containers.run(
                 name=self.container_name,
-                image=self.image_tag,
+                image=self.image_fullname,
                 environment=self.container_env_vars,
                 ports=self.container_ports,
                 mounts=self.volumes_mounts,
@@ -280,11 +335,12 @@ class DockerJenkinsServer():
                 detach=True
                 )
         except Exception as e:
-            logger.warning(f'Failed to run container: {self.container_name} Exception: {e}')
-            return False
-        logger.info(f'Successfully running container: {self.container_name}')
-        logger.info(f'Container is running here: {self.container_address}')
-        return True
+            logger.debug(f'Failed to run container: {self.container_name} Exception: {e}')
+            return '', ''
+        logger.debug(f'Successfully running container: {self.container_name}')
+        logger.debug(f'Container "{self.container_name}" is running at this address:')
+        logger.debug(f'    --> {self.container_address}')
+        return self.container_name, self.container_address
 
 
     def __container_stop(self) -> bool:
@@ -298,13 +354,13 @@ class DockerJenkinsServer():
         Returns:
             TODO
         """
-        logger.warning(f'Stopping container with matching tag: {self.container_name} ...')
+        logger.debug(f'Stopping container with matching tag: {self.container_name} ...')
         try:
             container_handle = self.docker_client.containers.get(self.container_name)
             container_handle.stop()
-            logger.warning('Container is stopped')
+            logger.debug('Container is stopped')
         except Exception as e:
-            logger.warning(f'Failed to stop container matching tag: {self.container_name}. Exception: {e}')
+            logger.debug(f'Failed to stop container matching tag: {self.container_name}. Exception: {e}')
             return False
         return True
 
@@ -320,11 +376,11 @@ class DockerJenkinsServer():
         Returns:
             TODO
         """
-        logger.warning(f'Killing container with matching tag: {self.container_name} ...')
+        logger.debug(f'Killing container with matching tag: {self.container_name} ...')
         try:
             container_handle = self.docker_client.containers.get(self.container_name)
             container_handle.kill()
-            logger.warning('Container is dead')
+            logger.debug('Container is dead')
         except Exception as e:
-            logger.warning(f'Failed to kill container matching tag: {self.container_name}. Exception: {e}')
+            logger.debug(f'Failed to kill container matching tag: {self.container_name}. Exception: {e}')
         return True
