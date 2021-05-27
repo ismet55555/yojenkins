@@ -181,7 +181,7 @@ class Folder():
 
         # Check if found item type/class
         if folder_info['_class'] not in JenkinsItemClasses.folder.value['class_type'] and JenkinsItemClasses.folder.value['item_type'] not in folder_info:
-            logger.warning(f'Failed to match type/class. This item is "{folder_info["_class"]}"')
+            logger.debug(f'Failed to match type/class. This item is "{folder_info["_class"]}"')
             return {}
 
         return folder_info
