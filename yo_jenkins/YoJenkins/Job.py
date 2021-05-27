@@ -401,7 +401,7 @@ class Job():
         Returns:
             TODO
         """
-        logger.info(f'Getting information for build queue "{build_queue_number}" ...')
+        logger.debug(f'Getting information for build queue "{build_queue_number}" ...')
 
         # Make the request URL
         if build_queue_number:
