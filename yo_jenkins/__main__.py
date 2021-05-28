@@ -2,6 +2,7 @@
 
 import logging
 from pprint import pprint
+import platform
 
 import click
 

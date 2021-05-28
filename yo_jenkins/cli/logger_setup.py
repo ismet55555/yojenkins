@@ -32,4 +32,3 @@ logger = logging.basicConfig(level=logging.INFO,
 coloredlogs.install(fmt=log_format,
                     datefmt='%H:%M:%S',
                     logger=logger)
-
