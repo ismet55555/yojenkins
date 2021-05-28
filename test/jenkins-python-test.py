@@ -5,9 +5,8 @@ import coloredlogs
 import jenkins
 
 # Creating a message logger
-data_format = "%d-%b-%y %H:%M:%S"
 format = f"[%(asctime)s][%(levelname)-10s] %(message)s"
-logger = logging.basicConfig(level=logging.INFO, format=format, datefmt=data_format)
+logger = logging.basicConfig(level=logging.INFO, format=format, datefmt="%d-%b-%y %H:%M:%S")
 logger = logging.getLogger()
 
 # Applying color to the output logs

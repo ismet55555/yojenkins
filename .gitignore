@@ -142,6 +142,7 @@ cython_debug/
 
 # # VSCode configs
 # *.code-workspace  # Uncomment later
+.vscode/settings.json
 
 # Apple custom folder attribures
 *.DS_Store

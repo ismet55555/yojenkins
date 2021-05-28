@@ -2,6 +2,12 @@
 
 - BUG FIXES
 
+- Playing audio
+    - Test audio on windows - installs and plays sound just fine ...
+    - Test winsound with simple script
+    - Use winsound if on Windows
+
+
 - yo-jenkins server server-teardown - Add options
 
 - Look into scrolling
@@ -20,6 +26,9 @@
         - L - All logs
         - S - For certain stage - need a way to pick? (enter text for now?)
         - B - Last X number of bytes of logs
+
+- Job Monitor
+    - B - Build this job now
 
 - For temporary message, look into
   threading timer

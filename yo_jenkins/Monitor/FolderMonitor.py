@@ -10,7 +10,6 @@ from pprint import pprint
 from time import sleep, time
 from typing import Dict, List, Tuple, Type
 
-import simpleaudio
 from YoJenkins.Status import BuildStatus, Color, Sound, StageStatus, Status
 
 from Monitor.Monitor import Monitor
