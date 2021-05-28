@@ -6,5 +6,5 @@ python-jenkins
 pyyaml
 requests_futures
 requests-cache
-simpleaudio
+simpleaudio; platform_system != "Windows"
 windows-curses; platform_system=="Windows"

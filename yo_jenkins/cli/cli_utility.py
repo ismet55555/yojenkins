@@ -2,22 +2,24 @@
 
 import json
 import logging
+import platform
 import sys
 from pprint import pprint
 from typing import Type
-from urllib3.util import parse_url
+from winsound import PlaySound
 
 import click
 import yaml
 from json2xml import json2xml
 from json2xml.utils import readfromstring
+from urllib3.util import parse_url
 from YoJenkins import REST, Auth, YoJenkins
 
 # Getting the logger reference
 logger = logging.getLogger()
 
 
-def set_debug_log_level(debug_flag:bool):
+def set_debug_log_level(debug_flag:bool) -> None:
     """Setting the log DEBUG level
 
     Args:
@@ -38,6 +40,29 @@ def set_debug_log_level(debug_flag:bool):
     logger.setLevel(logging_level)
     for handler in logger.handlers:
         handler.setLevel(logging_level)
+
+    # Show system information
+    platform_information()
+
+
+def platform_information() -> None:
+    """TODO Docstring
+
+    Args:
+        TODO
+
+    Returns:
+        TODO
+    """
+    # System information
+    logger.debug(f'System information:')
+    logger.debug(f'    - System:    {platform.system()}')
+    logger.debug(f'    - Release:   {platform.uname().release}')
+    logger.debug(f'    - Version:   {platform.version()}')
+    logger.debug(f'    - Machine:   {platform.uname().machine}')
+    logger.debug(f'    - Processor: {platform.uname().processor}')
+    logger.debug(f'    - Python:    {platform.python_version()} (REV:{platform.python_revision()})')
+
 
 
 def config_YoJenkins(profile:str) -> Type[YoJenkins]:

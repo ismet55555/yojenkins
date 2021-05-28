@@ -2,6 +2,7 @@
 
 import curses
 import logging
+import platform
 import sys
 import textwrap
 import threading
@@ -9,7 +10,11 @@ from pprint import pprint
 from time import sleep, time
 from typing import Dict, List, Tuple, Type
 
-import simpleaudio
+if platform.system() != "Windows":
+    import simpleaudio
+else:
+    import winsound
+
 from YoJenkins.Status import Color, Sound, Status
 
 from . import monitor_utility as mu
@@ -171,6 +176,7 @@ class Monitor:
 
         Args:
             scr (obj): Handle for curses terminal screen handle
+
         Returns: 
             None
         """
@@ -186,27 +192,49 @@ class Monitor:
     ###########################################################################
 
     def __thread_play_sound(self, sound_filepath: str) -> None:
-        """ TODO """
+        """TODO Docstring
+
+        Args:
+            TODO
+
+        Returns:
+            TODO
+        """
         logger.debug(f'Thread starting - Play sound - (ID: {threading.get_ident()} - Sound: {sound_filepath}s) ...')
 
         # Load the file and play it
-        wave_obj = simpleaudio.WaveObject.from_wave_file(sound_filepath)
-        play_obj = wave_obj.play()
-        # play_obj.wait_done()
-
-        self.playing_sound = True
-        while self.all_threads_enabled:
-            if play_obj.is_playing():
-                sleep(0.100)
-                if not self.all_threads_enabled:
+        if platform.system() != "Windows":
+            try:
+                wave_obj = simpleaudio.WaveObject.from_wave_file(sound_filepath)
+                play_obj = wave_obj.play()
+            except Exception as e:
+                logger.error(f'Failed to play sound. Exception: {e}')
+            self.playing_sound = True
+            while self.all_threads_enabled:
+                if play_obj.is_playing():
+                    sleep(0.100)
+                    if not self.all_threads_enabled:
+                        break
+                else:
                     break
-            else:
-                break
+        else:
+            try:
+                winsound.PlaySound(sound_filepath, winsound.SND_FILENAME | winsound.SND_NODEFAULT)
+                self.playing_sound = True
+            except RuntimeError as e:
+                logger.error(f'Failed to play sound. Exception: {e}')
         self.playing_sound = False
         logger.debug(f'Thread stopped - Play sound - (ID: {threading.get_ident()})')
 
     def play_sound_thread_on(self, sound_filepath: str) -> bool:
-        """ TODO """
+        """TODO Docstring
+
+        Args:
+            TODO
+
+        Returns:
+            TODO
+        """
         logger.debug(f'Playing sound file "{sound_filepath}" ...')
         try:
             threading.Thread(target=self.__thread_play_sound,
@@ -224,7 +252,14 @@ class Monitor:
     ###########################################################################
 
     def __thread_server_status(self, monitor_interval: float) -> None:
-        """ TODO """
+        """TODO Docstring
+
+        Args:
+            TODO
+
+        Returns:
+            TODO
+        """
         logger.debug(f'Thread starting - Server Status - (ID: {threading.get_ident()} - Refresh Interval: {monitor_interval}s) ...')
 
         # Set the monitoring thread flag up
@@ -249,7 +284,14 @@ class Monitor:
         logger.debug(f'Thread stopped - Server Status - (ID: {threading.get_ident()})')
 
     def server_status_thread_on(self, monitor_interval: float = 10.0) -> bool:
-        '''TODO'''
+        """TODO Docstring
+
+        Args:
+            TODO
+
+        Returns:
+            TODO
+        """
         logger.debug(f'Starting thread for server status ...')
         try:
             threading.Thread(target=self.__thread_server_status, args=(monitor_interval,), daemon=False).start()
@@ -266,7 +308,14 @@ class Monitor:
     ###########################################################################
 
     def all_threads_off(self) -> bool:
-        """ TODO """
+        """TODO Docstring
+
+        Args:
+            TODO
+
+        Returns:
+            TODO
+        """
         # logger.debug(f'Stopping all monitor threads ...')
 
         # Set the monitoring thread flag down
@@ -275,7 +324,14 @@ class Monitor:
         return True
 
     def all_threads_pause(self) -> bool:
-        """ TODO """
+        """TODO Docstring
+
+        Args:
+            TODO
+
+        Returns:
+            TODO
+        """
         logger.debug(f'Pausing all monitor threads ...')
 
         # Set the monitoring thread flag down

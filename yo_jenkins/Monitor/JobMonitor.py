@@ -2,16 +2,14 @@
 
 import curses
 import logging
-import os
 import sys
 import textwrap
 import threading
+from datetime import datetime
 from pprint import pprint
 from time import sleep, time
 from typing import Dict, List, Tuple, Type
-from datetime import datetime
 
-import simpleaudio
 from YoJenkins.Status import BuildStatus, Color, Sound, StageStatus, Status
 
 from Monitor.Monitor import Monitor
