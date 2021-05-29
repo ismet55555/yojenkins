@@ -133,7 +133,7 @@ def people(debug, pretty, yaml, xml, profile, list):
     cli_server.people(pretty, yaml, xml, profile, list)
 
 
-@server.command(short_help='\tShow current build queue')
+@server.command(short_help='\tShow current job build queues on server')
 @cli_decorators.debug
 @cli_decorators.format_output
 @cli_decorators.profile
@@ -159,7 +159,6 @@ def browser(debug, profile):
     set_debug_log_level(debug)
     cli_server.browser(profile)
 
-
 @server.command(short_help='\tCheck if sever is reachable')
 @cli_decorators.debug
 @cli_decorators.profile
@@ -168,33 +167,42 @@ def reachable(debug, profile, timeout):
     set_debug_log_level(debug)
     cli_server.reachable(profile, timeout)
 
-@server.command(short_help='\tQuite/Un-quite server')
-@cli_decorators.debug
-@click.option('-o', '--off', type=bool, default=False, required=False, is_flag=True, help='Undo quite down mode')
-def quite(debug, off):
-    set_debug_log_level(debug)
-    click.echo(click.style('TODO', fg='yellow',))
-    # TODO: Confirmation yes, also ability to pass auto approve --yes
-
-@server.command(short_help='\tWait for Jenkins server to resume normal operations')
-@cli_decorators.debug
-def wait_normal(debug):
-    set_debug_log_level(debug)
-    click.echo(click.style('TODO', fg='yellow',))
-
-@server.command(short_help='\tReboot the server')
+@server.command(short_help='\tServer quite mode enable/disable')
 @cli_decorators.debug
 @cli_decorators.profile
-@click.option('--force', type=bool, default=False, required=False, is_flag=True, help='Force restart. Without safe restart mode.')
+@click.option('--off', type=bool, default=False, required=False, is_flag=True, help='Undo quiet down mode')
+def quiet(debug, profile, off):
+    """
+    NOTE: A server with quiet mode enabled does not allow any new jobs to be build.
+    This may be needed prior to server maintenance, restarts, or shutdowns
+    """
+    set_debug_log_level(debug)
+    cli_server.quiet(profile, off)
+
+@server.command(short_help='\tRestart the server')
+@cli_decorators.debug
+@cli_decorators.profile
+@click.option('--force', type=bool, default=False, required=False, is_flag=True, help='Force restart. Without initial quiet mode.')
 def restart(debug, profile, force):
+    """
+    NOTE: By default this will put Jenkins into the quiet mode, wait for existing builds to be completed, and then restart Jenkins.
+    Use --force to skip quiet mode.
+    """
     set_debug_log_level(debug)
     cli_server.restart(profile, force)
 
 @server.command(short_help='\tShutdown the server')
 @cli_decorators.debug
-def shutdown(debug):
+@cli_decorators.profile
+@click.option('--force', type=bool, default=False, required=False, is_flag=True, help='Force shutdown. Without initial quiet mode')
+def shutdown(debug, profile, force):
+    """
+    NOTE: By default this will put Jenkins in a quiet mode, in preparation for a shutdown.
+    In that mode Jenkins does not start any new builds.
+    Use --force to skip quiet mode.
+    """
     set_debug_log_level(debug)
-    click.echo(click.style('TODO', fg='yellow',))
+    cli_server.shutdown(profile, force)
 
 @server.command(short_help='\tCreate a local development server using Docker')
 @cli_decorators.debug
@@ -228,11 +236,11 @@ def server_teardown(debug, remove_volume, remove_image):
     set_debug_log_level(debug)
     cli_server.server_teardown(remove_volume, remove_image)
 
-@server.command(short_help='\tCheck if a locally deployed development server is running')
-@cli_decorators.debug
-def server_check(debug):
-    set_debug_log_level(debug)
-    click.echo(click.style('TODO', fg='yellow',))
+# @server.command(short_help='\tCheck if a locally deployed development server is running')
+# @cli_decorators.debug
+# def server_check(debug):
+#     set_debug_log_level(debug)
+#     click.echo(click.style('TODO', fg='yellow',))
 
 
 
@@ -243,7 +251,6 @@ def server_check(debug):
 def node():
     """NODE MANAGEMENT"""
     pass
-    click.echo(click.style('TODO', fg='yellow',))
 
 @node.command(short_help='\tServer information')
 @cli_decorators.debug

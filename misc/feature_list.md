@@ -23,11 +23,10 @@
 - Show plugins - DONE
 - Install a plugin
 - Build queue - DONE
-- Quite / unquite down
+- Quite / unquite down - DONE
 - Is reachable - DONE
-- Wait for normal operation
-- Restart / safe restart
-- https://dheerajgambhir.medium.com/optimized-way-to-stop-restart-jenkins-72fb52aeac49#:~:text=Jenkins%20provides%20a%20set%20of,it%20in%20a%20quiet%20mode.&text=cancelQuietDown%3A%20Cancel%20the%20effect%20of,completed%2C%20and%20then%20restart%20Jenkins.
+- Restart / safe restart - DONE
+- Shutdown / exit - DONE
 
 
 ## Node
@@ -99,8 +98,6 @@
 - Abort build queue - **NEEDS TESTING**
 - Open build in browser - DONE
 - Monitor a build  - DONE
-- Build success/failure kick off command
-- More in jenkins-python module????
 
 
 ## Stage
