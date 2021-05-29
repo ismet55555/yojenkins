@@ -5,20 +5,28 @@
 - Job Monitor
     - B - Build this job now
 
+- auth
+    - move original "user" to auth
+
+
 - server
-    - quite
-    - wait-normal
-    - shutdown
-    - users (list all users) - move "user" to auth
-    - NOTE: https://support.cloudbees.com/hc/en-us/articles/216118748-How-to-Start-Stop-or-Restart-your-Instance
+    - Run a groovy script
+
+- job
+    - Add on single bash or powershell script
     - RUN SCRIPT: https://www.jenkins.io/doc/book/managing/script-console/
 
-http://<jenkins.server>/restart
-http://<jenkins.server>/safeRestart
-http://<jenkins.server>/exit
-http://<jenkins.server>/safeExit
-http://<jenkins.server>/quietDown
-http://<jenkins.server>/cancelQuietDown
+
+http://<jenkins.server>/restart - DONE
+http://<jenkins.server>/safeRestart - DONE
+
+http://<jenkins.server>/shutdown - DONE
+
+http://<jenkins.server>/exit - Shutdown
+http://<jenkins.server>/safeExit - Puts Jenkins into the quiet mode, wait for existing builds to be completed, and then shut down Jenkins
+
+http://<jenkins.server>/quietDown - Put Jenkins in a Quiet mode, in preparation for a restart. In that mode Jenkins don’t start any build
+http://<jenkins.server>/cancelQuietDown - Cancel the effect of the “quiet-down” command
 
 
 - Test on WSL!

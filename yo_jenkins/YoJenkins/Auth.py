@@ -549,15 +549,17 @@ class Auth:
             # TODO: Move this message to cli_auth.py, only return bool
             click.echo(click.style(f'Jenkins server authentication failed (Username: {self.jenkins_profile["username"]})', fg='bright_red', bold=True))
             click.echo(click.style(f'Possible causes:', fg='bright_red'))
-            click.echo(click.style(f'  - Wrong Jenkins server URL: {self.jenkins_profile["jenkins_server_url"]}', fg='bright_red'))
-            click.echo(click.style(f'  - Incorrect username: {self.jenkins_profile["username"]}', fg='bright_red'))
-            click.echo(click.style(f'  - Incorrect, removed, or expired API Token', fg='bright_red'))
-            click.echo(click.style(f'  - Username, {self.jenkins_profile["username"]}, does not have permission', fg='bright_red'))
+            click.echo(click.style(f'    - Wrong Jenkins server URL: {self.jenkins_profile["jenkins_server_url"]}', fg='bright_red'))
+            click.echo(click.style(f'    - Incorrect username: {self.jenkins_profile["username"]}', fg='bright_red'))
+            click.echo(click.style(f'    - Incorrect, removed, or expired API Token', fg='bright_red'))
+            click.echo(click.style(f'    - Username, {self.jenkins_profile["username"]}, does not have permission', fg='bright_red'))
+            click.echo(click.style(f'    - Jenkins server is still in the process of starting up', fg='bright_red'))
             click.echo(click.style('Possible solutions:', fg='bright_red'))
-            click.echo(click.style('   - yo-jenkins auth token', fg='bright_red'))
-            click.echo(click.style('   - yo-jenkins auth configure', fg='bright_red'))
-            click.echo(click.style('   - Manually create or update credentials file in home directory', fg='bright_red'))
-            click.echo(click.style('   - Go to Jenkins Web UI and check user configurations', fg='bright_red'))
+            click.echo(click.style('    - yo-jenkins auth token', fg='bright_red'))
+            click.echo(click.style('    - yo-jenkins auth configure', fg='bright_red'))
+            click.echo(click.style('    - Manually create or update credentials file in home directory', fg='bright_red'))
+            click.echo(click.style('    - Go to Jenkins Web UI and check user configurations', fg='bright_red'))
+            click.echo(click.style('    - Give Jenkins server a little to start up', fg='bright_red'))
             return False
 
         return True
