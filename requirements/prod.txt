@@ -7,4 +7,4 @@ pyyaml
 requests_futures
 requests-cache
 simpleaudio; platform_system != "Windows"
-windows-curses; platform_system=="Windows"
+windows-curses; platform_system == "Windows"

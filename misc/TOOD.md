@@ -8,7 +8,6 @@
 - auth
     - move original "user" to auth
 
-
 - server
     - Run a groovy script
 
@@ -16,21 +15,7 @@
     - Add on single bash or powershell script
     - RUN SCRIPT: https://www.jenkins.io/doc/book/managing/script-console/
 
-
-http://<jenkins.server>/restart - DONE
-http://<jenkins.server>/safeRestart - DONE
-
-http://<jenkins.server>/shutdown - DONE
-
-http://<jenkins.server>/exit - Shutdown
-http://<jenkins.server>/safeExit - Puts Jenkins into the quiet mode, wait for existing builds to be completed, and then shut down Jenkins
-
-http://<jenkins.server>/quietDown - Put Jenkins in a Quiet mode, in preparation for a restart. In that mode Jenkins don’t start any build
-http://<jenkins.server>/cancelQuietDown - Cancel the effect of the “quiet-down” command
-
-
 - Test on WSL!
-
 
 - Look into scrolling
     - https://docs.python.org/2/library/curses.html#curses.window.scroll
