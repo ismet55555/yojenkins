@@ -137,9 +137,17 @@ def queue(debug, pretty, yaml, xml, profile, list):
 @cli_decorators.format_output
 @cli_decorators.profile
 @cli_decorators.list
-def plugin(debug, pretty, yaml, xml, profile, list):
+def plugins(debug, pretty, yaml, xml, profile, list):
     set_debug_log_level(debug)
-    cli_server.plugin(pretty, yaml, xml, profile, list)
+    cli_server.plugins(pretty, yaml, xml, profile, list)
+
+@server.command(short_help='\tOpen server home page in web browser')
+@cli_decorators.debug
+@cli_decorators.profile
+def browser(debug, profile):
+    set_debug_log_level(debug)
+    cli_server.browser(profile)
+
 
 @server.command(short_help='\tCheck if sever is reachable')
 @cli_decorators.debug

@@ -88,7 +88,7 @@ def queue(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, opt_list:bo
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml)
 
 
-def plugin(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, opt_list:bool) -> None:
+def plugins(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, opt_list:bool) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -101,8 +101,6 @@ def plugin(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, opt_list:b
     """
     JY = cu.config_YoJenkins(profile)
 
-    # TODO: Test on server with permission
-    
     data, data_list = JY.Server.plugin_list()
     if not data:
         click.echo(click.style(f'No server plugin info found', fg='bright_red', bold=True))
@@ -110,6 +108,22 @@ def plugin(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, opt_list:b
 
     output = data_list if opt_list else data
     cu.standard_out(output, opt_pretty, opt_yaml, opt_xml)
+
+
+def browser(profile:str) -> None:
+    """TODO Docstring
+
+    Args:
+        TODO
+
+    Returns:
+        TODO
+    """
+    JY = cu.config_YoJenkins(profile)
+    data = JY.Server.browser_open()
+    if not data:
+        click.echo(click.style(f'failed', fg='bright_red', bold=True))
+        sys.exit(1)
 
 
 def reachable(profile:str, timeout:int) -> None:

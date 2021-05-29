@@ -321,9 +321,7 @@ class Build():
             stage_info['url'] = stage_info['_links']['self']['href']
 
         # Getting only the names of the stages
-        build_stage_name_list = []
-        for stage in build_stage_list:
-            build_stage_name_list.append(stage['name'])
+        build_stage_name_list = [ s['name'] for s in build_stage_list ]
 
         return build_stage_list, build_stage_name_list
 
