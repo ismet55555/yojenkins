@@ -11,7 +11,10 @@ from time import sleep, time
 from typing import Dict, List, Tuple, Type
 
 if platform.system() != "Windows":
-    import simpleaudio
+    try:
+        import simpleaudio
+    except:
+        pass
 else:
     import winsound
 
