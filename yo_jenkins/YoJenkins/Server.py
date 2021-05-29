@@ -166,14 +166,11 @@ class Server():
         return success
 
 
-
     def restart(self, force:bool=True) -> bool:
         """TODO Docstring
 
         Args:
             TODO
-            (jenkins_url)/safeRestart - Allows all running jobs to complete. New jobs will remain in the queue to run after the restart is complete.
-            (jenkins_url)/restart - Forces a restart without waiting for builds to complete.
 
         Returns:
             TODO
@@ -187,5 +184,49 @@ class Server():
             allow_redirect=False)
         if not success:
             logger.debug(f'Failed to initiate server restart')
+            return [], []
+        return success
+
+
+    def shutdown(self, force:bool=True) -> bool:
+        """TODO Docstring
+
+        Args:
+            TODO
+
+        Returns:
+            TODO
+        """
+        logger.debug("Initiating server force shutdown ..." if force else "Initiating server safe shutdown ...")
+        _, _, success = self.REST.request(
+            'exit' if force else 'safeExit',
+            'post',
+            is_endpoint=True,
+            json_content=False,
+            allow_redirect=False)
+        if not success:
+            logger.debug(f'Failed to initiate server shutdown')
+            return [], []
+        return success
+
+
+    def quiet(self, off:bool=False) -> bool:
+        """TODO Docstring
+
+        Args:
+            TODO
+
+        Returns:
+            TODO
+        """
+        logger.debug("Disabeling server quiet mode ..." if off else "Enabling server quiet mode ...")
+        _, _, success = self.REST.request(
+            'cancelQuietDown' if off else 'quietDown',
+            'post',
+            is_endpoint=True,
+            json_content=True,
+            allow_redirect=False)
+        if not success:
+            logger.debug(f'Failed to {"disable" if off else "enable"} server quiet mode')
             return [], []
         return success

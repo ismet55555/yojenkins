@@ -160,7 +160,7 @@ def reachable(profile:str, timeout:int) -> None:
     click.echo(click.style('true', fg='bright_green', bold=True))
 
 
-def quite():
+def quiet(profile:str, off:bool):
     """TODO Docstring
 
     Details: TODO
@@ -171,21 +171,11 @@ def quite():
     Returns:
         TODO
     """
-    pass
-
-
-def wait_normal():
-    """TODO Docstring
-
-    Details: TODO
-
-    Args:
-        TODO
-
-    Returns:
-        TODO
-    """
-    pass
+    JY = cu.config_YoJenkins(profile)
+    if not JY.Server.quiet(off=off):
+        click.echo(click.style(f'failed', fg='bright_red', bold=True))
+        sys.exit(1)
+    click.echo(click.style('success', fg='bright_green', bold=True))
 
 
 def restart(profile:str, force:bool):
@@ -206,7 +196,7 @@ def restart(profile:str, force:bool):
     click.echo(click.style('success', fg='bright_green', bold=True))
 
 
-def shutdown():
+def shutdown(profile:str, force:bool):
     """TODO Docstring
 
     Details: TODO
@@ -217,7 +207,11 @@ def shutdown():
     Returns:
         TODO
     """
-    pass
+    JY = cu.config_YoJenkins(profile)
+    if not JY.Server.shutdown(force=force):
+        click.echo(click.style(f'failed', fg='bright_red', bold=True))
+        sys.exit(1)
+    click.echo(click.style('success', fg='bright_green', bold=True))
 
 
 def server_deploy(config_file: str, plugins_file: str, protocol_schema: str, host: str, port: int, image_base: str, image_rebuild: bool, new_volume: bool, new_volume_name: str, bind_mount_dir: str, container_name: str, registry: str) -> None:
