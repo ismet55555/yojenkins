@@ -389,7 +389,7 @@ class Auth:
         # Filter out the profiles that are misconfigured (missing keys)
         profile_items = {}
         required_profile_items = ['jenkins_server_url', 'username']
-        logger.debug(f'Ignoring profiles that do not have at least the following keys: {required_profile_items} ...')
+        logger.debug(f'Ignoring profiles that do not have at least the following keys: {", ".join(required_profile_items)} ...')
         for i, (profile_key, profile_values) in enumerate(profile_items_all.items()):
             if all(item in list(profile_values.keys()) for item in required_profile_items): 
                 logger.debug(f'    - Profile {i+1} of {len(profile_items_all)}: "{profile_key}" - OK')
@@ -403,7 +403,7 @@ class Auth:
         # Select the credential profile
         profile_selected = {}
 
-        # 1 - Argument --profile
+        # PRIORITY 1 - Argument --profile
         if profile:
             if profile in profile_items:
                 profile_selected = profile_items[profile]
@@ -415,7 +415,7 @@ class Auth:
         else:
             logger.debug(f'Argument "--profile" was not specified')
 
-        # 2 - Environmental Variable
+        # PRIORITY 2 - Environmental Variable
         if not profile_selected:
             if self._profile_env_var in os.environ:
                 profile = os.getenv(self._profile_env_var)
@@ -429,7 +429,7 @@ class Auth:
             else:
                 logger.debug(f'Environmental Variable "{self._profile_env_var}" not set')
 
-        #3 - "default" profile
+        # PRIORITY 3 - "default" profile
         if not profile_selected:
             profile = 'default'
             if profile in profile_items:
@@ -439,7 +439,7 @@ class Auth:
             else:
                 logger.debug(f'Default profile "default" not found')
 
-        #4 - Any other active one
+        # PRIORITY 4 - Any other active one
         if not profile_selected:
             logger.debug('Selecting the first listed active profile ...')
             for profile, profile_values in profile_items.items():
@@ -504,7 +504,7 @@ class Auth:
             #     logger.debug(f'The entered API Token has a length of {len(self.jenkins_profile["api_token"])}, which is too short')
             #     return False
 
-            # FIXME: Do not pass the prompt text to standard out of command. Pipling the result won't work!
+            # FIXME: DO NOT pass the prompt text to standard out of command. As a result piping the result WILL NOT work!
 
         # Load the token or password
         self.jenkins_api_token = self.jenkins_profile['api_token']
