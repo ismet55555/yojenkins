@@ -1,7 +1,6 @@
 # TODO
 
-- BUG FIXES
-
+- *BUG FIXES*
 
 - Job Monitor
     - B - Build this job now
@@ -9,9 +8,18 @@
 - server
     - quite
     - wait-normal
-    - restart
     - shutdown
     - users (list all users) - move "user" to auth
+    - NOTE: https://support.cloudbees.com/hc/en-us/articles/216118748-How-to-Start-Stop-or-Restart-your-Instance
+    - RUN SCRIPT: https://www.jenkins.io/doc/book/managing/script-console/
+
+http://<jenkins.server>/restart
+http://<jenkins.server>/safeRestart
+http://<jenkins.server>/exit
+http://<jenkins.server>/safeExit
+http://<jenkins.server>/quietDown
+http://<jenkins.server>/cancelQuietDown
+
 
 - Test on WSL!
 
