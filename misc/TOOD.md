@@ -15,7 +15,11 @@
     - Add on single bash or powershell script
     - RUN SCRIPT: https://www.jenkins.io/doc/book/managing/script-console/
 
-- Test on WSL!
+- WSL
+    - simplesound not working
+        - ERROR: fatal error: alsa/asoundlib.h: No such file or directory
+    - Either warn user, or try different library for WSL
+    - Maybe look for WSL in string platform release?
 
 - Look into scrolling
     - https://docs.python.org/2/library/curses.html#curses.window.scroll
