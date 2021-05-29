@@ -28,18 +28,38 @@ def info(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str) -> None:
         TODO
     """
     JY = cu.config_YoJenkins(profile)
-
-    # Request the data
     data = JY.Server.info()
     if not data:
         click.echo(click.style(f'No server information', fg='bright_red', bold=True))
         sys.exit(1)
-
-    # Console output
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml)
 
 
-def user(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str) -> None:
+# # TODO: MOVE TO auth
+# def user(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str) -> None:
+#     """TODO Docstring
+
+#     Details: TODO
+
+#     Args:
+#         TODO
+
+#     Returns:
+#         TODO
+#     """
+#     JY = cu.config_YoJenkins(profile)
+
+#     # Request the data
+#     data = JY.Server.user_info()
+#     if not data:
+#         click.echo(click.style(f'failed', fg='bright_red', bold=True))
+#         sys.exit(1)
+
+#     # Console output
+#     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml)
+
+
+def people(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, opt_list:bool) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -51,15 +71,12 @@ def user(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str) -> None:
         TODO
     """
     JY = cu.config_YoJenkins(profile)
-
-    # Request the data
-    data = JY.Server.user_info()
+    data, data_list = JY.Server.people()
     if not data:
-        click.echo(click.style(f'No user info found', fg='bright_red', bold=True))
+        click.echo(click.style(f'failed', fg='bright_red', bold=True))
         sys.exit(1)
-
-    # Console output
-    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml)
+    output = data_list if opt_list else data
+    cu.standard_out(output, opt_pretty, opt_yaml, opt_xml)
 
 
 def queue(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, opt_list:bool) -> None:
@@ -74,8 +91,6 @@ def queue(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, opt_list:bo
         TODO
     """
     JY = cu.config_YoJenkins(profile)
-
-    # Request the data
     if opt_list:
         data = JY.Server.queue_list()  # TODO: Combine with server_queue_list adding a list argument
     else:
@@ -83,8 +98,6 @@ def queue(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, opt_list:bo
     if not data:
         click.echo(click.style(f'No build queue found', fg='bright_red', bold=True))
         sys.exit(1)
-
-    # Console output
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml)
 
 
@@ -100,7 +113,6 @@ def plugins(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, opt_list:
         TODO
     """
     JY = cu.config_YoJenkins(profile)
-
     data, data_list = JY.Server.plugin_list()
     if not data:
         click.echo(click.style(f'No server plugin info found', fg='bright_red', bold=True))
@@ -137,19 +149,14 @@ def reachable(profile:str, timeout:int) -> None:
     Returns:
         TODO
     """
-    # TODO: Add --timeout as an option
-
     A = Auth()
     if not A.get_configurations(profile):
         click.echo(click.style(f'Failed to find any credentials', fg='bright_red', bold=True))
         sys.exit(1)
     JY = YoJenkins(Auth_obj=A)
-    
-    data = JY.REST.is_reachable(A.jenkins_profile['jenkins_server_url'], timeout=timeout)
-    if not data:
+    if not JY.REST.is_reachable(A.jenkins_profile['jenkins_server_url'], timeout=timeout):
         click.echo(click.style(f'false', fg='bright_red', bold=True))
         sys.exit(1)
-
     click.echo(click.style('true', fg='bright_green', bold=True))
 
 
@@ -181,7 +188,7 @@ def wait_normal():
     pass
 
 
-def restart():
+def restart(profile:str, force:bool):
     """TODO Docstring
 
     Details: TODO
@@ -192,7 +199,11 @@ def restart():
     Returns:
         TODO
     """
-    pass
+    JY = cu.config_YoJenkins(profile)
+    if not JY.Server.restart(force=force):
+        click.echo(click.style(f'failed', fg='bright_red', bold=True))
+        sys.exit(1)
+    click.echo(click.style('success', fg='bright_green', bold=True))
 
 
 def shutdown():

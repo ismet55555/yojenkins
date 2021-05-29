@@ -114,13 +114,24 @@ def info(debug, pretty, yaml, xml, profile):
     set_debug_log_level(debug)
     cli_server.info(pretty, yaml, xml, profile)
 
-@server.command(short_help='\tShow user information')
+# TODO: Move to auth
+# @server.command(short_help='\tShow current user information')
+# @cli_decorators.debug
+# @cli_decorators.format_output
+# @cli_decorators.profile
+# def user(debug, pretty, yaml, xml, profile):
+#     set_debug_log_level(debug)
+#     cli_server.user(pretty, yaml, xml, profile)
+
+@server.command(short_help='\tShow all people/users on server')
 @cli_decorators.debug
 @cli_decorators.format_output
 @cli_decorators.profile
-def user(debug, pretty, yaml, xml, profile):
+@cli_decorators.list
+def people(debug, pretty, yaml, xml, profile, list):
     set_debug_log_level(debug)
-    cli_server.user(pretty, yaml, xml, profile)
+    cli_server.people(pretty, yaml, xml, profile, list)
+
 
 @server.command(short_help='\tShow current build queue')
 @cli_decorators.debug
@@ -171,13 +182,15 @@ def wait_normal(debug):
     set_debug_log_level(debug)
     click.echo(click.style('TODO', fg='yellow',))
 
-@server.command(short_help='\tRestart / Reboot')
+@server.command(short_help='\tReboot the server')
 @cli_decorators.debug
-def restart(debug):
+@cli_decorators.profile
+@click.option('--force', type=bool, default=False, required=False, is_flag=True, help='Force restart. Without safe restart mode.')
+def restart(debug, profile, force):
     set_debug_log_level(debug)
-    click.echo(click.style('TODO', fg='yellow',))
+    cli_server.restart(profile, force)
 
-@server.command(short_help='\tShutdown')
+@server.command(short_help='\tShutdown the server')
 @cli_decorators.debug
 def shutdown(debug):
     set_debug_log_level(debug)

@@ -41,7 +41,7 @@ class REST:
                 logger.debug('Starting new CACHED requests session ...')
                 self.request_session = CachedSession(backend='sqlite', expire_after=2)
             else:
-                logger.debug('Starting new requests session (FuturesSession) ...')
+                logger.debug('Starting new requests session (Type: FuturesSession) ...')
                 self.request_session = FuturesSession(max_workers=16)
         else:
             # Convert to future session
@@ -139,23 +139,25 @@ class REST:
             logger.debug('Successfully cleared request session cache')
 
 
-    def request(self, target:str, request_type:str, is_endpoint:bool=True, json_content:bool=True, auth:Tuple=None, auth_needed:bool=True, new_session:bool=False, params:dict={}, data:dict={}, headers:dict={}, timeout:int=10) -> Tuple[Dict, Dict, bool]:
+    def request(self, target:str, request_type:str, is_endpoint:bool=True, json_content:bool=True, auth:Tuple=None, auth_needed:bool=True, new_session:bool=False, params:dict={}, data:dict={}, headers:dict={}, timeout:int=10, allow_redirect:bool=True) -> Tuple[Dict, Dict, bool]:
         """Utility method for a single REST requests
 
         Details: Currently supported GET, POST, HEAD
 
-        **TODO**: Refactor/Rework this method. Maybe take appart?
+        **TODO**: Refactor/Rework this method. Too bloated. Take appart into multiple methods!
 
         Args:
-            target       : Request URL target. Does not include server_url
-            is_endpoint  : If True, add the object stored server URL, else do not
-            request_type : Type of request. Currently `get` and `post` only
-            json_content : If True, parse as json/dict, else return raw content text
-            auth         : Credentials in (username, password) format
-            auth_needed  : If True, use credentials, else do not
-            new_session  : If True, create a new connection sessions, else re-use previous/default session
-            params       : Parameters passed with the request
-            headers      : Headers passed with the request
+            target         : Request URL target. Does not include server_url
+            is_endpoint    : If True, add the object stored server URL, else do not
+            request_type   : Type of request. Currently `get` and `post` only
+            json_content   : If True, parse as json/dict, else return raw content text
+            auth           : Credentials in (username, password) format
+            auth_needed    : If True, use credentials, else do not
+            new_session    : If True, create a new connection sessions, else re-use previous/default session
+            params         : Parameters passed with the request
+            headers        : Headers passed with the request
+            timeout        : Number of seconds to wait for request
+            allow_redirect : If True, allow request redirection to other URLs
 
         Returns:
             Tuple of return content, return header, return success
@@ -182,52 +184,41 @@ class REST:
         try:
             elapsed_time = time()
             if request_type.lower() == 'get':
-                response = self.request_session.get(request_url, params=params, data=data, headers=headers, auth=auth, timeout=timeout)
+                response = self.request_session.get(request_url, params=params, data=data, headers=headers, auth=auth, timeout=timeout, allow_redirects=allow_redirect)
             elif request_type.lower() == 'post':
-                response = self.request_session.post(request_url, params=params, data=data, headers=headers, auth=auth, timeout=timeout)
+                response = self.request_session.post(request_url, params=params, data=data, headers=headers, auth=auth, timeout=timeout, allow_redirects=allow_redirect)
             elif request_type.lower() == 'head':
-                response = self.request_session.head(request_url, params=params, data=data, headers=headers, auth=auth, timeout=timeout)
+                response = self.request_session.head(request_url, params=params, data=data, headers=headers, auth=auth, timeout=timeout, allow_redirects=allow_redirect)
             else:
                 logger.debug(f'Request type "{request_type}" not recognized')
                 return {}, {}, False
-        except requests.exceptions.ConnectionError as e:
-            logger.debug(f'Failed to make request. Connection error. Exception: {e}')
-            return {}, {}, False
-        except requests.exceptions.InvalidSchema as e:
-            logger.debug(f'Failed to make request. Request format error. Exception: {e}')
-            return {}, {}, False
-        except Exception as e:
+        except (requests.exceptions.ConnectionError, requests.exceptions.InvalidSchema, requests.exceptions.RequestException) as e:
             logger.debug(f'Failed to make request. Exception: {e}')
-            return {}, {}, False  
+            return {}, {}, False
 
-        # Get the content from requests_cache.CachedSession() return
+        # Wait on the response to complete and get result
         try:
             if hasattr(response, 'result'):
                 response = response.result()
-        except requests.exceptions.ProxyError as e:
-            logger.debug(f'Failed to make request. Request timeout. Exception: {e}')
-            return {}, {}, False
-        except requests.exceptions.MissingSchema as e:
-            logger.debug(f'Failed to make request. URL error. Exception: {e}')
-            return {}, {}, False
-        except requests.exceptions.SSLError as e:
-            logger.debug(f'Failed to make request. Did you mean to use https?. Exception: {e}')
-            return {}, {}, False
-        except Exception as e:
+        except (requests.exceptions.RequestException, Exception) as e:
             logger.debug(f'Failed to make request. Exception: {e}')
             return {}, {}, False
  
-        logger.debug('Request info:')
-        logger.debug(f'   - Elapsed time: {time() - elapsed_time} seconds')
-        logger.debug(f'   - Return status code: {response.status_code}')
-        if self.is_cached:
-            logger.debug(f'   - Used request cache: {response.from_cache}')
+        # Logging any request redirects
+        if response.history:
+            for i, redirect_hop in enumerate(response.history):
+                logger.debug('Request redirects:')
+                logger.debug(f'    - {i+1}/{len(response.history)}: {redirect_hop.request.method} - {redirect_hop.url} - Status: {redirect_hop.status_code}')
+                print(redirect_hop)
+        redirect_methods = ": " + " --> ".join([ r.request.method for r in response.history ] + [response.request.method]) if response.history else '' 
 
-        # Get the return header
-        if response.headers:
-            logger.debug(f'Request return headers: {response.headers}')
-        else:
-            logger.debug(f'No headers received form {request_type.upper()} request: {request_url}')
+        # Final request report
+        logger.debug('Request summary:')
+        logger.debug(f'   - Request:          {response.request.method} - {request_url}')
+        logger.debug(f'   - Redirects:        {"Allow" if allow_redirect else "Block"} {redirect_methods}')
+        logger.debug(f'   - Elapsed time:     {time() - elapsed_time:.3f} seconds')
+        logger.debug(f'   - Response headers: {response.headers["Content-Type"] if "Content-Type" in response.headers else "N/A"}')
+        logger.debug(f'   - Status code:      {response.status_code}')
 
         # If a head request, only return headers
         if request_type.lower() == 'head':

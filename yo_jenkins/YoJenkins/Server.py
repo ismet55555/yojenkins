@@ -42,19 +42,43 @@ class Server():
         """
         return self.REST.request('api/json', 'get')[0]
 
+    # TODO: MOVE TO AUTH
+    # def user_info(self) -> Dict:
+    #     """Get user information
 
-    def user_info(self) -> Dict:
-        """Get user information
+    #     Details: Targeting the user that is specified in the selected profile
 
-        Details: Targeting the user that is specified in the selected profile
+    #     Args:
+    #         None
+
+    #     Returns:
+    #         User information
+    #     """
+    #     return self.REST.request('me/api/json', 'get')[0]
+
+
+    def people(self) -> Tuple[list, list]:
+        """Get the list of plugins installed on the server
 
         Args:
             None
 
         Returns:
-            User information
+            List of plugins, information list and URL list
         """
-        return self.REST.request('me/api/json', 'get')[0]
+        logger.debug(f'Getting all installed server plugins for "{self.server_base_url}" ...')
+
+        people_info, _, success = self.REST.request(
+            'asynchPeople/api/json?depth=1',
+            'get',
+            is_endpoint=True
+            )
+        if not success:
+            logger.debug(f'Failed to fetch server plugin information')
+            return [], []
+        people_info = people_info['users']
+        people_info_list = [ f"{p['user']['fullName']}" for p in people_info ]
+        return people_info, people_info_list
 
 
     def queue_info(self) -> Dict:
@@ -141,3 +165,27 @@ class Server():
         logger.debug('Successfully opened in web browser' if success else 'Failed to open in web browser')
         return success
 
+
+
+    def restart(self, force:bool=True) -> bool:
+        """TODO Docstring
+
+        Args:
+            TODO
+            (jenkins_url)/safeRestart - Allows all running jobs to complete. New jobs will remain in the queue to run after the restart is complete.
+            (jenkins_url)/restart - Forces a restart without waiting for builds to complete.
+
+        Returns:
+            TODO
+        """
+        logger.debug("Initiating server force restart ..." if force else "Initiating server safe restart ...")
+        _, _, success = self.REST.request(
+            'restart' if force else 'safeRestart',
+            'post',
+            is_endpoint=True,
+            json_content=True,
+            allow_redirect=False)
+        if not success:
+            logger.debug(f'Failed to initiate server restart')
+            return [], []
+        return success
