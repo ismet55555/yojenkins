@@ -31,7 +31,7 @@ def set_debug_log_level(debug_flag:bool) -> None:
     if debug_flag:
         logging_level = logging.DEBUG
         click.echo(click.style(f'\n[ LOGGING LEVEL ] : DEBUG\n', fg='bright_yellow', bold=True))
-        line = '[  TIME  ] [ MS ] [FILENAME               :  LN] MESSAGE'
+        line = '[  TIME  ] [ MS ] [FILENAME             :  LN] MESSAGE'
         click.echo(click.style(line, fg='bright_yellow', bold=True))
         line = '---------------------------------------------------------------------------'
         click.echo(click.style(line, fg='bright_yellow', bold=True))
