@@ -5,6 +5,7 @@ from pprint import pprint
 from typing import Dict, List, Tuple
 
 import jenkins
+import utility
 
 # Getting the logger reference
 logger = logging.getLogger()
@@ -112,17 +113,31 @@ class Server():
         """
         logger.debug(f'Getting all installed server plugins for "{self.server_base_url}" ...')
 
-        try:
-            # TODO: Replace with REST call
-            plugin_info = self.J.get_plugins()
-        except jenkins.JenkinsException as e:
-            error_no_html = e.args[0].split("\n")[0]
-            logger.debug(f'Failed to get server plugin information. Exception: {error_no_html}')
+        plugins_info, _, success = self.REST.request(
+            'pluginManager/api/json?depth=2',
+            'get',
+            is_endpoint=True
+            )
+        if not success:
+            logger.debug(f'Failed to fetch server plugin information')
             return [], []
 
-        pprint(plugin_info)
+        plugins_info = plugins_info['plugins']
+        plugin_info_list = [ f"{p['longName']} - {p['shortName']} - {p['version']}" for p in plugins_info ]
+        return plugins_info, plugin_info_list
 
-        plugin_info_list = ['TODO']
 
-        return plugin_info, plugin_info_list
+    def browser_open(self) -> bool:
+        """TODO Docstring
+
+        Args:
+            TODO
+
+        Returns:
+            TODO
+        """
+        logger.debug(f'Opening in server home page in browser: "{self.server_base_url}" ...')
+        success = utility.browser_open(url=self.server_base_url)
+        logger.debug('Successfully opened in web browser' if success else 'Failed to open in web browser')
+        return success
 

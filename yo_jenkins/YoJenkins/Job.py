@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 
 import logging
-# from pprint import pprint
-import pprint
 import re
 from datetime import datetime, timedelta
+from pprint import pprint
 from time import time
 from typing import Dict, List, Tuple, Type
 from urllib.parse import urlencode
@@ -18,8 +17,6 @@ from .JenkinsItemClasses import JenkinsItemClasses
 # Getting the logger reference
 logger = logging.getLogger()
 
-
-pp = pprint.PrettyPrinter(indent=4, depth=1)
 
 class Job():
     """TODO Job"""
@@ -135,14 +132,12 @@ class Job():
         self.search_items_count = 0
         self.__recursive_search(search_pattern=search_pattern, search_list=items, level=0, fullname=fullname)
 
-        # Remove duplicates from list (THANKS GeeksForGeeks.org)
+        # Remove duplicates from list
         logger.debug('Removing duplicates if needed ...')
         self.search_results = [i for n, i in enumerate(self.search_results) if i not in self.search_results[n + 1:]] 
 
-        # Collect URLs only
-        job_search_results_list = []
-        for search_result in self.search_results:
-            job_search_results_list.append(search_result['url'])
+        # Getting only the URLs of the stages
+        job_search_results_list = [ r['url'] for r in self.search_results ]
 
         # Output search stats
         logger.debug(f'Searched jobs: {self.search_items_count}. Search time: {time() - start_time} seconds')

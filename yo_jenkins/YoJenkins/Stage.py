@@ -185,9 +185,7 @@ class Stage():
         step_list = stage_info['stageFlowNodes']
 
         # Getting only the names/labels of the stages
-        step_name_list = []
-        for step_info in step_list:
-            step_name_list.append(step_info['name'])
+        step_name_list = [ s['name'] for s in step_list ]
 
         return step_list, step_name_list
 
