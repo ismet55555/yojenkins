@@ -157,7 +157,7 @@ class DockerJenkinsServer():
         return deployed, True
 
 
-    def all_clean(self) -> bool:
+    def clean(self, remove_volume:bool=False, remove_image:bool=False) -> bool:
         """TODO Docstring
 
         Details: TODO
@@ -173,12 +173,13 @@ class DockerJenkinsServer():
         if not self.__container_kill():
             return False
 
-        if not self.__volumes_remove():
-            return False
+        if remove_volume:
+            if not self.__volumes_remove():
+                return False
 
-
-        if not self.__image_remove():
-            return False
+        if remove_image:
+            if not self.__image_remove():
+                return False
 
         return True
 

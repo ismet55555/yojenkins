@@ -264,7 +264,7 @@ def server_deploy(config_file: str, plugins_file: str, protocol_schema: str, hos
 
 
 
-def server_teardown():
+def server_teardown(remove_volume:bool, remove_image:bool):
     """TODO Docstring
 
     Details: TODO
@@ -282,7 +282,7 @@ def server_teardown():
             deployed = json.load(file)
     except Exception as e:
         click.echo(click.style(f'Failed to detect a previous server deployment', fg='bright_red', bold=True))
-        click.echo(click.style(f'If you think there was a successfully deployment, use Docker to remove manually', fg='bright_red', bold=True))
+        click.echo(click.style(f'If you think there was a previously successfull deployment, use Docker to remove it manually', fg='bright_red', bold=True))
         sys.exit(1)
 
     # Filter out named volumes only
@@ -301,7 +301,7 @@ def server_teardown():
         sys.exit(1)
 
     # Remove the resources
-    if not DJS.all_clean():
+    if not DJS.clean(remove_volume, remove_image):
         click.echo(click.style(f'Failed to remove Jenkins server', fg='bright_red', bold=True))
         sys.exit(1)
 

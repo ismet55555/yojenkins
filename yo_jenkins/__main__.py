@@ -185,29 +185,41 @@ def shutdown(debug):
 
 @server.command(short_help='\tCreate a local development server using Docker')
 @cli_decorators.debug
-# FIXME: Restrict files and directories instead of just general path
 @click.option('--config-file', default='config_as_code.yaml', type=click.Path(file_okay=True, dir_okay=False), required=False, help='.yml/.yaml file for custom configuration as code for Jenkins server setup')
 @click.option('--plugins-file', default='plugins.txt', type=click.Path(file_okay=True, dir_okay=False), required=False, help='.txt file for custom list of all plugins to be installed on Jenkins server')
 @click.option('--protocol-schema', default='http', type=str, required=False, help='Protocol schema for Jenkins, http, https, etc.')
 @click.option('--host', default='localhost', type=str, required=False, help='Jenkins server host (localhost, 192.168.0.1, etc.)')
 @click.option('--port', default=8080, type=int, required=False, help='Jenkins server port')
-@click.option('--image-base', default='jenkins/jenkins', type=str, required=False, help='Base Jenkins server image (Default: jenkins/jenkins)')
+@click.option('--image-base', default='jenkins/jenkins', type=str, required=False, help='Base Jenkins server image (default: jenkins/jenkins)')
 @click.option('--image-rebuild', default=False, type=bool, required=False, is_flag=True, help='If image exists, rebuild existing docker image')
-@click.option('--new-volume', default=False, type=bool, required=False, is_flag=True, help='Erase existing Docker data volume from previously created servers')
+@click.option('--new-volume', default=False, type=bool, required=False, is_flag=True, help='Erase existing Docker data volume from previously created servers (default: off)')
 @click.option('--new-volume-name', default='yo-jenkins-jenkins', type=str, required=False, help='Name of the resulting Docker volume')
-@click.option('--bind-mount-dir', default='', type=click.Path(file_okay=False, dir_okay=True), required=False, help='Local directory to be bound inside container "/tmp/my_things" directory')
+@click.option('--bind-mount-dir', default='', type=click.Path(file_okay=False, dir_okay=True), required=False, help='Path of local directory to be bound inside container "/tmp/my_things" directory')
 @click.option('--container-name', default='yo-jenkins-jenkins', type=str, required=False, help='Name of the resulting Docker container')
 @click.option('--registry', default='', type=str, required=False, help='Registry to pull base Jenkins image from')
 def server_deploy(debug, config_file, plugins_file, protocol_schema, host, port, image_base, image_rebuild, new_volume, new_volume_name, bind_mount_dir, container_name, registry):
+    """ATTENTION: The resulting Jenkins server is for development and testing purposes only. Enjoy responsibly.
+    
+    NOTE: Docker must be installed for this command to function
+
+    BTW: All options have default values and command can be run without any specified options
+    """
     set_debug_log_level(debug)
     cli_server.server_deploy(config_file, plugins_file, protocol_schema, host, port, image_base, image_rebuild, new_volume, new_volume_name, bind_mount_dir, container_name, registry)
 
 @server.command(short_help='\tRemove a local development server')
+@click.option('--remove-volume', default=False, type=bool, required=False, is_flag=True, help='Also remove the Docker volume used for current server (default: off)')
+@click.option('--remove-image', default=False, type=bool, required=False, is_flag=True, help='Also remove the Docker image used for current server (default: off)')
 @cli_decorators.debug
-def server_teardown(debug):
+def server_teardown(debug, remove_volume, remove_image):
     set_debug_log_level(debug)
-    cli_server.server_teardown()
-    # TODO: Add options
+    cli_server.server_teardown(remove_volume, remove_image)
+
+@server.command(short_help='\tCheck if a locally deployed development server is running')
+@cli_decorators.debug
+def server_check(debug):
+    set_debug_log_level(debug)
+    click.echo(click.style('TODO', fg='yellow',))
 
 
 

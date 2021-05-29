@@ -2,10 +2,16 @@
 
 - BUG FIXES
 
-- yo-jenkins server server-teardown - Add options
 
 - Job Monitor
     - B - Build this job now
+
+- server
+    - quite
+    - wait-normal
+    - restart
+    - shutdown
+    - users (list all users) - move "user" to auth
 
 - Test on WSL!
 
