@@ -6,7 +6,6 @@ import platform
 import sys
 from pprint import pprint
 from typing import Type
-from winsound import PlaySound
 
 import click
 import yaml
