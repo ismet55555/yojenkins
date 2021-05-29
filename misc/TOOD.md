@@ -2,13 +2,13 @@
 
 - BUG FIXES
 
-- Playing audio
-    - Test audio on windows - installs and plays sound just fine ...
-    - Test winsound with simple script
-    - Use winsound if on Windows
-
-
 - yo-jenkins server server-teardown - Add options
+
+- Job Monitor
+    - B - Build this job now
+
+- Test on WSL!
+
 
 - Look into scrolling
     - https://docs.python.org/2/library/curses.html#curses.window.scroll
@@ -27,9 +27,6 @@
         - S - For certain stage - need a way to pick? (enter text for now?)
         - B - Last X number of bytes of logs
 
-- Job Monitor
-    - B - Build this job now
-
 - For temporary message, look into
   threading timer
     - t = threading.Timer(30.0, my_function)
@@ -41,7 +38,7 @@
   - views
 
 - Folder 
-    - View delete
+    - View - delete
 
 - Create job
   - in folder
