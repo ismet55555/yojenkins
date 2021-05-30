@@ -7,7 +7,7 @@ import sys
 import textwrap
 import threading
 from pprint import pprint
-from time import sleep, time
+from time import sleep, time, perf_counter
 
 from YoJenkins.Status import StageStatus, Status
 
@@ -102,7 +102,7 @@ class BuildMonitor(Monitor):
 
         # Main Loop
         while True:
-            start_time = time()
+            start_time = perf_counter()
 
             # Clearing the screen at each loop iteration before constructing the frame
             scr.clear()
@@ -145,7 +145,7 @@ class BuildMonitor(Monitor):
             y = 1
             
             if logger.level < 20:
-                # mu.draw_text(scr, str(loop_total_time), y, center_x=True, color=self.color['grey-light'], decor=self.decor['bold'])
+                # mu.draw_text(scr, f"{loop_total_time:.4f}", y, center_x=True, color=self.color['grey-light'], decor=self.decor['bold'])
                 # mu.draw_text(scr, str(curses.baudrate()), y, center_x=True, color=self.color['grey-light'], decor=self.decor['bold'])
                 mu.draw_text(scr, str(time() - sound_notify_msg_time) + ' ' + str(sound) + ' ' + str(sound_notify_msg_show), y, center_x=True, color=self.color['grey-light'], decor=self.decor['bold'])
             else:
@@ -429,7 +429,7 @@ class BuildMonitor(Monitor):
 
             ########################################################################################
 
-            loop_total_time = time() - start_time
+            loop_total_time = perf_counter() - start_time
 
             # Get User input
             keystroke = scr.getch()
