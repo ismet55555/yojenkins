@@ -20,7 +20,7 @@ stdout_handler = logging.StreamHandler(sys.stdout)
 # Defining the logger
 # NOTE: More items: https://docs.python.org/3/library/logging.html#logrecord-attributes
 # NOTE: Excluding %(levelname)-8s
-log_format = '[%(asctime)s] [%(relativeCreated)-4d] [%(filename)-21s:%(lineno)4s] %(message)s'
+log_format = '[%(asctime)s] [%(relativeCreated)-4d] [%(filename)-22s:%(lineno)4s] %(message)s'
 
 # Basic Configurations
 logger = logging.basicConfig(level=logging.INFO,

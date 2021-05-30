@@ -4,7 +4,7 @@ import logging
 import re
 from datetime import datetime, timedelta
 from pprint import pprint
-from time import time
+from time import time, perf_counter
 from typing import Dict, List, Tuple, Type
 from urllib.parse import urlencode
 
@@ -105,7 +105,7 @@ class Job():
         #   - Criteria of jobs is that jobs do not have any sub-folders, only views and jobs
 
         # Start a timer to time the search
-        start_time = time()
+        start_time = perf_counter()
 
         logger.debug(f'Job search pattern: {search_pattern}')
 
@@ -140,7 +140,7 @@ class Job():
         job_search_results_list = [ r['url'] for r in self.search_results ]
 
         # Output search stats
-        logger.debug(f'Searched jobs: {self.search_items_count}. Search time: {time() - start_time} seconds')
+        logger.debug(f'Searched jobs: {self.search_items_count}. Search time: {perf_counter() - start_time:.3f} seconds')
 
         return self.search_results, job_search_results_list
 

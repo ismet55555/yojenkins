@@ -7,7 +7,7 @@ import textwrap
 import threading
 from datetime import datetime
 from pprint import pprint
-from time import sleep, time
+from time import sleep, time, perf_counter
 from typing import Dict, List, Tuple, Type
 
 from YoJenkins.Status import BuildStatus, Color, Sound, StageStatus, Status
@@ -92,7 +92,7 @@ class JobMonitor(Monitor):
 
         # Main Loop
         while True:
-            start_time = time()
+            start_time = perf_counter()
 
             # Clearing the screen at each loop iteration before constructing the frame
             scr.clear()
@@ -319,7 +319,7 @@ class JobMonitor(Monitor):
 
             ########################################################################################
 
-            loop_total_time = time() - start_time
+            loop_total_time = perf_counter() - start_time
 
             # Get User input
             keystroke = scr.getch()

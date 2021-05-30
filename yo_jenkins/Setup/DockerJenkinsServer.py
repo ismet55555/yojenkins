@@ -5,7 +5,7 @@ from pprint import pprint
 from typing import Dict, List, Tuple
 import sys
 import os
-from time import time
+from time import time, perf_counter
 
 import docker
 
@@ -195,7 +195,7 @@ class DockerJenkinsServer():
         Returns:
             TODO
         """
-        start_time = time()
+        start_time = perf_counter()
         logger.debug(f'Building image: {self.image_fullname} ...')
         logger.debug(f'Dockerfile directory: {self.image_dockerfile_dir}')
         try:
@@ -210,7 +210,7 @@ class DockerJenkinsServer():
         except Exception as e:
             logger.debug(f'Failed to build image: {self.image_fullname}. Exception: {e}')
             return ''
-        logger.debug(f'Successfully build image: {self.image_fullname} (Elapsed time: {time() - start_time}s)')
+        logger.debug(f'Successfully build image: {self.image_fullname} (Elapsed time: {perf_counter() - start_time:.3f}s)')
         return self.image_fullname
 
 
