@@ -107,3 +107,25 @@ def verify(profile:str) -> None:
 
     click.echo(click.style('true', fg='bright_green', bold=True))
 
+
+def user(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str) -> None:
+    """TODO Docstring
+
+    Details: TODO
+
+    Args:
+        TODO
+
+    Returns:
+        TODO
+    """
+    JY = cu.config_YoJenkins(profile)
+
+    # Request the data
+    data = JY.Auth.user()
+    if not data:
+        click.echo(click.style(f'failed', fg='bright_red', bold=True))
+        sys.exit(1)
+
+    # Console output
+    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml)

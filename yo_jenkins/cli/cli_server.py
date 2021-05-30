@@ -35,30 +35,6 @@ def info(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str) -> None:
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml)
 
 
-# # TODO: MOVE TO auth
-# def user(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str) -> None:
-#     """TODO Docstring
-
-#     Details: TODO
-
-#     Args:
-#         TODO
-
-#     Returns:
-#         TODO
-#     """
-#     JY = cu.config_YoJenkins(profile)
-
-#     # Request the data
-#     data = JY.Server.user_info()
-#     if not data:
-#         click.echo(click.style(f'failed', fg='bright_red', bold=True))
-#         sys.exit(1)
-
-#     # Console output
-#     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml)
-
-
 def people(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, opt_list:bool) -> None:
     """TODO Docstring
 

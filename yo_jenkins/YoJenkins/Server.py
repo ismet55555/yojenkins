@@ -42,20 +42,6 @@ class Server():
         """
         return self.REST.request('api/json', 'get')[0]
 
-    # TODO: MOVE TO AUTH
-    # def user_info(self) -> Dict:
-    #     """Get user information
-
-    #     Details: Targeting the user that is specified in the selected profile
-
-    #     Args:
-    #         None
-
-    #     Returns:
-    #         User information
-    #     """
-    #     return self.REST.request('me/api/json', 'get')[0]
-
 
     def people(self) -> Tuple[list, list]:
         """Get the list of plugins installed on the server

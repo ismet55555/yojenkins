@@ -95,7 +95,13 @@ def wipe(debug):
     set_debug_log_level(debug)
     click.echo(click.style('TODO', fg='yellow',))
 
-
+@auth.command(short_help='\tShow current user information')
+@cli_decorators.debug
+@cli_decorators.format_output
+@cli_decorators.profile
+def user(debug, pretty, yaml, xml, profile):
+    set_debug_log_level(debug)
+    cli_auth.user(pretty, yaml, xml, profile)
 
 
 ##############################################################################
@@ -114,15 +120,6 @@ def info(debug, pretty, yaml, xml, profile):
     set_debug_log_level(debug)
     cli_server.info(pretty, yaml, xml, profile)
 
-# TODO: Move to auth
-# @server.command(short_help='\tShow current user information')
-# @cli_decorators.debug
-# @cli_decorators.format_output
-# @cli_decorators.profile
-# def user(debug, pretty, yaml, xml, profile):
-#     set_debug_log_level(debug)
-#     cli_server.user(pretty, yaml, xml, profile)
-
 @server.command(short_help='\tShow all people/users on server')
 @cli_decorators.debug
 @cli_decorators.format_output
@@ -131,7 +128,6 @@ def info(debug, pretty, yaml, xml, profile):
 def people(debug, pretty, yaml, xml, profile, list):
     set_debug_log_level(debug)
     cli_server.people(pretty, yaml, xml, profile, list)
-
 
 @server.command(short_help='\tShow current job build queues on server')
 @cli_decorators.debug
