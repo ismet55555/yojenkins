@@ -3,7 +3,7 @@
 import logging
 import re
 from pprint import pprint
-from time import time
+from time import time, perf_counter
 from typing import Dict, List, Tuple, Type
 
 import jenkins
@@ -119,7 +119,7 @@ class Folder():
             List of folder found. Both, list of info and list of folder URLs
         """
         # Start a timer to time the search
-        start_time = time()
+        start_time = perf_counter()
         logger.debug(f'Folder search pattern: {search_pattern}')
 
         # Get all the jobs
@@ -148,7 +148,7 @@ class Folder():
             folder_search_results_list.append(search_result['url'])
 
         # Output search stats
-        logger.debug(f'Searched folders: {self.search_items_count}. Search time: {time() - start_time} seconds')
+        logger.debug(f'Searched folders: {self.search_items_count}. Search time: {perf_counter() - start_time:.3f} seconds')
 
         return self.search_results, folder_search_results_list
 

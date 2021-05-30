@@ -4,7 +4,7 @@ import logging
 import os
 import sys
 from pprint import pprint
-from time import time
+from time import time, perf_counter
 
 import docker
 
@@ -55,7 +55,7 @@ build_args = {
     "JENKINS_ADMIN_PASSWORD": "password"
 }
 
-start_time = time()
+start_time = perf_counter()
 dockerfile_dir = os.path.join(os.getcwd(), 'misc/jenkins-container')
 logging.info(f'DOCKERFILE DIRECTORY: {dockerfile_dir}')
 image = client.images.build(
@@ -65,7 +65,7 @@ image = client.images.build(
     buildargs=build_args,
     quiet=False
 )
-logging.info(f'Successfully build image (Elapsed time: {time() - start_time}s)')
+logging.info(f'Successfully build image (Elapsed time: {(perf_counter() - start_time):.3f}s)')
 
 # Get the image tag
 image_tag = image[0].tags[0]

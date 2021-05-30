@@ -2,7 +2,7 @@
 
 import logging
 from pprint import pprint
-from time import sleep, time
+from time import sleep, time, perf_counter
 from typing import Dict, List, Tuple, Type
 
 import requests
@@ -181,8 +181,8 @@ class REST:
             self.request_session = FuturesSession(max_workers=16)
 
         # Making the request
+        start_time = perf_counter()
         try:
-            elapsed_time = time()
             if request_type.lower() == 'get':
                 response = self.request_session.get(request_url, params=params, data=data, headers=headers, auth=auth, timeout=timeout, allow_redirects=allow_redirect)
             elif request_type.lower() == 'post':
@@ -216,7 +216,7 @@ class REST:
         logger.debug('Request summary:')
         logger.debug(f'   - Request:          {response.request.method} - {request_url}')
         logger.debug(f'   - Redirects:        {"Allow" if allow_redirect else "Block"} {redirect_methods}')
-        logger.debug(f'   - Elapsed time:     {time() - elapsed_time:.3f} seconds')
+        logger.debug(f'   - Elapsed time:     {perf_counter() - start_time:.3f} seconds')
         logger.debug(f'   - Response headers: {response.headers["Content-Type"] if "Content-Type" in response.headers else "N/A"}')
         logger.debug(f'   - Status code:      {response.status_code}')
 
