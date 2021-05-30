@@ -25,7 +25,7 @@ logger = logging.getLogger()
 class Auth:
     """Handeling of authentication and profile management functionality"""
 
-    def __init__(self, R=None) -> None:
+    def __init__(self, REST_obj=None) -> None:
         """Object constructor method, called at object creation
 
         Args:
@@ -35,11 +35,11 @@ class Auth:
             None
         """
         # Request object
-        if not R:
+        if not REST_obj:
             # If not provided, make a new object
-            self.R:object = REST()
+            self.REST:object = REST()
         else:
-            self.R:object = R
+            self.REST:object = REST_obj
 
         # JenkinsSDK object - Instantiated in create_auth()
         self.JenkinsSDK = None
@@ -98,7 +98,7 @@ class Auth:
         Returns:
             TODO
         """
-        return self.R
+        return self.REST
 
 
     def generate_token(self, token_name:str='', server_base_url:str='', username:str='', password:str='') -> str:
@@ -135,7 +135,7 @@ class Auth:
             logger.debug('User entered password')
 
         # Requesting the Jenkins crumb
-        request_return_text, _, success = self.R.request(
+        request_return_text, _, success = self.REST.request(
             target=server_base_url.strip('/') + '/crumbIssuer/api/xml',
             is_endpoint=False,
             request_type='get', 
@@ -154,7 +154,7 @@ class Auth:
             ('newTokenName', token_name),
             ('tree', 'data[tokenValue]'),
         )
-        request_return_content, _, success = self.R.request(
+        request_return_content, _, success = self.REST.request(
             target=server_base_url.strip('/') + '/me/descriptorByName/jenkins.security.ApiTokenProperty/generateNewToken/api/json',
             is_endpoint=False,
             request_type='post',
@@ -527,14 +527,14 @@ class Auth:
             return False
 
         # Update the credentials in REST object
-        self.R.set_credentials(
+        self.REST.set_credentials(
             username=self.jenkins_profile['username'],
             api_token=self.jenkins_profile['api_token'],
             server_url=self.jenkins_profile['jenkins_server_url']
             )
 
         # Check network connection
-        if not self.R.is_reachable():
+        if not self.REST.is_reachable():
             click.echo(click.style(f'Jenkins server connection failed (Server: {self.jenkins_profile["jenkins_server_url"]})', fg='bright_red', bold=True))
             click.echo(click.style(f'Possible causes:', fg='bright_red'))
             click.echo(click.style(f'  - Wrong Jenkins server URL: {self.jenkins_profile["jenkins_server_url"]}', fg='bright_red'))
@@ -598,7 +598,7 @@ class Auth:
         except:
             logger.debug(f'Failed to find jenkins_server_url. Profile may not have loaded correctly')
             return False
-        request_success = self.R.request(
+        request_success = self.REST.request(
             target=request_url,
             is_endpoint=False,
             request_type='head'
@@ -608,3 +608,17 @@ class Auth:
             return False
         logger.debug(f'Successfully authenticated')
         return True
+
+
+    def user(self) -> Dict:
+        """Get current user information
+
+        Details: Targeting the user that is specified in the selected profile
+
+        Args:
+            None
+
+        Returns:
+            User information
+        """
+        return self.REST.request('me/api/json', 'get')[0]
