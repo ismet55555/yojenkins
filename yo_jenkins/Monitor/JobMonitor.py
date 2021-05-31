@@ -52,8 +52,8 @@ class JobMonitor(Monitor):
         self.builds_data_thread_interval = 0.0
         self._build_data_thread_lock = threading.Lock()
         
-        # Aborting build flag
-        self.build_abort = 0
+        # Building a job flag
+        self.job_build = 0
         
         # Temporary message box on screen
         self.message_box_temp_duration = 1  # sec
@@ -102,9 +102,11 @@ class JobMonitor(Monitor):
             # Check user keyboard input
             if keystroke in KEYS['QUIT']:
                 self.quit += 1
+            elif keystroke in KEYS['BUILD']:
+                self.job_build += 1
             elif keystroke in KEYS['RESUME']:
                 self.quit = 0
-                self.build_abort = 0
+                self.job_build = 0
             elif keystroke in KEYS['PAUSE']:
                 self.paused = not self.paused
             elif keystroke in KEYS['HELP']:
@@ -267,6 +269,7 @@ class JobMonitor(Monitor):
             if self.help:
                 curses.halfdelay(255)
                 message_lines = [
+                    'B - Build the job',
                     'O - Open job in web browser',
                     'P - Pause Monitor',
                     'Q - Quit Monitor',
@@ -276,7 +279,6 @@ class JobMonitor(Monitor):
                 mu.draw_message_box(scr, message_lines, 'left')
             else:
                 halfdelay_normal = True
-
 
             # Pause message box
             if self.paused:
@@ -288,6 +290,26 @@ class JobMonitor(Monitor):
                     'To resume press "P"'
                 ]
                 mu.draw_message_box(scr, message_lines)
+            else:
+                halfdelay_normal = True
+
+            # Build the monitored job
+            if self.job_build:
+                self.help = False
+                curses.halfdelay(255)
+                message_lines = [
+                    'Are you sure you want to build this job?',
+                    'To build press "B"',
+                    'To return press "R"'
+                ]
+                mu.draw_message_box(scr, message_lines)
+                if self.job_build > 1:  # Abort Message confirmed (pressed twice)
+                    if job_url:
+                        self.server_interaction = True
+                        self.Job.build_trigger(job_url=job_url)
+                    else:
+                        pass
+                    self.job_build = 0
             else:
                 halfdelay_normal = True
 
@@ -349,7 +371,14 @@ class JobMonitor(Monitor):
     #############################  JOB INFO  ##################################
 
     def __thread_job_info(self, job_url: str, monitor_interval: float) -> None:
-        """ TODO """
+        """TODO Docstring
+
+        Args:
+            TODO
+
+        Returns:
+            TODO
+        """
         logger.debug(f'Thread starting - Job info - (ID: {threading.get_ident()} - Refresh Interval: {monitor_interval}s) ...')
 
         # Set the monitoring thread flag up
@@ -373,7 +402,14 @@ class JobMonitor(Monitor):
         logger.debug(f'Thread stopped - Job info - (ID: {threading.get_ident()})')
 
     def __job_info_thread_on(self, job_url: str = '', monitor_interval: float = 5.0) -> bool:
-        """ TODO """
+        """TODO Docstring
+
+        Args:
+            TODO
+
+        Returns:
+            TODO
+        """
         logger.debug(f'Starting thread for job info for "{job_url}" ...')
         try:
             threading.Thread(target=self.__thread_job_info, args=(job_url, monitor_interval,), daemon=False).start()
@@ -386,7 +422,14 @@ class JobMonitor(Monitor):
     ############################  BUILDS INFO  ################################
 
     def __thread_build_info(self, build_url:str, build_data_index:int) -> None:
-        """ TODO """
+        """TODO Docstring
+
+        Args:
+            TODO
+
+        Returns:
+            TODO
+        """
         logger.debug(f'Thread starting - Build info (INDEX: {build_data_index}, ID: {threading.get_ident()}) ...')
         self.server_interaction = True
         self.builds_data[build_data_index] = self.Build.info(build_url=build_url)
@@ -394,7 +437,14 @@ class JobMonitor(Monitor):
 
 
     def __thread_builds_data(self, monitor_interval: float) -> None:
-        """ TODO """
+        """TODO Docstring
+
+        Args:
+            TODO
+
+        Returns:
+            TODO
+        """
         logger.debug(f'Thread starting - Builds data - (ID: {threading.get_ident()} - Refresh Interval: {monitor_interval}s) ...')
 
         # Set the monitoring thread flag up
@@ -444,8 +494,15 @@ class JobMonitor(Monitor):
         logger.debug(f'Thread stopped - Builds data - (ID: {threading.get_ident()})')
 
 
-    def __builds_data_thread_on(self, monitor_interval: float = 8.0) -> bool:
-        """ TODO """
+    def __builds_data_thread_on(self, monitor_interval: float = 7.0) -> bool:
+        """TODO Docstring
+
+        Args:
+            TODO
+
+        Returns:
+            TODO
+        """
         logger.debug(f'Starting thread for job builds info ...')
         try:
             threading.Thread(target=self.__thread_builds_data, args=(monitor_interval,), daemon=False).start()

@@ -5,9 +5,8 @@ import os
 from datetime import datetime, timedelta
 from pprint import pprint
 from time import perf_counter, sleep, time
-from typing import Dict, List, Tuple, Type
+from typing import Dict, List, Tuple
 
-import jenkins
 import requests
 import utility
 from Monitor import BuildMonitor
@@ -123,7 +122,8 @@ class Build():
                     build_info['resultText'] = BuildStatus.running.value
                     build_info['durationFormatted'] = None
                     build_info['endDatetime'] = None
-                    build_info['elapsedFormatted'] = str(timedelta(seconds=(time() - (build_info['timestamp']/1000.0))))[:-3]
+                    build_info['elapsedFormatted'] = str(timedelta(seconds=((datetime.utcnow().timestamp()) - build_info['timestamp'] / 1000)))[:-3]
+
             else:
                 build_info['resultText'] = BuildStatus.unknown.value
         else:
@@ -145,8 +145,12 @@ class Build():
             build_info['serverURL'] = utility.item_url_to_server_url(build_info['url'])
             build_info['serverDomain'] = utility.item_url_to_server_url(build_info['url'], False)
 
+            build_info['folderFullName'] = 'Base Folder' if not build_info['folderFullName'] else build_info['folderFullName']
+
         if 'builtOn' not in build_info:
             build_info['builtOn'] = 'N/A'
+        else:
+            build_info['builtOn'] = 'N/A' if not build_info['builtOn'] else build_info['builtOn']
 
         return build_info
 
