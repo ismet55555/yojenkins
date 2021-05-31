@@ -373,8 +373,7 @@ class BuildMonitor(Monitor):
                     'To return press "R"'
                 ]
                 mu.draw_message_box(scr, message_lines)
-                # Abort Message confirmed (pressed twice)
-                if self.build_abort > 1:
+                if self.build_abort > 1:  # Abort Message confirmed (pressed twice)
                     if build_url:
                         self.server_interaction = True
                         build_number = self.Build.abort(build_url=build_url)
@@ -387,7 +386,6 @@ class BuildMonitor(Monitor):
                     self.build_abort = 0
             else:
                 halfdelay_normal = True
-
 
             # Show the build logs
             if self.build_logs:
@@ -481,7 +479,7 @@ class BuildMonitor(Monitor):
 
         logger.debug(f'Thread stopped - Build info - (ID: {threading.get_ident()})')
 
-    def __build_info_thread_on(self, build_url: str = '', monitor_interval: float = 8.0) -> bool:
+    def __build_info_thread_on(self, build_url: str = '', monitor_interval: float = 7.0) -> bool:
         """ TODO """
         logger.debug(f'Starting thread for build info for "{build_url}" ...')
         try:
@@ -520,7 +518,7 @@ class BuildMonitor(Monitor):
 
         logger.debug(f'Thread stopped - Build Stages - (ID: {threading.get_ident()})')
 
-    def __build_stages_thread_on(self, build_url: str = '', monitor_interval: float = 10.0) -> bool:
+    def __build_stages_thread_on(self, build_url: str = '', monitor_interval: float = 9.0) -> bool:
         '''TODO'''
         logger.debug(f'Starting thread for build stages for "{build_url}" ...')
         try:

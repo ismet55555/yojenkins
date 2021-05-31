@@ -138,6 +138,7 @@ def load_keys() -> dict:
     """
     KEYS = {
         "ABORT":  (ord('a'), ord('A')),
+        "BUILD":  (ord('b'), ord('B')),
         "DOWN":   (curses.KEY_DOWN, ord('j')),
         "ENTER":  (curses.KEY_ENTER, ord('\n'), ord('\r')),
         "HELP":   (ord('h'), ord('H')),
