@@ -4,7 +4,7 @@ import logging
 import os
 from datetime import datetime, timedelta
 from pprint import pprint
-from time import sleep, time
+from time import perf_counter, sleep, time
 from typing import Dict, List, Tuple, Type
 
 import jenkins
@@ -352,7 +352,7 @@ class Build():
         pass
 
 
-    def logs(self, build_url:str='', job_name:str='', job_url:str='', build_number:int=None, latest:bool=False, download_dir:str='') -> bool:
+    def logs(self, build_url:str='', job_name:str='', job_url:str='', build_number:int=None, latest:bool=False, download_dir:str='', follow:bool=False) -> bool:
         """TODO Docstring
 
         Args:
@@ -361,7 +361,6 @@ class Build():
         Returns:
             TODO
         """
-        # TODO: Pass a list of build numbers
         if build_url:
             logger.debug(f'Build URL passed: {build_url}')
             url = build_url
@@ -381,14 +380,8 @@ class Build():
 
         # FIXME: Check if this is an actual build
 
-        # Making a direct request using the passed url
-        logger.debug(f'Deleting build: {url} ...')
         request_url = f"{url.strip('/')}/consoleText"
 
-        # Getting every line in a list item
-        # names_list = [y for y in (x.strip() for x in self.temp_console_output.splitlines()) if y]
-
-        # TODO: Download only last X number of logs, last X percent of the logs
         if download_dir:
             # Download to local file
             auth=requests.auth.HTTPBasicAuth(self.REST.username, self.REST.api_token)
@@ -399,22 +392,53 @@ class Build():
                     r.raise_for_status()
                     with open(os.path.join(download_dir, filename), 'wb') as f:
                         for chunk in r.iter_content(chunk_size=8192): 
-                            #if chunk: 
-                            f.write(chunk)
+                            if chunk: f.write(chunk)
                 logger.debug(f'Successfully download build logs to file')
             except Exception as e:
                 logger.debug(f'Failed to download or save logs for build. Exception: {e}')
                 return False
         else:
-            # Output to console
-            logger.debug('Fetching logs from server ...')
-            return_content, _, return_success = self.REST.request(request_url, 'get', is_endpoint=False, json_content=False)
-            if not return_success or not return_content:
-                logger.debug(f'Failed to get console logs. Build may not exist or is queued')
-                return False
-            logger.debug('Printing out console text logs ...')
-            print(return_content)
+            # Stream the logs to console
+            if not follow:
+                logger.debug('Fetching logs from server ...')
+                return_content, _, return_success = self.REST.request(request_url, 'get', is_endpoint=False, json_content=False)
+                if not return_success or not return_content:
+                    logger.debug(f'Failed to get console logs. Build may not exist or is queued')
+                    return False
+                logger.debug('Printing out console text logs ...')
+                print(return_content)
+            else:
+                logger.debug(f'Following/streaming logs from server ...')
+                logger.debug(f'NOTE: Jenkins server does not support requesting partial byte ranges, MUST download entire log to get log message differences')
+                auth=requests.auth.HTTPBasicAuth(self.REST.username, self.REST.api_token)
+                old_dict = {}
+                fetch_number = 1
+                try:
+                    while True:
+                        response = requests.head(request_url, auth=auth)
+                        content_length_sample_1 = int(response.headers['Content-Length'])
+                        sleep(1)
+                        response = requests.head(request_url, auth=auth)
+                        content_length_sample_2 = int(response.headers['Content-Length'])
 
+                        content_length_diff = content_length_sample_2 - content_length_sample_1
+                        if content_length_diff:
+                            logger.debug(f'FETCH {fetch_number}: Content length difference: {content_length_diff} bytes')
+                            new, _, return_success = self.REST.request(request_url, 'get', is_endpoint=False, json_content=False)
+                            new_dict = dict.fromkeys([ y for y in (x.strip() for x in new.splitlines()) if y ])
+
+                            diff = dict.fromkeys(x for x in new_dict if x not in old_dict)
+                            diff_list = list(diff.keys())
+                            diff_text = os.linesep.join(diff_list)
+
+                            old_dict = new_dict
+                            fetch_number += 1
+
+                            print(diff_text)
+                        else:
+                            logger.debug(f'NO content length difference')
+                except KeyboardInterrupt as e:
+                    logger.debug('Keyboard Interrupt (CTRL-C) by user. Stopping log following ...')
         return True
 
 

@@ -5,9 +5,6 @@
 - Job Monitor
     - B - Build this job now
 
-- auth
-    - move original "user" to auth
-
 - server
     - Run a groovy script
 
