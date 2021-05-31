@@ -260,7 +260,7 @@ class Stage():
         if not stage_step_list:
             return '', []
 
-        logger.debug('Downloading logs for each step in the stage ...')
+        logger.debug(f'Downloading logs for {len(stage_step_list)} step in the stage using {len(stage_step_list)} threads ...')
         self.stage_log_dict = {}
         threads = []
         for i, stage_step in enumerate(stage_step_list):
