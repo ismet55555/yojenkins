@@ -213,7 +213,7 @@ def stages(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, opt_list:b
 
 
 
-def logs(profile:str, job:str, build_number:int, build_url:str, latest:bool, download_dir:bool, follow:bool) -> None:
+def logs(profile:str, job:str, build_number:int, build_url:str, latest:bool, tail:float, download_dir:bool, follow:bool) -> None:
     """TODO Docstring
 
     Args:
@@ -239,13 +239,18 @@ def logs(profile:str, job:str, build_number:int, build_url:str, latest:bool, dow
 
     # Request the data
     if valid_url_format:
-        data = JY.Build.logs(build_url=build_url, job_url=job, build_number=build_number, latest=latest, download_dir=download_dir, follow=follow)
+        data = JY.Build.logs(build_url=build_url, job_url=job, build_number=build_number,
+                             latest=latest, tail=tail, download_dir=download_dir, follow=follow)
     else:
-        data = JY.Build.logs(build_url=build_url, job_name=job, build_number=build_number, latest=latest, download_dir=download_dir, follow=follow)
+        data = JY.Build.logs(build_url=build_url, job_name=job, build_number=build_number,
+                             latest=latest, tail=tail, download_dir=download_dir, follow=follow)
 
     if not data:
         click.echo(click.style(f'failed', fg='bright_red', bold=True))
         sys.exit(1)
+
+    if download_dir:
+        click.echo(click.style(f'success', fg='bright_green', bold=True))
 
 
 

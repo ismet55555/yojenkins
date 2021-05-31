@@ -649,13 +649,14 @@ def stages(ctx, debug, pretty, yaml, xml, profile, list, job, number, url, lates
 @click.option('-n', '--number', type=int, required=False, help='Build number')
 @click.option('-u', '--url', type=str, required=False, help='Build URL (No job info needed)')
 @click.option('--latest', type=str, required=False, is_flag=True, help='Latest build (Replaces --number)')
-@click.option('-d', '--download_dir', type=str, required=False, is_flag=False, help='Download logs to directory')
+@click.option('--tail', type=float, required=False, help='Last of logs. If < 1 then %, else number of lines')
+@click.option('-dd', '--download_dir', type=click.Path(file_okay=False, dir_okay=True), required=False, is_flag=False, help='Download logs to directory')
 @click.option('--follow', default=False, type=str, required=False, is_flag=True, help='Follow/Stream the logs as they are generated')
 @click.pass_context
-def logs(ctx, debug, profile, job, number, url, latest, download_dir, follow):
+def logs(ctx, debug, profile, job, number, url, latest, tail, download_dir, follow):
     set_debug_log_level(debug)
     if job or url:
-        cli_build.logs(profile, job, number, url, latest, download_dir, follow)
+        cli_build.logs(profile, job, number, url, latest, tail, download_dir, follow)
     else:
         click.echo(ctx.get_help())
 
@@ -764,7 +765,7 @@ def steps(ctx, debug, pretty, yaml, xml, profile, list, name, job, number, url, 
 @click.option('-n', '--number', type=int, required=False, help='Build number')
 @click.option('-u', '--url', type=str, required=False, help='Build URL (No job info needed)')
 @click.option('--latest', type=bool, required=False, is_flag=True, help='Latest build (Replaces --number)')
-@click.option('-d', '--download_dir', type=str, required=False, is_flag=False, help='Download logs to directory')
+@click.option('-dd', '--download_dir', type=click.Path(file_okay=False, dir_okay=True), required=False, is_flag=False, help='Download logs to directory')
 @click.pass_context
 def logs(ctx, debug, profile, name, job, number, url, latest, download_dir):
     set_debug_log_level(debug)

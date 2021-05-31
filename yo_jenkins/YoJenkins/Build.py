@@ -3,6 +3,7 @@
 import logging
 import os
 from datetime import datetime, timedelta
+from itertools import islice
 from pprint import pprint
 from time import perf_counter, sleep, time
 from typing import Dict, List, Tuple
@@ -356,7 +357,7 @@ class Build():
         pass
 
 
-    def logs(self, build_url:str='', job_name:str='', job_url:str='', build_number:int=None, latest:bool=False, download_dir:str='', follow:bool=False) -> bool:
+    def logs(self, build_url:str='', job_name:str='', job_url:str='', build_number:int=None, latest:bool=False, tail:float=None, download_dir:str='', follow:bool=False) -> bool:
         """TODO Docstring
 
         Args:
@@ -409,6 +410,17 @@ class Build():
                 if not return_success or not return_content:
                     logger.debug(f'Failed to get console logs. Build may not exist or is queued')
                     return False
+
+                # If tail/last part of the log was specified
+                if tail:
+                    logger.debug(f'--tail option specified with value of: {tail}')
+                    tail = abs(tail)
+                    logs_list = list(map(lambda num: num.strip(), return_content.splitlines()))
+                    number_of_lines = round(len(logs_list) * tail) if tail < 1 else round(tail)
+                    start_log_number = 0 if number_of_lines > len(logs_list) else len(logs_list) - number_of_lines
+                    return_content = os.linesep.join(list(islice(logs_list, start_log_number, None)))
+                    logger.debug(f'Only printing out last logs, lines {start_log_number} to {len(logs_list)} ...')
+
                 logger.debug('Printing out console text logs ...')
                 print(return_content)
             else:
@@ -428,8 +440,9 @@ class Build():
                         content_length_diff = content_length_sample_2 - content_length_sample_1
                         if content_length_diff:
                             logger.debug(f'FETCH {fetch_number}: Content length difference: {content_length_diff} bytes')
-                            new, _, return_success = self.REST.request(request_url, 'get', is_endpoint=False, json_content=False)
-                            new_dict = dict.fromkeys([ y for y in (x.strip() for x in new.splitlines()) if y ])
+                            return_content, _, return_success = self.REST.request(request_url, 'get', is_endpoint=False, json_content=False)
+                            # new_dict = dict.fromkeys([ x for x in (line.strip() for line in return_content.splitlines()) if x ])
+                            new_dict = dict.fromkeys(list(map(lambda num: num.strip(), return_content.splitlines())))
 
                             diff = dict.fromkeys(x for x in new_dict if x not in old_dict)
                             diff_list = list(diff.keys())
