@@ -27,7 +27,7 @@ setuptools.setup(
     author="Ismet Handzic",
     author_email="ismet.handzic@gmail.com",
     maintainer="Ismet Handzic",
-    description="A tool to monitor, manage, and have fun with Jenkins server",
+    description="A CLI tool to manage and have fun with Jenkins server",
     keywords="jenkins monitor manage job build fun",
     url="NOT.SET.UP.YET.com",
     packages=setuptools.find_packages(),
@@ -44,13 +44,14 @@ setuptools.setup(
             ]
         },
     classifiers=[
-        'Development Status :: 4 - Beta',
-        'Topic :: XXXXXXXXXX',
+        'Development Status :: 3 - Alpha',
         'License :: OSI Approved :: Apache Software License',
         'Natural Language :: English',
-        'Intended Audience :: XXXXXXXXXX',
-        'Topic :: XXXXXXXXXX',
-        'Topic :: XXXXXXXX :: Testing',
+        'Intended Audience :: System Administrators',
+        'Intended Audience :: Developers'
+        'Topic :: Utilities',
+        'Topic :: Software Development :: Testing',
+        'Topic :: System :: Monitoring',
         'Topic :: Software Development :: Libraries :: Python Modules',
         "Environment :: Console",
         "Environment :: Console :: Curses",
@@ -60,6 +61,7 @@ setuptools.setup(
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: 3 :: Only'
     ]
 )

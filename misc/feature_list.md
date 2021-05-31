@@ -93,7 +93,9 @@
 - List stages - DONE
 - List artifacts - DONE - **NEEDS TESTING**
 - Download artifact
-- Download log - DONE
+- logs
+    - download - DONE
+    - tail/follow - DONE
 - Build queue info - DONE
 - Abort build queue - **NEEDS TESTING**
 - Open build in browser - DONE
