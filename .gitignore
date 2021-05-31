@@ -137,9 +137,6 @@ cython_debug/
 # Configuration file
 .*.conf
 
-# Settings file
-# .*.settings
-
 # # VSCode configs
 # *.code-workspace  # Uncomment later
 .vscode/settings.json
