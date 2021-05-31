@@ -650,11 +650,12 @@ def stages(ctx, debug, pretty, yaml, xml, profile, list, job, number, url, lates
 @click.option('-u', '--url', type=str, required=False, help='Build URL (No job info needed)')
 @click.option('--latest', type=str, required=False, is_flag=True, help='Latest build (Replaces --number)')
 @click.option('-d', '--download_dir', type=str, required=False, is_flag=False, help='Download logs to directory')
+@click.option('--follow', default=False, type=str, required=False, is_flag=True, help='Follow/Stream the logs as they are generated')
 @click.pass_context
-def logs(ctx, debug, profile, job, number, url, latest, download_dir):
+def logs(ctx, debug, profile, job, number, url, latest, download_dir, follow):
     set_debug_log_level(debug)
     if job or url:
-        cli_build.logs(profile, job, number, url, latest, download_dir)
+        cli_build.logs(profile, job, number, url, latest, download_dir, follow)
     else:
         click.echo(ctx.get_help())
 
