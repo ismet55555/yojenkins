@@ -185,6 +185,8 @@ class Job():
             job_info['serverURL'] = utility.item_url_to_server_url(job_info['url'])
             job_info['serverDomain'] = utility.item_url_to_server_url(job_info['url'], False)
 
+            job_info['folderFullName'] = 'Base Folder' if not job_info['folderFullName'] else job_info['folderFullName']
+
         return job_info
 
 
