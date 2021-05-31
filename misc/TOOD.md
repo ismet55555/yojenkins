@@ -2,13 +2,29 @@
 
 - *BUG FIXES*
 
-- Job Monitor
-    - B - Build this job now
+- Test different systems
+    - MAC
+    - Windows
+    - WSL (Ubuntu)
+    - Ubuntu
+
+================================================
+
+- Organize and test setup.py building and packaging
+    - Pipenv
+    - requirements.txt
+    - Dependencies and relative directory references?
+
+- Update README.md
+    - Installation
+
+- Logo!
 
 - server
     - Run a groovy script
 
 - job
+    - Makes sure config.xml works
     - Add on single bash or powershell script
     - RUN SCRIPT: https://www.jenkins.io/doc/book/managing/script-console/
 
@@ -24,8 +40,8 @@
 
 - For job monitor, also look into server queue
 
-- Remove sound option from job monitor
-    - Sound for new job (halo type) ???
+- job monitor sound
+    - New job arrives - halo sound
 
 - Build and Job Monitor
     - I key to stop monitor and output job/build info in yaml format
@@ -39,6 +55,7 @@
 - For temporary message, look into
   threading timer
     - t = threading.Timer(30.0, my_function)
+    - maybe itertools.cycle((True, False))
 
 - Folder combine the following:
   - items
