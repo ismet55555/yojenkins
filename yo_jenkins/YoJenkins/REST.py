@@ -209,15 +209,17 @@ class REST:
             for i, redirect_hop in enumerate(response.history):
                 logger.debug('Request redirects:')
                 logger.debug(f'    - {i+1}/{len(response.history)}: {redirect_hop.request.method} - {redirect_hop.url} - Status: {redirect_hop.status_code}')
-                print(redirect_hop)
+
         redirect_methods = ": " + " --> ".join([ r.request.method for r in response.history ] + [response.request.method]) if response.history else '' 
+        response_content_type = response.headers["Content-Type"] if "Content-Type" in response.headers else "N/A"
+        response_content_len = response.headers["Content-Length"] if "Content-Length" in response.headers else "N/A"
 
         # Final request report
         logger.debug('Request summary:')
         logger.debug(f'   - Request:          {response.request.method} - {request_url}')
         logger.debug(f'   - Redirects:        {"Allow" if allow_redirect else "Block"} {redirect_methods}')
         logger.debug(f'   - Elapsed time:     {perf_counter() - start_time:.3f} seconds')
-        logger.debug(f'   - Response headers: {response.headers["Content-Type"] if "Content-Type" in response.headers else "N/A"}')
+        logger.debug(f'   - Response headers: {response_content_type} (Content Length Bytes: {response_content_len})')
         logger.debug(f'   - Status code:      {response.status_code}')
 
         # If a head request, only return headers
