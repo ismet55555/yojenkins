@@ -7,8 +7,8 @@ import sys
 import os
 
 import click
-from Setup import DockerJenkinsServer
-from YoJenkins import Auth, YoJenkins
+from ..Setup import DockerJenkinsServer
+from ..YoJenkins import Auth, YoJenkins
 
 from . import cli_utility as cu
 

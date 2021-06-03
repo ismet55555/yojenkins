@@ -10,15 +10,23 @@
 
 ================================================
 
-- Organize and test setup.py building and packaging
-    - Pipenv
-    - requirements.txt
-    - Dependencies and relative directory references?
+- Note:
+    - pipenv - set up env
+    - setup.py - build and packaage
 
 - Update README.md
     - Installation
 
 - Logo!
+
+- toml output - -t, --toml
+
+- Command variables
+    - SERVER, MY_JOB, etc
+    - var set (find out a way to store sensative info)
+    - var remove (also --all)
+    - var list
+    - var value
 
 - server
     - Run a groovy script

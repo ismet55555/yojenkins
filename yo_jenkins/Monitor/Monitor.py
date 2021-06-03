@@ -18,7 +18,7 @@ if platform.system() != "Windows":
 else:
     import winsound
 
-from YoJenkins.Status import Color, Sound, Status
+from ..YoJenkins.Status import Color, Sound, Status
 
 from . import monitor_utility as mu
 

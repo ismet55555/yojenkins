@@ -9,9 +9,9 @@ import threading
 from pprint import pprint
 from time import sleep, time, perf_counter
 
-from YoJenkins.Status import StageStatus, Status
+from ..YoJenkins.Status import StageStatus, Status
 
-from Monitor.Monitor import Monitor
+from ..Monitor.Monitor import Monitor
 
 from . import monitor_utility as mu
 

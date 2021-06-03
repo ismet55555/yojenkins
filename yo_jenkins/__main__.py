@@ -2,15 +2,14 @@
 
 import logging
 from pprint import pprint
-import platform
 
 import click
 
-from cli import (cli_auth, cli_build, cli_folder, cli_job, cli_server,
+from .cli import (cli_auth, cli_build, cli_folder, cli_job, cli_server,
                         cli_stage, cli_step)
-from cli import cli_decorators
-from cli import logger_setup
-from cli.cli_utility import set_debug_log_level
+from .cli import cli_decorators
+from .cli import logger_setup
+from .cli.cli_utility import set_debug_log_level
 
 logger = logging.getLogger()
 
