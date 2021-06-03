@@ -1,3 +1,4 @@
+toml
 Click
 coloredlogs
 docker

@@ -1,1 +1,2 @@
-recursive-include yo_jenkins/sound *.wav
+include Pipfile
+recursive-include yo_jenkins/*
