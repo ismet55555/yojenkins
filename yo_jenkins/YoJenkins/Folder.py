@@ -7,7 +7,8 @@ from time import time, perf_counter
 from typing import Dict, List, Tuple, Type
 
 import jenkins
-import utility
+# import utility
+from .. import utility
 
 from .JenkinsItemClasses import JenkinsItemClasses
 

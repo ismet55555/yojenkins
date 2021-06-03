@@ -1,24 +1,47 @@
 #!/usr/bin/env python3
 
+import toml
 import os
 import setuptools
+from pprint import pprint
 
-# Package version number (Updated via bumpversion)
+# Package version number (Updated via bump2version tool)
 __version__ = "0.0.1"
 
+def get_install_requirements():
+    # Loading Pipfile
+    try:
+        with open ('Pipfile', 'r') as fh:
+            pipfile = fh.read()
+        pipfile_toml = toml.loads(pipfile)
+    except FileNotFoundError:
+        return []
+
+    # Getting the "packages section"
+    try:
+        required_packages = pipfile_toml['packages'].items()
+    except KeyError:
+        return []
+
+    # Parsing Pipfile
+    packages = []
+    for p, v in required_packages:
+        version = v
+        if not isinstance(v, str):  # Check for a dict
+            version_parts = []
+            if 'version' in v:
+                version_parts.append(v['version'] if v['version'] != '*' else "")
+            if 'platform_system' in v:
+                version_parts.append(f"platform_system {v['platform_system']}")
+            version = '; '.join(version_parts)
+        packages.append(p if version == "*" else f"{p}{version}")
+
+    pprint(packages)
+    return packages
 
 def read(fname):
     """Utility function to read the README file. Used for the long_description"""
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
-
-
-def requirements():
-    """Load packages in requirements.txt"""
-    with open(os.path.join(os.path.dirname(__file__), "requirements/prod.txt")) as handle:
-        packages = handle.readlines()
-    packages = [package.strip() for package in packages]
-
-    return packages
 
 
 setuptools.setup(
@@ -29,13 +52,13 @@ setuptools.setup(
     maintainer="Ismet Handzic",
     description="A CLI tool to manage and have fun with Jenkins server",
     keywords="jenkins monitor manage job build fun",
-    url="NOT.SET.UP.YET.com",
+    url="ismethandzic.com",
     packages=setuptools.find_packages(),
-    install_requires=requirements(),
+    install_requires=get_install_requirements(),
     include_package_data=True,
     long_description=read('README.md'),
     long_description_content_type='text/markdown',
-    python_requires='>=3.6',
+    python_requires='>=3.7',
     setup_requires=['wheel'],
     py_modules=["yo_jenkins"],
     entry_points={
@@ -57,7 +80,6 @@ setuptools.setup(
         "Environment :: Console :: Curses",
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',

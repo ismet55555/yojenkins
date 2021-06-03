@@ -9,8 +9,9 @@ from time import perf_counter, sleep, time
 from typing import Dict, List, Tuple
 
 import requests
-import utility
-from Monitor import BuildMonitor
+# import utility
+from .. import utility
+from ..Monitor import BuildMonitor
 
 from .JenkinsItemClasses import JenkinsItemClasses
 from .Status import BuildStatus

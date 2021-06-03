@@ -4,7 +4,7 @@ import logging
 import sys
 
 import click
-from YoJenkins import Auth, REST
+from ..YoJenkins import Auth, REST
 
 from . import cli_utility as cu
 
