@@ -9,7 +9,7 @@ import os
 import click
 from ..Setup import DockerJenkinsServer
 from ..YoJenkins import Auth, YoJenkins
-from ..utility import site_package_filepath
+from ..utility import site_package_path
 
 from . import cli_utility as cu
 
@@ -232,7 +232,8 @@ def server_deploy(config_file: str, plugins_file: str, protocol_schema: str, hos
         sys.exit(1)
 
     # Write current server docker attributes to file
-    filepath = site_package_filepath(os.path.join('yo_jenkins', 'server_docker_settings', 'last_deploy_info.json'))
+    filepath = site_package_path(os.path.join('yo_jenkins', 'server_docker_settings', 'last_deploy_info.json'), True)
+    logger.debug(f'Writing server deploy information to file: {filepath}')
     with open(os.path.join(filepath), 'w') as file:
         json.dump(deployed, file)
 
@@ -258,7 +259,7 @@ def server_teardown(remove_volume:bool, remove_image:bool):
         TODO
     """
     # Load deployment info file with deployment information
-    filepath = site_package_filepath(os.path.join('yo_jenkins', 'server_docker_settings', 'last_deploy_info.json'))
+    filepath = site_package_path(os.path.join('yo_jenkins', 'server_docker_settings', 'last_deploy_info.json'))
     try:
         with open(os.path.join(filepath), 'r') as file:
             deployed = json.load(file)
