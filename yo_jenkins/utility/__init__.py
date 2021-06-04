@@ -527,11 +527,11 @@ def queue_find(all_queue_info:dict, job_name:str='', job_url:str='', first:bool=
     return queue_item_matches
 
 
-def site_package_filepath(relative_path:str) -> str:
+def site_package_path(relative_path:str, sp_path_only:bool=False) -> str:
     """Getting the filepath for site package directory
 
     Args:
-        None
+        TODO
 
     Returns:
         Site package directory absolute path
@@ -540,12 +540,12 @@ def site_package_filepath(relative_path:str) -> str:
     filepath = os.path.abspath(
             os.path.join(sysconfig.get_paths()["purelib"], relative_path)
         )
-
-    # If the file does not exist, get the relative path
-    if not os.path.exists(filepath):
-        logger.debug(f'File "{relative_path}" not found in direcotory: {sysconfig.get_paths()["purelib"]}')
-        filepath = os.path.abspath(
-            os.path.join(os.getcwd(), relative_path)
-        )
+    if not sp_path_only:
+        # If the file does not exist, get the relative path from project root
+        if not os.path.exists(filepath):
+            logger.debug(f'Failed to find file "{relative_path}" in direcotory: {sysconfig.get_paths()["purelib"]}')
+            filepath = os.path.abspath(
+                os.path.join(os.getcwd(), relative_path)
+            )
     logger.debug(f'Site package filepath: {filepath}')
     return filepath
