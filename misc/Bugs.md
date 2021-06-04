@@ -7,10 +7,10 @@
     ```python
     import sysconfig
 
-    site_package_filepath = sysconfig.get_paths()["purelib"]
+    site_package_path = sysconfig.get_paths()["purelib"]
     exam_file_location = os.path.abspath(
         os.path.join(
-            site_package_filepath,
+            site_package_path,
             "yo_jenkins",
             "<DIRECTORY>",
                 "<FILENAME>"

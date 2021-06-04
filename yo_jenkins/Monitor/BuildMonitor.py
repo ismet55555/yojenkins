@@ -9,7 +9,7 @@ from pprint import pprint
 from time import sleep, time, perf_counter
 
 from ..YoJenkins.Status import StageStatus, Status
-from ..utility import site_package_filepath
+from ..utility import site_package_path
 
 from ..Monitor.Monitor import Monitor
 
@@ -88,7 +88,7 @@ class BuildMonitor(Monitor):
         KEYS = mu.load_keys()
 
         # Sound effect related
-        self.sound_directory = site_package_filepath(os.path.join('yo_jenkins', 'sound'))
+        self.sound_directory = site_package_path(os.path.join('yo_jenkins', 'sound'))
         sound_notify_msg_time = 0
         sound_notify_msg_show = False
         sound_notify_msg_box_timing = False
