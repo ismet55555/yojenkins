@@ -1,2 +1,4 @@
 include Pipfile
 recursive-include yo_jenkins/*
+recursive-include yo_jenkins/server_docker_settings/ *
+recursive-include yo_jenkins/sound/ *
