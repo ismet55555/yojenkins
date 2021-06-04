@@ -1,5 +1,11 @@
 # Python Package Index (PYPI)
 
+**NOTE: This outlines how to package and ship a python package to PYPI manually. 
+However, GitHub actions does this automatically.
+Only do this manually in rare necessary situations.**
+
+---
+
 PYPI is a packaging repository for python. Typically, when you run `pip install <PACKAGE NAME>` you
 are fetching the package from https://pypi.org. 
 
@@ -7,6 +13,8 @@ There is also a mirror site of PYPI used for testing: https://test.pypi.org. Thi
 separate site and repository only used for testing various things regarding packaging and deployment.
 Anything done on TestPYPI will have no effect on PYPI.
 
+If you have any question or issues, feel free to contact the project owner.
+If you have and suggestions or imporvements, feel free to submit a pull request.
 
 ## Bump the Package Version Number
 
