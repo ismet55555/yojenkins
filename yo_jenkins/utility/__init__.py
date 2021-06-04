@@ -3,9 +3,10 @@
 import logging
 import re
 import webbrowser
-from pathlib import Path
 from typing import Dict, List, Tuple
 from urllib.parse import urljoin, urlparse
+import sysconfig
+import os
 
 import requests
 import yaml
@@ -524,3 +525,27 @@ def queue_find(all_queue_info:dict, job_name:str='', job_url:str='', first:bool=
         logger.debug(f'Failed to find job in build queue')
 
     return queue_item_matches
+
+
+def site_package_filepath(relative_path:str) -> str:
+    """Getting the filepath for site package directory
+
+    Args:
+        None
+
+    Returns:
+        Site package directory absolute path
+    """
+    # Get the path in python site packages
+    filepath = os.path.abspath(
+            os.path.join(sysconfig.get_paths()["purelib"], relative_path)
+        )
+
+    # If the file does not exist, get the relative path
+    if not os.path.exists(filepath):
+        logger.debug(f'File "{relative_path}" not found in direcotory: {sysconfig.get_paths()["purelib"]}')
+        filepath = os.path.abspath(
+            os.path.join(os.getcwd(), relative_path)
+        )
+    logger.debug(f'Site package filepath: {filepath}')
+    return filepath

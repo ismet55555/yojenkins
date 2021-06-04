@@ -3,9 +3,9 @@
 import logging
 from pprint import pprint
 from typing import Dict, List, Tuple
-import sys
 import os
 from time import time, perf_counter
+from ..utility import site_package_filepath
 
 import docker
 
@@ -48,7 +48,7 @@ class DockerJenkinsServer():
         self.docker_registry = registry
         self.image_base_image = image_base
         self.image_base_version = 'latest'
-        self.image_dockerfile_dir = os.path.join(os.getcwd(),'yo_jenkins/server_docker_settings')
+        self.image_dockerfile_dir = site_package_filepath(os.path.join('yo_jenkins', 'server_docker_settings'))
         self.image_fullname = image_fullname
         self.image_rebuild = image_rebuild
         self.image_build_args = {
