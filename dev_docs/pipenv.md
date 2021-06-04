@@ -47,17 +47,20 @@ Reference: https://pipenv.pypa.io/en/latest/cli/
   - `pipenv install [OPTIONS] [PROJECT DIRECTORY]`
 
   - `[OPTIONS]`:
+    - `--deploy` - Abort if the Pipfile.lock is out-of-date, or Python version is wrong
     - `--ignore-pipfile` - Install from `Pipfile.lock`, ignore the `Pipfile`
     - `--skip-lock` - Ignore the `Pipfile.lock` and install from the `Pipfile`. In addition, do not write out a Pipfile.lock reflecting changes to the Pipfile.
-    - `-e .` - Actively editable current directory. Sub-dependencies are not added to the Pipfile.lock if you leave the `-e` option out
+    - `--editable .` - Actively editable current directory. Sub-dependencies are not added to the Pipfile.lock if you leave the `-e` option out
     - `--two`, `--three` - Python Major version
     - `--python 3.7` - Use specific python version
     - `--quiet` - No standard output
 
   - **Development Example:** *(includes `[dev-packages]` section in `Pipfile`)*
-    - `pipenv install --skip-lock --three --dev -e .`
+    - `pipenv install --skip-lock --three --dev --editable .`
   - **Production/Deployment Example:** *(includes `[packages]` section in `Pipfile`)*
-    - `pipenv install --three --ignore-pipfile`
+    - `pipenv install --deploy --three --ignore-pipfile`
+
+
 
 - Activate the created pipenv virtual environment
   - `pipenv shell`
@@ -66,11 +69,8 @@ Reference: https://pipenv.pypa.io/en/latest/cli/
   - `pipenv install <PACKAGE NAME>`
 
 - Locking the current pipenv dependencies and package versions. Creates/modifies a `Pipfile.lock`
-  - `pipeenv lock`
-  - **NOTE**: If `Pipfile` changes, this will happen automatically
-
-- Clearing `Pipfile.lock`
-  - `pipenv lock --clear`
+  - `pipenv lock`
+  - `--clear` - Clears caches (pipenv, pip, and pip-tools)
 
 - Upgrade packages
   - `pipenv update <PACKAGE NAME>`
