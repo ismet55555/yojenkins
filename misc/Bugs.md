@@ -1,12 +1,26 @@
 
 ## Deployment
 
-- Fix  reference to `yo_jenkins/server_docker_settings`
+- Fix  reference to `yo_jenkins/server_docker_settings` and `yo_jenkins/sound`
     - How to get the reference
-    - Checkout --sample option on exam-terminal?
-    - Directories missing:
-        - `server_docker_settings`
-        - `sound`
+
+    ```python
+    import sysconfig
+
+    site_package_dir = sysconfig.get_paths()["purelib"]
+    exam_file_location = os.path.abspath(
+        os.path.join(
+            site_package_dir,
+            "yo_jenkins",
+            "<DIRECTORY>",
+                "<FILENAME>"
+                )
+        )
+    ```
+
+
+
+
 
 - Cannot install on WSL
     Collecting yo-jenkins
