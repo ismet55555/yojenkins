@@ -7,10 +7,10 @@
     ```python
     import sysconfig
 
-    site_package_dir = sysconfig.get_paths()["purelib"]
+    site_package_filepath = sysconfig.get_paths()["purelib"]
     exam_file_location = os.path.abspath(
         os.path.join(
-            site_package_dir,
+            site_package_filepath,
             "yo_jenkins",
             "<DIRECTORY>",
                 "<FILENAME>"
@@ -18,14 +18,36 @@
         )
     ```
 
+1. upload to pypi and install
+
+--------------------------------------------------
+
+- yo-jenkins server server-deploy --debug
+    - Failed to setup server
+    - Items deployed:
+    - {}
+    - Too much output. Items deployed??
 
 
+--------------------------------------------------
+
+
+- yo-jenkins build logs --follow <JOB> --latest
+    - KeyError: `content-length`
+    - Clue: `Content Length Bytes: N/A`
+
+
+--------------------------------------------------
 
 
 - Cannot install on WSL
     Collecting yo-jenkins
     Could not find a version that satisfies the requirement yo-jenkins (from versions: )
     No matching distribution found for yo-jenkins
+
+
+--------------------------------------------------
+
 
 - Cannot install from testPYPI
     - Dependency issue
