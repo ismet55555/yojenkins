@@ -52,7 +52,7 @@ setuptools.setup(
     maintainer="Ismet Handzic",
     description="A CLI tool to manage and have fun with Jenkins server",
     keywords="jenkins monitor manage job build fun",
-    url="ismethandzic.com",
+    url="https://ismethandzic.com/",
     packages=setuptools.find_packages(),
     install_requires=get_install_requirements(),
     include_package_data=True,
@@ -71,7 +71,7 @@ setuptools.setup(
         'License :: OSI Approved :: Apache Software License',
         'Natural Language :: English',
         'Intended Audience :: System Administrators',
-        'Intended Audience :: Developers'
+        'Intended Audience :: Developers',
         'Topic :: Utilities',
         'Topic :: Software Development :: Testing',
         'Topic :: System :: Monitoring',
