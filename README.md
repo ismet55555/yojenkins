@@ -6,12 +6,19 @@
 
 ## Installation
 
-- Install from PYPI
-    - ```
+1. Install system dependencies for `simpleaudio` sound python package
+    - **Windows:** Not needed, uses `winsound`
+    - **MacOS:** Not needed
+    - **Ubuntu:** `sudo apt update && apt-get install -y python3-dev python3-pip libasound2-dev`
+    - **CentOS:** `sudo yum update && yum install -y python3-devel gcc alsa-lib-devel`
+
+2. Install `yo-jenkins`
+    - From Python Package Index (PYPI)
+      - ```
         pip install yo-jenkins
         ```
 
-- Install the package locally using `setup.py`
-    - ```bash
-        python setup.py install
-        ```
+   - From using the included `setup.py`
+     - ```bash
+         python setup.py install
+         ```
