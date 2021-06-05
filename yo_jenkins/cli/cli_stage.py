@@ -4,7 +4,7 @@ import logging
 import sys
 
 import click
-from ..YoJenkins.Status import Status
+from YoJenkins.Status import Status
 
 from . import cli_utility as cu
 

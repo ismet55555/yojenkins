@@ -4,7 +4,6 @@ import curses
 import logging
 import pprint
 from math import floor
-from time import sleep
 from typing import Dict, List, Tuple, Type
 
 # Getting the logger reference

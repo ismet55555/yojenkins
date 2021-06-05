@@ -7,8 +7,7 @@ from pprint import pprint
 from typing import Dict, Tuple
 import threading
 
-# import utility
-from .. import utility
+import utility
 
 from .Status import StageStatus
 
