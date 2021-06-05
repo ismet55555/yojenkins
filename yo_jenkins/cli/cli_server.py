@@ -233,7 +233,7 @@ def server_deploy(config_file: str, plugins_file: str, protocol_schema: str, hos
 
     # Write current server docker attributes to file
     filepath = os.path.join(get_resource_dir(), 'server_docker_settings', 'last_deploy_info.json')
-    if not os.path.exists(filepath):
+    if not filepath:
         click.echo(click.style(f'Failed to find yo-jenkins included data directory', fg='bright_red', bold=True))
         sys.exit(1)
     logger.debug(f'Writing server deploy information to file: {filepath}')
