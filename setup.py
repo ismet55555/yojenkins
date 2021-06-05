@@ -6,7 +6,7 @@ import setuptools
 from pprint import pprint
 
 # Package version number (Updated via bump2version tool)
-__version__ = "0.0.7"
+__version__ = "0.0.8"
 
 def get_install_requirements():
     # Loading Pipfile
