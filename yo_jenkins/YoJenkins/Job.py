@@ -9,9 +9,8 @@ from typing import Dict, List, Tuple, Type
 from urllib.parse import urlencode
 
 import jenkins
-# import utility
-from .. import utility
-from ..Monitor import JobMonitor
+import utility
+from Monitor import JobMonitor
 
 from .JenkinsItemClasses import JenkinsItemClasses
 
