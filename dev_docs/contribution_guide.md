@@ -31,15 +31,13 @@ Also, note that as of now there are no sufficient tests setup (ie. pytest, unite
     - *NOTE*: You may have more than one python version on your computer. You may have to explicitly use `python3`
 
 3. Add system dependencies for `simpleaudio` sound python package
-    - *Windows:* Not needed, uses `winsound`
-    - *MacOS:* Not needed
-    - *Ubuntu:* `sudo apt update && apt-get install -y python3-dev python3-pip libasound2-dev`
-    - *CentOS:* `sudo yum update && yum install -y python3-devel gcc alsa-lib-devel`
+    - **Windows:** Not needed, uses `winsound`
+    - **MacOS:** Not needed
+    - **Ubuntu:** `sudo apt update && apt-get install -y python3-dev python3-pip libasound2-dev`
+    - **CentOS:** `sudo yum update && yum install -y python3-devel gcc alsa-lib-devel`
 
 4. Upgrade tooling and install `pipenv`
-    - `python -m pip install --upgrade pip`
-    - `python -m pip install --upgrade setuptools`
-    - `python -m pip install --upgrade virtualenv`
+    - `python -m pip install --upgrade pip setuptools virtualenv`
     - `python -m pip install --upgrade pipenv`
 
 5. Install pipenv with development environment
