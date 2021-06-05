@@ -592,5 +592,4 @@ def get_resource_dir(project_dir:str='yo_jenkins', sample_path:str='sound') -> s
         logger.debug(f'Failed to find included data directory')
         return ''
 
-    logger.debug(f'Successfully found "{project_dir}" directory in: {resource_dir_path}')
     return resource_dir_path
