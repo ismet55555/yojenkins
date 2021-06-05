@@ -7,6 +7,7 @@ from typing import Dict, List, Tuple
 from urllib.parse import urljoin, urlparse
 import sysconfig
 import os
+import site
 
 import requests
 import yaml
@@ -527,25 +528,69 @@ def queue_find(all_queue_info:dict, job_name:str='', job_url:str='', first:bool=
     return queue_item_matches
 
 
-def site_package_path(relative_path:str, sp_path_only:bool=False) -> str:
-    """Getting the filepath for site package directory
+def get_resource_path(relative_path:str) -> str:
+    """Getting the filepath for existing included resource
 
     Args:
         TODO
 
     Returns:
-        Site package directory absolute path
+        Included resource path
     """
     # Get the path in python site packages
-    filepath = os.path.abspath(
-            os.path.join(sysconfig.get_paths()["purelib"], relative_path)
-        )
-    if not sp_path_only:
-        # If the file does not exist, get the relative path from project root
-        if not os.path.exists(filepath):
-            logger.debug(f'Failed to find file "{relative_path}" in direcotory: {sysconfig.get_paths()["purelib"]}')
-            filepath = os.path.abspath(
-                os.path.join(os.getcwd(), relative_path)
-            )
-    logger.debug(f'Site package filepath: {filepath}')
-    return filepath
+    resource_dir = get_resource_dir()
+    resource_path = os.path.abspath(os.path.join(resource_dir, relative_path))
+
+    # If the file has not been found and it is on windows, try APPDATA directory
+    if not os.path.exists(resource_path):
+        logger.debug(f'Failed to find resource "{relative_path}" in: {resource_dir}')
+        return ''
+    logger.debug(f'Successfully found existing resource: {resource_path}')
+    return resource_path
+
+
+def get_resource_dir(project_dir:str='yo_jenkins', sample_path:str='sound') -> str:
+    """Getting the path to the directory containing project resources
+    
+    Details:
+        Effectively this function is looking through all possible package locations
+    and checking if it contains a directory with the project name
+
+    FIXME: Probably only need the relative path!
+
+    Args:
+        TODO
+
+    Returns:
+        Project directory absolute path
+    """
+    possible_dirs = {
+        'relative': os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', '..')),
+        'sys_dirs': sysconfig.get_paths()["purelib"],
+        'usr_dirs': site.getusersitepackages(),
+        'site_dirs': site.getsitepackages(),
+        'cwd': os.getcwd(),
+    }
+
+    dirs = []
+    for v in possible_dirs.values():
+        if isinstance(v, list):
+            dirs.extend(v)
+        else:
+            dirs.append(v)
+
+    logger.debug(f'Searching project resource directory ...')
+    resource_dir_path = ''
+    for dir in dirs:
+        if os.path.exists(os.path.join(dir, project_dir, sample_path)):
+            resource_dir_path = os.path.join(dir, project_dir)
+            logger.debug(f'    - {dir} - FOUND')
+            break
+        logger.debug(f'    - {dir} - NOT FOUND')
+
+    if not resource_dir_path:
+        logger.debug(f'Failed to find included data directory')
+        return ''
+
+    logger.debug(f'Successfully found "{project_dir}" directory in: {resource_dir_path}')
+    return resource_dir_path
