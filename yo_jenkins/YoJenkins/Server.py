@@ -5,8 +5,7 @@ from pprint import pprint
 from typing import Dict, List, Tuple
 
 import jenkins
-# import utility
-from .. import utility
+import utility
 
 # Getting the logger reference
 logger = logging.getLogger()

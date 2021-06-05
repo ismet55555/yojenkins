@@ -43,6 +43,7 @@ Also, note that as of now there are no sufficient tests setup (ie. pytest, unite
 5. Install pipenv with development environment
     - `pipenv install --deploy --three --dev`
       -  `--python 3.X` - If needed, specify the exact python version to use)
+      -  `--editable .` - This option is already specified in the `Pipfile`
 
 6. Check that all packages are installed
     - `pipenv graph`
