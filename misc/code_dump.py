@@ -145,3 +145,24 @@ scr.leaveok(True)
 
 curses.napms(10)
 curses.flushinp()
+
+
+
+
+
+8. **[BONUS]** Setting a alias for convenience
+    - Linux / MacOS / WSL:
+        1. ```bash
+            alias yo-jenkins="pipenv run python <PATH TO PROEJCT>/yo_jenkins/__main__.py"
+            ```
+    - Windows:
+        1. Add the following to your powershell profile (`$profile`)
+        2. ```powershell
+            function yo-jenkins {
+            $PATH_TO_PROJECT='<PATH to PROJECT>'; `
+            $CURRENT_DIR=pwd; `
+            cd $PATH_TO_PROJECT; `
+            pipenv run python $PATH_TO_PROJECT\yo_jenkins\__main__.py $args; `
+            cd $CURRENT_DIR
+            }
+            ```

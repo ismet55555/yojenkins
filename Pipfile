@@ -15,6 +15,7 @@ setuptools = "*"
 twine = "*"
 wheel = "*"
 yapf = "*"
+yo-jenkins = { path = ".", editable = true }
 
 [packages]
 toml = "*"

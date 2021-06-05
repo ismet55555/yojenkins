@@ -35,8 +35,6 @@ def get_install_requirements():
                 version_parts.append(f"platform_system {v['platform_system']}")
             version = '; '.join(version_parts)
         packages.append(p if version == "*" else f"{p}{version}")
-
-    pprint(packages)
     return packages
 
 def read(fname):
