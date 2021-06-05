@@ -10,16 +10,18 @@
 
 ================================================
 
-- Note:
-    - pipenv - set up env
-    - setup.py - build and packaage
+- server-deploy
+    - place timestamp, seconds and formatted into .json file
+    - Place docker version in .json file
+
 
 - Update README.md
     - Installation
 
 - Logo!
 
-- toml output - -t, --toml
+- Add output format: toml
+    - output - -t, --toml
 
 - Command variables
     - SERVER, MY_JOB, etc
