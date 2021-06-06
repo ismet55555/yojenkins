@@ -10,7 +10,10 @@ from pprint import pprint
 from typing import Dict, List, Tuple, Type
 from urllib.parse import urlencode, urlparse
 
+import sys
+
 print("Auth.py", os.getcwd())
+pprint(sys.modules)
 
 import click
 import utility
