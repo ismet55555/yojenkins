@@ -15,6 +15,7 @@ setuptools = "*"
 twine = "*"
 wheel = "*"
 yapf = "*"
+yo-jenkins = {editable = true, path = "."}
 
 [packages]
 toml = "*"
@@ -28,7 +29,6 @@ requests-cache = "*"
 requests_futures = "*"
 simpleaudio = {version = "*", platform_system = "!= 'Windows'"}
 windows-curses = {version = "*", platform_system = "== 'Windows'"}
-
 # [requires]
 # python_version = "3"
 
