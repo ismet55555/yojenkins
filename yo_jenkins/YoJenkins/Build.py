@@ -10,8 +10,8 @@ from typing import Dict, List, Tuple
 
 import requests
 # import utility
-import utility
-from Monitor import BuildMonitor
+from .. import utility
+from ..Monitor import BuildMonitor
 
 from .JenkinsItemClasses import JenkinsItemClasses
 from .Status import BuildStatus

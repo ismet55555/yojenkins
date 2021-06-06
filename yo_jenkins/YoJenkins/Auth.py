@@ -11,7 +11,8 @@ from typing import Dict, List, Tuple, Type
 from urllib.parse import urlencode, urlparse
 
 import click
-import utility
+# import ..utility
+from .. import utility
 import yaml
 from jenkins import Jenkins as JenkinsSDK
 

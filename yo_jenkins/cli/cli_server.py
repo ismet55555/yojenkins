@@ -7,9 +7,9 @@ import sys
 import os
 
 import click
-from Setup import DockerJenkinsServer
-from YoJenkins import Auth, YoJenkins
-from utility import get_resource_path, get_resource_dir
+from ..Setup import DockerJenkinsServer
+from ..YoJenkins import Auth, YoJenkins
+from ..utility import get_resource_path, get_resource_dir
 
 from . import cli_utility as cu
 
