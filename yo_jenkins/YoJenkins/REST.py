@@ -2,7 +2,7 @@
 
 import logging
 from pprint import pprint
-from time import sleep, time, perf_counter
+from time import perf_counter
 from typing import Dict, List, Tuple, Type
 
 import requests

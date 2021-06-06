@@ -7,13 +7,12 @@ import textwrap
 import threading
 from datetime import datetime
 from pprint import pprint
-from time import sleep, time, perf_counter
+from time import perf_counter, sleep, time
 from typing import Dict, List, Tuple, Type
 
-from ..YoJenkins.Status import BuildStatus, Color, Sound, StageStatus, Status
-
-# from Monitor.Monitor import Monitor
-from ..Monitor.Monitor import Monitor
+from yo_jenkins.Monitor.Monitor import Monitor
+from yo_jenkins.YoJenkins.Status import (BuildStatus, Color, Sound,
+                                         StageStatus, Status)
 
 from . import monitor_utility as mu
 

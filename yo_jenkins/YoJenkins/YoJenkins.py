@@ -3,13 +3,13 @@
 import logging
 import sys
 
-from .Auth import Auth
-from .Server import Server
-from .Folder import Folder
-from .Job import Job
-from .Build import Build
-from .Stage import Stage
-from .Step import Step
+from yo_jenkins.YoJenkins.Auth import Auth
+from yo_jenkins.YoJenkins.Server import Server
+from yo_jenkins.YoJenkins.Folder import Folder
+from yo_jenkins.YoJenkins.Job import Job
+from yo_jenkins.YoJenkins.Build import Build
+from yo_jenkins.YoJenkins.Stage import Stage
+from yo_jenkins.YoJenkins.Step import Step
 
 # Getting the logger reference
 logger = logging.getLogger()

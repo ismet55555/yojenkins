@@ -2,18 +2,17 @@
 
 import logging
 import re
-from datetime import datetime, timedelta
+from datetime import timedelta
 from pprint import pprint
 from time import time, perf_counter
 from typing import Dict, List, Tuple, Type
 from urllib.parse import urlencode
 
 import jenkins
-# import utility
-from .. import utility
-from ..Monitor import JobMonitor
+from yo_jenkins.Utility import utility
+from yo_jenkins.Monitor import JobMonitor
 
-from .JenkinsItemClasses import JenkinsItemClasses
+from yo_jenkins.YoJenkins.JenkinsItemClasses import JenkinsItemClasses
 
 # Getting the logger reference
 logger = logging.getLogger()

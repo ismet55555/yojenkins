@@ -7,3 +7,5 @@ from .Stage import Stage
 from .Step import Step
 from .YoJenkins import YoJenkins
 
+from .JenkinsItemClasses import JenkinsItemClasses
+

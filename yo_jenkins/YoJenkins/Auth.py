@@ -12,7 +12,6 @@ from typing import Dict, List, Tuple, Type
 import click
 import yaml
 from jenkins import Jenkins as JenkinsSDK
-from yo_jenkins import Utility
 from yo_jenkins.Utility import utility
 from yo_jenkins.YoJenkins.REST import REST
 

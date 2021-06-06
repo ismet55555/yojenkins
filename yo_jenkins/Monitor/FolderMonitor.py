@@ -10,10 +10,10 @@ from pprint import pprint
 from time import sleep, time
 from typing import Dict, List, Tuple, Type
 
-from ..YoJenkins.Status import BuildStatus, Color, Sound, StageStatus, Status
+from yo_jenkins.YoJenkins.Status import BuildStatus, Color, Sound, StageStatus, Status
 
 # from Monitor.Monitor import Monitor
-from ..Monitor.Monitor import Monitor
+from yo_jenkins.Monitor.Monitor import Monitor
 
 from . import monitor_utility as mu
 
