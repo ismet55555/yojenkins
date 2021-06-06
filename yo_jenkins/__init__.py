@@ -1,2 +1,1 @@
-# This file blank
-# Used to indicate to python that this directory is a package
+__version__ = "0.0.9"
