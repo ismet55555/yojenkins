@@ -43,6 +43,7 @@ Also, note that as of now there are no sufficient tests setup (ie. pytest, unite
 5. Install pipenv with development environment
     - `pipenv install --deploy --three --dev`
       -  `--python 3.X` - If needed, specify the exact python version to use)
+      -  `--editable .` - This is already included in `Pipenv` and will allow to actively run the project with the most recent changes
 
 6. Check that all packages are installed
     - `pipenv graph`
@@ -65,7 +66,7 @@ Also, note that as of now there are no sufficient tests setup (ie. pytest, unite
 
 4. Run the changes
     - `yo-jenkins` - This works because the current package is marked as editable in `Pipfile`
-    - `python yo_jenkins/__main__py` - This is effectivly what is run when running `yo-jenkins`
+    - `python yo_jenkins/__main__py` - This is effectively what is run when running `yo-jenkins`
 
 5. `git` add and commit as you like, adding good and useful commit messages
 
@@ -85,9 +86,13 @@ Also, note that as of now there are no sufficient tests setup (ie. pytest, unite
     - `--dev` - Install the package for the dev environment only
 
 2. Check `Pipfile` if the package was added
-2. Lock `Pipfile.lock`
+   
+3. Lock `Pipfile.lock`
     - `pipenv lock`
     - `--clear` - Clears caches (pipenv, pip, and pip-tools)
+
+4. Add the exact package listed in `Pipfile.lock` to `requirements.txt`
+
 
 ## Installing and Building the Project
 
