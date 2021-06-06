@@ -9,9 +9,11 @@ import sysconfig
 import os
 import site
 
+print("utility/__init__.py", os.getcwd())
+
 import requests
 import yaml
-from ..YoJenkins.JenkinsItemClasses import JenkinsItemClasses
+from YoJenkins.JenkinsItemClasses import JenkinsItemClasses
 
 logger = logging.getLogger()
 

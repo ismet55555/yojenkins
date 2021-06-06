@@ -10,9 +10,11 @@ from pprint import pprint
 from typing import Dict, List, Tuple, Type
 from urllib.parse import urlencode, urlparse
 
+print("Auth.py", os.getcwd())
+
 import click
-# import ..utility
-from .. import utility
+import utility
+# from .. import utility
 import yaml
 from jenkins import Jenkins as JenkinsSDK
 
