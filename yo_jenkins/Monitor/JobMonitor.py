@@ -3,16 +3,17 @@
 import curses
 import logging
 import sys
+import textwrap
 import threading
 from datetime import datetime
 from pprint import pprint
 from time import sleep, time, perf_counter
 from typing import Dict, List, Tuple, Type
 
-from YoJenkins.Status import BuildStatus, Color, Sound, StageStatus, Status
+from ..YoJenkins.Status import BuildStatus, Color, Sound, StageStatus, Status
 
 # from Monitor.Monitor import Monitor
-from Monitor.Monitor import Monitor
+from ..Monitor.Monitor import Monitor
 
 from . import monitor_utility as mu
 
