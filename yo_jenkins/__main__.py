@@ -5,13 +5,13 @@ from pprint import pprint
 
 import click
 import os
-print(os.getcwd())
+print("__main__.py", os.getcwd())
 
 from yo_jenkins.cli import (cli_auth, cli_build, cli_folder, cli_job, cli_server,
                         cli_stage, cli_step)
-from .cli import cli_decorators
-from .cli import logger_setup
-from .cli.cli_utility import set_debug_log_level
+from yo_jenkins.cli import cli_decorators
+from yo_jenkins.cli import logger_setup
+from yo_jenkins.cli.cli_utility import set_debug_log_level
 
 logger = logging.getLogger()
 
