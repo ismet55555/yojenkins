@@ -8,21 +8,16 @@ from getpass import getpass
 from pathlib import Path
 from pprint import pprint
 from typing import Dict, List, Tuple, Type
-from urllib.parse import urlencode, urlparse
-
-import sys
-
-print("Auth.py", os.getcwd())
-pprint(sys.modules)
 
 import click
-import utility
-# from .. import utility
 import yaml
 from jenkins import Jenkins as JenkinsSDK
+from yo_jenkins import Utility
+from yo_jenkins.Utility import utility
+from yo_jenkins.YoJenkins.REST import REST
 
 from . import colors
-from .REST import REST
+
 
 # Getting the logger reference
 logger = logging.getLogger()

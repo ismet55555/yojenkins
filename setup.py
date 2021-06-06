@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import toml
+# import toml
 import os
 import setuptools
 from pprint import pprint
@@ -8,12 +8,22 @@ from pprint import pprint
 # Package version number (Updated via bump2version tool)
 __version__ = "0.0.13"
 
-def get_install_requirements():
+def get_requirements():
+    """Load packages from requirements.txt"""
+    with open(os.path.join(os.path.dirname(__file__), "requirements.txt")) as handle:
+        packages = handle.readlines()
+    packages = [package.strip() for package in packages]
+
+    return packages
+
+def get_pipfile_requirements():
+    """Load packages from Pipfile"""
+    from toml import loads
     # Loading Pipfile
     try:
         with open ('Pipfile', 'r') as fh:
             pipfile = fh.read()
-        pipfile_toml = toml.loads(pipfile)
+        pipfile_toml = loads(pipfile)
     except FileNotFoundError:
         return []
 
@@ -52,7 +62,7 @@ setuptools.setup(
     keywords="jenkins monitor manage job build fun",
     url="https://ismethandzic.com/",
     packages=setuptools.find_packages(),
-    install_requires=get_install_requirements(),
+    install_requires=get_requirements(),
     include_package_data=True,
     long_description=read('README.md'),
     long_description_content_type='text/markdown',
