@@ -20,7 +20,7 @@ logger = logging.getLogger()
 
 
 MAIN_HELP_TEXT = """
-    \t\t\t \033[93m YO-JENKINS (Version: 0.0.11) \033[0m
+    \t\t\t \033[93m YO-JENKINS (Version: 0.0.12) \033[0m
 
     yo-jenkins is a tool that is focused on interfacing with
     Jenkins server from the comfort of the beloved command line. 
@@ -44,7 +44,7 @@ MAIN_HELP_TEXT = """
 
 @click.group(help=MAIN_HELP_TEXT)
 @click.version_option(
-    '0.0.11', "-v", "--version", message="%(version)s".format(version="version"),
+    '0.0.12', "-v", "--version", message="%(version)s".format(version="version"),
     help="Show the version"
 )
 def main():   
