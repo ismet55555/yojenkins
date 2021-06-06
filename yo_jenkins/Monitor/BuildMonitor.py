@@ -8,10 +8,10 @@ import threading
 from pprint import pprint
 from time import sleep, time, perf_counter
 
-from YoJenkins.Status import StageStatus, Status
-from utility import get_resource_path
+from ..YoJenkins.Status import StageStatus, Status
+from ..utility import get_resource_path
 
-from Monitor.Monitor import Monitor
+from ..Monitor.Monitor import Monitor
 
 from . import monitor_utility as mu
 

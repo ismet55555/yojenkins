@@ -4,8 +4,8 @@ import logging
 from pprint import pprint
 from typing import Dict, List, Tuple
 import os
-from time import perf_counter
-from utility import get_resource_path
+from time import time, perf_counter
+from ..utility import get_resource_path
 
 import docker
 

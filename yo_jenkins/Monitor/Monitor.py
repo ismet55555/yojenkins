@@ -4,6 +4,7 @@ import curses
 import logging
 import platform
 import sys
+import textwrap
 import threading
 from pprint import pprint
 from time import sleep, time
@@ -17,7 +18,7 @@ if platform.system() != "Windows":
 else:
     import winsound
 
-from YoJenkins.Status import Color, Sound, Status
+from ..YoJenkins.Status import Color, Sound, Status
 
 from . import monitor_utility as mu
 
