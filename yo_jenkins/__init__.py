@@ -1,8 +1,8 @@
-from . import cli
-from . import Monitor
-from . import Setup
-from . import utility
-from . import YoJenkins
+from yo_jenkins import cli
+from yo_jenkins import Monitor
+from yo_jenkins import Setup
+from yo_jenkins import Utility
+from yo_jenkins import YoJenkins
 
 
-__version__ = "0.0.12"
+__version__ = "0.0.13"
