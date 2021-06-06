@@ -826,10 +826,6 @@
             "index": "pypi",
             "version": "==0.31.0"
         },
-        "yo-jenkins": {
-            "editable": true,
-            "path": "."
-        },
         "zipp": {
             "hashes": [
                 "sha256:3607921face881ba3e026887d8150cca609d517579abe052ac81fc5aeffdbd76",

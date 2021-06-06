@@ -4,9 +4,8 @@ import logging
 import sys
 
 import click
-from ..YoJenkins import Auth, REST
-
-from . import cli_utility as cu
+from yo_jenkins.cli import cli_utility as cu
+from yo_jenkins.YoJenkins import REST, Auth
 
 # Getting the logger reference
 logger = logging.getLogger()

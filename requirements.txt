@@ -1,11 +1,13 @@
-autopep8
-black
-bump2version
-isort
-setuptools
-twine
-wheel
-yapf
+# This file for setup.py run
+
+# autopep8
+# black
+# bump2version
+# isort
+# setuptools
+# twine
+# wheel
+# yapf
 
 toml==0.10.2
 click==8.0.1
