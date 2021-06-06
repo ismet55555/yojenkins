@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 
 import logging
-from pprint import pprint
-from typing import Dict, List, Tuple
 import os
+from pprint import pprint
 from time import perf_counter
-from ..utility import get_resource_path
+from typing import Dict, List, Tuple
 
 import docker
+from yo_jenkins.Utility.utility import get_resource_path
 
 # Getting the logger reference
 logger = logging.getLogger()

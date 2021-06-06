@@ -1,35 +1,25 @@
 #!/usr/bin/env python3
 
 import logging
+import os
+import sys
 from pprint import pprint
 
 import click
-import os, sys
+
+try:
+    from . import yo_jenkins  # "yo_jenkins" case
+except:
+    import yo_jenkins            # "__main__" case
+
+from yo_jenkins.cli import (cli_auth, cli_build, cli_decorators, cli_folder,
+                            cli_job, cli_server, cli_stage, cli_step,
+                            logger_setup)
+from yo_jenkins.cli.cli_utility import set_debug_log_level
 
 print("__main__.py", os.getcwd())
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 pprint(sys.path)
-
-try:
-    from . import yo_jenkins     # "yo_jenkins" case
-except:
-    import yo_jenkins            # "__main__" case
-
-from yo_jenkins.cli import logger_setup
-
-
-
-pprint(sys.modules)
-
-
-
-from yo_jenkins.cli import (cli_auth, cli_build, cli_folder, cli_job, cli_server,
-                        cli_stage, cli_step)
-from yo_jenkins.cli import cli_decorators
-from yo_jenkins.cli import logger_setup
-from yo_jenkins.cli.cli_utility import set_debug_log_level
-
-
 pprint(sys.modules)
 
 logger = logging.getLogger()

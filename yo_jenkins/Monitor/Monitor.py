@@ -4,7 +4,6 @@ import curses
 import logging
 import platform
 import sys
-import textwrap
 import threading
 from pprint import pprint
 from time import sleep, time

@@ -5,16 +5,14 @@ import os
 from datetime import datetime, timedelta
 from itertools import islice
 from pprint import pprint
-from time import perf_counter, sleep, time
+from time import sleep
 from typing import Dict, List, Tuple
 
 import requests
-# import utility
-from .. import utility
-from ..Monitor import BuildMonitor
-
-from .JenkinsItemClasses import JenkinsItemClasses
-from .Status import BuildStatus
+from yo_jenkins.Monitor import BuildMonitor
+from yo_jenkins.Utility import utility
+from yo_jenkins.YoJenkins import JenkinsItemClasses
+from yo_jenkins.YoJenkins.Status import BuildStatus
 
 # Getting the logger reference
 logger = logging.getLogger()

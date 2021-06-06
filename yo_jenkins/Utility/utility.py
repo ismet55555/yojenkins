@@ -1,15 +1,13 @@
 #!/usr/bin/env python3
 
 import logging
+import os
 import re
+import site
+import sysconfig
 import webbrowser
 from typing import Dict, List, Tuple
 from urllib.parse import urljoin, urlparse
-import sysconfig
-import os
-import site
-
-print("utility/__init__.py", os.getcwd())
 
 import requests
 import yaml
