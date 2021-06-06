@@ -10,6 +10,9 @@
 
 ================================================
 
+- CLI Testing using click:
+  - https://github.com/cdeil/python-cli-examples/blob/master/click/greet/test_cli.py
+
 - server-deploy
     - place timestamp, seconds and formatted into .json file
     - Place docker version in .json file
