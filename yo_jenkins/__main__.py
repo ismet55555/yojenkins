@@ -4,8 +4,10 @@ import logging
 from pprint import pprint
 
 import click
+import os
+print(os.getcwd())
 
-from .cli import (cli_auth, cli_build, cli_folder, cli_job, cli_server,
+from yo_jenkins.cli import (cli_auth, cli_build, cli_folder, cli_job, cli_server,
                         cli_stage, cli_step)
 from .cli import cli_decorators
 from .cli import logger_setup

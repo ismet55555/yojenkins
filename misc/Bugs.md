@@ -5,12 +5,16 @@
 with pipenv on `python yo_jenkins/__main__.py` will give error:
     - Maybe related to the previoiusly missing `__init__.py`?
     - Try without `.` now?
+    - Has something to do with the PATH and the project
+    - Only on my system (ubuntu), tests work
 ```
 Traceback (most recent call last):
   File ".\yo_jenkins\__main__.py", line 8, in <module>
     from .cli import (cli_auth, cli_build, cli_folder, cli_job, cli_server,
 ImportError: attempted relative import with no known parent package
 ```
+
+
 
 --------------------------------------------------
 
