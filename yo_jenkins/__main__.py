@@ -7,6 +7,8 @@ import click
 import os
 print("__main__.py", os.getcwd())
 
+import yo_jenkins
+
 from yo_jenkins.cli import (cli_auth, cli_build, cli_folder, cli_job, cli_server,
                         cli_stage, cli_step)
 from yo_jenkins.cli import cli_decorators

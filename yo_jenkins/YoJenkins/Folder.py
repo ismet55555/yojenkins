@@ -6,9 +6,12 @@ from pprint import pprint
 from time import time, perf_counter
 from typing import Dict, List, Tuple, Type
 
+import os
+print("Folder.py", os.getcwd())
+
 import jenkins
-# import utility
-from .. import utility
+import utility
+# from .. import utility
 
 from .JenkinsItemClasses import JenkinsItemClasses
 
