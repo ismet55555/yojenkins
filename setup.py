@@ -6,7 +6,7 @@ import setuptools
 from pprint import pprint
 
 # Package version number (Updated via bump2version tool)
-__version__ = "0.0.15"
+__version__ = "0.0.16"
 
 def get_requirements():
     """Load packages from requirements.txt"""
