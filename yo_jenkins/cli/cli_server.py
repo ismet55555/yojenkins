@@ -227,8 +227,9 @@ def server_deploy(config_file: str, plugins_file: str, protocol_schema: str, hos
     deployed, success = DJS.setup()
     if not success:
         click.echo(click.style(f'Failed to setup server', fg='bright_red', bold=True))
-        click.echo(click.style(f'Items deployed:', fg='bright_red', bold=True))
-        click.echo(click.style(deployed, fg='bright_red', bold=True))
+        click.echo(click.style(f'Items deployed for partial deployment:', fg='bright_red', bold=True))
+        if deployed:
+            click.echo(click.style(deployed, fg='bright_red', bold=True))
         sys.exit(1)
 
     # Write current server docker attributes to file

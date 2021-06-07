@@ -430,7 +430,11 @@ class Build():
                 fetch_number = 1
                 try:
                     while True:
+                        # FIXME: Preserve already used session!  Use REST object
                         response = requests.head(request_url, auth=auth)
+                        if 'content-length' not in response.headers:
+                            logger.debug(f'Failed to find "content-length" key in server response headers: {response.headers}')
+                            return False
                         content_length_sample_1 = int(response.headers['Content-Length'])
                         sleep(1)
                         response = requests.head(request_url, auth=auth)
