@@ -11,7 +11,7 @@ from typing import Dict, List, Tuple
 import requests
 from yo_jenkins.Monitor import BuildMonitor
 from yo_jenkins.Utility import utility
-from yo_jenkins.YoJenkins import JenkinsItemClasses
+from yo_jenkins.YoJenkins.JenkinsItemClasses import JenkinsItemClasses
 from yo_jenkins.YoJenkins.Status import BuildStatus
 
 # Getting the logger reference
