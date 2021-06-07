@@ -2,12 +2,6 @@
 
 - *BUG FIXES*
 
-- Test different systems
-    - MAC
-    - Windows
-    - WSL (Ubuntu)
-    - Ubuntu
-
 ================================================
 
 - CLI Testing using click:
@@ -26,7 +20,10 @@
 - Add output format: toml
     - output - -t, --toml
 
-- Command variables
+- look into faster json encoding and decoding:
+  - https://github.com/ultrajson/ultrajson
+
+- Command variables - why not just use env_vars
     - SERVER, MY_JOB, etc
     - var set (find out a way to store sensative info)
     - var remove (also --all)
