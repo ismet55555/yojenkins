@@ -1,28 +1,13 @@
 # BUGS
 
 
-- yo-jenkins build monitor <some job-PR-448> --latest
-  - Build.py - 507 -> 74
-  - yo_jenkins.YoJenkins.JenkinsItemClasses has no attribute 'job'
-
-
 --------------------------------------------------
 
-- yo-jenkins server server-deploy --debug
-    - Failed to setup server
-    - Items deployed:
-    - {}
-    - Too much output. Items deployed??
-
-
---------------------------------------------------
-
-
-- yo-jenkins build logs --follow <JOB> --latest
-    - KeyError: `content-length`
-    - Clue: `Content Length Bytes: N/A`
-    - Catch this error! 
-    - Test
+- yo-jenkins buld logs <JOB URL> --latest --follow --debug
+  - Each request opens up a new connection 
+  - Starting new HTTP connection (1): localhost:8080
+  - Should be:
+    - http://localhost:8080 "GET /job/testing/api/json HTTP/1.1" 200 525
 
 
 --------------------------------------------------
