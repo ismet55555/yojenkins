@@ -31,13 +31,19 @@
 
 ## Ideas
 
-- Jenkins dockerized server - URL to configuration as code
+- yo-jenkins man
+    - info
+    - Check for updates
+    - Report an issue
+    - Request a feature
+
+
 
 - Total log bytes indicator on monitor
 - Log size option in logs -b, --bytes
 
-- On creation and deletion of things have --verify flag
-    to make sure the operation works
+- On creation and deletion of things have --dry-run flag
+    to make sure the operation would works (THIS EVEN POSSIBLE?)
         - create
         - delete
         - abort

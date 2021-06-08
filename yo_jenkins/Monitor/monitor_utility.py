@@ -156,21 +156,6 @@ def load_keys() -> dict:
     return KEYS
 
 
-def load_software_name_version() -> str:
-    """
-    Load the software name and version.
-    The version number is updated by bumpversion
-
-    Args:
-        None
-    Returns: 
-        (str): Software name and version
-    """
-    software_name = "exam-terminal"
-    software_version = "0.0.18"  # Updated with bumpversion
-    return software_name + ' v' + software_version
-
-
 def get_center_x(scr, line:str) -> int:
     """
     Find the horizontal center position of the given text line
