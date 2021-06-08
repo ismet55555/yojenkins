@@ -7,7 +7,7 @@ from time import perf_counter
 from typing import Dict, List, Tuple, Type
 
 from yo_jenkins.Utility import utility
-from yo_jenkins.YoJenkins import JenkinsItemClasses
+from yo_jenkins.YoJenkins.JenkinsItemClasses import JenkinsItemClasses
 
 # Getting the logger reference
 logger = logging.getLogger()

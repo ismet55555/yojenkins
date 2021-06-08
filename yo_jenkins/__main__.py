@@ -76,9 +76,9 @@ def token(debug, profile):
 @auth.command(short_help='\tShow the local credentials file')
 @cli_decorators.debug
 @cli_decorators.format_output
-def show(debug, pretty, yaml, xml):
+def show(debug, pretty, yaml, xml, toml):
     set_debug_log_level(debug)
-    cli_auth.show(pretty, yaml, xml)
+    cli_auth.show(pretty, yaml, xml, toml)
 
 @auth.command(short_help='\tCheck if credentials can authenticate')
 @cli_decorators.debug
@@ -97,9 +97,9 @@ def wipe(debug):
 @cli_decorators.debug
 @cli_decorators.format_output
 @cli_decorators.profile
-def user(debug, pretty, yaml, xml, profile):
+def user(debug, pretty, yaml, xml, toml, profile):
     set_debug_log_level(debug)
-    cli_auth.user(pretty, yaml, xml, profile)
+    cli_auth.user(pretty, yaml, xml, toml, profile)
 
 
 ##############################################################################
@@ -114,27 +114,27 @@ def server():
 @cli_decorators.debug
 @cli_decorators.format_output
 @cli_decorators.profile
-def info(debug, pretty, yaml, xml, profile):
+def info(debug, pretty, yaml, toml, xml, profile):
     set_debug_log_level(debug)
-    cli_server.info(pretty, yaml, xml, profile)
+    cli_server.info(pretty, yaml, xml, toml, profile)
 
 @server.command(short_help='\tShow all people/users on server')
 @cli_decorators.debug
 @cli_decorators.format_output
 @cli_decorators.profile
 @cli_decorators.list
-def people(debug, pretty, yaml, xml, profile, list):
+def people(debug, pretty, yaml, xml, toml, profile, list):
     set_debug_log_level(debug)
-    cli_server.people(pretty, yaml, xml, profile, list)
+    cli_server.people(pretty, yaml, xml, toml, profile, list)
 
 @server.command(short_help='\tShow current job build queues on server')
 @cli_decorators.debug
 @cli_decorators.format_output
 @cli_decorators.profile
 @cli_decorators.list
-def queue(debug, pretty, yaml, xml, profile, list):
+def queue(debug, pretty, yaml, xml, toml, profile, list):
     set_debug_log_level(debug)
-    cli_server.queue(pretty, yaml, xml, profile, list)
+    cli_server.queue(pretty, yaml, xml, toml, profile, list)
     # NOTE: Maybe move to "job"?
 
 @server.command(short_help='\tShow plugin information')
@@ -142,9 +142,9 @@ def queue(debug, pretty, yaml, xml, profile, list):
 @cli_decorators.format_output
 @cli_decorators.profile
 @cli_decorators.list
-def plugins(debug, pretty, yaml, xml, profile, list):
+def plugins(debug, pretty, yaml, xml, toml, profile, list):
     set_debug_log_level(debug)
-    cli_server.plugins(pretty, yaml, xml, profile, list)
+    cli_server.plugins(pretty, yaml, xml, toml, profile, list)
 
 @server.command(short_help='\tOpen server home page in web browser')
 @cli_decorators.debug
@@ -156,7 +156,7 @@ def browser(debug, profile):
 @server.command(short_help='\tCheck if sever is reachable')
 @cli_decorators.debug
 @cli_decorators.profile
-@click.option('-t', '--timeout', type=int, default=10, required=False, is_flag=False, help='Request timeout value')
+@click.option('--timeout', type=int, default=10, required=False, is_flag=False, help='Request timeout value')
 def reachable(debug, profile, timeout):
     set_debug_log_level(debug)
     cli_server.reachable(profile, timeout)
@@ -275,9 +275,9 @@ def folder():
 @cli_decorators.format_output
 @cli_decorators.profile
 @click.argument('folder', nargs=1, type=str, required=True)
-def info(debug, pretty, yaml, xml, profile, folder):
+def info(debug, pretty, yaml, xml, toml, profile, folder):
     set_debug_log_level(debug)
-    cli_folder.info(pretty, yaml, xml, profile, folder)
+    cli_folder.info(pretty, yaml, xml, toml, profile, folder)
 
 @folder.command(short_help='\tSearch folders by REGEX pattern')
 @cli_decorators.debug
@@ -288,9 +288,9 @@ def info(debug, pretty, yaml, xml, profile, folder):
 @click.option('-d', '--depth', type=int, default=4, required=False, help='Search depth from root directory')
 @click.option('-fn', '--fullname', type=bool, default=False, required=False, is_flag=True, help='Search entire folder path name')
 @cli_decorators.list
-def search(debug, pretty, yaml, xml, profile, search_pattern, search_folder, depth, fullname, list):
+def search(debug, pretty, yaml, xml, toml, profile, search_pattern, search_folder, depth, fullname, list):
     set_debug_log_level(debug)
-    cli_folder.search(pretty, yaml, xml, profile, search_pattern, search_folder, depth, fullname, list)
+    cli_folder.search(pretty, yaml, xml, toml, profile, search_pattern, search_folder, depth, fullname, list)
 
 @folder.command(short_help='\tList all subfolders in folder')
 @cli_decorators.debug
@@ -298,9 +298,9 @@ def search(debug, pretty, yaml, xml, profile, search_pattern, search_folder, dep
 @cli_decorators.profile
 @click.argument('folder', nargs=1, type=str, required=True)
 
-def subfolders(debug, pretty, yaml, xml, profile, folder, list):
+def subfolders(debug, pretty, yaml, xml, toml, profile, folder, list):
     set_debug_log_level(debug)
-    cli_folder.subfolders(pretty, yaml, xml, profile, folder, list)
+    cli_folder.subfolders(pretty, yaml, xml, toml, profile, folder, list)
 
 @folder.command(short_help='\tList all jobs in folder')
 @cli_decorators.debug
@@ -308,9 +308,9 @@ def subfolders(debug, pretty, yaml, xml, profile, folder, list):
 @cli_decorators.profile
 @click.argument('folder', nargs=1, type=str, required=True)
 @cli_decorators.list
-def jobs(debug, pretty, yaml, xml, profile, folder, list):
+def jobs(debug, pretty, yaml, xml, toml, profile, folder, list):
     set_debug_log_level(debug)
-    cli_folder.jobs(pretty, yaml, xml, profile, folder, list)
+    cli_folder.jobs(pretty, yaml, xml, toml, profile, folder, list)
 
 @folder.command(short_help='\tList all views in folder')
 @cli_decorators.debug
@@ -318,9 +318,9 @@ def jobs(debug, pretty, yaml, xml, profile, folder, list):
 @cli_decorators.profile
 @click.argument('folder', nargs=1, type=str, required=True)
 @cli_decorators.list
-def views(debug, pretty, yaml, xml, profile, folder, list):
+def views(debug, pretty, yaml, xml, toml, profile, folder, list):
     set_debug_log_level(debug)
-    cli_folder.views(pretty, yaml, xml, profile, folder, list)
+    cli_folder.views(pretty, yaml, xml, toml, profile, folder, list)
 
 @folder.command(short_help='\tList all items in folder')
 @cli_decorators.debug
@@ -328,9 +328,9 @@ def views(debug, pretty, yaml, xml, profile, folder, list):
 @cli_decorators.profile
 @click.argument('folder', nargs=1, type=str, required=True)
 @cli_decorators.list
-def items(debug, pretty, yaml, xml, profile, folder, list):
+def items(debug, pretty, yaml, xml, toml, profile, folder, list):
     set_debug_log_level(debug)
-    cli_folder.items(pretty, yaml, xml, profile, folder, list)
+    cli_folder.items(pretty, yaml, xml, toml, profile, folder, list)
 
 @folder.command(short_help='\tOpen folder in web browser')
 @cli_decorators.debug
@@ -393,9 +393,9 @@ def job():
 @cli_decorators.format_output
 @cli_decorators.profile
 @click.argument('job', nargs=1, type=str, required=True)
-def info(debug, pretty, yaml, xml, profile, job):
+def info(debug, pretty, yaml, xml, toml, profile, job):
     set_debug_log_level(debug)
-    cli_job.info(pretty, yaml, xml, profile, job)
+    cli_job.info(pretty, yaml, xml, toml, profile, job)
 
 @job.command(short_help='\tSearch jobs by REGEX pattern')
 @cli_decorators.debug
@@ -406,9 +406,9 @@ def info(debug, pretty, yaml, xml, profile, job):
 @click.option('-d', '--depth', type=int, default=4, required=False, help='Search depth from root directory')
 @click.option('-fn', '--fullname', type=bool, default=False, required=False, is_flag=True, help='Search entire job path name')
 @cli_decorators.list
-def search(debug, pretty, yaml, xml, profile, search_pattern, search_folder, depth, fullname, list):
+def search(debug, pretty, yaml, xml, toml, profile, search_pattern, search_folder, depth, fullname, list):
     set_debug_log_level(debug)
-    cli_job.search(pretty, yaml, xml, profile, search_pattern, search_folder, depth, fullname, list)
+    cli_job.search(pretty, yaml, xml, toml, profile, search_pattern, search_folder, depth, fullname, list)
 
 @job.command(short_help='\tList all builds for job')
 @cli_decorators.debug
@@ -416,9 +416,9 @@ def search(debug, pretty, yaml, xml, profile, search_pattern, search_folder, dep
 @cli_decorators.profile
 @click.argument('job', nargs=1, type=str, required=True)
 @cli_decorators.list
-def list(debug, pretty, yaml, xml, profile, job, list):
+def list(debug, pretty, yaml, xml, toml, profile, job, list):
     set_debug_log_level(debug)
-    cli_job.build_list(pretty, yaml, xml, profile, job, list)
+    cli_job.build_list(pretty, yaml, xml, toml, profile, job, list)
 
 @job.command(short_help='\tGet next build number')
 @cli_decorators.debug
@@ -469,9 +469,9 @@ def build(debug, profile, job, parameter):
 @cli_decorators.profile
 @click.argument('job', nargs=1, type=str, required=True)
 @click.option('-i', '--id', type=bool, default=False, required=False, is_flag=True, help='Only output queue ID')
-def queue_check(debug, pretty, yaml, xml, profile, job, id):
+def queue_check(debug, pretty, yaml, xml, toml, profile, job, id):
     set_debug_log_level(debug)
-    cli_job.queue_check(pretty, yaml, xml, profile, job, id)
+    cli_job.queue_check(pretty, yaml, xml, toml, profile, job, id)
 
 @job.command(short_help='\tCancel this job in queue')
 @cli_decorators.debug
@@ -569,10 +569,10 @@ def build():
 @click.option('-u', '--url', type=str, required=False, help='Build URL (No job info needed)')
 @click.option('--latest', type=bool, required=False, is_flag=True, help='Latest build (Replaces --number)')
 @click.pass_context
-def info(ctx, debug, pretty, yaml, xml, profile, job, number, url, latest):
+def info(ctx, debug, pretty, yaml, xml, toml, profile, job, number, url, latest):
     set_debug_log_level(debug)
     if job or url:
-        cli_build.info(pretty, yaml, xml, profile, job, number, url, latest)
+        cli_build.info(pretty, yaml, xml, toml, profile, job, number, url, latest)
     else:
         click.echo(ctx.get_help())
 
@@ -633,10 +633,10 @@ def delete(ctx, debug, profile, job, number, url, latest):
 @click.option('-u', '--url', type=str, required=False, help='Build URL (No job info needed)')
 @click.option('--latest', type=str, required=False, is_flag=True, help='Latest build (Replaces --number)')
 @click.pass_context
-def stages(ctx, debug, pretty, yaml, xml, profile, list, job, number, url, latest):
+def stages(ctx, debug, pretty, yaml, xml, toml, profile, list, job, number, url, latest):
     set_debug_log_level(debug)
     if job or url:
-        cli_build.stages(pretty, yaml, xml, profile, list, job, number, url, latest)
+        cli_build.stages(pretty, yaml, xml, toml, profile, list, job, number, url, latest)
     else:
         click.echo(ctx.get_help())
 
@@ -714,10 +714,10 @@ def stage():
 @click.option('-u', '--url', type=str, required=False, help='Build URL (No job info needed)')
 @click.option('--latest', type=bool, required=False, is_flag=True, help='Latest build (Replaces --number)')
 @click.pass_context
-def info(ctx, debug, pretty, yaml, xml, profile, name, job, number, url, latest):
+def info(ctx, debug, pretty, yaml, xml, toml, profile, name, job, number, url, latest):
     set_debug_log_level(debug)
     if job or url:
-        cli_stage.info(pretty, yaml, xml, profile, name, job, number, url, latest)
+        cli_stage.info(pretty, yaml, xml, toml, profile, name, job, number, url, latest)
     else:
         click.echo(ctx.get_help())
 
@@ -748,10 +748,10 @@ def status(ctx, debug, profile, name, job, number, url, latest):
 @click.option('-u', '--url', type=str, required=False, help='Build URL (No job info needed)')
 @click.option('--latest', type=bool, required=False, is_flag=True, help='Latest build (Replaces --number)')
 @click.pass_context
-def steps(ctx, debug, pretty, yaml, xml, profile, list, name, job, number, url, latest):
+def steps(ctx, debug, pretty, yaml, xml, toml, profile, list, name, job, number, url, latest):
     set_debug_log_level(debug)
     if job or url:
-        cli_stage.steps(pretty, yaml, xml, profile, list, name, job, number, url, latest)
+        cli_stage.steps(pretty, yaml, xml, toml, profile, list, name, job, number, url, latest)
     else:
         click.echo(ctx.get_help())
 
@@ -788,10 +788,10 @@ def step():
 @cli_decorators.profile
 @click.argument('url', nargs=1, type=str, required=True)
 @click.pass_context
-def info(ctx, debug, pretty, yaml, xml, profile, url):
+def info(ctx, debug, pretty, yaml, xml, toml, profile, url):
     set_debug_log_level(debug)
     if job or url:
-        cli_step.info(pretty, yaml, xml, profile, url)
+        cli_step.info(pretty, yaml, xml, toml, profile, url)
     else:
         click.echo(ctx.get_help())
 

@@ -11,7 +11,7 @@ from . import cli_utility as cu
 logger = logging.getLogger()
 
 
-def info(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, step_url:str) -> None:
+def info(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:str, step_url:str) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -38,4 +38,4 @@ def info(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, step_url:str
     if not data:
         click.echo(click.style(f'No step information', fg='bright_red', bold=True))
         sys.exit(1)
-    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml)
+    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)

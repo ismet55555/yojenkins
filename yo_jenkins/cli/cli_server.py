@@ -17,7 +17,7 @@ from . import cli_utility as cu
 logger = logging.getLogger()
 
 
-def info(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str) -> None:
+def info(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:str) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -33,10 +33,10 @@ def info(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str) -> None:
     if not data:
         click.echo(click.style(f'No server information', fg='bright_red', bold=True))
         sys.exit(1)
-    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml)
+    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
-def people(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, opt_list:bool) -> None:
+def people(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:str, opt_list:bool) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -52,11 +52,11 @@ def people(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, opt_list:b
     if not data:
         click.echo(click.style(f'failed', fg='bright_red', bold=True))
         sys.exit(1)
-    output = data_list if opt_list else data
-    cu.standard_out(output, opt_pretty, opt_yaml, opt_xml)
+    data = data_list if opt_list else data
+    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
-def queue(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, opt_list:bool) -> None:
+def queue(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:str, opt_list:bool) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -75,10 +75,10 @@ def queue(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, opt_list:bo
     if not data:
         click.echo(click.style(f'No build queue found', fg='bright_red', bold=True))
         sys.exit(1)
-    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml)
+    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
-def plugins(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, opt_list:bool) -> None:
+def plugins(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:str, opt_list:bool) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -95,8 +95,8 @@ def plugins(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, opt_list:
         click.echo(click.style(f'No server plugin info found', fg='bright_red', bold=True))
         sys.exit(1)
 
-    output = data_list if opt_list else data
-    cu.standard_out(output, opt_pretty, opt_yaml, opt_xml)
+    data = data_list if opt_list else data
+    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
 def browser(profile:str) -> None:

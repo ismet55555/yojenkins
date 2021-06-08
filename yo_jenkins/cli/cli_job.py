@@ -12,7 +12,7 @@ from . import cli_utility as cu
 logger = logging.getLogger()
 
 
-def info(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, job:str) -> None:
+def info(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:str, job:str) -> None:
     """TODO Docstring
 
     Args:
@@ -32,10 +32,10 @@ def info(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, job:str) -> 
     if not data:
         click.echo(click.style(f'not found', fg='bright_red', bold=True))
         sys.exit(1)
-    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml)
+    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
-def search(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, search_pattern:str, search_folder:str, depth:int, fullname:bool, opt_list:bool) -> None:
+def search(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:str, search_pattern:str, search_folder:str, depth:int, fullname:bool, opt_list:bool) -> None:
     """TODO Docstring
 
     Args:
@@ -55,11 +55,11 @@ def search(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, search_pat
     if not data:
         click.echo(click.style(f'not found', fg='bright_red', bold=True))
         sys.exit(1)
-    output = data_list if opt_list else data
-    cu.standard_out(output, opt_pretty, opt_yaml, opt_xml)
+    data = data_list if opt_list else data
+    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
-def build_list(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, job:str, opt_list:bool) -> None:
+def build_list(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:str, job:str, opt_list:bool) -> None:
     """TODO Docstring
 
     Args:
@@ -79,8 +79,8 @@ def build_list(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, job:st
     if not data:
         click.echo(click.style(f'not found', fg='bright_red', bold=True))
         sys.exit(1)
-    output = data_list if opt_list else data
-    cu.standard_out(output, opt_pretty, opt_yaml, opt_xml)
+    data = data_list if opt_list else data
+    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
 def build_next(profile:str, job:str) -> None:
@@ -207,7 +207,7 @@ def build(profile:str, job:str, parameters:tuple) -> None:
     click.echo(click.style(f'{data}', fg='bright_green', bold=True))
 
 
-def queue_check(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, job:str, opt_id:bool) -> None:
+def queue_check(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:str, job:str, opt_id:bool) -> None:
     """TODO Docstring
 
     Args:
@@ -232,7 +232,7 @@ def queue_check(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, job:s
     if opt_id:
         click.echo(click.style(f'{queue_id}', fg='bright_green', bold=True))
     else:
-        cu.standard_out(data, opt_pretty, opt_yaml, opt_xml)
+        cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
 def browser(profile:str, job:str) -> None:

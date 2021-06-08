@@ -18,14 +18,6 @@
   - Don't put rev if there is none
 
 
---------------------------------------------------
-
-
-- Cannot install from testPYPI
-    - Dependency issue
-    - Can it be that something went bad from 0.0.1 to 0.0.2???
-    - Try again with later versions
-
 
 --------------------------------------------------
 

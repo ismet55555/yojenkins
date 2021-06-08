@@ -11,7 +11,7 @@ from . import cli_utility as cu
 logger = logging.getLogger()
 
 
-def info(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, folder:str) -> None:
+def info(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:str, folder:str) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -33,10 +33,10 @@ def info(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, folder:str) 
     if not data:
         click.echo(click.style(f'no folder information', fg='bright_red', bold=True))
         sys.exit(1)
-    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml)
+    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
-def search(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, search_pattern:str, search_folder:str, depth:int, fullname:bool, opt_list:bool) -> None:
+def search(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:str, search_pattern:str, search_folder:str, depth:int, fullname:bool, opt_list:bool) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -59,10 +59,10 @@ def search(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, search_pat
         click.echo(click.style(f'"not found', fg='bright_red', bold=True))
         sys.exit(1)
     data = data_list if opt_list else data
-    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml)
+    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
-def subfolders(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, folder:str, opt_list:bool) -> None:
+def subfolders(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:str, folder:str, opt_list:bool) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -85,10 +85,10 @@ def subfolders(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, folder
         click.echo(click.style(f'not found or no subfolders', fg='bright_red', bold=True))
         sys.exit(1)
     data = data_list if opt_list else data
-    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml)
+    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
-def jobs(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, folder:str, opt_list:bool) -> None:
+def jobs(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:str, folder:str, opt_list:bool) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -111,10 +111,10 @@ def jobs(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, folder:str, 
         click.echo(click.style(f'not found', fg='bright_red', bold=True))
         sys.exit(1)
     data = data_list if opt_list else data
-    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml)
+    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
-def views(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, folder:str, opt_list:int) -> None:
+def views(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:str, folder:str, opt_list:int) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -137,10 +137,10 @@ def views(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, folder:str,
         click.echo(click.style(f'not found', fg='bright_red', bold=True))
         sys.exit(1)
     data = data_list if opt_list else data
-    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml)
+    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
-def items(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, folder:str, opt_list:int) -> None:
+def items(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:str, folder:str, opt_list:int) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -163,7 +163,7 @@ def items(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, folder:str,
         click.echo(click.style(f'not found or no folder items', fg='bright_red', bold=True))
         sys.exit(1)
     data = data_list if opt_list else data
-    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml)
+    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
 def browser(profile:str, folder:str) -> None:

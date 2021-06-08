@@ -12,7 +12,7 @@ from . import cli_utility as cu
 # Getting the logger reference
 logger = logging.getLogger()
 
-def info(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, job:str, build_number:int, build_url:str, latest:bool) -> None:
+def info(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:str, job:str, build_number:int, build_url:str, latest:bool) -> None:
     """TODO Docstring
 
     Args:
@@ -45,7 +45,7 @@ def info(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, job:str, bui
     if not data:
         click.echo(click.style(f'No build information', fg='bright_red', bold=True))
         sys.exit(1)
-    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml)
+    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
 def status(profile:str, job:str, build_number:int, build_url:str, latest:bool) -> None:
@@ -174,7 +174,7 @@ def delete(profile:str, job:str, build_number:int, build_url:str, latest:bool) -
 
 
 
-def stages(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, opt_list:bool, job:str, build_number:int, build_url:str, latest:bool) -> None:
+def stages(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:str, opt_list:bool, job:str, build_number:int, build_url:str, latest:bool) -> None:
     """TODO Docstring
 
     Args:
@@ -208,8 +208,8 @@ def stages(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, opt_list:b
         click.echo(click.style(f'Failed to get build stages', fg='bright_red', bold=True))
         sys.exit(1)
 
-    output = data_list if opt_list else data
-    cu.standard_out(output, opt_pretty, opt_yaml, opt_xml)
+    data = data_list if opt_list else data
+    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
 

@@ -150,6 +150,24 @@ def is_list_items_in_dict(list_items:list, dict_to_check:dict) -> int:
     return None
 
 
+def iter_data_empty_item_stripper(iter_data):
+    """Removes any empty data form a nested or un-nested iter item
+
+    Details: https://stackoverflow.com/a/27974027/11294572
+
+    Args:
+        iter_data : data in the form of iterable (ie. list, dict, set, etc)
+
+    Returns:
+        Iterable item without any blank/empty items
+    """
+    if isinstance(iter_data, dict):
+        return {k: v for k, v in ((k, iter_data_empty_item_stripper(v)) for k, v in iter_data.items()) if v}
+    if isinstance(iter_data, list):
+        return [v for v in map(iter_data_empty_item_stripper, iter_data) if v]
+    return iter_data
+
+
 def url_to_name(url:str) -> str:
     """Convert the jenkins item URL to its name
 
