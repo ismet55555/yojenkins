@@ -57,7 +57,7 @@ def token(profile:str) -> None:
     click.echo(click.style(data, fg='bright_green', bold=True))
 
 
-def show(opt_pretty:bool, opt_yaml:bool, opt_xml:bool) -> None:
+def show(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -75,7 +75,7 @@ def show(opt_pretty:bool, opt_yaml:bool, opt_xml:bool) -> None:
         click.echo(click.style(f'Failed to find or read local configuration file', fg='bright_red', bold=True))
         sys.exit(1)
 
-    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml)
+    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
 def verify(profile:str) -> None:
@@ -107,7 +107,7 @@ def verify(profile:str) -> None:
     click.echo(click.style('true', fg='bright_green', bold=True))
 
 
-def user(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str) -> None:
+def user(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:str) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -127,4 +127,4 @@ def user(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str) -> None:
         sys.exit(1)
 
     # Console output
-    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml)
+    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)

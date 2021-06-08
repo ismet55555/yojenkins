@@ -18,6 +18,7 @@ def format_output(decorated_function):
     @click.option('-p', '--pretty', type=bool, default=False,  required=False, is_flag=True, help='Output in pretty human readable format')
     @click.option('-y', '--yaml', type=bool, default=False, required=False, is_flag=True, help='Output in YAML/YMLS format')
     @click.option('-x', '--xml', type=bool, default=False, required=False, is_flag=True, help='Output in XML format')
+    @click.option('-t', '--toml', type=bool, default=False, required=False, is_flag=True, help='Output in TOML format')
     @functools.wraps(decorated_function)
     def wrapper(*args, **kwds):
         return decorated_function(*args, **kwds)

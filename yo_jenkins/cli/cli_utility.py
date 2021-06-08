@@ -8,11 +8,13 @@ from pprint import pprint
 from typing import Type
 
 import click
+import toml
 import yaml
 from json2xml import json2xml
 from json2xml.utils import readfromstring
 from urllib3.util import parse_url
 from yo_jenkins.YoJenkins import REST, Auth, YoJenkins
+from yo_jenkins.Utility.utility import iter_data_empty_item_stripper
 
 # Getting the logger reference
 logger = logging.getLogger()
@@ -90,7 +92,7 @@ def config_YoJenkins(profile:str) -> Type[YoJenkins]:
     return YoJenkins(Auth_obj)
 
 
-def standard_out(data:dict, opt_pretty:bool=False, opt_yaml:bool=False, opt_xml:bool=False) -> None:
+def standard_out(data:dict, opt_pretty:bool=False, opt_yaml:bool=False, opt_xml:bool=False, opt_toml:bool=False) -> None:
     """TODO Docstring
 
     Args:
@@ -99,6 +101,9 @@ def standard_out(data:dict, opt_pretty:bool=False, opt_yaml:bool=False, opt_xml:
     Returns:
         TODO
     """
+    # Strip away any empty items in the iterable data
+    data = iter_data_empty_item_stripper(data)
+
     if opt_pretty:
         logger.debug('"PRETTY" (human readable) output was enabled')
 
@@ -111,6 +116,11 @@ def standard_out(data:dict, opt_pretty:bool=False, opt_yaml:bool=False, opt_xml:
         logger.debug('Outputting XML format ...')
         data = readfromstring(json.dumps(data))
         print(json2xml.Json2xml(data, pretty=opt_pretty).to_xml())
+    elif opt_toml:
+        # TOML format
+        data = {'item': data} if isinstance(data, list) else data
+        logger.debug('Outputting TOML format ...')
+        print(toml.dumps(data))
     else:
         # JSON format
         logger.debug('Outputting JSON format ...')
