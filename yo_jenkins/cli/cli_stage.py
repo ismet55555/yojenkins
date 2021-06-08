@@ -12,7 +12,7 @@ from . import cli_utility as cu
 # Getting the logger reference
 logger = logging.getLogger()
 
-def info(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, stage_name:str, job:str, build_number:int, build_url:str, latest:bool) -> None:
+def info(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:str, stage_name:str, job:str, build_number:int, build_url:str, latest:bool) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -49,7 +49,7 @@ def info(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, profile:str, stage_name:s
     if not data:
         click.echo(click.style(f'no stage information', fg='bright_red', bold=True))
         sys.exit(1)
-    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml)
+    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
 def status(profile:str, stage_name: str, job:str, build_number:int, build_url:str, latest:bool) -> None:
@@ -140,8 +140,8 @@ def steps(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, profile:str, opt_list
         click.echo(click.style(f'failed', fg='bright_red', bold=True))
         sys.exit(1)
 
-    output = data_list if opt_list else data
-    cu.standard_out(output, opt_pretty, opt_yaml, opt_xml)
+    data = data_list if opt_list else data
+    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
 

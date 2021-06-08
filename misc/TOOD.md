@@ -13,12 +13,9 @@
 
 
 - Update README.md
-    - Installation
+    - copy paste the default output
 
 - Logo!
-
-- Add output format: toml
-    - output - -t, --toml
 
 - look into faster json encoding and decoding:
   - https://github.com/ultrajson/ultrajson
