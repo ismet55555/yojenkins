@@ -4,13 +4,29 @@
 
 ================================================
 
+- yo-jenkins server server-deploy
+  - Output progress ...
+
+
+- Job - config
+  - Output the config.xml file
+  - Option for config.json
+
+- Job - Create
+  - Move to both folder/job and job menu
+  - Blank job
+  - Create a job using config.xml
+  - Option for config.json
+
+
+- Job
+    - Add on single bash or powershell script
+    - RUN SCRIPT: https://www.jenkins.io/doc/book/managing/script-console/
+
+
+
 - CLI Testing using click:
   - https://github.com/cdeil/python-cli-examples/blob/master/click/greet/test_cli.py
-
-- server-deploy
-    - place timestamp, seconds and formatted into .json file
-    - Place docker version in .json file
-
 
 - Logo!
 
@@ -20,24 +36,13 @@
 - server
     - Run a groovy script
 
-- job
-    - Makes sure config.xml works
-    - Add on single bash or powershell script
-    - RUN SCRIPT: https://www.jenkins.io/doc/book/managing/script-console/
-
-- WSL
-    - simplesound not working
-        - ERROR: fatal error: alsa/asoundlib.h: No such file or directory
-    - Either warn user, or try different library for WSL
-    - Maybe look for WSL in string platform release?
-    - Find out what sound library works on WSL
-
 - Look into scrolling
     - https://docs.python.org/2/library/curses.html#curses.window.scroll
 
-- For job monitor, also look into server queue
+- Job Monitors
+  - Job queue check
 
-- job monitor sound
+- Job monitor sound
     - New job arrives - halo sound
 
 - Build and Job Monitor
@@ -45,9 +50,9 @@
 
 - Build Monitor:
     - L - Build logs
-        - L - All logs
+        - L - All logs output
         - S - For certain stage - need a way to pick? (enter text for now?)
-        - B - Last X number of bytes of logs
+        - F - Switch to follow logs
 
 - For temporary message, look into
   threading timer
@@ -62,15 +67,6 @@
 
 - Folder 
     - View - delete
-
-- Create job
-  - in folder
-  - in job
-
-- Create job
-  - with blank config file
-  - with specified config file
-  - with interpolated config file
 
 - __main__.py 
   - sort in alphabetical order
