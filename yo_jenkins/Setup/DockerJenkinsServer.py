@@ -4,6 +4,7 @@ import logging
 import os
 from pprint import pprint
 from time import perf_counter
+from datetime import datetime
 from typing import Dict, List, Tuple
 
 import docker
@@ -153,6 +154,9 @@ class DockerJenkinsServer():
             return deployed, False
         deployed['container'] = container_name
         deployed['address'] = server_address
+        deployed['timestamp'] = datetime.now().timestamp()
+        deployed['datetime'] = datetime.now().strftime("%A, %B %d, %Y %I:%M:%S")
+        deployed['docker_version'] = self.docker_client.info()['ServerVersion'] if 'ServerVersion' in self.docker_client.info() else 'N/A'
 
         return deployed, True
 

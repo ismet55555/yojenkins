@@ -55,6 +55,8 @@ def platform_information() -> None:
     Returns:
         TODO
     """
+    python_rev = f'(REV:{platform.python_revision()})' if platform.python_revision() else ''
+
     # System information
     logger.debug(f'System information:')
     logger.debug(f'    - System:    {platform.system()}')
@@ -62,7 +64,7 @@ def platform_information() -> None:
     logger.debug(f'    - Version:   {platform.version()}')
     logger.debug(f'    - Machine:   {platform.uname().machine}')
     logger.debug(f'    - Processor: {platform.uname().processor}')
-    logger.debug(f'    - Python:    {platform.python_version()} (REV:{platform.python_revision()})')
+    logger.debug(f'    - Python:    {platform.python_version()} {python_rev}')
 
 
 
@@ -102,6 +104,7 @@ def standard_out(data:dict, opt_pretty:bool=False, opt_yaml:bool=False, opt_xml:
         TODO
     """
     # Strip away any empty items in the iterable data
+    logger.debug(f'Removing all empty items in iterable data ...')
     data = iter_data_empty_item_stripper(data)
 
     if opt_pretty:

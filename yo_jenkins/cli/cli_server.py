@@ -239,7 +239,7 @@ def server_deploy(config_file: str, plugins_file: str, protocol_schema: str, hos
         sys.exit(1)
     logger.debug(f'Writing server deploy information to file: {filepath}')
     with open(os.path.join(filepath), 'w') as file:
-        json.dump(deployed, file)
+        json.dump(deployed, file, indent=4, sort_keys=True)
 
     volumes_named = [ list(l.values())[0] for l in deployed["volumes"] ]
 
@@ -264,9 +264,11 @@ def server_teardown(remove_volume:bool, remove_image:bool):
     """
     # Load deployment info file with deployment information
     filepath = get_resource_path(os.path.join('server_docker_settings', 'last_deploy_info.json'))
+    logger.debug(f'Detecting server deployment info file: {filepath} ...')
     try:
         with open(os.path.join(filepath), 'r') as file:
             deployed = json.load(file)
+        logger.debug(f'Successfully found and loaded server deployment info file: {deployed}')
     except Exception as e:
         click.echo(click.style(f'Failed to detect a previous server deployment', fg='bright_red', bold=True))
         click.echo(click.style(f'If you think there was a previously successfull deployment, use Docker to remove it manually', fg='bright_red', bold=True))

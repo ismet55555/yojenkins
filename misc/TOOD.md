@@ -12,20 +12,10 @@
     - Place docker version in .json file
 
 
-- Update README.md
-    - copy paste the default output
-
 - Logo!
 
 - look into faster json encoding and decoding:
   - https://github.com/ultrajson/ultrajson
-
-- Command variables - why not just use env_vars
-    - SERVER, MY_JOB, etc
-    - var set (find out a way to store sensative info)
-    - var remove (also --all)
-    - var list
-    - var value
 
 - server
     - Run a groovy script
