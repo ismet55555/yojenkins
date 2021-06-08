@@ -5,9 +5,10 @@ from pprint import pprint
 
 import click
 
+from yo_jenkins import __version__
+from yo_jenkins.cli import logger_setup
 from yo_jenkins.cli import (cli_auth, cli_build, cli_decorators, cli_folder,
-                            cli_job, cli_server, cli_stage, cli_step,
-                            logger_setup)
+                            cli_job, cli_server, cli_stage, cli_step)
 from yo_jenkins.cli.cli_utility import set_debug_log_level
 
 logger = logging.getLogger()
@@ -16,8 +17,8 @@ logger = logging.getLogger()
 ##############################################################################
 
 
-MAIN_HELP_TEXT = """
-    \t\t\t \033[93m YO-JENKINS (Version: 0.0.18) \033[0m
+MAIN_HELP_TEXT = f"""
+    \t\t\t \033[93m YO-JENKINS (Version: {__version__}) \033[0m
 
     yo-jenkins is a tool that is focused on interfacing with
     Jenkins server from the comfort of the beloved command line. 
@@ -41,10 +42,10 @@ MAIN_HELP_TEXT = """
 
 @click.group(help=MAIN_HELP_TEXT)
 @click.version_option(
-    '0.0.18', "-v", "--version", message="%(version)s".format(version="version"),
+    __version__, "-v", "--version", message="%(version)s".format(version="version"),
     help="Show the version"
 )
-def main():   
+def main():  
     pass
 
 
@@ -153,7 +154,7 @@ def browser(debug, profile):
     set_debug_log_level(debug)
     cli_server.browser(profile)
 
-@server.command(short_help='\tCheck if sever is reachable')
+@server.command(short_help='\tCheck if server is reachable')
 @cli_decorators.debug
 @cli_decorators.profile
 @click.option('--timeout', type=int, default=10, required=False, is_flag=False, help='Request timeout value')
@@ -185,7 +186,7 @@ def restart(debug, profile, force):
     set_debug_log_level(debug)
     cli_server.restart(profile, force)
 
-@server.command(short_help='\tShutdown the server')
+@server.command(short_help='\tShut down the server')
 @cli_decorators.debug
 @cli_decorators.profile
 @click.option('--force', type=bool, default=False, required=False, is_flag=True, help='Force shutdown. Without initial quiet mode')
