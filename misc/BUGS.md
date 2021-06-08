@@ -13,15 +13,6 @@
 --------------------------------------------------
 
 
-- System information in log:
-  - Ptyhon: 3.9.2 (REV:)
-  - Don't put rev if there is none
-
-
-
---------------------------------------------------
-
-
 When starting a monitor, don't instantly play sound
 at no status change!
 

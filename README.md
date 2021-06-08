@@ -32,7 +32,7 @@
 
 Usage: __main__.py [OPTIONS] COMMAND [ARGS]...
 
-                        YO-JENKINS (Version: 0.0.16) 
+                        YO-JENKINS (Version: 0.0.0) 
 
   yo-jenkins is a tool that is focused on interfacing with Jenkins server from
   the comfort of the beloved command line.  This tool can also be used as a
