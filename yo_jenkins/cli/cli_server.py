@@ -202,6 +202,10 @@ def server_deploy(config_file: str, plugins_file: str, protocol_schema: str, hos
     Returns:
         TODO
     """
+    click.echo(f'Setting up a local local Jenkins development server. Hold tight, this may take a minute ...')
+
+    # TODO: Check if the docker server deployment file is there. If so, show that it is being renewed.
+
     # Creat object
     DJS = DockerJenkinsServer(
         config_file=config_file,
