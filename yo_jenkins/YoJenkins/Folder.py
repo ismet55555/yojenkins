@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
 
+import json
 import logging
 import re
 from pprint import pprint
 from time import perf_counter
 from typing import Dict, List, Tuple, Type
 
+import toml
+import xmltodict
+import yaml
 from yo_jenkins.Utility import utility
 from yo_jenkins.YoJenkins.JenkinsItemClasses import JenkinsItemClasses
 
@@ -347,7 +351,7 @@ class Folder():
         return success
 
 
-    def config(self, filepath:str='', folder_name:str='', folder_url:str='') -> Tuple[str, bool]:
+    def config(self, filepath:str='', folder_name:str='', folder_url:str='', opt_json:bool=False, opt_yaml:bool=False, opt_toml:bool=False) -> Tuple[str, bool]:
         """Get the folder XML configuration (config.xml)
 
         Args:
@@ -377,14 +381,27 @@ class Folder():
         logger.debug('Successfully fetched XML configurations' if success else 'Failed to fetch XML configurations')
 
         if filepath:
+            if any([opt_json, opt_yaml, opt_toml]):
+                logger.debug('Converting content to JSON ...')
+                data_ordered_dict = xmltodict.parse(return_content)
+                content_to_write = json.loads(json.dumps(data_ordered_dict))
+            if opt_json:
+                content_to_write = json.dumps(data_ordered_dict)
+            elif opt_yaml:
+                logger.debug('Converting content to YAML ...')
+                content_to_write = yaml.dump(content_to_write)
+            elif opt_toml:
+                logger.debug('Converting content to TOML ...')
+                content_to_write = toml.dumps(content_to_write)
+
             logger.debug(f'Writing fetched configuration to "{filepath}" ...')
             try:
                 with open(filepath, 'w+') as file:
-                    file.write(return_content)
+                    file.write(content_to_write)
                 logger.debug(f'Successfully wrote configurations to file')
             except Exception as e:
                 logger.debug('Failed to write configurations to file. Exception: {e}')
-                return return_content, False 
+                return "", False 
 
         return return_content, True
 

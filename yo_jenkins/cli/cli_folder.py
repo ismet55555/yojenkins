@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 
+import json
 import logging
 import sys
+from pprint import pprint
 
 import click
+import xmltodict
 
 from . import cli_utility as cu
 
@@ -190,7 +193,7 @@ def browser(profile:str, folder:str) -> None:
         sys.exit(1)
 
 
-def config(profile:str, folder:str, filepath:str) -> None:
+def config(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, opt_json:bool, profile:str, folder:str, filepath:str) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -205,9 +208,9 @@ def config(profile:str, folder:str, filepath:str) -> None:
     valid_url_format = cu.is_full_url(folder)
 
     if valid_url_format:
-        data, write_success = JY.Folder.config(filepath=filepath, folder_url=folder)
+        data, write_success = JY.Folder.config(filepath=filepath, folder_url=folder, opt_json=opt_json, opt_yaml=opt_yaml, opt_toml=opt_toml)
     else:
-        data, write_success = JY.Folder.config(filepath=filepath, folder_name=folder)
+        data, write_success = JY.Folder.config(filepath=filepath, folder_name=folder, opt_json=opt_json, opt_yaml=opt_yaml, opt_toml=opt_toml)
 
     if not data:
         click.echo(click.style(f'failed', fg='bright_red', bold=True))
@@ -217,7 +220,11 @@ def config(profile:str, folder:str, filepath:str) -> None:
         click.echo(click.style(f'failed to write', fg='bright_red', bold=True))
         sys.exit(1)
 
+    # Converting XML to dict
+    data = json.loads(json.dumps(xmltodict.parse(data)))
 
+    opt_xml = False if opt_json or opt_yaml or opt_toml else True
+    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 def create(profile:str, folder:str, name:str, type:str, xml_file:str) -> None:
     """TODO Docstring

@@ -343,12 +343,14 @@ def browser(debug, profile, folder):
 
 @folder.command(short_help='\tFolder XML configuration')
 @cli_decorators.debug
+@cli_decorators.format_output
+@click.option('-j', '--json', type=bool, default=False, required=False, is_flag=True, help='Output config in JSON format')
 @cli_decorators.profile
 @click.argument('folder', nargs=1, type=str, required=True)
 @click.option('--filepath', type=click.Path(file_okay=True, dir_okay=True), required=False, help='File/Filepath to write configurations to')
-def config(debug, profile, folder, filepath):
+def config(debug, pretty, yaml, xml, toml, json, profile, folder, filepath):
     set_debug_log_level(debug)
-    cli_folder.config(profile, folder, filepath)
+    cli_folder.config(pretty, yaml, xml, toml, json, profile, folder, filepath)
 
 @folder.command(short_help='\tCreate an item')
 @cli_decorators.debug
