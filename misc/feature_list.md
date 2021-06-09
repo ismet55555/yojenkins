@@ -5,28 +5,27 @@
 - configure
     - Set up a new credentials file (with default) - DONE
     - pass entire json string or ref to file to setup a new profile or multiple profiles
-- remove - remove a profile
 - token
     - generate a token - DONE
     - add token to specified token - DONE
-    - --refresh-all for all profiles - ?
+- verify - DONE
+- user - DONE
 - activate - activate a profile
 - deactivate - deactivate a profile
 - wipe - wipe all credentials
-- verify - DONE
-- user info 
+- deconfigure - remove a profile
 
 
 ## Server
-- Info - **NEEDS TESTING**
+- Info - DONE
 - All user/people info - DONE
 - Show plugins - DONE
-- Install a plugin
 - Build queue - DONE
 - Quite / unquite down - DONE
 - Is reachable - DONE
 - Restart / safe restart - DONE
 - Shutdown / exit - DONE
+- Install a plugin
 
 
 ## Node
@@ -51,9 +50,8 @@
 - Create job - DONE
 - Create view - DONE
 - Copy new item - DONE
-- Check if item exists
 - Folder XML config.xml - DONE
-
+- Check if item exists (header)
 
 
 ## Job
@@ -62,6 +60,7 @@
 - List Builds - DONE
 - Check if in queue - DONE
 - Return builds that are currently running
+  - Maybe part of list ??
 - Get next build in line - DONE
 - Set next build number - DONE
 - Check if build exists - DONE
@@ -115,7 +114,8 @@
 - Info - DONE
 
 
-## User
+## user
+- **Currently `server people` as `all`**
 - info
 - all
 - create
@@ -123,14 +123,14 @@
 - modify
 
 
-## Cred
+## cred
 - info
 - list credentials
 - create credentials
 - config credentials
 
 
-## Logs
+## logs
 Point to remote logs or local logs
 - search - Regex search
 - repo - Cross reference a error repo file
@@ -139,3 +139,11 @@ Point to remote logs or local logs
 - diff - Compare two build logs, show difference somehow
 
 
+## yo
+    - set of custom functionalities
+    - yo-jenkins yo
+      - get <URL>
+      - post <URL>
+      - --header
+      - --content
+      - all the custom formatting
