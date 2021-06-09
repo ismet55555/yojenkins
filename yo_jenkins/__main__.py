@@ -345,7 +345,7 @@ def browser(debug, profile, folder):
 @cli_decorators.debug
 @cli_decorators.profile
 @click.argument('folder', nargs=1, type=str, required=True)
-@click.option('-f', '--filepath', type=click.Path(file_okay=True, dir_okay=True), required=False, help='File/Filepath to write configurations to')
+@click.option('--filepath', type=click.Path(file_okay=True, dir_okay=True), required=False, help='File/Filepath to write configurations to')
 def config(debug, profile, folder, filepath):
     set_debug_log_level(debug)
     cli_folder.config(profile, folder, filepath)
@@ -493,12 +493,14 @@ def browser(debug, profile, job):
 
 @job.command(short_help='\tJob XML configuration')
 @cli_decorators.debug
+@cli_decorators.format_output
+@click.option('-j', '--json', type=bool, default=False, required=False, is_flag=True, help='Output config in JSON format')
 @cli_decorators.profile
 @click.argument('job', nargs=1, type=str, required=True)
-@click.option('-f', '--filepath', type=click.Path(file_okay=True, dir_okay=False), required=False, help='File/Filepath to write configurations to')
-def config(debug, profile, job, filepath):
+@click.option('--filepath', type=click.Path(file_okay=True, dir_okay=False), required=False, help='Filepath to write configurations to')
+def config(debug, pretty, yaml, xml, toml, json, profile, job, filepath):
     set_debug_log_level(debug)
-    cli_job.config(profile, job, filepath)
+    cli_job.config(pretty, yaml, xml, toml, json, profile, job, filepath)
 
 @job.command(short_help='\tDisable job')
 @cli_decorators.debug
@@ -649,7 +651,7 @@ def stages(ctx, debug, pretty, yaml, xml, toml, profile, list, job, number, url,
 @click.option('-u', '--url', type=str, required=False, help='Build URL (No job info needed)')
 @click.option('--latest', type=str, required=False, is_flag=True, help='Latest build (Replaces --number)')
 @click.option('--tail', type=float, required=False, help='Last of logs. If < 1 then %, else number of lines')
-@click.option('-dd', '--download_dir', type=click.Path(file_okay=False, dir_okay=True), required=False, is_flag=False, help='Download logs to directory')
+@click.option('-dd', '--download-dir', type=click.Path(file_okay=False, dir_okay=True), required=False, is_flag=False, help='Download logs to directory')
 @click.option('--follow', default=False, type=str, required=False, is_flag=True, help='Follow/Stream the logs as they are generated')
 @click.pass_context
 def logs(ctx, debug, profile, job, number, url, latest, tail, download_dir, follow):

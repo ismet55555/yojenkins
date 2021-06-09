@@ -118,7 +118,8 @@ def standard_out(data:dict, opt_pretty:bool=False, opt_yaml:bool=False, opt_xml:
         # XML format
         logger.debug('Outputting XML format ...')
         data = readfromstring(json.dumps(data))
-        print(json2xml.Json2xml(data, pretty=opt_pretty).to_xml())
+        data_xml = json2xml.Json2xml(data, pretty=opt_pretty).to_xml()
+        print(data_xml) if opt_pretty else print(data_xml.decode())
     elif opt_toml:
         # TOML format
         data = {'item': data} if isinstance(data, list) else data

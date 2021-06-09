@@ -31,6 +31,9 @@
 
 ## Ideas
 
+- yo-jenkins yo do <URL>
+  - custom url send, see feature list
+
 - yo-jenkins man
     - info
     - Check for updates

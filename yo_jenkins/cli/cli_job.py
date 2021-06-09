@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 
+import json
 import logging
 import sys
 from pprint import pprint
 
 import click
+import xmltodict
 
 from . import cli_utility as cu
 
@@ -200,7 +202,7 @@ def build(profile:str, job:str, parameters:tuple) -> None:
         data = JY.Job.build_trigger(job_name=job, paramters=parameters)
 
     if not data:
-        parameters_text = " with parameters: {parameters}" if parameters else ""
+        # parameters_text = " with parameters: {parameters}" if parameters else ""
         click.echo(click.style(f'failed', fg='bright_red', bold=True))
         sys.exit(1)
 
@@ -257,7 +259,7 @@ def browser(profile:str, job:str) -> None:
         sys.exit(1)
 
 
-def config(profile:str, job:str, filepath:str) -> None:
+def config(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, opt_json:bool, profile:str, job:str, filepath:str) -> None:
     """TODO Docstring
 
     Args:
@@ -270,18 +272,23 @@ def config(profile:str, job:str, filepath:str) -> None:
     valid_url_format = cu.is_full_url(job)
 
     if valid_url_format:
-        data, write_success = JY.Job.config(filepath=filepath, job_url=job)
+        data, write_success = JY.Job.config(filepath=filepath, job_url=job, opt_json=opt_json, opt_yaml=opt_yaml, opt_toml=opt_toml)
     else:
-        data, write_success = JY.Job.config(filepath=filepath, job_name=job)
+        data, write_success = JY.Job.config(filepath=filepath, job_name=job, opt_json=opt_json, opt_yaml=opt_yaml, opt_toml=opt_toml)
 
     if not data:
         click.echo(click.style(f'failed', fg='bright_red', bold=True))
         sys.exit(1)
-    print(data)
 
     if not write_success:
-        click.echo(click.style(f'failed to write', fg='bright_red', bold=True))
+        click.echo(click.style(f'failed to write to file', fg='bright_red', bold=True))
         sys.exit(1)
+
+    # Converting XML to dict
+    data = json.loads(json.dumps(xmltodict.parse(data)))
+
+    opt_xml = False if opt_json or opt_yaml or opt_toml else True
+    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
 def disable(profile:str, job:str) -> None:

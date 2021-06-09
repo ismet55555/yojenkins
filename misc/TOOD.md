@@ -5,12 +5,15 @@
 ================================================
 
 - yo-jenkins server server-deploy
-  - Output progress ...
+  - Output progress, progress bar ... look in to click add-on
 
 
 - Job - config
   - Output the config.xml file
   - Option for config.json
+
+- Folder - config
+  - mimic folder config
 
 - Job - Create
   - Move to both folder/job and job menu
