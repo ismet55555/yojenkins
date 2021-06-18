@@ -5,9 +5,9 @@ click==8.0.1
 coloredlogs==15.0.1
 docker==5.0.0
 json2xml==3.6.0
-python-jenkins==1.8.0
+python-jenkins==1.8.0.0a0
 PyYAML==5.4.1
-requests-cache==0.7.0
+requests-cache==0.7.0.dev452
 requests-futures==1.0.0
 simpleaudio==1.0.4; platform_system != "Windows"
 windows-curses; platform_system == "Windows"
