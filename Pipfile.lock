@@ -238,7 +238,7 @@
         },
         "windows-curses": {
             "platform_system": "== 'Windows'",
-            "version": "*"
+            "version": "==*"
         },
         "xmltodict": {
             "hashes": [
@@ -574,6 +574,10 @@
                 "sha256:a86d6e1f5b1dc238b218b012df0aa79409667bb209e58da56d0b94704e712a97"
             ],
             "version": "==1.5.0"
+        },
+        "sanitized-package": {
+            "editable": true,
+            "path": "."
         },
         "secretstorage": {
             "hashes": [
