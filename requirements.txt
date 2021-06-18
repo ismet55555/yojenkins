@@ -10,4 +10,4 @@ PyYAML==5.4.1
 requests-cache==0.7.0.dev452
 requests-futures==1.0.0
 simpleaudio==1.0.4; platform_system != "Windows"
-windows-curses; platform_system == "Windows"
+windows-curses==2.2.0; platform_system == "Windows"

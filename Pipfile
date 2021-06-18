@@ -28,7 +28,7 @@ pyyaml = "*"
 requests-cache = "*"
 requests_futures = "*"
 simpleaudio = {version = "*", platform_system = "!= 'Windows'"}
-windows-curses = {version = "*", platform_system = "== 'Windows'"}
+windows-curses = {version = "2.2.0", platform_system = "== 'Windows'"}
 # [requires]
 # python_version = "3"
 
