@@ -1,15 +1,26 @@
 #!/usr/bin/env python3
 
-# import toml
 import os
-import setuptools
+import sys
 from pprint import pprint
+
+import setuptools
 
 # Package version number (Updated via bump2version tool)
 __version__ = "0.0.19"
 
+def check_py_version():
+    """Check the python version"""
+    if sys.version_info < (3, 7):
+        print(f'Your Python version ({sys.version_info.major}.{sys.version_info.minor}) is not supported')
+        print('Must have Python 3.7 or higher')
+        sys.exit(1)
+
 def get_requirements():
     """Load packages from requirements.txt"""
+
+    check_py_version()
+
     with open(os.path.join(os.path.dirname(__file__), "requirements.txt")) as handle:
         packages = handle.readlines()
     packages = [package.strip() for package in packages]
@@ -19,6 +30,7 @@ def get_requirements():
 def get_pipfile_requirements():
     """Load packages from Pipfile"""
     from toml import loads
+
     # Loading Pipfile
     try:
         with open ('Pipfile', 'r') as fh:
