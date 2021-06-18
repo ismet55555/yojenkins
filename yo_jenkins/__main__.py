@@ -493,7 +493,7 @@ def browser(debug, profile, job):
     set_debug_log_level(debug)
     cli_job.browser(profile, job)
 
-@job.command(short_help='\tJob XML configuration')
+@job.command(short_help='\tGet job configuration')
 @cli_decorators.debug
 @cli_decorators.format_output
 @click.option('-j', '--json', type=bool, default=False, required=False, is_flag=True, help='Output config in JSON format')
@@ -545,7 +545,7 @@ def wipe(debug, profile, job):
     set_debug_log_level(debug)
     cli_job.wipe(profile, job)
 
-@job.command(short_help='\tMonitor UI')
+@job.command(short_help='\tStart monitor UI')
 @cli_decorators.debug
 @cli_decorators.profile
 @click.argument('job', nargs=1, type=str, required=False)
@@ -554,6 +554,15 @@ def monitor(debug, profile, job, sound):
     set_debug_log_level(debug)
     cli_job.monitor(profile, job, sound)
 
+@job.command(short_help='\tCreate a job')
+@cli_decorators.debug
+@cli_decorators.profile
+@click.argument('folder', nargs=1, type=str, required=True)
+def create(debug, profile, folder):
+    set_debug_log_level(debug)
+    cli_job.create(profile, folder)
+
+    # TODO: Actually move to folder, create item....
 
 
 
@@ -679,7 +688,7 @@ def browser(ctx, debug, profile, job, number, url, latest):
     else:
         click.echo(ctx.get_help())
 
-@build.command(short_help='\tMonitor UI')
+@build.command(short_help='\tStart monitor UI')
 @cli_decorators.debug
 @cli_decorators.profile
 @click.argument('job', nargs=1, type=str, required=False)

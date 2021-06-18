@@ -8,13 +8,6 @@
   - Output progress, progress bar ... look in to click add-on
 
 
-- Job - config
-  - Output the config.xml file
-  - Option for config.json
-
-- Folder - config
-  - mimic folder config
-
 - Job - Create
   - Move to both folder/job and job menu
   - Blank job
@@ -25,6 +18,7 @@
 - Job
     - Add on single bash or powershell script
     - RUN SCRIPT: https://www.jenkins.io/doc/book/managing/script-console/
+    - Give
 
 
 
@@ -85,28 +79,13 @@
     - elapsed loop time
     - curses.boudrate
     - ... need at least like 4
-
-- Find a way to show user error messages
+    - Find a way to show user error messages
 
 - Curses scrolling:
     - Build Monitor - Stages
     - Job Monitor - Builds
     - Folder Monitor - Jobs
 
-- Concurrent requests for stage logs
-    - ALREADY WORKS? - TEST ...
-    - Separate monitoring object?
-    - Use for stage logs
-
-- Look into partially downloading logs
-    - specify headers
-        - Byte range: 14.5: https://stackoverflow.com/questions/23602412/only-download-a-part-of-the-document-using-python-requests
-        - Other:
-            - https://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
-        
-- Maybe probe log files the file first for size?
-    - If large, can we divide it up?
-    - https://stackoverflow.com/questions/41546386/check-if-a-large-file-exists-without-downloading-it
 
 - Clean sensitive data fro repo history
     - https://www.cidean.com/blog/2019/clean-sensitive-files-from-git-repo/
@@ -116,14 +95,13 @@
     - https://stackoverflow.com/questions/2919878/git-rewrite-previous-commit-usernames-and-emails
     - https://docs.github.com/en/github/setting-up-and-managing-your-github-profile/managing-contribution-graphs-on-your-profile/why-are-my-contributions-not-showing-up-on-my-profile#contributions-that-are-counted
 
-- Use .yo-jenkins directory in home instead of just a file
-
 - yo-jenkins auth wipe [HOLD OFF, DO LATER]
 
 - Waiting spinning thingy [ HOLD OFF, DO LATER ]
     - OR click progress bar: https://click.palletsprojects.com/en/7.x/utils/#showing-progress-bars
 
 - Add "ey-yo" to "step" -> "'sup" ASCII sign [ HOLD OFF, DO LATER ]
+  - yo-jenkins yo ey-yo
 
 
 
