@@ -31,6 +31,8 @@
 
 ## Ideas
 
+- command history saving and showing
+
 - yo-jenkins yo do <URL>
   - custom url send, see feature list
 
@@ -40,17 +42,8 @@
     - Report an issue
     - Request a feature
 
-
-
 - Total log bytes indicator on monitor
-- Log size option in logs -b, --bytes
-
-- On creation and deletion of things have --dry-run flag
-    to make sure the operation would works (THIS EVEN POSSIBLE?)
-        - create
-        - delete
-        - abort
-        - cancel
+  - Using request header
 
 - Compare passed url with server url ???
 
@@ -74,19 +67,14 @@
     - create, info, build, delete
     - folder, job, build
 
-- Can we find a public jenkins server to test on?
-    - Use terraform to spin up an image to test?
-    - Use docker to spin up a server with pre-defined configs
-
-- Run the tool inside docker
+- Run this tool inside docker
     - Not part of the tool, but part of the setup
 
 - Create separate configuration files:
     - credentials.conf   -> when in home place into `./yo-jenkins` directory
     - yo-jenkins-conf
 
-- HTML output of build results
-
+- Figure out the output to commands
 - After creation, deletion, build start, etc return job name like docker (maybe if flag is set)
 
 - Recursively show directories/items for specified folder
