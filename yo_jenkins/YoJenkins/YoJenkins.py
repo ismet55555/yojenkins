@@ -14,9 +14,6 @@ from yo_jenkins.YoJenkins.Step import Step
 # Getting the logger reference
 logger = logging.getLogger()
 
-if sys.version_info < (3, 6):
-    logger.error('This python version ({sys.version_info.major}.{sys.version_info.minor}) is not supported')
-
 
 class YoJenkins:
     """This class is a composite class of other objects

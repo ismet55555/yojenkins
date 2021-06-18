@@ -2,12 +2,12 @@
 
 toml==0.10.2
 click==8.0.1
-coloredlogs==15.0
+coloredlogs==15.0.1
 docker==5.0.0
 json2xml==3.6.0
-python-jenkins==1.7.0
+python-jenkins==1.8.0
 PyYAML==5.4.1
-requests-cache==0.6.4
+requests-cache==0.7.0
 requests-futures==1.0.0
-simpleaudio; platform_system != "Windows"
+simpleaudio==1.0.4; platform_system != "Windows"
 windows-curses; platform_system == "Windows"

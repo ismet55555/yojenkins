@@ -2,6 +2,7 @@
 
 import logging
 from pprint import pprint
+import sys
 
 import click
 
@@ -13,6 +14,10 @@ from yo_jenkins.cli.cli_utility import set_debug_log_level
 
 logger = logging.getLogger()
 
+if sys.version_info < (3, 7):
+    click.echo(click.style(f'Your Python version ({sys.version_info.major}.{sys.version_info.minor}) is not supported', fg='bright_red', bold=True))
+    click.echo(click.style('Must have Python 3.7 or higher', fg='bright_red', bold=True))
+    sys.exit(1)
 
 ##############################################################################
 
