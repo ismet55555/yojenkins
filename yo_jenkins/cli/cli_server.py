@@ -191,7 +191,7 @@ def shutdown(profile:str, force:bool):
     click.echo(click.style('success', fg='bright_green', bold=True))
 
 
-def server_deploy(config_file: str, plugins_file: str, protocol_schema: str, host: str, port: int, image_base: str, image_rebuild: bool, new_volume: bool, new_volume_name: str, bind_mount_dir: str, container_name: str, registry: str) -> None:
+def server_deploy(config_file: str, plugins_file: str, protocol_schema: str, host: str, port: int, image_base: str, image_rebuild: bool, new_volume: bool, new_volume_name: str, bind_mount_dir: str, container_name: str, registry: str, admin_user: str, password: str) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -202,7 +202,7 @@ def server_deploy(config_file: str, plugins_file: str, protocol_schema: str, hos
     Returns:
         TODO
     """
-    click.echo(f'Setting up a local local Jenkins development server. Hold tight, this may take a minute ...')
+    click.echo(f'Setting up a local Jenkins development server. Hold tight, this may take a minute ...')
 
     # TODO: Check if the docker server deployment file is there. If so, show that it is being renewed.
 
@@ -219,7 +219,9 @@ def server_deploy(config_file: str, plugins_file: str, protocol_schema: str, hos
         new_volume_name=new_volume_name,
         bind_mount_dir=bind_mount_dir,
         container_name=container_name,
-        registry=registry
+        registry=registry,
+        admin_user=admin_user,
+        password=password if password else "password"
         )
     
     # Initialize docker client
@@ -251,10 +253,10 @@ def server_deploy(config_file: str, plugins_file: str, protocol_schema: str, hos
     click.echo(click.style(f'   - Docker image:      {deployed["image"]}', fg='bright_green', bold=True))
     click.echo(click.style(f'   - Docker volumes:    {deployed["container"]}', fg='bright_green', bold=True))
     click.echo(click.style(f'   - Docker container:  {", ".join(volumes_named)}', fg='bright_green', bold=True))
-    click.echo(click.style(f'   - Server address:    {deployed["address"]}', fg='bright_green', bold=True))
     click.echo()
-    click.echo(click.style(f'Username: admin', fg='bright_green', bold=True))
-    click.echo(click.style(f'Password: password', fg='bright_green', bold=True))
+    click.echo(click.style(f'Address:  {deployed["address"]}', fg='bright_green', bold=True))
+    click.echo(click.style(f'Username: {admin_user}', fg='bright_green', bold=True))
+    click.echo(click.style(f'Password: {"*************" if password else "password (default)"}', fg='bright_green', bold=True))
 
 
 

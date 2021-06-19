@@ -218,7 +218,9 @@ def shutdown(debug, profile, force):
 @click.option('--bind-mount-dir', default='', type=click.Path(file_okay=False, dir_okay=True), required=False, help='Path of local directory to be bound inside container "/tmp/my_things" directory')
 @click.option('--container-name', default='yo-jenkins-jenkins', type=str, required=False, help='Name of the resulting Docker container')
 @click.option('--registry', default='', type=str, required=False, help='Registry to pull base Jenkins image from')
-def server_deploy(debug, config_file, plugins_file, protocol_schema, host, port, image_base, image_rebuild, new_volume, new_volume_name, bind_mount_dir, container_name, registry):
+@click.option('--admin-user', default='admin', type=str, required=False, help='Set username of admin (default: admin)')
+@click.option('--password', default='', type=str, required=False, help='Set password for admin account (default: password)')
+def server_deploy(debug, config_file, plugins_file, protocol_schema, host, port, image_base, image_rebuild, new_volume, new_volume_name, bind_mount_dir, container_name, registry, admin_user, password):
     """ATTENTION: The resulting Jenkins server is for development and testing purposes only. Enjoy responsibly.
     
     NOTE: Docker must be installed for this command to function
@@ -226,7 +228,7 @@ def server_deploy(debug, config_file, plugins_file, protocol_schema, host, port,
     BTW: All options have default values and command can be run without any specified options
     """
     set_debug_log_level(debug)
-    cli_server.server_deploy(config_file, plugins_file, protocol_schema, host, port, image_base, image_rebuild, new_volume, new_volume_name, bind_mount_dir, container_name, registry)
+    cli_server.server_deploy(config_file, plugins_file, protocol_schema, host, port, image_base, image_rebuild, new_volume, new_volume_name, bind_mount_dir, container_name, registry, admin_user, password)
 
 @server.command(short_help='\tRemove a local development server')
 @click.option('--remove-volume', default=False, type=bool, required=False, is_flag=True, help='Also remove the Docker volume used for current server (default: off)')
