@@ -252,6 +252,9 @@ def server_deploy(config_file: str, plugins_file: str, protocol_schema: str, hos
     click.echo(click.style(f'   - Docker volumes:    {deployed["container"]}', fg='bright_green', bold=True))
     click.echo(click.style(f'   - Docker container:  {", ".join(volumes_named)}', fg='bright_green', bold=True))
     click.echo(click.style(f'   - Server address:    {deployed["address"]}', fg='bright_green', bold=True))
+    click.echo()
+    click.echo(click.style(f'Username: admin', fg='bright_green', bold=True))
+    click.echo(click.style(f'Password: password', fg='bright_green', bold=True))
 
 
 

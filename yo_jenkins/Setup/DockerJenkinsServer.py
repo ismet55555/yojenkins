@@ -154,8 +154,8 @@ class DockerJenkinsServer():
             return deployed, False
         deployed['container'] = container_name
         deployed['address'] = server_address
-        deployed['timestamp'] = datetime.now().timestamp()
-        deployed['datetime'] = datetime.now().strftime("%A, %B %d, %Y %I:%M:%S")
+        deployed['deploy_timestamp'] = datetime.now().timestamp()
+        deployed['deploy_datetime'] = datetime.now().strftime("%A, %B %d, %Y %I:%M:%S")
         deployed['docker_version'] = self.docker_client.info()['ServerVersion'] if 'ServerVersion' in self.docker_client.info() else 'N/A'
 
         return deployed, True
