@@ -158,3 +158,8 @@ cython_debug/
 
 # Temp last server deployment information file
 last_deploy_info.json
+
+# Configuration files
+config.xml
+config.json
+config.toml

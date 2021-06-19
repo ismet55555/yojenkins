@@ -16,6 +16,7 @@ import yaml
 from yo_jenkins.Monitor import JobMonitor
 from yo_jenkins.Utility import utility
 from yo_jenkins.YoJenkins.JenkinsItemClasses import JenkinsItemClasses
+from yo_jenkins.YoJenkins.JenkinsItemConfig import JenkinsItemConfig
 
 # Getting the logger reference
 logger = logging.getLogger()
@@ -551,8 +552,12 @@ class Job():
                 logger.debug('Converting content to JSON ...')
                 data_ordered_dict = xmltodict.parse(return_content)
                 content_to_write = json.loads(json.dumps(data_ordered_dict))
+            else:
+                # XML Format
+                content_to_write = return_content
+
             if opt_json:
-                content_to_write = json.dumps(data_ordered_dict)
+                content_to_write = json.dumps(data_ordered_dict, indent=4)
             elif opt_yaml:
                 logger.debug('Converting content to YAML ...')
                 content_to_write = yaml.dump(content_to_write)
@@ -722,4 +727,62 @@ class Job():
             logger.debug('Successfully opened monitor')
         else:
             logger.debug('Failed to open monitor for build')
+        return success
+
+
+    def create(self, name:str, folder_name:str='', folder_url:str='', config:str='config.xml') -> bool:
+        """TODO Docstring
+
+        Args:
+            TODO
+
+        Returns:
+            TODO
+        """
+        if not folder_name and not folder_url:
+            logger.debug('Failed to get folder information. No folder name or folder url received')
+            return False
+
+        if folder_url:
+            folder_url = folder_url.strip('/')
+        else:
+            folder_url = utility.name_to_url(self.REST.get_server_url(), folder_name)
+
+        if not name:
+            logger.debug('Item name is a blank')
+            return False
+        if utility.has_special_char(name):
+            return False
+
+        # TODO: Check if job already exists
+
+        # Use job config from file
+        if config:
+            logger.debug(f'Opening and reading file: {config} ...')
+            try:
+                config_file = open(config, 'rb')
+                config_definition = config_file.read()
+            except Exception as e:
+                logger.debug(f'Failed to open and read file. Exception: {e}')
+
+        # Use blank job config
+        if not config:
+            config_definition = JenkinsItemConfig.job.value['blank'].encode('utf-8')
+
+        logger.debug(f'Creating job "{name}" ...')
+        endpoint = f'createItem?name={name}'
+        headers={'Content-Type': 'application/xml; charset=utf-8'}
+        _, _, success = self.REST.request(
+            f'{folder_url.strip("/")}/{endpoint}',
+            'post',
+            data=config_definition,
+            headers=headers,
+            is_endpoint=False)
+        logger.debug(f'Successfully created item "{name}"' if success else f'Failed to create item "{name}"')
+
+        try:
+            config_file.close()
+        except:
+            pass
+
         return success

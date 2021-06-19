@@ -8,4 +8,5 @@ from .Step import Step
 from .YoJenkins import YoJenkins
 
 from .JenkinsItemClasses import JenkinsItemClasses
+from .JenkinsItemConfig import JenkinsItemConfig
 

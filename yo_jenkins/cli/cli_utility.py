@@ -110,16 +110,18 @@ def standard_out(data:dict, opt_pretty:bool=False, opt_yaml:bool=False, opt_xml:
     if opt_pretty:
         logger.debug('"PRETTY" (human readable) output was enabled')
 
+    if opt_xml:
+        logger.debug('Outputting XML format ...')
+        # data = readfromstring(json.dumps(data))
+        # data_xml = json2xml.Json2xml(data, pretty=opt_pretty).to_xml()
+        # print(data) if opt_pretty else print(data.decode())
+        print(data)
+        return
+
     if opt_yaml:
         # YAML format
         logger.debug('Outputting YAML format ...')
         print(yaml.safe_dump(data, default_flow_style=False, indent=2))
-    elif opt_xml:
-        # XML format
-        logger.debug('Outputting XML format ...')
-        data = readfromstring(json.dumps(data))
-        data_xml = json2xml.Json2xml(data, pretty=opt_pretty).to_xml()
-        print(data_xml) if opt_pretty else print(data_xml.decode())
     elif opt_toml:
         # TOML format
         data = {'item': data} if isinstance(data, list) else data
@@ -132,6 +134,8 @@ def standard_out(data:dict, opt_pretty:bool=False, opt_yaml:bool=False, opt_xml:
             print(json.dumps(data, indent=4, sort_keys=True))
         else:
             print(json.dumps(data))
+
+
 
 
 def is_full_url(url:str) -> bool:
