@@ -15,6 +15,7 @@ from json2xml.utils import readfromstring
 from urllib3.util import parse_url
 from yo_jenkins.YoJenkins import REST, Auth, YoJenkins
 from yo_jenkins.Utility.utility import iter_data_empty_item_stripper
+from yo_jenkins import __version__
 
 # Getting the logger reference
 logger = logging.getLogger()
@@ -41,6 +42,9 @@ def set_debug_log_level(debug_flag:bool) -> None:
     logger.setLevel(logging_level)
     for handler in logger.handlers:
         handler.setLevel(logging_level)
+
+    # Program version
+    logger.debug(f'Tool version: {__version__}')
 
     # Show system information
     platform_information()
