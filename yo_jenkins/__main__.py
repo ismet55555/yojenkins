@@ -357,16 +357,17 @@ def config(debug, pretty, yaml, xml, toml, json, profile, folder, filepath):
     set_debug_log_level(debug)
     cli_folder.config(pretty, yaml, xml, toml, json, profile, folder, filepath)
 
-@folder.command(short_help='\tCreate an item')
+
+@folder.command(short_help='\tCreate an item (folder, view, job)')
 @cli_decorators.debug
 @cli_decorators.profile
-@click.argument('folder', nargs=1, type=str, required=True)
 @click.argument('name', nargs=1, type=str, required=True)
+@click.argument('folder', nargs=1, type=str, required=True)
 @click.option('--type', type=click.Choice(['folder', 'view', 'job'], case_sensitive=False), default='folder', required=False, help='Item type created [default: folder]')
 @click.option('-cf', '--config-file', type=click.Path(file_okay=True, dir_okay=False), required=False, help='Path to local XML file defining item')
-def create(debug, profile, folder, name, type, config_file):
+def create(debug, profile, name, folder, type, config_file):
     set_debug_log_level(debug)
-    cli_folder.create(profile, folder, name, type, config_file)
+    cli_folder.create(profile, name, folder, type, config_file)
 
 @folder.command(short_help='\tCopy an existing item')
 @cli_decorators.debug
@@ -378,7 +379,7 @@ def copy(debug, profile, folder, original, new):
     set_debug_log_level(debug)
     cli_folder.copy(profile, folder, original, new)
 
-@folder.command(short_help='\tDelete folder')
+@folder.command(short_help='\tDelete folder or view')
 @cli_decorators.debug
 @cli_decorators.profile
 @click.argument('folder', nargs=1, type=str, required=True)
@@ -562,12 +563,12 @@ def monitor(debug, profile, job, sound):
 @job.command(short_help='\tCreate a job')
 @cli_decorators.debug
 @cli_decorators.profile
+@click.argument('name', nargs=1, type=str, required=True)
 @click.argument('folder', nargs=1, type=str, required=True)
-def create(debug, profile, folder):
+@click.option('--config', default='', type=click.Path(file_okay=True, dir_okay=False), required=False, help='Config file defining the job')
+def create(debug, profile, name, folder, config):
     set_debug_log_level(debug)
-    cli_job.create(profile, folder)
-
-    # TODO: Actually move to folder, create item....
+    cli_job.create(profile, name, folder, config)
 
 
 

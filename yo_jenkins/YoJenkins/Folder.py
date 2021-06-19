@@ -12,6 +12,7 @@ import xmltodict
 import yaml
 from yo_jenkins.Utility import utility
 from yo_jenkins.YoJenkins.JenkinsItemClasses import JenkinsItemClasses
+from yo_jenkins.YoJenkins.JenkinsItemConfig import JenkinsItemConfig
 
 # Getting the logger reference
 logger = logging.getLogger()
@@ -34,27 +35,6 @@ class Folder():
         # Recursive search results
         self.search_results = []
         self.search_items_count = 0
-
-        self.EMPTY_VIEW_CONFIG_XML = '''<?xml version="1.0" encoding="UTF-8"?>
-        <hudson.model.ListView>
-        <name>EMPTY</name>
-        <filterExecutors>false</filterExecutors>
-        <filterQueue>false</filterQueue>
-        <properties class="hudson.model.View$PropertyList"/>
-        <jobNames>
-            <comparator class="hudson.util.CaseInsensitiveComparator"/>
-        </jobNames>
-        <jobFilters/>
-        <columns>
-            <hudson.views.StatusColumn/>
-            <hudson.views.WeatherColumn/>
-            <hudson.views.JobColumn/>
-            <hudson.views.LastSuccessColumn/>
-            <hudson.views.LastFailureColumn/>
-            <hudson.views.LastDurationColumn/>
-            <hudson.views.BuildButtonColumn/>
-        </columns>
-        </hudson.model.ListView>'''
 
 
     def __recursive_search(self, search_pattern:str, search_list:list, level:int, fullname:bool=True) -> None:
@@ -385,6 +365,10 @@ class Folder():
                 logger.debug('Converting content to JSON ...')
                 data_ordered_dict = xmltodict.parse(return_content)
                 content_to_write = json.loads(json.dumps(data_ordered_dict))
+            else:
+                # XML Format
+                content_to_write = return_content
+
             if opt_json:
                 content_to_write = json.dumps(data_ordered_dict)
             elif opt_yaml:
@@ -406,7 +390,7 @@ class Folder():
         return return_content, True
 
 
-    def create(self, name:str, type:str='folder', xml_file:str='config.xml', folder_name:str='', folder_url:str='') -> bool:
+    def create(self, name:str, type:str='folder', folder_name:str='', folder_url:str='', config:str='config.xml') -> bool:
         """TODO Docstring
 
         Args:
@@ -430,36 +414,48 @@ class Folder():
         if utility.has_special_char(name):
             return False
 
+        # TODO: Check if job already exists
+
         supported_create_items = ['folder', 'view', 'job']
         if type.strip().lower() not in supported_create_items:
             logger.debug(f'Failed to match supported items to create: {supported_create_items}')
             return False
 
+        # Use config from file
+        if config:
+            logger.debug(f'Opening and reading file: {config} ...')
+            try:
+                config_file = open(config, 'rb')
+                config_definition = config_file.read()
+            except Exception as e:
+                logger.debug(f'Failed to open and read file. Exception: {e}')
+
+        # Use blank item config
         if type == 'folder':
             endpoint = f'createItem?name={name}'
-            data = {
-                "name": name,
-                "mode": "com.cloudbees.hudson.plugins.folder.Folder"
-            }
-            headers = {}
+            config_definition = JenkinsItemConfig.folder.value['blank'].encode('utf-8')
         elif type == 'view':
             endpoint = f'createView?name={name}'
-            data = self.EMPTY_VIEW_CONFIG_XML.encode('utf-8')
-            headers={'Content-Type': 'text/xml; charset=utf-8'}
+            config_definition = JenkinsItemConfig.view.value['blank'].encode('utf-8')
         elif type == 'job':
             endpoint = f'createItem?name={name}'
-            data = {}
-            headers={}
-            # TODO
+            config_definition = JenkinsItemConfig.job.value['blank'].encode('utf-8')
+        headers={'Content-Type': 'application/xml; charset=utf-8'}
 
         logger.debug(f'Creating "{type}" item "{name}" ...')
-        return_content, return_header, success = self.REST.request(
+        _, _, success = self.REST.request(
             f'{folder_url.strip("/")}/{endpoint}',
             'post',
-            data=data,
+            data=config_definition,
             headers=headers,
             is_endpoint=False)
-        logger.debug(f'Successfully created item "{name}"' if success else f'Failed to create item "{name}"')
+        logger.debug(f'Successfully created "{type}" item "{name}"' if success else f'Failed to create "{type}" item "{name}"')
+
+        try:
+            config_file.close()
+        except:
+            pass
+
         return success
 
 
