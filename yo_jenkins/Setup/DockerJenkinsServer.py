@@ -31,7 +31,9 @@ class DockerJenkinsServer():
         new_volume_name: str = 'yo-jenkins-jenkins',
         bind_mount_dir: str = '',
         container_name: str = 'yo-jenkins-jenkins',
-        registry: str = ''
+        registry: str = '',
+        admin_user: str = 'admin',
+        password: str = 'password'
     ):
         """Object constructor method, called at object creation
 
@@ -60,8 +62,8 @@ class DockerJenkinsServer():
             "PROTOCOL_SCHEMA": protocol_schema,
             "JENKINS_HOSTNAME": host,
             "JENKINS_PORT": f"{port}",
-            "JENKINS_ADMIN_ID": "admin",
-            "JENKINS_ADMIN_PASSWORD": "password"
+            "JENKINS_ADMIN_ID": admin_user,
+            "JENKINS_ADMIN_PASSWORD": password
         }
 
         # Container Related
