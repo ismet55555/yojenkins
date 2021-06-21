@@ -2,6 +2,7 @@
 
 from enum import Enum
 
+
 class JenkinsItemClasses(Enum):
     """Enum of Jenkins classes ordered in categories for checking and comparison
 
@@ -10,7 +11,8 @@ class JenkinsItemClasses(Enum):
         - `JenkinsItemClasses.view.value['item_type']`
     """
     folder = {
-        "item_type": "jobs",
+        "item_type":
+            "jobs",
         "class_type": [
             'com.cloudbees.hudson.plugins.folder.Folder',
             'org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject',
@@ -18,34 +20,21 @@ class JenkinsItemClasses(Enum):
         ]
     }
     view = {
-        "item_type": "views",
+        "item_type":
+            "views",
         "class_type": [
-            'hudson.model.AllView',
-            'hudson.model.ListView',
-            'jenkins.branch.MultiBranchProjectViewHolder$ViewImpl'
+            'hudson.model.AllView', 'hudson.model.ListView', 'jenkins.branch.MultiBranchProjectViewHolder$ViewImpl'
         ]
     }
     job = {
         "item_type": "jobs",
-        "class_type": [
-            'org.jenkinsci.plugins.workflow.job.WorkflowJob',
-            'hudson.model.FreeStyleProject'
-        ]
+        "class_type": ['org.jenkinsci.plugins.workflow.job.WorkflowJob', 'hudson.model.FreeStyleProject']
     }
     build = {
         "item_type": "builds",
-        "class_type": [
-            'org.jenkinsci.plugins.workflow.job.WorkflowRun',
-            'hudson.model.FreeStyleBuild'
-        ]
+        "class_type": ['org.jenkinsci.plugins.workflow.job.WorkflowRun', 'hudson.model.FreeStyleBuild']
     }
     queue = {
         "item_type": "queue",
-        "class_type": [
-            'hudson.model.Queue$BuildableItem',
-            'hudson.model.Queue$BlockedItem'
-        ]
+        "class_type": ['hudson.model.Queue$BuildableItem', 'hudson.model.Queue$BlockedItem']
     }
-
-
-

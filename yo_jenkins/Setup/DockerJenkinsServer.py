@@ -17,24 +17,22 @@ logger = logging.getLogger()
 class DockerJenkinsServer():
     """Class managing containerized Jenkins instance"""
 
-    def __init__(
-        self,
-        config_file: str = 'server_docker_settings/config_as_code.yaml',
-        plugins_file: str = 'plugins.txt',
-        protocol_schema: str = 'http',
-        host: str = 'localhost',
-        port: int = 8080,
-        image_fullname: str = 'yo-jenkins-jenkins:latest',
-        image_base: str = 'jenkins/jenkins',
-        image_rebuild: bool = False,
-        new_volume: bool = False,
-        new_volume_name: str = 'yo-jenkins-jenkins',
-        bind_mount_dir: str = '',
-        container_name: str = 'yo-jenkins-jenkins',
-        registry: str = '',
-        admin_user: str = 'admin',
-        password: str = 'password'
-    ):
+    def __init__(self,
+                 config_file: str = 'server_docker_settings/config_as_code.yaml',
+                 plugins_file: str = 'plugins.txt',
+                 protocol_schema: str = 'http',
+                 host: str = 'localhost',
+                 port: int = 8080,
+                 image_fullname: str = 'yo-jenkins-jenkins:latest',
+                 image_base: str = 'jenkins/jenkins',
+                 image_rebuild: bool = False,
+                 new_volume: bool = False,
+                 new_volume_name: str = 'yo-jenkins-jenkins',
+                 bind_mount_dir: str = '',
+                 container_name: str = 'yo-jenkins-jenkins',
+                 registry: str = '',
+                 admin_user: str = 'admin',
+                 password: str = 'password'):
         """Object constructor method, called at object creation
 
         Args:
@@ -69,12 +67,9 @@ class DockerJenkinsServer():
         # Container Related
         self.container_name = container_name
         self.container_address = f"{protocol_schema}://{host}:{port}"
-        self.container_ports = {
-            '8080/tcp': port,
-            '50000/tcp': 50000
-        }
+        self.container_ports = {'8080/tcp': port, '50000/tcp': 50000}
         self.container_env_vars = []
-        self.container_restart_policy={}
+        self.container_restart_policy = {}
         self.container_remove = False if self.container_restart_policy else True
 
         # Volume Related
@@ -87,7 +82,6 @@ class DockerJenkinsServer():
         for k, v in vars(self).items():
             if k in ['image_build_args', 'docker_client', 'container_env_vars']: continue
             logger.debug(f'    - {k}: {v}')
-
 
     def docker_client_init(self) -> bool:
         """TODO Docstring
@@ -115,7 +109,6 @@ class DockerJenkinsServer():
         logger.debug('Successfully connected to local docker client/engine')
 
         return True
-
 
     def setup(self) -> dict:
         """TODO Docstring
@@ -158,12 +151,12 @@ class DockerJenkinsServer():
         deployed['address'] = server_address
         deployed['deploy_timestamp'] = datetime.now().timestamp()
         deployed['deploy_datetime'] = datetime.now().strftime("%A, %B %d, %Y %I:%M:%S")
-        deployed['docker_version'] = self.docker_client.info()['ServerVersion'] if 'ServerVersion' in self.docker_client.info() else 'N/A'
+        deployed['docker_version'] = self.docker_client.info(
+        )['ServerVersion'] if 'ServerVersion' in self.docker_client.info() else 'N/A'
 
         return deployed, True
 
-
-    def clean(self, remove_volume:bool=False, remove_image:bool=False) -> bool:
+    def clean(self, remove_volume: bool = False, remove_image: bool = False) -> bool:
         """TODO Docstring
 
         Details: TODO
@@ -189,7 +182,6 @@ class DockerJenkinsServer():
 
         return True
 
-
     def __image_build(self) -> str:
         """TODO Docstring
 
@@ -205,20 +197,18 @@ class DockerJenkinsServer():
         logger.debug(f'Building image: {self.image_fullname} ...')
         logger.debug(f'Dockerfile directory: {self.image_dockerfile_dir}')
         try:
-            self.docker_client.images.build(
-                path=self.image_dockerfile_dir,
-                tag=self.image_fullname,
-                rm=True,
-                buildargs=self.image_build_args,
-                quiet=False,
-                forcerm=True
-            )
+            self.docker_client.images.build(path=self.image_dockerfile_dir,
+                                            tag=self.image_fullname,
+                                            rm=True,
+                                            buildargs=self.image_build_args,
+                                            quiet=False,
+                                            forcerm=True)
         except Exception as e:
             logger.debug(f'Failed to build image: {self.image_fullname}. Exception: {e}')
             return ''
-        logger.debug(f'Successfully build image: {self.image_fullname} (Elapsed time: {perf_counter() - start_time:.3f}s)')
+        logger.debug(
+            f'Successfully build image: {self.image_fullname} (Elapsed time: {perf_counter() - start_time:.3f}s)')
         return self.image_fullname
-
 
     def __image_remove(self) -> bool:
         """TODO Docstring
@@ -240,7 +230,6 @@ class DockerJenkinsServer():
         logger.debug(f'Successfully removed image: {self.image_fullname}')
         return True
 
-
     def __volumes_create(self) -> list:
         """TODO Docstring
 
@@ -258,12 +247,7 @@ class DockerJenkinsServer():
         # Bind Volume Mounts
         for volume_source, volume_target in self.volumes_bind.items():
             logger.debug(f'Adding new local bind volume to mount list: {volume_source} -> {volume_target} ...')
-            mount = docker.types.Mount(
-                source=volume_source,
-                target=volume_target,
-                type='bind',
-                read_only=False
-            )
+            mount = docker.types.Mount(source=volume_source, target=volume_target, type='bind', read_only=False)
             self.volumes_mounts.append(mount)
             volume_mounts_names.append({'bind': volume_source})
 
@@ -282,18 +266,12 @@ class DockerJenkinsServer():
                 logger.debug('Successfully created!')
 
             logger.debug(f'Adding named volumes to mount list: {volume_name} ...')
-            mount = docker.types.Mount(
-                target=volume_dir,
-                source=volume_name,
-                type='volume',
-                read_only=False
-            )
+            mount = docker.types.Mount(target=volume_dir, source=volume_name, type='volume', read_only=False)
             self.volumes_mounts.append(mount)
             volume_mounts_names.append({'named': volume_name})
 
         logger.debug(f'Number of volumes to be mounted to container: {len(self.volumes_mounts)}')
         return volume_mounts_names
-
 
     def __volumes_remove(self) -> bool:
         """TODO Docstring
@@ -316,7 +294,6 @@ class DockerJenkinsServer():
                 logger.debug(f'    - Volume: {volume_name} - FAILED - Exception: {e}')
         return True
 
-
     def __container_run(self) -> Tuple[str, str]:
         """TODO Docstring
 
@@ -330,17 +307,15 @@ class DockerJenkinsServer():
         """
         logger.debug(f'Creating and running container: {self.container_name} ...')
         try:
-            self.docker_client.containers.run(
-                name=self.container_name,
-                image=self.image_fullname,
-                environment=self.container_env_vars,
-                ports=self.container_ports,
-                mounts=self.volumes_mounts,
-                restart_policy=self.container_restart_policy,
-                remove=self.container_remove,
-                auto_remove=self.container_remove,
-                detach=True
-                )
+            self.docker_client.containers.run(name=self.container_name,
+                                              image=self.image_fullname,
+                                              environment=self.container_env_vars,
+                                              ports=self.container_ports,
+                                              mounts=self.volumes_mounts,
+                                              restart_policy=self.container_restart_policy,
+                                              remove=self.container_remove,
+                                              auto_remove=self.container_remove,
+                                              detach=True)
         except Exception as e:
             logger.debug(f'Failed to run container: {self.container_name} Exception: {e}')
             return '', ''
@@ -348,7 +323,6 @@ class DockerJenkinsServer():
         logger.debug(f'Container "{self.container_name}" is running at this address:')
         logger.debug(f'    --> {self.container_address}')
         return self.container_name, self.container_address
-
 
     def __container_stop(self) -> bool:
         """TODO Docstring
@@ -370,7 +344,6 @@ class DockerJenkinsServer():
             logger.debug(f'Failed to stop container matching tag: {self.container_name}. Exception: {e}')
             return False
         return True
-
 
     def __container_kill(self) -> bool:
         """TODO Docstring

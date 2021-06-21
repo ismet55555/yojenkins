@@ -14,7 +14,7 @@ from . import cli_utility as cu
 logger = logging.getLogger()
 
 
-def info(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:str, folder:str) -> None:
+def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, folder: str) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -37,7 +37,8 @@ def info(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:st
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
-def search(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:str, search_pattern:str, search_folder:str, depth:int, fullname:bool, opt_list:bool) -> None:
+def search(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, search_pattern: str,
+           search_folder: str, depth: int, fullname: bool, opt_list: bool) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -50,9 +51,15 @@ def search(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:
     """
     JY = cu.config_YoJenkins(profile)
     if cu.is_full_url(search_folder):
-        data, data_list = JY.Folder.search(search_pattern=search_pattern, folder_url=search_folder, folder_depth=depth, fullname=fullname)
+        data, data_list = JY.Folder.search(search_pattern=search_pattern,
+                                           folder_url=search_folder,
+                                           folder_depth=depth,
+                                           fullname=fullname)
     else:
-        data, data_list = JY.Folder.search(search_pattern=search_pattern, folder_name=search_folder, folder_depth=depth, fullname=fullname)
+        data, data_list = JY.Folder.search(search_pattern=search_pattern,
+                                           folder_name=search_folder,
+                                           folder_depth=depth,
+                                           fullname=fullname)
 
     if not data:
         click.echo(click.style(f'"not found', fg='bright_red', bold=True))
@@ -61,7 +68,8 @@ def search(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
-def subfolders(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:str, folder:str, opt_list:bool) -> None:
+def subfolders(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, folder: str,
+               opt_list: bool) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -85,7 +93,8 @@ def subfolders(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, prof
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
-def jobs(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:str, folder:str, opt_list:bool) -> None:
+def jobs(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, folder: str,
+         opt_list: bool) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -109,7 +118,8 @@ def jobs(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:st
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
-def views(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:str, folder:str, opt_list:int) -> None:
+def views(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, folder: str,
+          opt_list: int) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -133,7 +143,8 @@ def views(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:s
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
-def items(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:str, folder:str, opt_list:int) -> None:
+def items(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, folder: str,
+          opt_list: int) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -157,7 +168,7 @@ def items(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:s
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
-def browser(profile:str, folder:str) -> None:
+def browser(profile: str, folder: str) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -170,7 +181,7 @@ def browser(profile:str, folder:str) -> None:
     """
     JY = cu.config_YoJenkins(profile)
     if cu.is_full_url(folder):
-        data= JY.Folder.browser_open(folder_url=folder)
+        data = JY.Folder.browser_open(folder_url=folder)
     else:
         data = JY.Folder.browser_open(folder_name=folder)
 
@@ -179,7 +190,8 @@ def browser(profile:str, folder:str) -> None:
         sys.exit(1)
 
 
-def config(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, opt_json:bool, profile:str, folder:str, filepath:str) -> None:
+def config(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_json: bool, profile: str, folder: str,
+           filepath: str) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -192,9 +204,17 @@ def config(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, opt_json
     """
     JY = cu.config_YoJenkins(profile)
     if cu.is_full_url(folder):
-        data, write_success = JY.Folder.config(filepath=filepath, folder_url=folder, opt_json=opt_json, opt_yaml=opt_yaml, opt_toml=opt_toml)
+        data, write_success = JY.Folder.config(filepath=filepath,
+                                               folder_url=folder,
+                                               opt_json=opt_json,
+                                               opt_yaml=opt_yaml,
+                                               opt_toml=opt_toml)
     else:
-        data, write_success = JY.Folder.config(filepath=filepath, folder_name=folder, opt_json=opt_json, opt_yaml=opt_yaml, opt_toml=opt_toml)
+        data, write_success = JY.Folder.config(filepath=filepath,
+                                               folder_name=folder,
+                                               opt_json=opt_json,
+                                               opt_yaml=opt_yaml,
+                                               opt_toml=opt_toml)
 
     if not data:
         click.echo(click.style(f'failed', fg='bright_red', bold=True))
@@ -212,7 +232,7 @@ def config(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, opt_json
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
-def create(profile:str, name:str, folder:str, type:str, config:str) -> None:
+def create(profile: str, name: str, folder: str, type: str, config: str) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -235,7 +255,7 @@ def create(profile:str, name:str, folder:str, type:str, config:str) -> None:
     click.echo(click.style(f'success', fg='bright_green', bold=True))
 
 
-def copy(profile:str, folder:str, original_name:str, new_name:str) -> None:
+def copy(profile: str, folder: str, original_name: str, new_name: str) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -260,7 +280,7 @@ def copy(profile:str, folder:str, original_name:str, new_name:str) -> None:
     click.echo(click.style(f'success', fg='bright_green', bold=True))
 
 
-def delete(profile:str, folder:str) -> None:
+def delete(profile: str, folder: str) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -273,7 +293,7 @@ def delete(profile:str, folder:str) -> None:
     """
     JY = cu.config_YoJenkins(profile)
     if cu.is_full_url(folder):
-        data= JY.Folder.delete(folder_url=folder)
+        data = JY.Folder.delete(folder_url=folder)
     else:
         data = JY.Folder.delete(folder_name=folder)
 

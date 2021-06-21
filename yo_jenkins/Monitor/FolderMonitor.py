@@ -20,11 +20,13 @@ from . import monitor_utility as mu
 # Getting the logger reference
 logger = logging.getLogger()
 
+
 class FolderMonitor(Monitor):
     """This class defines the BuildMonitor class and its function.
     
     The FolderMonitor class enables active folder monitoring
     """
+
     def __init__(self, Build) -> None:
         """Object constructor method, called at object creation
 

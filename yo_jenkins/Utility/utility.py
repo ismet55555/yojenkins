@@ -16,7 +16,7 @@ from yo_jenkins.YoJenkins.JenkinsItemClasses import JenkinsItemClasses
 logger = logging.getLogger()
 
 
-def load_contents_from_local_yaml_file(local_file_path:str) -> Dict:
+def load_contents_from_local_yaml_file(local_file_path: str) -> Dict:
     """Loading a local file contents
 
     Parameters:
@@ -37,7 +37,7 @@ def load_contents_from_local_yaml_file(local_file_path:str) -> Dict:
     return file_contents
 
 
-def load_contents_from_remote_yaml_file_url(remote_file_url:str, allow_redirects:bool=True) -> Dict:
+def load_contents_from_remote_yaml_file_url(remote_file_url: str, allow_redirects: bool = True) -> Dict:
     """Loading a remote yaml file contents over HTTP
 
     Args:
@@ -54,7 +54,8 @@ def load_contents_from_remote_yaml_file_url(remote_file_url:str, allow_redirects
     remote_file_ext = Path(remote_file_url).suffix
     file_ext_accepted = ['.yml', '.yaml', '.conf']
     if not remote_file_ext in file_ext_accepted:
-        logger.debug(f'Remote file requested "{remote_filename}"" is not one of the accepted file types: {file_ext_accepted}')
+        logger.debug(
+            f'Remote file requested "{remote_filename}"" is not one of the accepted file types: {file_ext_accepted}')
         return {}
 
     # Get request headers
@@ -70,7 +71,9 @@ def load_contents_from_remote_yaml_file_url(remote_file_url:str, allow_redirects
     content_length = int(header['Content-length']) / 1000000
     logger.debug(f'Requested file content length: {content_length:.5f} MB)')
     if content_length > 1.0:
-        logger.debug(f'The requested remote file "{remote_filename}" is {content_length:.2f} MB and larger than 1.0 MB limit, will not download')
+        logger.debug(
+            f'The requested remote file "{remote_filename}" is {content_length:.2f} MB and larger than 1.0 MB limit, will not download'
+        )
         return {}
 
     # Check if content is text or yaml based
@@ -80,7 +83,9 @@ def load_contents_from_remote_yaml_file_url(remote_file_url:str, allow_redirects
     if not content_type:
         return {}
     elif not any(ext in content_type for ext in content_types_accepted):
-        logger.debug(f'The content type "{content_type}" of the requested file "{remote_filename}" is not one of the following: {content_types_accepted}')
+        logger.debug(
+            f'The content type "{content_type}" of the requested file "{remote_filename}" is not one of the following: {content_types_accepted}'
+        )
         return {}
 
     # Downloading the file content
@@ -98,13 +103,14 @@ def load_contents_from_remote_yaml_file_url(remote_file_url:str, allow_redirects
             logger.debug(f'Failed loading requested file. Exception: {e}')
             return {}
     else:
-        logger.debug(f"Failed to get remote file '{remote_file_url}'. HTTP request error code {remote_request.status_code}")
+        logger.debug(
+            f"Failed to get remote file '{remote_file_url}'. HTTP request error code {remote_request.status_code}")
         return {}
 
     return file_contents
 
 
-def append_lines_to_beginning_of_file(filepath:str, lines_to_append:List[str]) -> bool:
+def append_lines_to_beginning_of_file(filepath: str, lines_to_append: List[str]) -> bool:
     """Add lines to the beginning to a text based file
 
     Details: The passed list is parsed and each list item is a separate line added
@@ -120,8 +126,8 @@ def append_lines_to_beginning_of_file(filepath:str, lines_to_append:List[str]) -
     # TODO: Check if file exists
     logger.debug(f'Appending lines of text to the beginning of file: {filepath} ...')
     try:
-        f = open(filepath,'r+')
-        lines_old = f.readlines() # read old content
+        f = open(filepath, 'r+')
+        lines_old = f.readlines()  # read old content
         lines = lines_to_append + lines_old
         f.seek(0)
         for line in lines:
@@ -134,7 +140,7 @@ def append_lines_to_beginning_of_file(filepath:str, lines_to_append:List[str]) -
     return True
 
 
-def is_list_items_in_dict(list_items:list, dict_to_check:dict) -> int:
+def is_list_items_in_dict(list_items: list, dict_to_check: dict) -> int:
     """Return index of ANY matched item in the passed list
 
     Args:
@@ -168,7 +174,7 @@ def iter_data_empty_item_stripper(iter_data):
     return iter_data
 
 
-def url_to_name(url:str) -> str:
+def url_to_name(url: str) -> str:
     """Convert the jenkins item URL to its name
 
     Args:
@@ -185,11 +191,11 @@ def url_to_name(url:str) -> str:
     url_split = url_components.path.strip().strip('/').split('/')
     remove_list = ['job', 'view', 'change-requests']
 
-    filtered_list =  []
+    filtered_list = []
     for list_item in url_split:  # TODO: Use list comprehension
-        if list_item not in remove_list: 
+        if list_item not in remove_list:
             filtered_list.append(list_item)
-    
+
     # Assemble back
     name = '/'.join(filtered_list)
 
@@ -197,7 +203,7 @@ def url_to_name(url:str) -> str:
     return name
 
 
-def format_name(name:str) -> str:
+def format_name(name: str) -> str:
     """Format / clean up the passed name
 
     Details: The formatting includes it:
@@ -213,13 +219,14 @@ def format_name(name:str) -> str:
     """
     # Filter out terms
     name_formatted = name.strip().replace('/job/', '/').strip('/')
-    name_formatted = name_formatted.replace('job/', '/').strip('/').replace('view/', '').replace('change-requests/', '')
+    name_formatted = name_formatted.replace('job/', '/').strip('/').replace('view/',
+                                                                            '').replace('change-requests/', '')
 
     logger.debug(f'Formatted "{name}" to "{name_formatted}"')
     return name_formatted
 
 
-def fullname_to_name(fullname:str) -> str:
+def fullname_to_name(fullname: str) -> str:
     """Convert the jenkins item full name to its name only
 
     Details: Hey/This/Is/A/Full/Job --> Job
@@ -235,7 +242,7 @@ def fullname_to_name(fullname:str) -> str:
     return name
 
 
-def name_to_url(server_base_url:str, name:str) -> str:
+def name_to_url(server_base_url: str, name: str) -> str:
     """Convert the item name to URL
 
     ** TODO **
@@ -263,7 +270,7 @@ def name_to_url(server_base_url:str, name:str) -> str:
     return url
 
 
-def build_url_to_other_url(build_url:str, target_url:str='job') -> str:
+def build_url_to_other_url(build_url: str, target_url: str = 'job') -> str:
     """From build_url get job or folder url
 
     Args:
@@ -279,15 +286,15 @@ def build_url_to_other_url(build_url:str, target_url:str='job') -> str:
 
     # Get the indexes to remove
     if target_url == 'job':
-        last_index = -2 if not path_list[-1] else  -1
+        last_index = -2 if not path_list[-1] else -1
     elif target_url == 'folder':
-        last_index = -4 if not path_list[-1] else  -3
+        last_index = -4 if not path_list[-1] else -3
     else:
         logger.debug(f'Failed to recognize passed target URL. Passed value: {target_url}')
         return ''
 
     # Join the new path
-    path_new = '/'.join(path_list[0:last_index]) 
+    path_new = '/'.join(path_list[0:last_index])
 
     # Assemble the job url
     base_url = url_parsed.scheme + '://' + url_parsed.netloc
@@ -298,7 +305,7 @@ def build_url_to_other_url(build_url:str, target_url:str='job') -> str:
     return result_url
 
 
-def build_url_to_build_number(build_url:str) -> int:
+def build_url_to_build_number(build_url: str) -> int:
     """Get the build number from its build URL
 
     Args:
@@ -311,7 +318,7 @@ def build_url_to_build_number(build_url:str) -> int:
     # Dissect the build url
     url_parsed = urlparse(build_url)
 
-    # Split the path, remove the empty items 
+    # Split the path, remove the empty items
     url_path_split_list = list(filter(None, url_parsed.path.split('/')))
 
     # Get the last item, convert to int
@@ -321,7 +328,7 @@ def build_url_to_build_number(build_url:str) -> int:
     return build_number
 
 
-def item_url_to_server_url(url:str, include_scheme:bool=True) -> str:
+def item_url_to_server_url(url: str, include_scheme: bool = True) -> str:
     """From build_url get job or folder url
 
     Args:
@@ -339,7 +346,7 @@ def item_url_to_server_url(url:str, include_scheme:bool=True) -> str:
     return server_url
 
 
-def has_build_number_started(job_info:dict, build_number:int) -> bool:
+def has_build_number_started(job_info: dict, build_number: int) -> bool:
     """Given the job info, check if build number has been started/run
 
     Args:
@@ -361,7 +368,11 @@ def has_build_number_started(job_info:dict, build_number:int) -> bool:
     return False
 
 
-def item_subitem_list(item_info:Dict, get_key_info:str, item_type:str, item_class_list:list=[], item_class_key:str='_class') -> Tuple[list, list]:
+def item_subitem_list(item_info: Dict,
+                      get_key_info: str,
+                      item_type: str,
+                      item_class_list: list = [],
+                      item_class_key: str = '_class') -> Tuple[list, list]:
     """Given a item (job, build, etc) info, get the sub-items matching criteria
 
     Details: <DETAILED DESCRIPTION>
@@ -394,7 +405,7 @@ def item_subitem_list(item_info:Dict, get_key_info:str, item_type:str, item_clas
     return item_list, item_name_list
 
 
-def to_seconds(time_quantity:int, time_unit_text:str) -> int:
+def to_seconds(time_quantity: int, time_unit_text: str) -> int:
     """
     Get the number of seconds form the time quantity and time unit type.
     Examples: 
@@ -429,7 +440,7 @@ def to_seconds(time_quantity:int, time_unit_text:str) -> int:
     return 0
 
 
-def html_clean(html:str) -> str:
+def html_clean(html: str) -> str:
     """Clean up HTML format to text without HTML tags
 
     Args:
@@ -452,7 +463,7 @@ def html_clean(html:str) -> str:
     return cleaned_text
 
 
-def browser_open(url:str, new:int=2, autoraise:bool=True) -> str:
+def browser_open(url: str, new: int = 2, autoraise: bool = True) -> str:
     """Clean up HTML format to text without HTML tags
 
     Args:
@@ -471,7 +482,7 @@ def browser_open(url:str, new:int=2, autoraise:bool=True) -> str:
     return True
 
 
-def has_special_char(text:str, special_chars:str='@!#$%^&*<>?/\|~:') -> bool:
+def has_special_char(text: str, special_chars: str = '@!#$%^&*<>?/\|~:') -> bool:
     """Check if passed text string contains any special characters
 
     Args:
@@ -490,7 +501,7 @@ def has_special_char(text:str, special_chars:str='@!#$%^&*<>?/\|~:') -> bool:
     return includes_special_chars
 
 
-def remove_special_char(text:str, special_chars:str='@!#$%^&*<>?/\|~:') -> str:
+def remove_special_char(text: str, special_chars: str = '@!#$%^&*<>?/\|~:') -> str:
     """Remove any special characters from text string
 
     Args:
@@ -506,7 +517,7 @@ def remove_special_char(text:str, special_chars:str='@!#$%^&*<>?/\|~:') -> str:
     return text_new
 
 
-def queue_find(all_queue_info:dict, job_name:str='', job_url:str='', first:bool=True) -> list:
+def queue_find(all_queue_info: dict, job_name: str = '', job_url: str = '', first: bool = True) -> list:
     """Finding job in server build queue
 
     Args:
@@ -525,7 +536,9 @@ def queue_find(all_queue_info:dict, job_name:str='', job_url:str='', first:bool=
     for i, queue_item in enumerate(all_queue_info['items']):
         # Check the item type
         if queue_item['task']['_class'] not in JenkinsItemClasses.job.value['class_type']:
-            logger.debug(f"[ITEM {i+1}/{len(all_queue_info['items'])}] Queued item not a job. Item class: {queue_item['task']['_class']}")
+            logger.debug(
+                f"[ITEM {i+1}/{len(all_queue_info['items'])}] Queued item not a job. Item class: {queue_item['task']['_class']}"
+            )
             continue
 
         queue_job_url = queue_item['task']['url']
@@ -546,7 +559,7 @@ def queue_find(all_queue_info:dict, job_name:str='', job_url:str='', first:bool=
     return queue_item_matches
 
 
-def get_resource_path(relative_path:str) -> str:
+def get_resource_path(relative_path: str) -> str:
     """Getting the filepath for existing included resource
 
     Args:
@@ -567,7 +580,7 @@ def get_resource_path(relative_path:str) -> str:
     return resource_path
 
 
-def get_resource_dir(project_dir:str='yo_jenkins', sample_path:str='sound') -> str:
+def get_resource_dir(project_dir: str = 'yo_jenkins', sample_path: str = 'sound') -> str:
     """Getting the path to the directory containing project resources
     
     Details:
@@ -583,7 +596,7 @@ def get_resource_dir(project_dir:str='yo_jenkins', sample_path:str='sound') -> s
         Project directory absolute path
     """
     possible_dirs = {
-        'relative': os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', '..')),
+        'relative': os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')),
         'sys_dirs': sysconfig.get_paths()["purelib"],
         'usr_dirs': site.getusersitepackages(),
         'site_dirs': site.getsitepackages(),

@@ -24,7 +24,6 @@ class Step():
         # REST Request object
         self.R = R
 
-
     def info(self, step_url=str) -> Dict:
         """Get the information of the specified step
 

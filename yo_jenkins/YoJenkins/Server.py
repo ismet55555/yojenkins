@@ -27,7 +27,6 @@ class Server():
 
         self.server_base_url = self.Auth.jenkins_profile['jenkins_server_url']
 
-
     def info(self) -> Dict:
         """Get the server information
 
@@ -41,7 +40,6 @@ class Server():
         """
         return self.REST.request('api/json', 'get')[0]
 
-
     def people(self) -> Tuple[list, list]:
         """Get the list of plugins installed on the server
 
@@ -53,18 +51,13 @@ class Server():
         """
         logger.debug(f'Getting all installed server plugins for "{self.server_base_url}" ...')
 
-        people_info, _, success = self.REST.request(
-            'asynchPeople/api/json?depth=1',
-            'get',
-            is_endpoint=True
-            )
+        people_info, _, success = self.REST.request('asynchPeople/api/json?depth=1', 'get', is_endpoint=True)
         if not success:
             logger.debug(f'Failed to fetch server plugin information')
             return [], []
         people_info = people_info['users']
-        people_info_list = [ f"{p['user']['fullName']}" for p in people_info ]
+        people_info_list = [f"{p['user']['fullName']}" for p in people_info]
         return people_info, people_info_list
-
 
     def queue_info(self) -> Dict:
         """Get all the jobs stuck in the server queue
@@ -86,7 +79,6 @@ class Server():
         if not return_content:
             logger.debug('Failed to get server queue info. Check access and permissions for this endpoint')
         return return_content
-
 
     def queue_list(self) -> List[str]:
         """Get all list of all the jobs stuck in the server queue
@@ -110,7 +102,6 @@ class Server():
 
         return queue_list
 
-
     def plugin_list(self) -> Tuple[list, list]:
         """Get the list of plugins installed on the server
 
@@ -122,19 +113,14 @@ class Server():
         """
         logger.debug(f'Getting all installed server plugins for "{self.server_base_url}" ...')
 
-        plugins_info, _, success = self.REST.request(
-            'pluginManager/api/json?depth=2',
-            'get',
-            is_endpoint=True
-            )
+        plugins_info, _, success = self.REST.request('pluginManager/api/json?depth=2', 'get', is_endpoint=True)
         if not success:
             logger.debug(f'Failed to fetch server plugin information')
             return [], []
 
         plugins_info = plugins_info['plugins']
-        plugin_info_list = [ f"{p['longName']} - {p['shortName']} - {p['version']}" for p in plugins_info ]
+        plugin_info_list = [f"{p['longName']} - {p['shortName']} - {p['version']}" for p in plugins_info]
         return plugins_info, plugin_info_list
-
 
     def browser_open(self) -> bool:
         """TODO Docstring
@@ -150,8 +136,7 @@ class Server():
         logger.debug('Successfully opened in web browser' if success else 'Failed to open in web browser')
         return success
 
-
-    def restart(self, force:bool=True) -> bool:
+    def restart(self, force: bool = True) -> bool:
         """TODO Docstring
 
         Args:
@@ -161,19 +146,17 @@ class Server():
             TODO
         """
         logger.debug("Initiating server force restart ..." if force else "Initiating server safe restart ...")
-        _, _, success = self.REST.request(
-            'restart' if force else 'safeRestart',
-            'post',
-            is_endpoint=True,
-            json_content=True,
-            allow_redirect=False)
+        _, _, success = self.REST.request('restart' if force else 'safeRestart',
+                                          'post',
+                                          is_endpoint=True,
+                                          json_content=True,
+                                          allow_redirect=False)
         if not success:
             logger.debug(f'Failed to initiate server restart')
             return [], []
         return success
 
-
-    def shutdown(self, force:bool=True) -> bool:
+    def shutdown(self, force: bool = True) -> bool:
         """TODO Docstring
 
         Args:
@@ -183,19 +166,17 @@ class Server():
             TODO
         """
         logger.debug("Initiating server force shutdown ..." if force else "Initiating server safe shutdown ...")
-        _, _, success = self.REST.request(
-            'exit' if force else 'safeExit',
-            'post',
-            is_endpoint=True,
-            json_content=False,
-            allow_redirect=False)
+        _, _, success = self.REST.request('exit' if force else 'safeExit',
+                                          'post',
+                                          is_endpoint=True,
+                                          json_content=False,
+                                          allow_redirect=False)
         if not success:
             logger.debug(f'Failed to initiate server shutdown')
             return [], []
         return success
 
-
-    def quiet(self, off:bool=False) -> bool:
+    def quiet(self, off: bool = False) -> bool:
         """TODO Docstring
 
         Args:
@@ -205,12 +186,11 @@ class Server():
             TODO
         """
         logger.debug("Disabeling server quiet mode ..." if off else "Enabling server quiet mode ...")
-        _, _, success = self.REST.request(
-            'cancelQuietDown' if off else 'quietDown',
-            'post',
-            is_endpoint=True,
-            json_content=True,
-            allow_redirect=False)
+        _, _, success = self.REST.request('cancelQuietDown' if off else 'quietDown',
+                                          'post',
+                                          is_endpoint=True,
+                                          json_content=True,
+                                          allow_redirect=False)
         if not success:
             logger.debug(f'Failed to {"disable" if off else "enable"} server quiet mode')
             return [], []

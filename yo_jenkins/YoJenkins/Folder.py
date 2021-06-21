@@ -17,6 +17,7 @@ from yo_jenkins.YoJenkins.JenkinsItemConfig import JenkinsItemConfig
 # Getting the logger reference
 logger = logging.getLogger()
 
+
 class Folder():
     """TODO Folder"""
 
@@ -36,8 +37,7 @@ class Folder():
         self.search_results = []
         self.search_items_count = 0
 
-
-    def __recursive_search(self, search_pattern:str, search_list:list, level:int, fullname:bool=True) -> None:
+    def __recursive_search(self, search_pattern: str, search_list: list, level: int, fullname: bool = True) -> None:
         """Recursive search method for folders
 
         Details: Matched pattern findings are storred in the object: `self.search_results`
@@ -72,7 +72,9 @@ class Folder():
                     if re.search(search_pattern, list_item[dict_key], re.IGNORECASE):
                         self.search_results.append(list_item)
                 except re.error as e:
-                    logger.debug(f'Error while applying REGEX pattern "{search_pattern}" to "{list_item[dict_key]}". Exception: {e}')
+                    logger.debug(
+                        f'Error while applying REGEX pattern "{search_pattern}" to "{list_item[dict_key]}". Exception: {e}'
+                    )
                     break
 
             # Count items searched for record
@@ -85,8 +87,12 @@ class Folder():
             # Keep searching all sub-items for this item. Call itself for some recursion fun
             self.__recursive_search(search_pattern, list_item['jobs'], level, fullname)
 
-
-    def search(self, search_pattern:str, folder_name:str='', folder_url:str='', folder_depth:int=4, fullname:bool=True) -> Tuple[list, list]:
+    def search(self,
+               search_pattern: str,
+               folder_name: str = '',
+               folder_url: str = '',
+               folder_depth: int = 4,
+               fullname: bool = True) -> Tuple[list, list]:
         """Search the server for folders matching REGEX pattern
 
         Args:
@@ -121,7 +127,7 @@ class Folder():
 
         # Remove duplicates from list (THANKS GeeksForGeeks.org)
         logger.debug('Removing duplicates if needed ...')
-        self.search_results = [i for n, i in enumerate(self.search_results) if i not in self.search_results[n + 1:]] 
+        self.search_results = [i for n, i in enumerate(self.search_results) if i not in self.search_results[n + 1:]]
 
         # Collect URLs only
         folder_search_results_list = []
@@ -129,12 +135,12 @@ class Folder():
             folder_search_results_list.append(search_result['url'])
 
         # Output search stats
-        logger.debug(f'Searched folders: {self.search_items_count}. Search time: {perf_counter() - start_time:.3f} seconds')
+        logger.debug(
+            f'Searched folders: {self.search_items_count}. Search time: {perf_counter() - start_time:.3f} seconds')
 
         return self.search_results, folder_search_results_list
 
-
-    def info(self, folder_name:str='', folder_url:str='') -> Dict:
+    def info(self, folder_name: str = '', folder_url: str = '') -> Dict:
         """Get the folder information
 
         Args:
@@ -151,24 +157,20 @@ class Folder():
         if folder_name and not folder_url:
             folder_url = utility.name_to_url(self.REST.get_server_url(), folder_name)
 
-        folder_info, _, success = self.REST.request(
-            folder_url.strip('/') + '/api/json',
-            'get',
-            is_endpoint=False
-            )
+        folder_info, _, success = self.REST.request(folder_url.strip('/') + '/api/json', 'get', is_endpoint=False)
         if not success:
             logger.debug(f'Failed to find folder info: {folder_url}')
             return {}
 
         # Check if found item type/class
-        if folder_info['_class'] not in JenkinsItemClasses.folder.value['class_type'] and JenkinsItemClasses.folder.value['item_type'] not in folder_info:
+        if folder_info['_class'] not in JenkinsItemClasses.folder.value[
+                'class_type'] and JenkinsItemClasses.folder.value['item_type'] not in folder_info:
             logger.debug(f'Failed to match type/class. This item is "{folder_info["_class"]}"')
             return {}
 
         return folder_info
 
-
-    def subfolder_list(self, folder_name:str='', folder_url:str='') -> Tuple[list, list]:
+    def subfolder_list(self, folder_name: str = '', folder_url: str = '') -> Tuple[list, list]:
         """Get the list of all sub-folders within the specified folder
 
         Args:
@@ -187,19 +189,17 @@ class Folder():
 
         # Extract lists
         sub_folder_list, sub_folder_list_url = utility.item_subitem_list(
-            item_info=folder_info, 
-            get_key_info='url', 
-            item_type=JenkinsItemClasses.folder.value['item_type'], 
-            item_class_list=JenkinsItemClasses.folder.value['class_type']
-            )
+            item_info=folder_info,
+            get_key_info='url',
+            item_type=JenkinsItemClasses.folder.value['item_type'],
+            item_class_list=JenkinsItemClasses.folder.value['class_type'])
 
         logger.debug(f'Number of subfolders found: {len(sub_folder_list)}')
         logger.debug(f'Sub-folders: {sub_folder_list_url}')
 
         return sub_folder_list, sub_folder_list_url
 
-
-    def jobs_list(self, folder_name:str='', folder_url:str='') -> Tuple[list, list]:
+    def jobs_list(self, folder_name: str = '', folder_url: str = '') -> Tuple[list, list]:
         """Get the list of all jobs within the specified folder
 
         Args:
@@ -217,20 +217,17 @@ class Folder():
             return [], []
 
         # Extract lists
-        job_list, job_list_url = utility.item_subitem_list(
-            item_info=folder_info,
-            get_key_info='url',
-            item_type=JenkinsItemClasses.job.value['item_type'],
-            item_class_list=JenkinsItemClasses.job.value['class_type']
-            )
+        job_list, job_list_url = utility.item_subitem_list(item_info=folder_info,
+                                                           get_key_info='url',
+                                                           item_type=JenkinsItemClasses.job.value['item_type'],
+                                                           item_class_list=JenkinsItemClasses.job.value['class_type'])
 
         logger.debug(f'Number of jobs found: {len(job_list)}')
         logger.debug(f'Jobs: {job_list_url}')
 
         return job_list, job_list_url
 
-
-    def view_list(self, folder_name:str='', folder_url:str='') -> Tuple[list, list]:
+    def view_list(self, folder_name: str = '', folder_url: str = '') -> Tuple[list, list]:
         """Get the list of all views within the specified folder
 
         Args:
@@ -251,16 +248,14 @@ class Folder():
             item_info=folder_info,
             get_key_info='url',
             item_type=JenkinsItemClasses.view.value['item_type'],
-            item_class_list=JenkinsItemClasses.view.value['class_type']
-            )
+            item_class_list=JenkinsItemClasses.view.value['class_type'])
 
         logger.debug(f'Number of views found: {len(view_list)}')
         logger.debug(f'Views: {view_list_url}')
 
         return view_list, view_list_url
 
-
-    def item_list(self, folder_name:str='', folder_url:str='') -> Tuple[list, list]:
+    def item_list(self, folder_name: str = '', folder_url: str = '') -> Tuple[list, list]:
         """Get the list of all items within the specified folder
 
         Args:
@@ -287,12 +282,10 @@ class Folder():
         all_item_url = []
         for item in all_subitems:
             logger.debug(f'Searching folder for "{item["item_type"]}" items ...')
-            item_list, item_list_url = utility.item_subitem_list(
-                item_info=folder_info,
-                get_key_info='url',
-                item_type=item['item_type'],
-                item_class_list=item['class_type']
-                )
+            item_list, item_list_url = utility.item_subitem_list(item_info=folder_info,
+                                                                 get_key_info='url',
+                                                                 item_type=item['item_type'],
+                                                                 item_class_list=item['class_type'])
             if item_list:
                 logger.debug(f'Successfully found {len(item_list)} "{item["item_type"]}" items')
                 all_item_list.extend(item_list)
@@ -305,8 +298,7 @@ class Folder():
 
         return all_item_list, all_item_url
 
-
-    def browser_open(self, folder_name:str='', folder_url:str='') -> bool:
+    def browser_open(self, folder_name: str = '', folder_url: str = '') -> bool:
         """Get the list of all items within the specified folder
 
         Args:
@@ -330,8 +322,13 @@ class Folder():
         logger.debug('Successfully opened in web browser' if success else 'Failed to open in web browser')
         return success
 
-
-    def config(self, filepath:str='', folder_name:str='', folder_url:str='', opt_json:bool=False, opt_yaml:bool=False, opt_toml:bool=False) -> Tuple[str, bool]:
+    def config(self,
+               filepath: str = '',
+               folder_name: str = '',
+               folder_url: str = '',
+               opt_json: bool = False,
+               opt_yaml: bool = False,
+               opt_toml: bool = False) -> Tuple[str, bool]:
         """Get the folder XML configuration (config.xml)
 
         Args:
@@ -353,11 +350,10 @@ class Folder():
             folder_url = utility.name_to_url(self.REST.get_server_url(), folder_name)
 
         logger.debug(f'Fetching XML configurations for folder: "{folder_url}" ...')
-        return_content, _, success = self.REST.request(
-            f'{folder_url.strip("/")}/config.xml',
-            'get',
-            json_content=False,
-            is_endpoint=False)
+        return_content, _, success = self.REST.request(f'{folder_url.strip("/")}/config.xml',
+                                                       'get',
+                                                       json_content=False,
+                                                       is_endpoint=False)
         logger.debug('Successfully fetched XML configurations' if success else 'Failed to fetch XML configurations')
 
         if filepath:
@@ -385,12 +381,16 @@ class Folder():
                 logger.debug(f'Successfully wrote configurations to file')
             except Exception as e:
                 logger.debug('Failed to write configurations to file. Exception: {e}')
-                return "", False 
+                return "", False
 
         return return_content, True
 
-
-    def create(self, name:str, type:str='folder', folder_name:str='', folder_url:str='', config:str='config.xml') -> bool:
+    def create(self,
+               name: str,
+               type: str = 'folder',
+               folder_name: str = '',
+               folder_url: str = '',
+               config: str = 'config.xml') -> bool:
         """TODO Docstring
 
         Args:
@@ -440,16 +440,16 @@ class Folder():
         elif type == 'job':
             endpoint = f'createItem?name={name}'
             config_definition = JenkinsItemConfig.job.value['blank'].encode('utf-8')
-        headers={'Content-Type': 'application/xml; charset=utf-8'}
+        headers = {'Content-Type': 'application/xml; charset=utf-8'}
 
         logger.debug(f'Creating "{type}" item "{name}" ...')
-        _, _, success = self.REST.request(
-            f'{folder_url.strip("/")}/{endpoint}',
-            'post',
-            data=config_definition,
-            headers=headers,
-            is_endpoint=False)
-        logger.debug(f'Successfully created "{type}" item "{name}"' if success else f'Failed to create "{type}" item "{name}"')
+        _, _, success = self.REST.request(f'{folder_url.strip("/")}/{endpoint}',
+                                          'post',
+                                          data=config_definition,
+                                          headers=headers,
+                                          is_endpoint=False)
+        logger.debug(
+            f'Successfully created "{type}" item "{name}"' if success else f'Failed to create "{type}" item "{name}"')
 
         try:
             config_file.close()
@@ -458,8 +458,7 @@ class Folder():
 
         return success
 
-
-    def copy(self, original_name:str, new_name:str, folder_name:str='', folder_url:str='') -> bool:
+    def copy(self, original_name: str, new_name: str, folder_name: str = '', folder_url: str = '') -> bool:
         """TODO Docstring
 
         Args:
@@ -490,12 +489,14 @@ class Folder():
             return False
 
         logger.debug(f'Copying original item "{original_name}" to new item "{new_name}" ...')
-        success = self.REST.request(f'{folder_url.strip("/")}/createItem?name={new_name}&mode=copy&from={original_name}', 'post', is_endpoint=False)[2]
+        success = self.REST.request(
+            f'{folder_url.strip("/")}/createItem?name={new_name}&mode=copy&from={original_name}',
+            'post',
+            is_endpoint=False)[2]
         logger.debug('Successfully copied item' if success else 'Failed to copy item')
         return success
 
-
-    def delete(self, folder_name:str='', folder_url:str='') -> bool:
+    def delete(self, folder_name: str = '', folder_url: str = '') -> bool:
         """Delete folder
 
         Args:

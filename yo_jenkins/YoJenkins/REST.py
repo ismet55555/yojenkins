@@ -13,7 +13,6 @@ from requests.auth import HTTPBasicAuth
 # Getting the logger reference
 logger = logging.getLogger()
 
-
 # TODO: Septate functionalities
 #       - GET, POST, HEAD
 #       - Time request (request statistics)
@@ -22,7 +21,12 @@ logger = logging.getLogger()
 class REST:
     """Handeling of REST requests"""
 
-    def __init__(self, username:str='', api_token:str='', server_url:str='', session=None, is_cached:bool=False) -> None:
+    def __init__(self,
+                 username: str = '',
+                 api_token: str = '',
+                 server_url: str = '',
+                 session=None,
+                 is_cached: bool = False) -> None:
         """TODO Docstring
 
         Args:
@@ -49,15 +53,14 @@ class REST:
             self.request_session = FuturesSession(session=session, max_workers=16)
 
         # Authentication passed
-        self.username:str = username
-        self.api_token:str = api_token
-        self.server_url:str = server_url
+        self.username: str = username
+        self.api_token: str = api_token
+        self.server_url: str = server_url
 
         # Flag signaling if this object has authentication credentials to server
         self.has_credentials = False
 
-
-    def set_credentials(self, username:str, api_token:str, server_url:str) -> None:
+    def set_credentials(self, username: str, api_token: str, server_url: str) -> None:
         """TODO Docstring
 
         Args:
@@ -71,7 +74,6 @@ class REST:
         self.server_url = server_url.strip('/') + '/'
         self.has_credentials = True
 
-
     def get_server_url(self) -> str:
         """TODO Docstring
 
@@ -82,7 +84,6 @@ class REST:
             TODO
         """
         return self.server_url
-
 
     def get_active_session(self) -> object:
         """TODO Docstring
@@ -95,8 +96,7 @@ class REST:
         """
         return self.request_session
 
-
-    def is_reachable(self, server_url:str='', timeout:int=5) -> bool:
+    def is_reachable(self, server_url: str = '', timeout: int = 5) -> bool:
         """Check if the server is reachable
 
         Args:
@@ -110,12 +110,11 @@ class REST:
 
         logger.debug(f'Checking if server is reachable: "{server_url}" ...')
 
-        request_success = self.request(
-            target=server_url,
-            is_endpoint=False,
-            request_type='head',
-            auth_needed=False,
-            timeout=timeout)[1]
+        request_success = self.request(target=server_url,
+                                       is_endpoint=False,
+                                       request_type='head',
+                                       auth_needed=False,
+                                       timeout=timeout)[1]
 
         if request_success:
             logger.debug('Successfully found server is reachable')
@@ -123,7 +122,6 @@ class REST:
         else:
             logger.debug('Failed. Server cannot be reached or is offline')
             return False
-
 
     def clear_cache(self):
         """TODO Docstring
@@ -138,8 +136,19 @@ class REST:
             self.request_session.cache.clear()
             logger.debug('Successfully cleared request session cache')
 
-
-    def request(self, target:str, request_type:str, is_endpoint:bool=True, json_content:bool=True, auth:Tuple=None, auth_needed:bool=True, new_session:bool=False, params:dict={}, data:dict={}, headers:dict={}, timeout:int=10, allow_redirect:bool=True) -> Tuple[Dict, Dict, bool]:
+    def request(self,
+                target: str,
+                request_type: str,
+                is_endpoint: bool = True,
+                json_content: bool = True,
+                auth: Tuple = None,
+                auth_needed: bool = True,
+                new_session: bool = False,
+                params: dict = {},
+                data: dict = {},
+                headers: dict = {},
+                timeout: int = 10,
+                allow_redirect: bool = True) -> Tuple[Dict, Dict, bool]:
         """Utility method for a single REST requests
 
         Details: Currently supported GET, POST, HEAD
@@ -173,7 +182,7 @@ class REST:
         # Get credentials if needed
         if auth_needed:
             if not auth:
-                auth=HTTPBasicAuth(self.username, self.api_token)
+                auth = HTTPBasicAuth(self.username, self.api_token)
 
         # Use a connection session if possible
         if not self.request_session or new_session:
@@ -184,15 +193,34 @@ class REST:
         start_time = perf_counter()
         try:
             if request_type.lower() == 'get':
-                response = self.request_session.get(request_url, params=params, data=data, headers=headers, auth=auth, timeout=timeout, allow_redirects=allow_redirect)
+                response = self.request_session.get(request_url,
+                                                    params=params,
+                                                    data=data,
+                                                    headers=headers,
+                                                    auth=auth,
+                                                    timeout=timeout,
+                                                    allow_redirects=allow_redirect)
             elif request_type.lower() == 'post':
-                response = self.request_session.post(request_url, params=params, data=data, headers=headers, auth=auth, timeout=timeout, allow_redirects=allow_redirect)
+                response = self.request_session.post(request_url,
+                                                     params=params,
+                                                     data=data,
+                                                     headers=headers,
+                                                     auth=auth,
+                                                     timeout=timeout,
+                                                     allow_redirects=allow_redirect)
             elif request_type.lower() == 'head':
-                response = self.request_session.head(request_url, params=params, data=data, headers=headers, auth=auth, timeout=timeout, allow_redirects=allow_redirect)
+                response = self.request_session.head(request_url,
+                                                     params=params,
+                                                     data=data,
+                                                     headers=headers,
+                                                     auth=auth,
+                                                     timeout=timeout,
+                                                     allow_redirects=allow_redirect)
             else:
                 logger.debug(f'Request type "{request_type}" not recognized')
                 return {}, {}, False
-        except (requests.exceptions.ConnectionError, requests.exceptions.InvalidSchema, requests.exceptions.RequestException) as e:
+        except (requests.exceptions.ConnectionError, requests.exceptions.InvalidSchema,
+                requests.exceptions.RequestException) as e:
             logger.debug(f'Failed to make request. Exception: {e}')
             return {}, {}, False
 
@@ -203,14 +231,17 @@ class REST:
         except (requests.exceptions.RequestException, Exception) as e:
             logger.debug(f'Failed to make request. Exception: {e}')
             return {}, {}, False
- 
+
         # Logging any request redirects
         if response.history:
             for i, redirect_hop in enumerate(response.history):
                 logger.debug('Request redirects:')
-                logger.debug(f'    - {i+1}/{len(response.history)}: {redirect_hop.request.method} - {redirect_hop.url} - Status: {redirect_hop.status_code}')
+                logger.debug(
+                    f'    - {i+1}/{len(response.history)}: {redirect_hop.request.method} - {redirect_hop.url} - Status: {redirect_hop.status_code}'
+                )
 
-        redirect_methods = ": " + " --> ".join([ r.request.method for r in response.history ] + [response.request.method]) if response.history else '' 
+        redirect_methods = ": " + " --> ".join([r.request.method for r in response.history] +
+                                               [response.request.method]) if response.history else ''
         response_content_type = response.headers["Content-Type"] if "Content-Type" in response.headers else "N/A"
         response_content_len = response.headers["Content-Length"] if "Content-Length" in response.headers else "N/A"
 
@@ -228,7 +259,8 @@ class REST:
 
         # Check the return status code
         if not response.ok:
-            logger.debug(f'Failed to make {request_type.upper()} request "{request_url}". Server code: {response.status_code}')
+            logger.debug(
+                f'Failed to make {request_type.upper()} request "{request_url}". Server code: {response.status_code}')
             return {}, {}, False
 
         # Get the return content and format it
@@ -247,4 +279,3 @@ class REST:
             logger.debug(f'No content received form {request_type.upper()} request: {request_url}')
 
         return return_content, response.headers, True
-

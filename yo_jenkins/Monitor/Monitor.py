@@ -24,6 +24,7 @@ from . import monitor_utility as mu
 # Getting the logger reference
 logger = logging.getLogger()
 
+
 class Monitor:
     """Abstract class for all monitor objects"""
 
@@ -61,19 +62,16 @@ class Monitor:
 
         self.server_interaction = False
 
-
     def __del__(self):
         """ TODO """
         # Just in case turn off all threads
         self.all_threads_off()
 
-
-
     ###########################################################################
     #                         CURSES UTILITY
     ###########################################################################
 
-    def basic_screen_setup(self, halfdelay:bool) -> None:
+    def basic_screen_setup(self, halfdelay: bool) -> None:
         """
         Basic configurations of the current curses terminal screen
 
@@ -98,7 +96,6 @@ class Monitor:
         else:
             curses.halfdelay(255)
 
-
     def check_terminal_size(self, scr) -> None:
         """
         Checking if current terminal size is sufficient, if it is not, display warning.
@@ -116,8 +113,7 @@ class Monitor:
 
         # Debug Terminal Size
         if logger.level == logging.DEBUG:
-            scr.addstr(
-                1, 1, f"[Terminal Size: W:{term_width}, H:{term_height}]", self.color['grey-light'])
+            scr.addstr(1, 1, f"[Terminal Size: W:{term_width}, H:{term_height}]", self.color['grey-light'])
 
         k = 0
         KEYS = mu.load_keys()
@@ -131,31 +127,23 @@ class Monitor:
             self.terminal_size_good = term_height >= self.height_limit and term_width >= self.width_limit
 
             message_lines = [
-                '',
-                'Uh-Oh! Window too small!',
-                '',
-                '乁( ◔ ౪◔)「    (ಥ⌣ಥ)',
-                '',
-                f'Current: W:{term_width} x H:{term_height}',
-                f'Needed : W:{self.width_limit} x H:{self.height_limit}',
-                '',
-                'To continue, resize window',
-                ''
+                '', 'Uh-Oh! Window too small!', '', '乁( ◔ ౪◔)「    (ಥ⌣ಥ)', '',
+                f'Current: W:{term_width} x H:{term_height}', f'Needed : W:{self.width_limit} x H:{self.height_limit}',
+                '', 'To continue, resize window', ''
                 'To quit, press "Q" or "ESC"'
             ]
             try:
                 for y_2, line in enumerate(message_lines):
-                    scr.addstr(1 + y_2, mu.get_center_x(scr, line),
-                               line, self.decor['bold'])
+                    scr.addstr(1 + y_2, mu.get_center_x(scr, line), line, self.decor['bold'])
             except Exception as e:
                 logger.debug(
-                    f'Failed to render window. Window size way too small. Needed : W:{self.width_limit} x H:{self.height_limit}')
+                    f'Failed to render window. Window size way too small. Needed : W:{self.width_limit} x H:{self.height_limit}'
+                )
                 self.all_threads_enabled = False
                 sys.exit(1)
 
             scr.refresh()
             k = scr.getch()
-
 
     def status_to_color(self, status_text: str) -> str:
         """
@@ -171,7 +159,6 @@ class Monitor:
                 return Color.items.value[status_item.name]
         return Color.items.value['unknown']
 
-
     def status_to_sound(self, status_text: str) -> str:
         """
         Given a status sound
@@ -186,8 +173,6 @@ class Monitor:
             if status_text.strip().upper() in status_item.value:
                 return Sound.items.value[status_item.name]
         return Sound.items.value['unknown']
-
-
 
     ###########################################################################
     #                         PLAY SOUND EFFECT
@@ -239,15 +224,11 @@ class Monitor:
         """
         logger.debug(f'Playing sound file "{sound_filepath}" ...')
         try:
-            threading.Thread(target=self.__thread_play_sound,
-                             args=(sound_filepath,), daemon=True).start()
+            threading.Thread(target=self.__thread_play_sound, args=(sound_filepath, ), daemon=True).start()
         except Exception as e:
-            logger.error(
-                f'Failed to start play sound thread for "{sound_filepath}". Exception: {e}. Type: {type(e)}')
+            logger.error(f'Failed to start play sound thread for "{sound_filepath}". Exception: {e}. Type: {type(e)}')
 
         return True
-
-
 
     ###########################################################################
     #                         SERVER STATUS
@@ -262,7 +243,9 @@ class Monitor:
         Returns:
             TODO
         """
-        logger.debug(f'Thread starting - Server Status - (ID: {threading.get_ident()} - Refresh Interval: {monitor_interval}s) ...')
+        logger.debug(
+            f'Thread starting - Server Status - (ID: {threading.get_ident()} - Refresh Interval: {monitor_interval}s) ...'
+        )
 
         # Set the monitoring thread flag up
         self.all_threads_enabled = True
@@ -296,14 +279,11 @@ class Monitor:
         """
         logger.debug(f'Starting thread for server status ...')
         try:
-            threading.Thread(target=self.__thread_server_status, args=(monitor_interval,), daemon=False).start()
+            threading.Thread(target=self.__thread_server_status, args=(monitor_interval, ), daemon=False).start()
         except Exception as e:
-            logger.error(
-                f'Failed to start server status monitoring thread. Exception: {e}. Type: {type(e)}')
+            logger.error(f'Failed to start server status monitoring thread. Exception: {e}. Type: {type(e)}')
 
         return True
-
-
 
     ###########################################################################
     #                         ALL THREAD CONTROL
@@ -340,5 +320,3 @@ class Monitor:
         self.paused = True
 
         return True
-
-

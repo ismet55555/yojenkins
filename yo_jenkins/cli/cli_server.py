@@ -17,7 +17,7 @@ from . import cli_utility as cu
 logger = logging.getLogger()
 
 
-def info(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:str) -> None:
+def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -36,7 +36,7 @@ def info(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:st
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
-def people(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:str, opt_list:bool) -> None:
+def people(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, opt_list: bool) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -56,7 +56,7 @@ def people(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
-def queue(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:str, opt_list:bool) -> None:
+def queue(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, opt_list: bool) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -78,7 +78,7 @@ def queue(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:s
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
-def plugins(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:str, opt_list:bool) -> None:
+def plugins(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, opt_list: bool) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -99,7 +99,7 @@ def plugins(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
-def browser(profile:str) -> None:
+def browser(profile: str) -> None:
     """TODO Docstring
 
     Args:
@@ -115,7 +115,7 @@ def browser(profile:str) -> None:
         sys.exit(1)
 
 
-def reachable(profile:str, timeout:int) -> None:
+def reachable(profile: str, timeout: int) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -137,7 +137,7 @@ def reachable(profile:str, timeout:int) -> None:
     click.echo(click.style('true', fg='bright_green', bold=True))
 
 
-def quiet(profile:str, off:bool):
+def quiet(profile: str, off: bool):
     """TODO Docstring
 
     Details: TODO
@@ -155,7 +155,7 @@ def quiet(profile:str, off:bool):
     click.echo(click.style('success', fg='bright_green', bold=True))
 
 
-def restart(profile:str, force:bool):
+def restart(profile: str, force: bool):
     """TODO Docstring
 
     Details: TODO
@@ -173,7 +173,7 @@ def restart(profile:str, force:bool):
     click.echo(click.style('success', fg='bright_green', bold=True))
 
 
-def shutdown(profile:str, force:bool):
+def shutdown(profile: str, force: bool):
     """TODO Docstring
 
     Details: TODO
@@ -191,7 +191,9 @@ def shutdown(profile:str, force:bool):
     click.echo(click.style('success', fg='bright_green', bold=True))
 
 
-def server_deploy(config_file: str, plugins_file: str, protocol_schema: str, host: str, port: int, image_base: str, image_rebuild: bool, new_volume: bool, new_volume_name: str, bind_mount_dir: str, container_name: str, registry: str, admin_user: str, password: str) -> None:
+def server_deploy(config_file: str, plugins_file: str, protocol_schema: str, host: str, port: int, image_base: str,
+                  image_rebuild: bool, new_volume: bool, new_volume_name: str, bind_mount_dir: str,
+                  container_name: str, registry: str, admin_user: str, password: str) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -207,23 +209,21 @@ def server_deploy(config_file: str, plugins_file: str, protocol_schema: str, hos
     # TODO: Check if the docker server deployment file is there. If so, show that it is being renewed.
 
     # Creat object
-    DJS = DockerJenkinsServer(
-        config_file=config_file,
-        plugins_file=plugins_file,
-        protocol_schema=protocol_schema,
-        host=host,
-        port=port,
-        image_base=image_base,
-        image_rebuild=image_rebuild,
-        new_volume=new_volume,
-        new_volume_name=new_volume_name,
-        bind_mount_dir=bind_mount_dir,
-        container_name=container_name,
-        registry=registry,
-        admin_user=admin_user,
-        password=password if password else "password"
-        )
-    
+    DJS = DockerJenkinsServer(config_file=config_file,
+                              plugins_file=plugins_file,
+                              protocol_schema=protocol_schema,
+                              host=host,
+                              port=port,
+                              image_base=image_base,
+                              image_rebuild=image_rebuild,
+                              new_volume=new_volume,
+                              new_volume_name=new_volume_name,
+                              bind_mount_dir=bind_mount_dir,
+                              container_name=container_name,
+                              registry=registry,
+                              admin_user=admin_user,
+                              password=password if password else "password")
+
     # Initialize docker client
     if not DJS.docker_client_init():
         click.echo(click.style(f'Failed to connect to local docker client', fg='bright_red', bold=True))
@@ -247,7 +247,7 @@ def server_deploy(config_file: str, plugins_file: str, protocol_schema: str, hos
     with open(os.path.join(filepath), 'w') as file:
         json.dump(deployed, file, indent=4, sort_keys=True)
 
-    volumes_named = [ list(l.values())[0] for l in deployed["volumes"] ]
+    volumes_named = [list(l.values())[0] for l in deployed["volumes"]]
 
     click.echo(click.style('Successfully created containerized Jenkins server!', fg='bright_green', bold=True))
     click.echo(click.style(f'   - Docker image:      {deployed["image"]}', fg='bright_green', bold=True))
@@ -256,11 +256,12 @@ def server_deploy(config_file: str, plugins_file: str, protocol_schema: str, hos
     click.echo()
     click.echo(click.style(f'Address:  {deployed["address"]}', fg='bright_green', bold=True))
     click.echo(click.style(f'Username: {admin_user}', fg='bright_green', bold=True))
-    click.echo(click.style(f'Password: {"*************" if password else "password (default)"}', fg='bright_green', bold=True))
+    click.echo(
+        click.style(f'Password: {"*************" if password else "password (default)"}', fg='bright_green',
+                    bold=True))
 
 
-
-def server_teardown(remove_volume:bool, remove_image:bool):
+def server_teardown(remove_volume: bool, remove_image: bool):
     """TODO Docstring
 
     Details: TODO
@@ -280,18 +281,20 @@ def server_teardown(remove_volume:bool, remove_image:bool):
         logger.debug(f'Successfully found and loaded server deployment info file: {deployed}')
     except Exception as e:
         click.echo(click.style(f'Failed to detect a previous server deployment', fg='bright_red', bold=True))
-        click.echo(click.style(f'If you think there was a previously successfull deployment, use Docker to remove it manually', fg='bright_red', bold=True))
+        click.echo(
+            click.style(
+                f'If you think there was a previously successfull deployment, use Docker to remove it manually',
+                fg='bright_red',
+                bold=True))
         sys.exit(1)
 
     # Filter out named volumes only
-    volumes_named_only = [ list(l.values())[0] for l in deployed["volumes"] if 'named' in l]
+    volumes_named_only = [list(l.values())[0] for l in deployed["volumes"] if 'named' in l]
 
     # Creat object
-    DJS = DockerJenkinsServer(
-        image_fullname=deployed['image'],
-        new_volume_name=volumes_named_only[0],
-        container_name=deployed['container']
-        )
+    DJS = DockerJenkinsServer(image_fullname=deployed['image'],
+                              new_volume_name=volumes_named_only[0],
+                              container_name=deployed['container'])
 
     # Initialize docker client
     if not DJS.docker_client_init():
@@ -306,4 +309,5 @@ def server_teardown(remove_volume:bool, remove_image:bool):
     # Remove the deployment info file
     os.remove(filepath)
 
-    click.echo(click.style(f'Successfully removed Jenkins server: {deployed["address"]}', fg='bright_green', bold=True))
+    click.echo(click.style(f'Successfully removed Jenkins server: {deployed["address"]}', fg='bright_green',
+                           bold=True))

@@ -14,7 +14,7 @@ from . import cli_utility as cu
 logger = logging.getLogger()
 
 
-def info(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:str, job:str) -> None:
+def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, job: str) -> None:
     """TODO Docstring
 
     Args:
@@ -35,7 +35,8 @@ def info(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:st
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
-def search(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:str, search_pattern:str, search_folder:str, depth:int, fullname:bool, opt_list:bool) -> None:
+def search(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, search_pattern: str,
+           search_folder: str, depth: int, fullname: bool, opt_list: bool) -> None:
     """TODO Docstring
 
     Args:
@@ -46,9 +47,15 @@ def search(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:
     """
     JY = cu.config_YoJenkins(profile)
     if cu.is_full_url(search_folder):
-        data, data_list = JY.Job.search(search_pattern=search_pattern, folder_url=search_folder, folder_depth=depth, fullname=fullname)
+        data, data_list = JY.Job.search(search_pattern=search_pattern,
+                                        folder_url=search_folder,
+                                        folder_depth=depth,
+                                        fullname=fullname)
     else:
-        data, data_list = JY.Job.search(search_pattern=search_pattern, folder_name=search_folder, folder_depth=depth, fullname=fullname)
+        data, data_list = JY.Job.search(search_pattern=search_pattern,
+                                        folder_name=search_folder,
+                                        folder_depth=depth,
+                                        fullname=fullname)
 
     if not data:
         click.echo(click.style(f'not found', fg='bright_red', bold=True))
@@ -57,7 +64,8 @@ def search(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
-def build_list(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:str, job:str, opt_list:bool) -> None:
+def build_list(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, job: str,
+               opt_list: bool) -> None:
     """TODO Docstring
 
     Args:
@@ -79,7 +87,7 @@ def build_list(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, prof
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
-def build_next(profile:str, job:str) -> None:
+def build_next(profile: str, job: str) -> None:
     """TODO Docstring
 
     Args:
@@ -101,7 +109,7 @@ def build_next(profile:str, job:str) -> None:
     click.echo(click.style(f'{data}', fg='bright_green', bold=True))
 
 
-def build_last(profile:str, job:str) -> None:
+def build_last(profile: str, job: str) -> None:
     """TODO Docstring
 
     Args:
@@ -123,7 +131,7 @@ def build_last(profile:str, job:str) -> None:
     click.echo(click.style(f'{data}', fg='bright_green', bold=True))
 
 
-def build_set(profile:str, job:str, build_number:int) -> None:
+def build_set(profile: str, job: str, build_number: int) -> None:
     """TODO Docstring
 
     Args:
@@ -145,7 +153,7 @@ def build_set(profile:str, job:str, build_number:int) -> None:
     click.echo(click.style(f'{build_number}', fg='bright_green', bold=True))
 
 
-def build_exist(profile:str, job:str, build_number:int) -> None:
+def build_exist(profile: str, job: str, build_number: int) -> None:
     """TODO Docstring
 
     Args:
@@ -167,7 +175,7 @@ def build_exist(profile:str, job:str, build_number:int) -> None:
     click.echo(click.style(f'true', fg='bright_green', bold=True))
 
 
-def build(profile:str, job:str, parameters:tuple) -> None:
+def build(profile: str, job: str, parameters: tuple) -> None:
     """TODO Docstring
 
     Args:
@@ -194,7 +202,8 @@ def build(profile:str, job:str, parameters:tuple) -> None:
     click.echo(click.style(f'{data}', fg='bright_green', bold=True))
 
 
-def queue_check(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:str, job:str, opt_id:bool) -> None:
+def queue_check(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, job: str,
+                opt_id: bool) -> None:
     """TODO Docstring
 
     Args:
@@ -220,7 +229,7 @@ def queue_check(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, pro
         cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
-def browser(profile:str, job:str) -> None:
+def browser(profile: str, job: str) -> None:
     """TODO Docstring
 
     Args:
@@ -240,7 +249,8 @@ def browser(profile:str, job:str) -> None:
         sys.exit(1)
 
 
-def config(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, opt_json:bool, profile:str, job:str, filepath:str) -> None:
+def config(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_json: bool, profile: str, job: str,
+           filepath: str) -> None:
     """TODO Docstring
 
     Args:
@@ -251,9 +261,17 @@ def config(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, opt_json
     """
     JY = cu.config_YoJenkins(profile)
     if cu.is_full_url(job):
-        data, write_success = JY.Job.config(filepath=filepath, job_url=job, opt_json=opt_json, opt_yaml=opt_yaml, opt_toml=opt_toml)
+        data, write_success = JY.Job.config(filepath=filepath,
+                                            job_url=job,
+                                            opt_json=opt_json,
+                                            opt_yaml=opt_yaml,
+                                            opt_toml=opt_toml)
     else:
-        data, write_success = JY.Job.config(filepath=filepath, job_name=job, opt_json=opt_json, opt_yaml=opt_yaml, opt_toml=opt_toml)
+        data, write_success = JY.Job.config(filepath=filepath,
+                                            job_name=job,
+                                            opt_json=opt_json,
+                                            opt_yaml=opt_yaml,
+                                            opt_toml=opt_toml)
 
     if not data:
         click.echo(click.style(f'failed', fg='bright_red', bold=True))
@@ -271,7 +289,7 @@ def config(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, opt_json
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
-def disable(profile:str, job:str) -> None:
+def disable(profile: str, job: str) -> None:
     """TODO Docstring
 
     Args:
@@ -292,7 +310,7 @@ def disable(profile:str, job:str) -> None:
     click.echo(click.style(f'{data}', fg='bright_green', bold=True))
 
 
-def enable(profile:str, job:str) -> None:
+def enable(profile: str, job: str) -> None:
     """TODO Docstring
 
     Args:
@@ -313,7 +331,7 @@ def enable(profile:str, job:str) -> None:
     click.echo(click.style(f'{data}', fg='bright_green', bold=True))
 
 
-def rename(profile:str, job:str, new_name:str) -> None:
+def rename(profile: str, job: str, new_name: str) -> None:
     """TODO Docstring
 
     Args:
@@ -334,7 +352,7 @@ def rename(profile:str, job:str, new_name:str) -> None:
     click.echo(click.style(f'{data}', fg='bright_green', bold=True))
 
 
-def delete(profile:str, job:str) -> None:
+def delete(profile: str, job: str) -> None:
     """TODO Docstring
 
     Args:
@@ -355,7 +373,7 @@ def delete(profile:str, job:str) -> None:
     click.echo(click.style(f'{data}', fg='bright_green', bold=True))
 
 
-def wipe(profile:str, job:str) -> None:
+def wipe(profile: str, job: str) -> None:
     """TODO Docstring
 
     Args:
@@ -376,7 +394,7 @@ def wipe(profile:str, job:str) -> None:
     click.echo(click.style(f'{data}', fg='bright_green', bold=True))
 
 
-def monitor(profile:str, job:str, sound:bool) -> None:
+def monitor(profile: str, job: str, sound: bool) -> None:
     """TODO Docstring
 
     Args:
@@ -396,7 +414,7 @@ def monitor(profile:str, job:str, sound:bool) -> None:
         sys.exit(1)
 
 
-def create(profile:str, name:str, folder:str, config:str) -> None:
+def create(profile: str, name: str, folder: str, config: str) -> None:
     """TODO Docstring
 
     Args:

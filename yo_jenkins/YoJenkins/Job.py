@@ -45,8 +45,7 @@ class Job():
         self.search_results = []
         self.search_items_count = 0
 
-
-    def __recursive_search(self, search_pattern:str, search_list:list, level:int, fullname:bool=True) -> None:
+    def __recursive_search(self, search_pattern: str, search_list: list, level: int, fullname: bool = True) -> None:
         """Recursive search method for jobs
 
         Details: Matched pattern findings are storred in the object: `self.search_results`
@@ -80,7 +79,9 @@ class Job():
                     if re.search(search_pattern, list_item[dict_key], re.IGNORECASE):
                         self.search_results.append(list_item)
                 except re.error as e:
-                    logger.debug(f'Error while applying REGEX pattern "{search_pattern}" to "{list_item[dict_key]}". Exception: {e}')
+                    logger.debug(
+                        f'Error while applying REGEX pattern "{search_pattern}" to "{list_item[dict_key]}". Exception: {e}'
+                    )
                     break
 
             # Count items searched for record
@@ -93,8 +94,12 @@ class Job():
             # Keep searching all sub-items for this item. Call itself for some recursion fun
             self.__recursive_search(search_pattern, list_item['jobs'], level, fullname)
 
-
-    def search(self, search_pattern:str, folder_name:str='', folder_url:str='', folder_depth:int=4, fullname:bool=True) -> Tuple[list, list]:
+    def search(self,
+               search_pattern: str,
+               folder_name: str = '',
+               folder_url: str = '',
+               folder_depth: int = 4,
+               fullname: bool = True) -> Tuple[list, list]:
         """TODO Docstring
 
         Args:
@@ -105,7 +110,7 @@ class Job():
             TODO
         """
         # Finding the job by REGEX pattern
-        # NOTE: 
+        # NOTE:
         #   - Criteria of jobs is that jobs do not have any sub-folders, only views and jobs
 
         # Start a timer to time the search
@@ -138,18 +143,18 @@ class Job():
 
         # Remove duplicates from list
         logger.debug('Removing duplicates if needed ...')
-        self.search_results = [i for n, i in enumerate(self.search_results) if i not in self.search_results[n + 1:]] 
+        self.search_results = [i for n, i in enumerate(self.search_results) if i not in self.search_results[n + 1:]]
 
         # Getting only the URLs of the stages
-        job_search_results_list = [ r['url'] for r in self.search_results ]
+        job_search_results_list = [r['url'] for r in self.search_results]
 
         # Output search stats
-        logger.debug(f'Searched jobs: {self.search_items_count}. Search time: {perf_counter() - start_time:.3f} seconds')
+        logger.debug(
+            f'Searched jobs: {self.search_items_count}. Search time: {perf_counter() - start_time:.3f} seconds')
 
         return self.search_results, job_search_results_list
 
-
-    def info(self, job_name:str='', job_url:str='') -> Dict:
+    def info(self, job_name: str = '', job_url: str = '') -> Dict:
         """TODO Docstring
 
         Args:
@@ -166,11 +171,7 @@ class Job():
             job_url = utility.name_to_url(self.REST.get_server_url(), job_name)
 
         logger.debug(f'Job url passed: {job_url}')
-        job_info, _, success = self.REST.request(
-            f'{job_url.strip("/")}/api/json',
-            'get',
-            is_endpoint=False
-            )
+        job_info, _, success = self.REST.request(f'{job_url.strip("/")}/api/json', 'get', is_endpoint=False)
         if not success:
             logger.debug(f'Failed to find job info: {job_url}')
             return {}
@@ -189,12 +190,12 @@ class Job():
             job_info['serverURL'] = utility.item_url_to_server_url(job_info['url'])
             job_info['serverDomain'] = utility.item_url_to_server_url(job_info['url'], False)
 
-            job_info['folderFullName'] = 'Base Folder' if not job_info['folderFullName'] else job_info['folderFullName']
+            job_info[
+                'folderFullName'] = 'Base Folder' if not job_info['folderFullName'] else job_info['folderFullName']
 
         return job_info
 
-
-    def build_list(self, job_name:str='', job_url:str='') -> Tuple[list, list]:
+    def build_list(self, job_name: str = '', job_url: str = '') -> Tuple[list, list]:
         """TODO Docstring
 
         Args:
@@ -210,15 +211,14 @@ class Job():
 
         # Get all the past builds
         build_list, build_url_list = utility.item_subitem_list(
-            item_info=job_info, get_key_info='url',
+            item_info=job_info,
+            get_key_info='url',
             item_type=JenkinsItemClasses.build.value['item_type'],
-            item_class_list=JenkinsItemClasses.build.value['class_type']
-            )
+            item_class_list=JenkinsItemClasses.build.value['class_type'])
 
         return build_list, build_url_list
 
-
-    def build_next_number(self, job_name:str='', job_url:str='') -> int:
+    def build_next_number(self, job_name: str = '', job_url: str = '') -> int:
         """TODO Docstring
 
         Args:
@@ -236,8 +236,7 @@ class Job():
 
         return job_info['nextBuildNumber']
 
-
-    def build_last_number(self, job_name:str='', job_url:str='', job_info:dict={}) -> int:
+    def build_last_number(self, job_name: str = '', job_url: str = '', job_info: dict = {}) -> int:
         """TODO Docstring
 
         Args:
@@ -264,8 +263,7 @@ class Job():
 
         return job_info['lastBuild']['number']
 
-
-    def build_set_next_number(self, build_number:int, job_name:str='', job_url:str='') -> int:
+    def build_set_next_number(self, build_number: int, job_name: str = '', job_url: str = '') -> int:
         """TODO Docstring
 
         Args:
@@ -276,7 +274,7 @@ class Job():
         """
         if not job_name and not job_url:
             logger.debug('Failed to set job next build number. No job name or job url received')
-            return 
+            return
         if job_url and not job_name:
             job_name = utility.url_to_name(url=job_url)
         # Format name
@@ -289,13 +287,17 @@ class Job():
             response = self.JenkinsSDK.set_next_build_number(job_name, build_number)
         except jenkins.JenkinsException as e:
             error_no_html = e.args[0].split("\n")[0]
-            logger.debug(f'Failed to set next build number for job "{job_name}" to {build_number}. Exception: {error_no_html}')
+            logger.debug(
+                f'Failed to set next build number for job "{job_name}" to {build_number}. Exception: {error_no_html}')
             return
 
         return build_number
 
-
-    def build_number_exist(self, build_number:int, job_info:dict={}, job_name:str='', job_url:str='') -> bool:
+    def build_number_exist(self,
+                           build_number: int,
+                           job_info: dict = {},
+                           job_name: str = '',
+                           job_url: str = '') -> bool:
         """TODO Docstring
 
         Args:
@@ -323,8 +325,7 @@ class Job():
 
         return False
 
-
-    def build_trigger(self, job_name:str='', job_url:str='', paramters:Dict={}, token:str='') -> int:
+    def build_trigger(self, job_name: str = '', job_url: str = '', paramters: Dict = {}, token: str = '') -> int:
         """TODO Docstring
 
         Args:
@@ -363,7 +364,7 @@ class Job():
         logger.debug(f'POST url: {post_url}')
 
         # Posting to Jenkins
-        return_headers= self.REST.request(post_url, 'post', is_endpoint=False)[1]
+        return_headers = self.REST.request(post_url, 'post', is_endpoint=False)[1]
 
         # Parse the queue location of the build
         if return_headers:
@@ -379,8 +380,7 @@ class Job():
 
         return build_queue_number
 
-
-    def wipeout_workspace(self, job_name:str='', job_url:str='') -> bool:
+    def wipeout_workspace(self, job_name: str = '', job_url: str = '') -> bool:
         """TODO Docstring
 
         Args:
@@ -392,8 +392,7 @@ class Job():
         # TODO
         pass
 
-
-    def queue_info(self, build_queue_number:int=0, build_queue_url:str='') -> Dict:
+    def queue_info(self, build_queue_number: int = 0, build_queue_url: str = '') -> Dict:
         """TODO Docstring
 
         Args:
@@ -427,8 +426,7 @@ class Job():
 
         return queue_info
 
-
-    def in_queue_check(self, job_name:str='', job_url:str='') -> Tuple[dict, int]:
+    def in_queue_check(self, job_name: str = '', job_url: str = '') -> Tuple[dict, int]:
         """TODO Docstring
 
         Args:
@@ -447,11 +445,11 @@ class Job():
         queue_matches = utility.queue_find(queue_all, job_name=job_name, job_url=job_url)
         if not queue_matches:
             return {}, 0
-        queue_info = queue_matches[0]          
+        queue_info = queue_matches[0]
 
         # Adding additional parameters
         if queue_info:
-            queue_info['inQueueSinceFormatted'] = str(timedelta(seconds=queue_info['inQueueSince']/1000.0))[:-3]
+            queue_info['inQueueSinceFormatted'] = str(timedelta(seconds=queue_info['inQueueSince'] / 1000.0))[:-3]
             queue_info['fullUrl'] = self.REST.get_server_url() + '/' + queue_info['url']
             queue_info['jobUrl'] = queue_info['task']['url']
             queue_info['jobFullName'] = utility.url_to_name(queue_info['jobUrl'])
@@ -462,8 +460,7 @@ class Job():
 
         return queue_info, queue_info['id']
 
-
-    def queue_abort(self, build_queue_number:int) -> bool:
+    def queue_abort(self, build_queue_number: int) -> bool:
         """TODO Docstring
 
         Args:
@@ -483,7 +480,9 @@ class Job():
         return_content = self.REST.request(endpoint, 'post', is_endpoint=True)[0]
 
         if not return_content:
-            logger.error('Failed to abort build queue. Specified build queue number may be wrong or build may have already started')
+            logger.error(
+                'Failed to abort build queue. Specified build queue number may be wrong or build may have already started'
+            )
             logger.error('The following jobs are currently in queue:')
             queue_list = self.queue_list()
             for i, queue_item in enumerate(queue_list):
@@ -493,8 +492,7 @@ class Job():
 
         return True
 
-
-    def browser_open(self, job_name:str='', job_url:str='') -> bool:
+    def browser_open(self, job_name: str = '', job_url: str = '') -> bool:
         """TODO Docstring
 
         Args:
@@ -517,8 +515,13 @@ class Job():
         logger.debug('Successfully opened in web browser' if success else 'Failed to open in web browser')
         return success
 
-
-    def config(self, filepath:str='', job_name:str='', job_url:str='', opt_json:bool=False, opt_yaml:bool=False, opt_toml:bool=False) -> Tuple[str, bool]:
+    def config(self,
+               filepath: str = '',
+               job_name: str = '',
+               job_url: str = '',
+               opt_json: bool = False,
+               opt_yaml: bool = False,
+               opt_toml: bool = False) -> Tuple[str, bool]:
         """Get the folder XML configuration (config.xml)
 
         Args:
@@ -540,13 +543,12 @@ class Job():
             job_url = utility.name_to_url(self.REST.get_server_url(), job_name)
 
         logger.debug(f'Fetching XML configurations for job: "{job_url}" ...')
-        return_content, _, success = self.REST.request(
-            f'{job_url.strip("/")}/config.xml',
-            'get',
-            json_content=False,
-            is_endpoint=False)
+        return_content, _, success = self.REST.request(f'{job_url.strip("/")}/config.xml',
+                                                       'get',
+                                                       json_content=False,
+                                                       is_endpoint=False)
         logger.debug('Successfully fetched XML configurations' if success else 'Failed to fetch XML configurations')
-        
+
         if filepath:
             if any([opt_json, opt_yaml, opt_toml]):
                 logger.debug('Converting content to JSON ...')
@@ -572,12 +574,11 @@ class Job():
                 logger.debug(f'Successfully wrote configurations to file')
             except Exception as e:
                 logger.debug(f'Failed to write configurations to file. Exception: {e}')
-                return "", False 
+                return "", False
 
         return return_content, True
 
-
-    def disable(self, job_name:str='', job_url:str='') -> bool:
+    def disable(self, job_name: str = '', job_url: str = '') -> bool:
         """TODO Docstring
 
         Args:
@@ -600,8 +601,7 @@ class Job():
         logger.debug('Successfully disabled job' if success else 'Failed to disable job')
         return success
 
-
-    def enable(self, job_name:str='', job_url:str='') -> bool:
+    def enable(self, job_name: str = '', job_url: str = '') -> bool:
         """TODO Docstring
 
         Args:
@@ -624,8 +624,7 @@ class Job():
         logger.debug('Successfully enabled job' if success else 'Failed to enable job')
         return success
 
-
-    def rename(self, new_name:str, job_name:str='', job_url:str='') -> bool:
+    def rename(self, new_name: str, job_name: str = '', job_url: str = '') -> bool:
         """TODO Docstring
 
         Args:
@@ -654,8 +653,7 @@ class Job():
         logger.debug('Successfully renamed job' if success else 'Failed to rename job')
         return success
 
-
-    def delete(self, job_name:str='', job_url:str='') -> bool:
+    def delete(self, job_name: str = '', job_url: str = '') -> bool:
         """TODO Docstring
 
         Args:
@@ -678,8 +676,7 @@ class Job():
         logger.debug('Successfully deleted job' if success else 'Failed to delete job')
         return success
 
-
-    def wipe_workspace(self, job_name:str='', job_url:str='') -> bool:
+    def wipe_workspace(self, job_name: str = '', job_url: str = '') -> bool:
         """TODO Docstring
 
         Args:
@@ -702,8 +699,7 @@ class Job():
         logger.debug('Successfully wiped job workspace' if success else 'Failed to wipe job workspace')
         return success
 
-
-    def monitor(self, job_name:str='', job_url:str='', sound:bool=False) -> bool:
+    def monitor(self, job_name: str = '', job_url: str = '', sound: bool = False) -> bool:
         """TODO Docstring
 
         Args:
@@ -729,8 +725,7 @@ class Job():
             logger.debug('Failed to open monitor for build')
         return success
 
-
-    def create(self, name:str, folder_name:str='', folder_url:str='', config:str='config.xml') -> bool:
+    def create(self, name: str, folder_name: str = '', folder_url: str = '', config: str = 'config.xml') -> bool:
         """TODO Docstring
 
         Args:
@@ -771,13 +766,12 @@ class Job():
 
         logger.debug(f'Creating job "{name}" ...')
         endpoint = f'createItem?name={name}'
-        headers={'Content-Type': 'application/xml; charset=utf-8'}
-        _, _, success = self.REST.request(
-            f'{folder_url.strip("/")}/{endpoint}',
-            'post',
-            data=config_definition,
-            headers=headers,
-            is_endpoint=False)
+        headers = {'Content-Type': 'application/xml; charset=utf-8'}
+        _, _, success = self.REST.request(f'{folder_url.strip("/")}/{endpoint}',
+                                          'post',
+                                          data=config_definition,
+                                          headers=headers,
+                                          is_endpoint=False)
         logger.debug(f'Successfully created item "{name}"' if success else f'Failed to create item "{name}"')
 
         try:

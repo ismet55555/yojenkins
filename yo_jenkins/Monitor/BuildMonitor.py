@@ -56,12 +56,9 @@ class BuildMonitor(Monitor):
 
         # Output build logs to console
         self.build_logs = False
-        
+
         # Temporary message box on screen
         self.message_box_temp_duration = 1  # sec
-
-
-
 
     ###########################################################################
     #                         BUILD MONITOR
@@ -143,13 +140,23 @@ class BuildMonitor(Monitor):
 
             # TOP HEADER
             y = 1
-            
+
             if logger.level < 20:
                 # mu.draw_text(scr, f"{loop_total_time:.4f}", y, center_x=True, color=self.color['grey-light'], decor=self.decor['bold'])
                 # mu.draw_text(scr, str(curses.baudrate()), y, center_x=True, color=self.color['grey-light'], decor=self.decor['bold'])
-                mu.draw_text(scr, str(time() - sound_notify_msg_time) + ' ' + str(sound) + ' ' + str(sound_notify_msg_show), y, center_x=True, color=self.color['grey-light'], decor=self.decor['bold'])
+                mu.draw_text(scr,
+                             str(time() - sound_notify_msg_time) + ' ' + str(sound) + ' ' + str(sound_notify_msg_show),
+                             y,
+                             center_x=True,
+                             color=self.color['grey-light'],
+                             decor=self.decor['bold'])
             else:
-                mu.draw_text(scr, 'BUILD MONITOR', y, center_x=True, color=self.color['grey-light'], decor=self.decor['bold'])
+                mu.draw_text(scr,
+                             'BUILD MONITOR',
+                             y,
+                             center_x=True,
+                             color=self.color['grey-light'],
+                             decor=self.decor['bold'])
             y += 1
 
             # Draw header divider
@@ -165,8 +172,8 @@ class BuildMonitor(Monitor):
                 build_url = self.build_info_data['url']
 
                 # INFO
-                mu.draw_horizontal_header(
-                    scr, y, x[0], term_width - 5, '-', 'INFO', self.color['normal'] | self.decor['bold'])
+                mu.draw_horizontal_header(scr, y, x[0], term_width - 5, '-', 'INFO',
+                                          self.color['normal'] | self.decor['bold'])
                 y += 1
 
                 build_info_items = {
@@ -178,27 +185,29 @@ class BuildMonitor(Monitor):
                 }
                 for i, (key, value) in enumerate(build_info_items.items()):
                     # Job Name
-                    mu.draw_text(scr, f'{key}:', y,
-                                 x[0], decor=self.decor['bold'])
-                    mu.draw_text(scr, mu.truncate_text(
-                        f'{value}', term_width - 5 - 12), y, x[1])
+                    mu.draw_text(scr, f'{key}:', y, x[0], decor=self.decor['bold'])
+                    mu.draw_text(scr, mu.truncate_text(f'{value}', term_width - 5 - 12), y, x[1])
                     y += 1
                 y += 1
 
-                mu.draw_horizontal_header(scr, y, x[0], term_width - 5, '-', 'STATUS', self.color['normal'] | self.decor['bold'])
+                mu.draw_horizontal_header(scr, y, x[0], term_width - 5, '-', 'STATUS',
+                                          self.color['normal'] | self.decor['bold'])
                 y += 1
 
                 # Play a sound on status change
                 if sound:
-                    mu.draw_text(scr, f'( fx )', 1, term_width - 8, color=self.color['grey-dark'], decor=self.decor['bold'])
+                    mu.draw_text(scr,
+                                 f'( fx )',
+                                 1,
+                                 term_width - 8,
+                                 color=self.color['grey-dark'],
+                                 decor=self.decor['bold'])
                 if sound and not self.playing_sound:
                     # Get the sound file name
-                    status_sound = self.status_to_sound(
-                        self.build_info_data['resultText'])
+                    status_sound = self.status_to_sound(self.build_info_data['resultText'])
                     if status_sound_last != status_sound and status_sound:
                         # FIXME: Only check file names, not status text
-                        self.play_sound_thread_on(
-                            os.path.join(self.sound_directory, status_sound))
+                        self.play_sound_thread_on(os.path.join(self.sound_directory, status_sound))
                         status_sound_last = status_sound
 
                 # Status text color
@@ -208,23 +217,33 @@ class BuildMonitor(Monitor):
                     'Started': [self.build_info_data['startDatetime'], self.color['normal'], self.decor['normal']],
                     'Ended': [self.build_info_data['endDatetime'], self.color['normal'], self.decor['normal']],
                     'Elapsed': [self.build_info_data['elapsedFormatted'], self.color['normal'], self.decor['normal']],
-                    'Estimated': [self.build_info_data['estimatedDurationFormatted'], self.color['normal'], self.decor['normal']],
-                    'Refresh': [str(self.build_info_thread_interval) + ' sec', self.color['normal'], self.decor['normal']],
+                    'Estimated': [
+                        self.build_info_data['estimatedDurationFormatted'], self.color['normal'], self.decor['normal']
+                    ],
+                    'Refresh': [
+                        str(self.build_info_thread_interval) + ' sec', self.color['normal'], self.decor['normal']
+                    ],
                     'Status': [self.build_info_data['resultText'], self.color[status_color], self.decor['bold']]
                 }
                 for i, (key, value) in enumerate(build_info_items.items()):
-                    mu.draw_text(scr, f'{key}:', y,
-                                 x[0], decor=self.decor['bold'])
-                    mu.draw_text(scr, mu.truncate_text(
-                        f'{value[0]}', term_width - 5 - 12), y, x[1], color=value[1], decor=value[2])
+                    mu.draw_text(scr, f'{key}:', y, x[0], decor=self.decor['bold'])
+                    mu.draw_text(scr,
+                                 mu.truncate_text(f'{value[0]}', term_width - 5 - 12),
+                                 y,
+                                 x[1],
+                                 color=value[1],
+                                 decor=value[2])
                     y += 1
             else:
                 y += 3
-                mu.draw_text(scr, 'NO DATA', y, center_x=True,
-                             color=self.color['normal'], decor=self.decor['bold'])
+                mu.draw_text(scr, 'NO DATA', y, center_x=True, color=self.color['normal'], decor=self.decor['bold'])
                 y += 2
-                mu.draw_text(scr, 'ಠ_ಠ  ¯\_(⊙︿⊙)_/¯', y, center_x=True,
-                             color=self.color['normal'], decor=self.decor['bold'])
+                mu.draw_text(scr,
+                             'ಠ_ಠ  ¯\_(⊙︿⊙)_/¯',
+                             y,
+                             center_x=True,
+                             color=self.color['normal'],
+                             decor=self.decor['bold'])
             y += 1
 
             ########################################################################################
@@ -236,7 +255,8 @@ class BuildMonitor(Monitor):
                 x = [3, 8, 40, 55]
 
                 # Header
-                mu.draw_horizontal_header(scr, y, x[0], term_width - 5, '-', 'STAGES', self.color['normal'] | self.decor['bold'])
+                mu.draw_horizontal_header(scr, y, x[0], term_width - 5, '-', 'STAGES',
+                                          self.color['normal'] | self.decor['bold'])
                 y += 1
 
                 # Loop through all listed stages in build
@@ -274,22 +294,19 @@ class BuildMonitor(Monitor):
             # SERVER STATUS
             y = term_height - 3
             if self.server_status_data:
-                auth_status = False if 'auth' not in self.server_status_data else self.server_status_data[
-                    "auth"]
+                auth_status = False if 'auth' not in self.server_status_data else self.server_status_data["auth"]
                 reach_status = False if 'reachable' not in self.server_status_data else self.server_status_data[
                     "reachable"]
                 line = f'Server Status: Reachable: {reach_status}, Authenticated: {auth_status}'
             else:
                 line = f'Server Status: NO DATA'
-            mu.draw_text(scr, line, y, center_x=True,
-                         color=self.color['grey-dark'])
+            mu.draw_text(scr, line, y, center_x=True, color=self.color['grey-dark'])
 
             ########################################################################################
 
             # User key input instructions
             y = term_height - 2
-            mu.draw_text(scr, 'Press "H" for keyboard shortcuts',
-                         y, center_x=True, color=self.color['grey-dark'])
+            mu.draw_text(scr, 'Press "H" for keyboard shortcuts', y, center_x=True, color=self.color['grey-dark'])
 
             ########################################################################################
 
@@ -308,8 +325,12 @@ class BuildMonitor(Monitor):
 
             # Indicate server interaction
             if self.server_interaction:
-                mu.draw_text(scr, '(R)', term_height - 2, term_width - 5,
-                             color=self.color['grey-dark'], decor=self.decor['bold'])
+                mu.draw_text(scr,
+                             '(R)',
+                             term_height - 2,
+                             term_width - 5,
+                             color=self.color['grey-dark'],
+                             decor=self.decor['bold'])
             self.server_interaction = False
 
             ########################################################################################
@@ -325,14 +346,8 @@ class BuildMonitor(Monitor):
             if self.help:
                 curses.halfdelay(255)
                 message_lines = [
-                    'A - Abort build',
-                    'L - Output build logs',
-                    'O - Open build in web browser',
-                    'P - Pause Monitor',
-                    'Q - Quit Monitor',
-                    'S - Sound notification on/off',
-                    ' ',
-                    'H - Keyboard shortcuts'
+                    'A - Abort build', 'L - Output build logs', 'O - Open build in web browser', 'P - Pause Monitor',
+                    'Q - Quit Monitor', 'S - Sound notification on/off', ' ', 'H - Keyboard shortcuts'
                 ]
                 mu.draw_message_box(scr, message_lines, 'left')
             else:
@@ -354,11 +369,7 @@ class BuildMonitor(Monitor):
             if self.paused:
                 self.help = False
                 curses.halfdelay(255)
-                message_lines = [
-                    'Monitor paused',
-                    'Requests stopped',
-                    'To resume press "P"'
-                ]
+                message_lines = ['Monitor paused', 'Requests stopped', 'To resume press "P"']
                 mu.draw_message_box(scr, message_lines)
             else:
                 halfdelay_normal = True
@@ -367,11 +378,7 @@ class BuildMonitor(Monitor):
             if self.build_abort:
                 self.help = False
                 curses.halfdelay(255)
-                message_lines = [
-                    'Are you sure you want to abort build?',
-                    'To abort press "A"',
-                    'To return press "R"'
-                ]
+                message_lines = ['Are you sure you want to abort build?', 'To abort press "A"', 'To return press "R"']
                 mu.draw_message_box(scr, message_lines)
                 if self.build_abort > 1:  # Abort Message confirmed (pressed twice)
                     if build_url:
@@ -403,11 +410,7 @@ class BuildMonitor(Monitor):
             if self.quit:
                 self.help = False
                 curses.halfdelay(255)
-                message_lines = [
-                    'Are you sure you want to quit?',
-                    'To quit press "Q"',
-                    'To return press "R"'
-                ]
+                message_lines = ['Are you sure you want to quit?', 'To quit press "Q"', 'To return press "R"']
                 mu.draw_message_box(scr, message_lines)
                 # Quit Message confirmed (pressed twice)
                 if self.quit > 1:
@@ -432,7 +435,7 @@ class BuildMonitor(Monitor):
             # Get User input
             keystroke = scr.getch()
 
-    def monitor_start(self, build_url: str, sound: bool = False) -> bool: 
+    def monitor_start(self, build_url: str, sound: bool = False) -> bool:
         """
         Curses wrapper function for drawing main menu on screen
 
@@ -447,8 +450,6 @@ class BuildMonitor(Monitor):
 
         return curses.wrapper(self.__monitor_draw, build_url, sound)
 
-
-
     ###########################################################################
     #                      DATA COLLECTION THREADS
     ###########################################################################
@@ -457,7 +458,9 @@ class BuildMonitor(Monitor):
 
     def __thread_build_info(self, build_url: str, monitor_interval: float) -> None:
         """ TODO """
-        logger.debug(f'Thread starting - Build info - (ID: {threading.get_ident()} - Refresh Interval: {monitor_interval}s) ...')
+        logger.debug(
+            f'Thread starting - Build info - (ID: {threading.get_ident()} - Refresh Interval: {monitor_interval}s) ...'
+        )
 
         # Set the monitoring thread flag up
         self.all_threads_enabled = True
@@ -484,19 +487,22 @@ class BuildMonitor(Monitor):
         logger.debug(f'Starting thread for build info for "{build_url}" ...')
         try:
             threading.Thread(target=self.__thread_build_info, args=(
-                build_url, monitor_interval,), daemon=False).start()
+                build_url,
+                monitor_interval,
+            ), daemon=False).start()
         except Exception as e:
             logger.error(
                 f'Failed to start build info monitoring thread for {build_url}. Exception: {e}. Type: {type(e)}')
 
         return True
 
-
     ###########################  BUILD STAGES  ################################
 
     def __thread_build_stages(self, build_url: str, monitor_interval: float) -> None:
         """ TODO """
-        logger.debug(f'Thread starting - Build Stages - (ID: {threading.get_ident()} - Refresh Interval: {monitor_interval}s) ...')
+        logger.debug(
+            f'Thread starting - Build Stages - (ID: {threading.get_ident()} - Refresh Interval: {monitor_interval}s) ...'
+        )
 
         # Set the monitoring thread flag up
         self.all_threads_enabled = True
@@ -522,10 +528,12 @@ class BuildMonitor(Monitor):
         '''TODO'''
         logger.debug(f'Starting thread for build stages for "{build_url}" ...')
         try:
-            threading.Thread(target=self.__thread_build_stages, args=(build_url, monitor_interval,), daemon=False).start()
+            threading.Thread(target=self.__thread_build_stages, args=(
+                build_url,
+                monitor_interval,
+            ), daemon=False).start()
         except Exception as e:
             logger.error(
                 f'Failed to start build info monitoring thread for {build_url}. Exception: {e}. Type: {type(e)}')
 
         return True
-

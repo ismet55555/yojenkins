@@ -11,7 +11,7 @@ from typing import Dict, List, Tuple, Type
 logger = logging.getLogger()
 
 
-def logging_console(enabled:bool=True) -> None:
+def logging_console(enabled: bool = True) -> None:
     """
     Disable logger standard out in terminal, only keep log file output
 
@@ -74,18 +74,18 @@ def load_curses_colors_decor() -> Tuple[dict, dict]:
 
     # Defining colors [foreground/font, background]
     color_definition = {
-        'normal':       [curses.COLOR_WHITE, bkgrd_color],    # FIXME: Rename to "normal" to match decor
-        'red':          [curses.COLOR_RED, bkgrd_color],
-        'green':        [curses.COLOR_GREEN, bkgrd_color],
-        'blue':         [curses.COLOR_BLUE, bkgrd_color],
-        'yellow':       [curses.COLOR_YELLOW, bkgrd_color],
-        'orange':       [209, bkgrd_color],
-        'cyan':         [curses.COLOR_CYAN, bkgrd_color],
-        'magenta':      [curses.COLOR_MAGENTA, bkgrd_color],
-        'grey-dark':    [240, bkgrd_color],
-        'grey-light':   [248, bkgrd_color],
-        'black-white':  [curses.COLOR_BLACK, curses.COLOR_WHITE],
-        'white-red':    [curses.COLOR_WHITE, curses.COLOR_RED]
+        'normal': [curses.COLOR_WHITE, bkgrd_color],  # FIXME: Rename to "normal" to match decor
+        'red': [curses.COLOR_RED, bkgrd_color],
+        'green': [curses.COLOR_GREEN, bkgrd_color],
+        'blue': [curses.COLOR_BLUE, bkgrd_color],
+        'yellow': [curses.COLOR_YELLOW, bkgrd_color],
+        'orange': [209, bkgrd_color],
+        'cyan': [curses.COLOR_CYAN, bkgrd_color],
+        'magenta': [curses.COLOR_MAGENTA, bkgrd_color],
+        'grey-dark': [240, bkgrd_color],
+        'grey-light': [248, bkgrd_color],
+        'black-white': [curses.COLOR_BLACK, curses.COLOR_WHITE],
+        'white-red': [curses.COLOR_WHITE, curses.COLOR_RED]
     }
 
     # If terminal does not support colors, reset everything to white
@@ -103,18 +103,19 @@ def load_curses_colors_decor() -> Tuple[dict, dict]:
         color[key] = curses.color_pair(index + 1)
 
     # Defining font decorations
-    decoration_definition ={
-        'normal' : curses.A_NORMAL,         # Normal display (no highlight)
-        'standout': curses.A_STANDOUT,      # Best highlighting mode of the terminal
-        'underline': curses.A_UNDERLINE,    # Underlining
-        'reverse': curses.A_REVERSE,        # Reverse video
-        'blink': curses.A_BLINK,            # Blinking
-        'dim': curses.A_DIM,                # Half bright
-        'bold': curses.A_BOLD,              # Extra bright or bold
-        'protect': curses.A_PROTECT,        # Protected mode
-        'invisible': curses.A_INVIS,        # Invisible or blank mode
-        'alt-char': curses.A_ALTCHARSET,    # Alternate character set
-        'char': curses.A_CHARTEXT           # Bit-mask to extract a character
+    decoration_definition = {
+        'normal': curses.A_NORMAL,  # Normal display (no highlight)
+        'standout': curses.A_STANDOUT,  # Best highlighting mode of the terminal
+        'underline': curses.A_UNDERLINE,  # Underlining
+        'reverse': curses.A_REVERSE,  # Reverse video
+        'blink': curses.A_BLINK,  # Blinking
+        'dim': curses.A_DIM,  # Half bright
+        'bold': curses.A_BOLD,  # Extra bright or bold
+        'protect': curses.A_PROTECT,  # Protected mode
+        'invisible': curses.A_INVIS,  # Invisible or blank mode
+        'alt-char': curses.A_ALTCHARSET,  # Alternate character set
+        'char':
+            curses.A_CHARTEXT  # Bit-mask to extract a character
     }
 
     # Initiating curses color and saving for quick reference
@@ -137,26 +138,26 @@ def load_keys() -> dict:
         KEYS (dict): Dictionary of references to curses keys
     """
     KEYS = {
-        "ABORT":  (ord('a'), ord('A')),
-        "BUILD":  (ord('b'), ord('B')),
-        "DOWN":   (curses.KEY_DOWN, ord('j')),
-        "ENTER":  (curses.KEY_ENTER, ord('\n'), ord('\r')),
-        "HELP":   (ord('h'), ord('H')),
-        "LEFT":   (curses.KEY_LEFT, ord('h')),
-        "LOGS":   (ord('l'), ord('L')),
-        "OPEN":   (ord('o'), ord('O')),
-        "PAUSE":  (ord('p'), ord('P')),
-        "QUIT":   (27 , ord('q'), ord('Q')),
+        "ABORT": (ord('a'), ord('A')),
+        "BUILD": (ord('b'), ord('B')),
+        "DOWN": (curses.KEY_DOWN, ord('j')),
+        "ENTER": (curses.KEY_ENTER, ord('\n'), ord('\r')),
+        "HELP": (ord('h'), ord('H')),
+        "LEFT": (curses.KEY_LEFT, ord('h')),
+        "LOGS": (ord('l'), ord('L')),
+        "OPEN": (ord('o'), ord('O')),
+        "PAUSE": (ord('p'), ord('P')),
+        "QUIT": (27, ord('q'), ord('Q')),
         "RESUME": (ord('r'), ord('R')),
-        "RIGHT":  (curses.KEY_RIGHT, ord('l')),
-        "SOUND":  (ord('s'), ord('S')),
-        "SPACE":  (32, ord(' ')),
-        "UP":     (curses.KEY_UP, ord('k'))
+        "RIGHT": (curses.KEY_RIGHT, ord('l')),
+        "SOUND": (ord('s'), ord('S')),
+        "SPACE": (32, ord(' ')),
+        "UP": (curses.KEY_UP, ord('k'))
     }
     return KEYS
 
 
-def get_center_x(scr, line:str) -> int:
+def get_center_x(scr, line: str) -> int:
     """
     Find the horizontal center position of the given text line
 
@@ -185,7 +186,7 @@ def get_center_y(scr) -> int:
     return term_height // 2
 
 
-def truncate_text(text:str, length_limit:int) -> str:
+def truncate_text(text: str, length_limit: int) -> str:
     """
     Truncating/shortening of text given a length limit.
     Will add "..." to truncated text.
@@ -203,7 +204,7 @@ def truncate_text(text:str, length_limit:int) -> str:
     return truncated_text
 
 
-def get_message_box_size(term_height:int, term_width:int, message_lines:list) -> Tuple[int, int, int, int]:
+def get_message_box_size(term_height: int, term_width: int, message_lines: list) -> Tuple[int, int, int, int]:
     """
     Given a message box list with each item being a message box line/row,
     this method find the right size and position of the message box for
@@ -243,7 +244,7 @@ def get_progress_bar(exam_progress: float, bar_char_width=60, bar_char_full='|',
 
     progress_str = []
     for i in range(bar_char_width):
-        
+
         if i <= exam_progress * bar_char_width:
             progress_str.append(bar_char_full)
         else:
@@ -253,7 +254,7 @@ def get_progress_bar(exam_progress: float, bar_char_width=60, bar_char_full='|',
     return progress_str
 
 
-def draw_screen_border(scr, color:list) -> None:
+def draw_screen_border(scr, color: list) -> None:
     """
     Draw a border around entire terminal screen with specified color
 
@@ -268,7 +269,13 @@ def draw_screen_border(scr, color:list) -> None:
     scr.attroff(color)
 
 
-def draw_horizontal_header(scr, row:int, col:int, width:int, symbol:str='-', text:str='', color:list=[]) -> None:
+def draw_horizontal_header(scr,
+                           row: int,
+                           col: int,
+                           width: int,
+                           symbol: str = '-',
+                           text: str = '',
+                           color: list = []) -> None:
     """
     Draw a horizontal header on the screen
     Example:  `---------  HELLO  -------------`
@@ -303,7 +310,7 @@ def draw_horizontal_header(scr, row:int, col:int, width:int, symbol:str='-', tex
         scr.addstr(row, col, line, color)
 
 
-def draw_horizontal_seperator(scr, row:int, color:list=[], symbol:str='-', text:str='') -> None:
+def draw_horizontal_seperator(scr, row: int, color: list = [], symbol: str = '-', text: str = '') -> None:
     """
     Draw a horizontal line accross the terminal screen at specified height
     and with specified color
@@ -331,7 +338,7 @@ def draw_horizontal_seperator(scr, row:int, color:list=[], symbol:str='-', text:
         scr.addstr(row, 1, line, color)
 
 
-def draw_vertical_seperator(scr, x:int, color:list) -> None:
+def draw_vertical_seperator(scr, x: int, color: list) -> None:
     """
     Draw a vertical line accross the terminal screen at specified character
     column and with specified color
@@ -346,7 +353,7 @@ def draw_vertical_seperator(scr, x:int, color:list) -> None:
     # TODO: Currently unused but may come in handy
 
 
-def draw_message_box(scr, message_lines:list, justify:str='center') -> None:
+def draw_message_box(scr, message_lines: list, justify: str = 'center') -> None:
     """
     Draw a message box in the middle of the terminal screen
 
@@ -366,7 +373,7 @@ def draw_message_box(scr, message_lines:list, justify:str='center') -> None:
     message_box.border()
 
     # Find the longest line of text
-    max_line_len = len(max(message_lines, key = len))
+    max_line_len = len(max(message_lines, key=len))
 
     for l, line in enumerate(message_lines):
         # Getting the horizontal starting point
@@ -383,7 +390,14 @@ def draw_message_box(scr, message_lines:list, justify:str='center') -> None:
     message_box.refresh()
 
 
-def draw_text(scr, text:str=None, y:int=None, x:int=None, color:list=None, decor:int=None, center_y:bool=False, center_x:bool=False) -> None:
+def draw_text(scr,
+              text: str = None,
+              y: int = None,
+              x: int = None,
+              color: list = None,
+              decor: int = None,
+              center_y: bool = False,
+              center_x: bool = False) -> None:
     """
     Draw a text on screen.
     This is a wrapper for `addstr`
@@ -423,7 +437,7 @@ def draw_text(scr, text:str=None, y:int=None, x:int=None, color:list=None, decor
     scr.noutrefresh()
 
 
-def paint_background(scr, color:int=0) -> None:
+def paint_background(scr, color: int = 0) -> None:
     """
     Paint the background of the terminal window with one color
 
