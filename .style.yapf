@@ -1,7 +1,6 @@
 [style]
 based_on_style = google
-spaces_before_comment = 4
+spaces_before_comment = 3
 split_before_logical_operator = true
 
-COLUMN_LIMIT = 119
-SPACES_BEFORE_COMMENT = 3
+column_limit = 119
