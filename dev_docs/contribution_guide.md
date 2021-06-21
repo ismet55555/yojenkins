@@ -79,6 +79,20 @@ Also, note that as of now there are no sufficient tests setup (ie. pytest, unite
 7. On GitHub open a pull request to merge to the `main` branch
 
 
+
+## Formatting and Linting Code
+1. If you haven't already, activate/enter the virtual environment
+    - `pipenv shell`
+
+2. Make sure you are in the root directory of the project
+
+3. Run `yapf` formatter
+    - `yapf --in-place --recursive .`
+
+3. Run 'pylint` code linter
+    - `pylint yo_jenkins --report y`
+
+
 ## Adding a New Dependency *(If needed)*
 
 1. Install the package
