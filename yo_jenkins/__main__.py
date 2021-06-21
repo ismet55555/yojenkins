@@ -198,6 +198,16 @@ def quiet(debug, profile, off):
     cli_server.quiet(profile, off)
 
 
+
+
+
+
+
+
+
+
+
+
 @server.command(short_help='\tRestart the server')
 @cli_decorators.debug
 @cli_decorators.profile
