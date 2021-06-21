@@ -32,7 +32,7 @@ class REST:
         Args:
             TODO
 
-        Details: 
+        Details:
             Troubleshoot: nettop -p Python
 
         Returns:

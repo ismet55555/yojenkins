@@ -7,10 +7,8 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-autopep8 = "*"
-black = "*"
 bump2version = "*"
-isort = "*"
+pylint = "*"
 setuptools = "*"
 twine = "*"
 wheel = "*"
@@ -18,7 +16,6 @@ yapf = "*"
 yo-jenkins = {editable = true, path = "."}
 
 [packages]
-toml = "*"
 click = "*"
 coloredlogs = "*"
 docker = "*"
@@ -28,9 +25,8 @@ pyyaml = "*"
 requests-cache = "*"
 requests_futures = "*"
 simpleaudio = {version = "*", platform_system = "!= 'Windows'"}
+toml = "*"
 windows-curses = {version = "2.2.0", platform_system = "== 'Windows'"}
-# [requires]
-# python_version = "3"
 
 [pipenv]
 allow_prereleases = true
