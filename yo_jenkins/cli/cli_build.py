@@ -8,11 +8,12 @@ from yo_jenkins.YoJenkins.Status import Status
 
 from . import cli_utility as cu
 
-
 # Getting the logger reference
 logger = logging.getLogger()
 
-def info(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:str, job:str, build_number:int, build_url:str, latest:bool) -> None:
+
+def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, job: str, build_number: int,
+         build_url: str, latest: bool) -> None:
     """TODO Docstring
 
     Args:
@@ -22,7 +23,10 @@ def info(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:st
         TODO
     """
     if job and not build_number and not latest:
-        click.echo(click.style(f'INPUT ERROR: For job, either specify --number or --latest. See --help', fg='bright_red', bold=True))
+        click.echo(
+            click.style(f'INPUT ERROR: For job, either specify --number or --latest. See --help',
+                        fg='bright_red',
+                        bold=True))
         sys.exit(1)
 
     JY = cu.config_YoJenkins(profile)
@@ -48,7 +52,7 @@ def info(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:st
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
-def status(profile:str, job:str, build_number:int, build_url:str, latest:bool) -> None:
+def status(profile: str, job: str, build_number: int, build_url: str, latest: bool) -> None:
     """TODO Docstring
 
     Args:
@@ -58,7 +62,10 @@ def status(profile:str, job:str, build_number:int, build_url:str, latest:bool) -
         TODO
     """
     if job and not build_number and not latest:
-        click.echo(click.style(f'INPUT ERROR: For job, either specify --number or --latest. See --help', fg='bright_red', bold=True))
+        click.echo(
+            click.style(f'INPUT ERROR: For job, either specify --number or --latest. See --help',
+                        fg='bright_red',
+                        bold=True))
         sys.exit(1)
 
     JY = cu.config_YoJenkins(profile)
@@ -81,7 +88,7 @@ def status(profile:str, job:str, build_number:int, build_url:str, latest:bool) -
     if not data:
         click.echo(click.style(f'No status found', fg='bright_red', bold=True))
         sys.exit(1)
-    
+
     # Color for output
     if data.upper() in Status.unknown.value:
         output_fg = 'black'
@@ -98,7 +105,7 @@ def status(profile:str, job:str, build_number:int, build_url:str, latest:bool) -
     click.echo(click.style(f'{data}', fg=output_fg, bold=True))
 
 
-def abort(profile:str, job:str, build_number:int, build_url:str, latest:bool) -> None:
+def abort(profile: str, job: str, build_number: int, build_url: str, latest: bool) -> None:
     """TODO Docstring
 
     Args:
@@ -108,7 +115,10 @@ def abort(profile:str, job:str, build_number:int, build_url:str, latest:bool) ->
         TODO
     """
     if job and not build_number and not latest:
-        click.echo(click.style(f'INPUT ERROR: For job, either specify --number or --latest. See --help', fg='bright_red', bold=True))
+        click.echo(
+            click.style(f'INPUT ERROR: For job, either specify --number or --latest. See --help',
+                        fg='bright_red',
+                        bold=True))
         sys.exit(1)
 
     JY = cu.config_YoJenkins(profile)
@@ -135,8 +145,7 @@ def abort(profile:str, job:str, build_number:int, build_url:str, latest:bool) ->
     click.echo(click.style(f'{data}', fg='bright_green', bold=True))
 
 
-
-def delete(profile:str, job:str, build_number:int, build_url:str, latest:bool) -> None:
+def delete(profile: str, job: str, build_number: int, build_url: str, latest: bool) -> None:
     """TODO Docstring
 
     Args:
@@ -146,7 +155,10 @@ def delete(profile:str, job:str, build_number:int, build_url:str, latest:bool) -
         TODO
     """
     if job and not build_number and not latest:
-        click.echo(click.style(f'INPUT ERROR: For job, either specify --number or --latest. See --help', fg='bright_red', bold=True))
+        click.echo(
+            click.style(f'INPUT ERROR: For job, either specify --number or --latest. See --help',
+                        fg='bright_red',
+                        bold=True))
         sys.exit(1)
 
     JY = cu.config_YoJenkins(profile)
@@ -173,8 +185,8 @@ def delete(profile:str, job:str, build_number:int, build_url:str, latest:bool) -
     click.echo(click.style(f'{data}', fg='bright_green', bold=True))
 
 
-
-def stages(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:str, opt_list:bool, job:str, build_number:int, build_url:str, latest:bool) -> None:
+def stages(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, opt_list: bool, job: str,
+           build_number: int, build_url: str, latest: bool) -> None:
     """TODO Docstring
 
     Args:
@@ -184,7 +196,10 @@ def stages(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:
         TODO
     """
     if job and not build_number and not latest:
-        click.echo(click.style(f'INPUT ERROR: For job, either specify --number or --latest. See --help', fg='bright_red', bold=True))
+        click.echo(
+            click.style(f'INPUT ERROR: For job, either specify --number or --latest. See --help',
+                        fg='bright_red',
+                        bold=True))
         sys.exit(1)
 
     JY = cu.config_YoJenkins(profile)
@@ -200,9 +215,15 @@ def stages(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:
 
     # Request the data
     if valid_url_format:
-        data, data_list = JY.Build.stage_list(build_url=build_url, job_url=job, build_number=build_number, latest=latest)
+        data, data_list = JY.Build.stage_list(build_url=build_url,
+                                              job_url=job,
+                                              build_number=build_number,
+                                              latest=latest)
     else:
-        data, data_list = JY.Build.stage_list(build_url=build_url, job_name=job, build_number=build_number, latest=latest)
+        data, data_list = JY.Build.stage_list(build_url=build_url,
+                                              job_name=job,
+                                              build_number=build_number,
+                                              latest=latest)
 
     if not data:
         click.echo(click.style(f'Failed to get build stages', fg='bright_red', bold=True))
@@ -212,8 +233,8 @@ def stages(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
-
-def logs(profile:str, job:str, build_number:int, build_url:str, latest:bool, tail:float, download_dir:bool, follow:bool) -> None:
+def logs(profile: str, job: str, build_number: int, build_url: str, latest: bool, tail: float, download_dir: bool,
+         follow: bool) -> None:
     """TODO Docstring
 
     Args:
@@ -223,7 +244,10 @@ def logs(profile:str, job:str, build_number:int, build_url:str, latest:bool, tai
         TODO
     """
     if job and not build_number and not latest:
-        click.echo(click.style(f'INPUT ERROR: For job, either specify --number or --latest. See --help', fg='bright_red', bold=True))
+        click.echo(
+            click.style(f'INPUT ERROR: For job, either specify --number or --latest. See --help',
+                        fg='bright_red',
+                        bold=True))
         sys.exit(1)
 
     JY = cu.config_YoJenkins(profile)
@@ -239,11 +263,21 @@ def logs(profile:str, job:str, build_number:int, build_url:str, latest:bool, tai
 
     # Request the data
     if valid_url_format:
-        data = JY.Build.logs(build_url=build_url, job_url=job, build_number=build_number,
-                             latest=latest, tail=tail, download_dir=download_dir, follow=follow)
+        data = JY.Build.logs(build_url=build_url,
+                             job_url=job,
+                             build_number=build_number,
+                             latest=latest,
+                             tail=tail,
+                             download_dir=download_dir,
+                             follow=follow)
     else:
-        data = JY.Build.logs(build_url=build_url, job_name=job, build_number=build_number,
-                             latest=latest, tail=tail, download_dir=download_dir, follow=follow)
+        data = JY.Build.logs(build_url=build_url,
+                             job_name=job,
+                             build_number=build_number,
+                             latest=latest,
+                             tail=tail,
+                             download_dir=download_dir,
+                             follow=follow)
 
     if not data:
         click.echo(click.style(f'failed', fg='bright_red', bold=True))
@@ -253,8 +287,7 @@ def logs(profile:str, job:str, build_number:int, build_url:str, latest:bool, tai
         click.echo(click.style(f'success', fg='bright_green', bold=True))
 
 
-
-def browser(profile:str, job:str, build_number:int, build_url:str, latest:bool) -> None:
+def browser(profile: str, job: str, build_number: int, build_url: str, latest: bool) -> None:
     """TODO Docstring
 
     Args:
@@ -264,7 +297,10 @@ def browser(profile:str, job:str, build_number:int, build_url:str, latest:bool) 
         TODO
     """
     if job and not build_number and not latest:
-        click.echo(click.style(f'INPUT ERROR: For job, either specify --number or --latest. See --help', fg='bright_red', bold=True))
+        click.echo(
+            click.style(f'INPUT ERROR: For job, either specify --number or --latest. See --help',
+                        fg='bright_red',
+                        bold=True))
         sys.exit(1)
 
     JY = cu.config_YoJenkins(profile)
@@ -289,8 +325,7 @@ def browser(profile:str, job:str, build_number:int, build_url:str, latest:bool) 
         sys.exit(1)
 
 
-
-def monitor(profile:str, job:str, build_number:int, build_url:str, latest:bool, sound:bool) -> None:
+def monitor(profile: str, job: str, build_number: int, build_url: str, latest: bool, sound: bool) -> None:
     """TODO Docstring
 
     Args:
@@ -300,7 +335,10 @@ def monitor(profile:str, job:str, build_number:int, build_url:str, latest:bool, 
         TODO
     """
     if job and not build_number and not latest:
-        click.echo(click.style(f'INPUT ERROR: For job, either specify --number or --latest. See --help', fg='bright_red', bold=True))
+        click.echo(
+            click.style(f'INPUT ERROR: For job, either specify --number or --latest. See --help',
+                        fg='bright_red',
+                        bold=True))
         sys.exit(1)
 
     JY = cu.config_YoJenkins(profile)
@@ -316,19 +354,17 @@ def monitor(profile:str, job:str, build_number:int, build_url:str, latest:bool, 
 
     # Request the data
     if valid_url_format:
-        data = JY.Build.monitor(
-            build_url=build_url,
-            job_url=job,
-            build_number=build_number,
-            latest=latest,
-            sound=sound)
+        data = JY.Build.monitor(build_url=build_url,
+                                job_url=job,
+                                build_number=build_number,
+                                latest=latest,
+                                sound=sound)
     else:
-        data = JY.Build.monitor(
-            build_url=build_url,
-            job_name=job,
-            build_number=build_number,
-            latest=latest,
-            sound=sound)
+        data = JY.Build.monitor(build_url=build_url,
+                                job_name=job,
+                                build_number=build_number,
+                                latest=latest,
+                                sound=sound)
 
     if not data:
         click.echo(click.style(f'failed', fg='bright_red', bold=True))

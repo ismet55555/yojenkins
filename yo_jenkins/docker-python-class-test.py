@@ -13,5 +13,3 @@ logging.basicConfig(level=logging.DEBUG, format=log_format, datefmt='%H:%M:%S')
 
 DJS = DockerJenkinsServer()
 DJS.setup()
-
-

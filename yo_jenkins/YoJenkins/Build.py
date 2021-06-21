@@ -31,13 +31,17 @@ class Build():
             None
         """
         self.REST = REST
-        self.Auth= Auth
+        self.Auth = Auth
         self.BM = BuildMonitor(REST, Auth, self)
 
         self.build_logs_extension = ".log"
 
-
-    def info(self, build_url:str='', job_name:str='', job_url:str='', build_number:int=None, latest:bool=False) -> Dict:
+    def info(self,
+             build_url: str = '',
+             job_name: str = '',
+             job_url: str = '',
+             build_number: int = None,
+             latest: bool = False) -> Dict:
         """TODO Docstring
 
         Args:
@@ -61,18 +65,16 @@ class Build():
             if job_name and not job_url:
                 job_url = utility.name_to_url(self.REST.get_server_url(), job_name)
 
-            job_info, _, success = self.REST.request(
-                f'{job_url.strip("/")}/api/json',
-                'get',
-                is_endpoint=False
-                )
+            job_info, _, success = self.REST.request(f'{job_url.strip("/")}/api/json', 'get', is_endpoint=False)
             if not success:
                 logger.debug(f'Failed to find job info: {job_url}')
                 return {}
 
             # Check if found item type/class is a build
             if job_info['_class'] not in JenkinsItemClasses.job.value['class_type']:
-                logger.debug(f'Failed. The passed job information does not match a job type/class. Failed to match type/class. This item is "{job_info["_class"]}"')
+                logger.debug(
+                    f'Failed. The passed job information does not match a job type/class. Failed to match type/class. This item is "{job_info["_class"]}"'
+                )
                 return {}
 
             job_last_build_number = job_info['lastBuild']['number'] if 'lastBuild' in job_info else 0
@@ -80,7 +82,9 @@ class Build():
             # If build number is not passed, get the latest build number for job
             if not build_number and latest:
                 # Build number not passed and latest flag is not set
-                logger.debug(f'No build number passed BUT --latest flag set. Using latest build number for this job: {job_last_build_number}')
+                logger.debug(
+                    f'No build number passed BUT --latest flag set. Using latest build number for this job: {job_last_build_number}'
+                )
                 build_number = job_last_build_number
             elif not build_number and not latest:
                 logger.debug('Failed to specify build. No build number passed and --latest flag not set')
@@ -92,11 +96,9 @@ class Build():
                     return {}
 
             logger.debug(f'Getting build info for job "{job_info["fullName"]}, build {build_number} ...')
-            build_info, _, success = self.REST.request(
-                f'{job_url.strip("/")}/{build_number}/api/json',
-                'get',
-                is_endpoint=False
-                )
+            build_info, _, success = self.REST.request(f'{job_url.strip("/")}/{build_number}/api/json',
+                                                       'get',
+                                                       is_endpoint=False)
             if not success:
                 logger.debug(f'Failed to request build information')
                 return {}
@@ -108,21 +110,26 @@ class Build():
 
         # Add additional derived information
         if 'timestamp' in build_info:
-            build_info['startDatetime'] = datetime.fromtimestamp(build_info['timestamp']/1000.0).strftime("%A, %B %d, %Y %I:%M:%S")
-            build_info['estimatedDurationFormatted'] = str(timedelta(seconds=build_info["estimatedDuration"]/1000.0))[:-3] if build_info["estimatedDuration"] > 0 else None
+            build_info['startDatetime'] = datetime.fromtimestamp(build_info['timestamp'] /
+                                                                 1000.0).strftime("%A, %B %d, %Y %I:%M:%S")
+            build_info['estimatedDurationFormatted'] = str(timedelta(
+                seconds=build_info["estimatedDuration"] /
+                1000.0))[:-3] if build_info["estimatedDuration"] > 0 else None
 
             # Check if results are in
             if 'result' in build_info:
                 if build_info['result']:
                     build_info['resultText'] = build_info['result']
-                    build_info['durationFormatted'] = str(timedelta(seconds=build_info['duration']/1000.0))[:-3]
-                    build_info['endDatetime'] = datetime.fromtimestamp((build_info['timestamp'] + build_info['duration'])/1000.0).strftime("%A, %B %d, %Y %I:%M:%S")
+                    build_info['durationFormatted'] = str(timedelta(seconds=build_info['duration'] / 1000.0))[:-3]
+                    build_info['endDatetime'] = datetime.fromtimestamp(
+                        (build_info['timestamp'] + build_info['duration']) / 1000.0).strftime("%A, %B %d, %Y %I:%M:%S")
                     build_info['elapsedFormatted'] = build_info['durationFormatted']
                 else:
                     build_info['resultText'] = BuildStatus.running.value
                     build_info['durationFormatted'] = None
                     build_info['endDatetime'] = None
-                    build_info['elapsedFormatted'] = str(timedelta(seconds=((datetime.utcnow().timestamp()) - build_info['timestamp'] / 1000)))[:-3]
+                    build_info['elapsedFormatted'] = str(
+                        timedelta(seconds=((datetime.utcnow().timestamp()) - build_info['timestamp'] / 1000)))[:-3]
 
             else:
                 build_info['resultText'] = BuildStatus.unknown.value
@@ -145,7 +152,8 @@ class Build():
             build_info['serverURL'] = utility.item_url_to_server_url(build_info['url'])
             build_info['serverDomain'] = utility.item_url_to_server_url(build_info['url'], False)
 
-            build_info['folderFullName'] = 'Base Folder' if not build_info['folderFullName'] else build_info['folderFullName']
+            build_info[
+                'folderFullName'] = 'Base Folder' if not build_info['folderFullName'] else build_info['folderFullName']
 
         if 'builtOn' not in build_info:
             build_info['builtOn'] = 'N/A'
@@ -154,8 +162,12 @@ class Build():
 
         return build_info
 
-
-    def status_text(self, build_url:str='', job_name:str='', job_url:str='', build_number:int=None, latest:bool=False) -> str:
+    def status_text(self,
+                    build_url: str = '',
+                    job_name: str = '',
+                    job_url: str = '',
+                    build_number: int = None,
+                    latest: bool = False) -> str:
         """TODO Docstring
 
         Args:
@@ -165,12 +177,11 @@ class Build():
             TODO
         """
         # Get the build info
-        build_info = self.info(
-            build_url=build_url,
-            job_name=job_name,
-            job_url=job_url,
-            build_number=build_number,
-            latest=latest)
+        build_info = self.info(build_url=build_url,
+                               job_name=job_name,
+                               job_url=job_url,
+                               build_number=build_number,
+                               latest=latest)
 
         # If nothing is returned, check if job is queued on server
         if not build_info:
@@ -193,7 +204,7 @@ class Build():
             queue_matches = utility.queue_find(queue_all, job_name=job_name, job_url=job_url)
             if not queue_matches:
                 return {}, 0
-            queue_info = queue_matches[0]  
+            queue_info = queue_matches[0]
 
             if not queue_info:
                 logger.debug('Build for job NOT found in queue')
@@ -213,8 +224,12 @@ class Build():
             logger.debug('Build found, but has concluded or stopped with result')
             return build_info['result']
 
-
-    def abort(self, build_url:str='', job_name:str='', job_url:str='', build_number:int=None, latest:bool=False) -> int:
+    def abort(self,
+              build_url: str = '',
+              job_name: str = '',
+              job_url: str = '',
+              build_number: int = None,
+              latest: bool = False) -> int:
         """TODO Docstring
 
         Args:
@@ -246,8 +261,12 @@ class Build():
 
         return utility.build_url_to_build_number(build_url=url)
 
-
-    def delete(self, build_url:str='', job_name:str='', job_url:str='', build_number:int=None, latest:bool=False) -> int:
+    def delete(self,
+               build_url: str = '',
+               job_name: str = '',
+               job_url: str = '',
+               build_number: int = None,
+               latest: bool = False) -> int:
         """TODO Docstring
 
         Args:
@@ -278,8 +297,12 @@ class Build():
 
         return utility.build_url_to_build_number(build_url=url)
 
-
-    def stage_list(self, build_url:str='', job_name:str='', job_url:str='', build_number:int=None, latest:bool=False) -> Tuple[list, list]:
+    def stage_list(self,
+                   build_url: str = '',
+                   job_name: str = '',
+                   job_url: str = '',
+                   build_number: int = None,
+                   latest: bool = False) -> Tuple[list, list]:
         """TODO Docstring
 
         Args:
@@ -288,7 +311,7 @@ class Build():
         Returns:
             TODO
         """
-        # FIXME: yo-jenkins build stages --url https://***REMOVED***.com/job/***REMOVED***/job/Non-Prod-Jobs/job/***REMOVED***/job/test_job/46/ 
+        # FIXME: yo-jenkins build stages --url https://***REMOVED***.com/job/***REMOVED***/job/Non-Prod-Jobs/job/***REMOVED***/job/test_job/46/
         #        yields 404 in running build. Maybe issue with formatting of the url to name?
 
         # TODO: Pass a list of build numbers
@@ -319,18 +342,22 @@ class Build():
 
         # Add additional derived information for each step
         for stage_info in build_stage_list:
-            stage_info['startDatetime'] = datetime.fromtimestamp(stage_info["startTimeMillis"]/1000.0).strftime("%A, %B %d, %Y %I:%M:%S")
-            stage_info['durationFormatted'] = str(timedelta(seconds=stage_info["durationMillis"]/1000.0))[:-3]
-            stage_info['pauseDurationFormatted'] = str(timedelta(seconds=stage_info["pauseDurationMillis"]/1000.0))
+            stage_info['startDatetime'] = datetime.fromtimestamp(stage_info["startTimeMillis"] /
+                                                                 1000.0).strftime("%A, %B %d, %Y %I:%M:%S")
+            stage_info['durationFormatted'] = str(timedelta(seconds=stage_info["durationMillis"] / 1000.0))[:-3]
+            stage_info['pauseDurationFormatted'] = str(timedelta(seconds=stage_info["pauseDurationMillis"] / 1000.0))
             stage_info['url'] = stage_info['_links']['self']['href']
 
         # Getting only the names of the stages
-        build_stage_name_list = [ s['name'] for s in build_stage_list ]
+        build_stage_name_list = [s['name'] for s in build_stage_list]
 
         return build_stage_list, build_stage_name_list
 
-
-    def artifact_list(self, build_url:str='', job_name:str='', job_url:str='', build_number:int=None) -> List[dict]:
+    def artifact_list(self,
+                      build_url: str = '',
+                      job_name: str = '',
+                      job_url: str = '',
+                      build_number: int = None) -> List[dict]:
         """TODO Docstring
 
         Args:
@@ -340,8 +367,8 @@ class Build():
             TODO
         """
         # Test on build with artifacts
-        return self.info(build_url=build_url, job_name=job_name, job_url=job_url, build_number=build_number)['artifacts']
-
+        return self.info(build_url=build_url, job_name=job_name, job_url=job_url,
+                         build_number=build_number)['artifacts']
 
     def artifact_download(self):
         """TODO Docstring
@@ -355,8 +382,15 @@ class Build():
         # TODO: Test on build with artifacts
         pass
 
-
-    def logs(self, build_url:str='', job_name:str='', job_url:str='', build_number:int=None, latest:bool=False, tail:float=None, download_dir:str='', follow:bool=False) -> bool:
+    def logs(self,
+             build_url: str = '',
+             job_name: str = '',
+             job_url: str = '',
+             build_number: int = None,
+             latest: bool = False,
+             tail: float = None,
+             download_dir: str = '',
+             follow: bool = False) -> bool:
         """TODO Docstring
 
         Args:
@@ -371,12 +405,7 @@ class Build():
         else:
             logger.debug('NO build URL passed. Getting build information through job ...')
             # Get build info request
-            build_info = self.info(
-                job_name=job_name,
-                job_url=job_url,
-                build_number=build_number,
-                latest=latest
-                )
+            build_info = self.info(job_name=job_name, job_url=job_url, build_number=build_number, latest=latest)
             if not build_info:
                 logger.debug(f'Build does not exist or may be queued')
                 return False
@@ -388,14 +417,14 @@ class Build():
 
         if download_dir:
             # Download to local file
-            auth=requests.auth.HTTPBasicAuth(self.REST.username, self.REST.api_token)
+            auth = requests.auth.HTTPBasicAuth(self.REST.username, self.REST.api_token)
             filename = f'build-logs_{datetime.now().strftime("%m-%d-%Y_%I-%M-%S")}{self.build_logs_extension}'
             logger.debug(f'Downloading console text logs to local file "{filename}" ...')
             try:
                 with requests.get(request_url, auth=auth, stream=True, timeout=10) as r:
                     r.raise_for_status()
                     with open(os.path.join(download_dir, filename), 'wb') as f:
-                        for chunk in r.iter_content(chunk_size=8192): 
+                        for chunk in r.iter_content(chunk_size=8192):
                             if chunk: f.write(chunk)
                 logger.debug(f'Successfully download build logs to file')
             except Exception as e:
@@ -405,7 +434,10 @@ class Build():
             # Stream the logs to console
             if not follow:
                 logger.debug('Fetching logs from server ...')
-                return_content, _, return_success = self.REST.request(request_url, 'get', is_endpoint=False, json_content=False)
+                return_content, _, return_success = self.REST.request(request_url,
+                                                                      'get',
+                                                                      is_endpoint=False,
+                                                                      json_content=False)
                 if not return_success or not return_content:
                     logger.debug(f'Failed to get console logs. Build may not exist or is queued')
                     return False
@@ -424,8 +456,10 @@ class Build():
                 print(return_content)
             else:
                 logger.debug(f'Following/streaming logs from server ...')
-                logger.debug(f'NOTE: Jenkins server does not support requesting partial byte ranges, MUST download entire log to get log message differences')
-                auth=requests.auth.HTTPBasicAuth(self.REST.username, self.REST.api_token)
+                logger.debug(
+                    f'NOTE: Jenkins server does not support requesting partial byte ranges, MUST download entire log to get log message differences'
+                )
+                auth = requests.auth.HTTPBasicAuth(self.REST.username, self.REST.api_token)
                 old_dict = {}
                 fetch_number = 1
                 try:
@@ -433,7 +467,8 @@ class Build():
                         # FIXME: Preserve already used session!  Use REST object
                         response = requests.head(request_url, auth=auth)
                         if 'content-length' not in response.headers:
-                            logger.debug(f'Failed to find "content-length" key in server response headers: {response.headers}')
+                            logger.debug(
+                                f'Failed to find "content-length" key in server response headers: {response.headers}')
                             return False
                         content_length_sample_1 = int(response.headers['Content-Length'])
                         sleep(1)
@@ -442,8 +477,12 @@ class Build():
 
                         content_length_diff = content_length_sample_2 - content_length_sample_1
                         if content_length_diff:
-                            logger.debug(f'FETCH {fetch_number}: Content length difference: {content_length_diff} bytes')
-                            return_content, _, return_success = self.REST.request(request_url, 'get', is_endpoint=False, json_content=False)
+                            logger.debug(
+                                f'FETCH {fetch_number}: Content length difference: {content_length_diff} bytes')
+                            return_content, _, return_success = self.REST.request(request_url,
+                                                                                  'get',
+                                                                                  is_endpoint=False,
+                                                                                  json_content=False)
                             # new_dict = dict.fromkeys([ x for x in (line.strip() for line in return_content.splitlines()) if x ])
                             new_dict = dict.fromkeys(list(map(lambda num: num.strip(), return_content.splitlines())))
 
@@ -461,8 +500,12 @@ class Build():
                     logger.debug('Keyboard Interrupt (CTRL-C) by user. Stopping log following ...')
         return True
 
-
-    def browser_open(self, build_url:str='', job_name:str='', job_url:str='', build_number:int=None, latest:bool=False) -> bool:
+    def browser_open(self,
+                     build_url: str = '',
+                     job_name: str = '',
+                     job_url: str = '',
+                     build_number: int = None,
+                     latest: bool = False) -> bool:
         """TODO Docstring
 
         Args:
@@ -492,8 +535,13 @@ class Build():
             logger.debug('Failed to open in web browser')
         return success
 
-
-    def monitor(self, build_url:str='', job_name:str='', job_url:str='', build_number:int=None, latest:bool=False, sound:bool=False) -> bool:
+    def monitor(self,
+                build_url: str = '',
+                job_name: str = '',
+                job_url: str = '',
+                build_number: int = None,
+                latest: bool = False,
+                sound: bool = False) -> bool:
         """TODO Docstring
 
         Args:
@@ -521,5 +569,3 @@ class Build():
         else:
             logger.debug('Failed to open monitor for build')
         return success
-
-

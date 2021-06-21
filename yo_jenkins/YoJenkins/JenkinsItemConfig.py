@@ -2,6 +2,7 @@
 
 from enum import Enum
 
+
 class JenkinsItemConfig(Enum):
     """Enum of Jenkins item configs ordered in categories for creating
 
@@ -9,7 +10,8 @@ class JenkinsItemConfig(Enum):
         - `JenkinsItemConfig.folder.value['blank']`
     """
     folder = {
-        "blank": '''<?xml version='1.1' encoding='UTF-8'?>
+        "blank":
+            '''<?xml version='1.1' encoding='UTF-8'?>
                     <com.cloudbees.hudson.plugins.folder.Folder plugin="cloudbees-folder@6.15">
                     <properties/>
                     <folderViews class="com.cloudbees.hudson.plugins.folder.views.DefaultFolderViewHolder">
@@ -27,10 +29,12 @@ class JenkinsItemConfig(Enum):
                     <healthMetrics/>
                     <icon class="com.cloudbees.hudson.plugins.folder.icons.StockFolderIcon"/>
                     </com.cloudbees.hudson.plugins.folder.Folder>''',
-        "template": ""
+        "template":
+            ""
     }
     view = {
-        "blank": '''<?xml version="1.1" encoding="UTF-8"?>
+        "blank":
+            '''<?xml version="1.1" encoding="UTF-8"?>
                     <hudson.model.ListView>
                         <name>blankio</name>
                         <filterExecutors>false</filterExecutors>
@@ -51,10 +55,12 @@ class JenkinsItemConfig(Enum):
                         </columns>
                         <recurse>false</recurse>
                     </hudson.model.ListView>''',
-        "template": ""
+        "template":
+            ""
     }
     job = {
-        "blank": '''<?xml version='1.1' encoding='UTF-8'?>
+        "blank":
+            '''<?xml version='1.1' encoding='UTF-8'?>
                     <project>
                         <description></description>
                         <keepDependencies>false</keepDependencies>
@@ -70,7 +76,8 @@ class JenkinsItemConfig(Enum):
                         <publishers/>
                         <buildWrappers/>
                     </project>''',
-        "script": '''<?xml version='1.1' encoding='UTF-8'?>
+        "script":
+            '''<?xml version='1.1' encoding='UTF-8'?>
                     <project>
                         <actions/>
                         <description></description>

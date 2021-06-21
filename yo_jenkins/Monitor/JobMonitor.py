@@ -11,19 +11,20 @@ from time import perf_counter, sleep, time
 from typing import Dict, List, Tuple, Type
 
 from yo_jenkins.Monitor.Monitor import Monitor
-from yo_jenkins.YoJenkins.Status import (BuildStatus, Color, Sound,
-                                         StageStatus, Status)
+from yo_jenkins.YoJenkins.Status import (BuildStatus, Color, Sound, StageStatus, Status)
 
 from . import monitor_utility as mu
 
 # Getting the logger reference
 logger = logging.getLogger()
 
+
 class JobMonitor(Monitor):
     """This class defines the BuildMonitor class and its function.
     
     The JobMonitor class enables active job monitoring
     """
+
     def __init__(self, REST, Auth, Job, Build) -> None:
         """Object constructor method, called at object creation
 
@@ -51,14 +52,12 @@ class JobMonitor(Monitor):
         self.builds_data_number_of_builds = 10
         self.builds_data_thread_interval = 0.0
         self._build_data_thread_lock = threading.Lock()
-        
+
         # Building a job flag
         self.job_build = 0
-        
+
         # Temporary message box on screen
         self.message_box_temp_duration = 1  # sec
-
-
 
     ###########################################################################
     #                         BUILD MONITOR
@@ -128,11 +127,16 @@ class JobMonitor(Monitor):
 
             # TOP HEADER
             y = 1
-            
+
             if logger.level < 20:
                 pass
             else:
-                mu.draw_text(scr, 'JOB MONITOR', y, center_x=True, color=self.color['grey-light'], decor=self.decor['bold'])
+                mu.draw_text(scr,
+                             'JOB MONITOR',
+                             y,
+                             center_x=True,
+                             color=self.color['grey-light'],
+                             decor=self.decor['bold'])
 
             y += 1
 
@@ -149,8 +153,8 @@ class JobMonitor(Monitor):
                 job_url = self.job_info_data['url']
 
                 # INFO
-                mu.draw_horizontal_header(
-                    scr, y, x[0], term_width - 5, '-', 'INFO', self.color['normal'] | self.decor['bold'])
+                mu.draw_horizontal_header(scr, y, x[0], term_width - 5, '-', 'INFO',
+                                          self.color['normal'] | self.decor['bold'])
                 y += 1
 
                 job_info_items = {
@@ -159,19 +163,20 @@ class JobMonitor(Monitor):
                     'Server': self.job_info_data['serverURL'],
                 }
                 for i, (key, value) in enumerate(job_info_items.items()):
-                    mu.draw_text(scr, f'{key}:', y,
-                                 x[0], decor=self.decor['bold'])
-                    mu.draw_text(scr, mu.truncate_text(
-                        f'{value}', term_width - 5 - 12), y, x[1])
+                    mu.draw_text(scr, f'{key}:', y, x[0], decor=self.decor['bold'])
+                    mu.draw_text(scr, mu.truncate_text(f'{value}', term_width - 5 - 12), y, x[1])
                     y += 1
                 y += 1
             else:
                 y += 3
-                mu.draw_text(scr, 'NO DATA', y, center_x=True,
-                             color=self.color['normal'], decor=self.decor['bold'])
+                mu.draw_text(scr, 'NO DATA', y, center_x=True, color=self.color['normal'], decor=self.decor['bold'])
                 y += 2
-                mu.draw_text(scr, 'ಠ_ಠ  ¯\_(⊙︿⊙)_/¯', y, center_x=True,
-                             color=self.color['normal'], decor=self.decor['bold'])
+                mu.draw_text(scr,
+                             'ಠ_ಠ  ¯\_(⊙︿⊙)_/¯',
+                             y,
+                             center_x=True,
+                             color=self.color['normal'],
+                             decor=self.decor['bold'])
             y += 1
 
             ########################################################################################
@@ -181,7 +186,8 @@ class JobMonitor(Monitor):
                 x = [3, 12, 32, 52]
 
                 # Header
-                mu.draw_horizontal_header(scr, y, x[0], term_width - 5, '-', 'BUILDS', self.color['normal'] | self.decor['bold'])
+                mu.draw_horizontal_header(scr, y, x[0], term_width - 5, '-', 'BUILDS',
+                                          self.color['normal'] | self.decor['bold'])
                 y += 1
 
                 # Loop through all listed builds
@@ -193,7 +199,7 @@ class JobMonitor(Monitor):
                     mu.draw_text(scr, f'{build["displayName"]}', y, x[0])
 
                     # Datetime
-                    line = datetime.fromtimestamp(build['timestamp']/1000.0).strftime("%m/%d - %H:%M")
+                    line = datetime.fromtimestamp(build['timestamp'] / 1000.0).strftime("%m/%d - %H:%M")
                     mu.draw_text(scr, line, y, x[1])
 
                     # Build Run duration
@@ -217,7 +223,6 @@ class JobMonitor(Monitor):
                 # Change the minimum window height limit (no stages section)
                 self.height_limit = 17
 
-
             # Divider
             y = term_height - 4
             mu.draw_horizontal_seperator(scr, y, self.color['grey-dark'])
@@ -227,8 +232,7 @@ class JobMonitor(Monitor):
             # SERVER STATUS
             y = term_height - 3
             if self.server_status_data:
-                auth_status = False if 'auth' not in self.server_status_data else self.server_status_data[
-                    "auth"]
+                auth_status = False if 'auth' not in self.server_status_data else self.server_status_data["auth"]
                 reach_status = False if 'reachable' not in self.server_status_data else self.server_status_data[
                     "reachable"]
                 line = f'Server Status: Reachable: {reach_status}, Authenticated: {auth_status}'
@@ -252,8 +256,12 @@ class JobMonitor(Monitor):
 
             # Indicate server interaction
             if self.server_interaction:
-                mu.draw_text(scr, '(R)', term_height - 2, term_width - 5,
-                             color=self.color['grey-dark'], decor=self.decor['bold'])
+                mu.draw_text(scr,
+                             '(R)',
+                             term_height - 2,
+                             term_width - 5,
+                             color=self.color['grey-dark'],
+                             decor=self.decor['bold'])
             self.server_interaction = False
 
             ########################################################################################
@@ -269,11 +277,7 @@ class JobMonitor(Monitor):
             if self.help:
                 curses.halfdelay(255)
                 message_lines = [
-                    'B - Build the job',
-                    'O - Open job in web browser',
-                    'P - Pause Monitor',
-                    'Q - Quit Monitor',
-                    ' ',
+                    'B - Build the job', 'O - Open job in web browser', 'P - Pause Monitor', 'Q - Quit Monitor', ' ',
                     'H - Keyboard shortcuts'
                 ]
                 mu.draw_message_box(scr, message_lines, 'left')
@@ -284,11 +288,7 @@ class JobMonitor(Monitor):
             if self.paused:
                 self.help = False
                 curses.halfdelay(255)
-                message_lines = [
-                    'Monitor paused',
-                    'Requests stopped',
-                    'To resume press "P"'
-                ]
+                message_lines = ['Monitor paused', 'Requests stopped', 'To resume press "P"']
                 mu.draw_message_box(scr, message_lines)
             else:
                 halfdelay_normal = True
@@ -298,9 +298,7 @@ class JobMonitor(Monitor):
                 self.help = False
                 curses.halfdelay(255)
                 message_lines = [
-                    'Are you sure you want to build this job?',
-                    'To build press "B"',
-                    'To return press "R"'
+                    'Are you sure you want to build this job?', 'To build press "B"', 'To return press "R"'
                 ]
                 mu.draw_message_box(scr, message_lines)
                 if self.job_build > 1:  # Abort Message confirmed (pressed twice)
@@ -317,11 +315,7 @@ class JobMonitor(Monitor):
             if self.quit:
                 self.help = False
                 curses.halfdelay(255)
-                message_lines = [
-                    'Are you sure you want to quit?',
-                    'To quit press "Q"',
-                    'To return press "R"'
-                ]
+                message_lines = ['Are you sure you want to quit?', 'To quit press "Q"', 'To return press "R"']
                 mu.draw_message_box(scr, message_lines)
                 # Quit Message confirmed (pressed twice)
                 if self.quit > 1:
@@ -346,8 +340,7 @@ class JobMonitor(Monitor):
             # Get User input
             keystroke = scr.getch()
 
-
-    def monitor_start(self, job_url: str, sound: bool = False) -> bool: 
+    def monitor_start(self, job_url: str, sound: bool = False) -> bool:
         """
         Curses wrapper function for drawing main menu on screen
 
@@ -361,8 +354,6 @@ class JobMonitor(Monitor):
         mu.logging_console(enabled=False)
 
         return curses.wrapper(self.__monitor_draw, job_url, sound)
-
-
 
     ###########################################################################
     #                      DATA COLLECTION THREADS
@@ -379,7 +370,8 @@ class JobMonitor(Monitor):
         Returns:
             TODO
         """
-        logger.debug(f'Thread starting - Job info - (ID: {threading.get_ident()} - Refresh Interval: {monitor_interval}s) ...')
+        logger.debug(
+            f'Thread starting - Job info - (ID: {threading.get_ident()} - Refresh Interval: {monitor_interval}s) ...')
 
         # Set the monitoring thread flag up
         self.all_threads_enabled = True
@@ -412,16 +404,18 @@ class JobMonitor(Monitor):
         """
         logger.debug(f'Starting thread for job info for "{job_url}" ...')
         try:
-            threading.Thread(target=self.__thread_job_info, args=(job_url, monitor_interval,), daemon=False).start()
+            threading.Thread(target=self.__thread_job_info, args=(
+                job_url,
+                monitor_interval,
+            ), daemon=False).start()
         except Exception as e:
             logger.error(f'Failed to start job info monitoring thread for {job_url}. Exception: {e}. Type: {type(e)}')
 
         return True
 
-
     ############################  BUILDS INFO  ################################
 
-    def __thread_build_info(self, build_url:str, build_data_index:int) -> None:
+    def __thread_build_info(self, build_url: str, build_data_index: int) -> None:
         """TODO Docstring
 
         Args:
@@ -435,7 +429,6 @@ class JobMonitor(Monitor):
         self.builds_data[build_data_index] = self.Build.info(build_url=build_url)
         logger.debug(f'Thread stopped - Build info (INDEX: {build_data_index}, ID: {threading.get_ident()})')
 
-
     def __thread_builds_data(self, monitor_interval: float) -> None:
         """TODO Docstring
 
@@ -445,7 +438,9 @@ class JobMonitor(Monitor):
         Returns:
             TODO
         """
-        logger.debug(f'Thread starting - Builds data - (ID: {threading.get_ident()} - Refresh Interval: {monitor_interval}s) ...')
+        logger.debug(
+            f'Thread starting - Builds data - (ID: {threading.get_ident()} - Refresh Interval: {monitor_interval}s) ...'
+        )
 
         # Set the monitoring thread flag up
         self.all_threads_enabled = True
@@ -467,9 +462,15 @@ class JobMonitor(Monitor):
                     # Get and store the data in each thread
                     threads = []
                     try:
-                        for build_data_index, build in enumerate(self.job_info_data['builds'][:self.builds_data_number_of_builds]):
+                        for build_data_index, build in enumerate(
+                                self.job_info_data['builds'][:self.builds_data_number_of_builds]):
                             # build_data_index += 1
-                            thread = threading.Thread(target=self.__thread_build_info, args=(build['url'], build_data_index,), daemon=False)
+                            thread = threading.Thread(target=self.__thread_build_info,
+                                                      args=(
+                                                          build['url'],
+                                                          build_data_index,
+                                                      ),
+                                                      daemon=False)
                             thread.start()
                             threads.append(thread)
                     except Exception as e:
@@ -477,12 +478,11 @@ class JobMonitor(Monitor):
 
                     try:
                         for thread in threads:
-                            thread.join()  
+                            thread.join()
                     except Exception as e:
                         logger.debug(f'Failure occurred when ending build data threads. Exception: {e}')
                 else:
                     logger.debug(f'No job info data. Waiting ...')
-                    
 
             # Wait some time before checking again
             start_time = time()
@@ -492,7 +492,6 @@ class JobMonitor(Monitor):
                     break
 
         logger.debug(f'Thread stopped - Builds data - (ID: {threading.get_ident()})')
-
 
     def __builds_data_thread_on(self, monitor_interval: float = 7.0) -> bool:
         """TODO Docstring
@@ -505,9 +504,8 @@ class JobMonitor(Monitor):
         """
         logger.debug(f'Starting thread for job builds info ...')
         try:
-            threading.Thread(target=self.__thread_builds_data, args=(monitor_interval,), daemon=False).start()
+            threading.Thread(target=self.__thread_builds_data, args=(monitor_interval, ), daemon=False).start()
         except Exception as e:
             logger.error(f'Failed to start job builds info monitoring thread. Exception: {e}. Type: {type(e)}')
 
         return True
-

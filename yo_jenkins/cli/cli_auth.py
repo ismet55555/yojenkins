@@ -11,7 +11,7 @@ from yo_jenkins.YoJenkins import REST, Auth
 logger = logging.getLogger()
 
 
-def configure(token:str) -> None:
+def configure(token: str) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -31,7 +31,7 @@ def configure(token:str) -> None:
     click.echo(click.style(f'Successfully configured credentials file', fg='bright_green', bold=True))
 
 
-def token(profile:str) -> None:
+def token(profile: str) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -57,7 +57,7 @@ def token(profile:str) -> None:
     click.echo(click.style(data, fg='bright_green', bold=True))
 
 
-def show(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool) -> None:
+def show(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -78,7 +78,7 @@ def show(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool) -> None:
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
-def verify(profile:str) -> None:
+def verify(profile: str) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -107,7 +107,7 @@ def verify(profile:str) -> None:
     click.echo(click.style('true', fg='bright_green', bold=True))
 
 
-def user(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:str) -> None:
+def user(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str) -> None:
     """TODO Docstring
 
     Details: TODO

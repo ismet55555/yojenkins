@@ -11,7 +11,7 @@ from . import cli_utility as cu
 logger = logging.getLogger()
 
 
-def info(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:str, step_url:str) -> None:
+def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, step_url: str) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -24,10 +24,7 @@ def info(opt_pretty:bool, opt_yaml:bool, opt_xml:bool, opt_toml:bool, profile:st
     """
     # Check if URL is ok
     if not cu.is_full_url(step_url):
-        click.echo(click.style(
-            f'INPUT ERROR: Step url is not a URL: {step_url}',
-            fg='bright_red',
-            bold=True))
+        click.echo(click.style(f'INPUT ERROR: Step url is not a URL: {step_url}', fg='bright_red', bold=True))
         sys.exit(1)
 
     JY = cu.config_YoJenkins(profile)

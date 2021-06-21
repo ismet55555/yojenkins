@@ -84,6 +84,7 @@ class Color(Enum):
         'unknown': 'normal'
     }
 
+
 class Sound(Enum):
     """Enum of Jenkins status sound filename
 

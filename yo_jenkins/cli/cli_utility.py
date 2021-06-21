@@ -21,7 +21,7 @@ from yo_jenkins import __version__
 logger = logging.getLogger()
 
 
-def set_debug_log_level(debug_flag:bool) -> None:
+def set_debug_log_level(debug_flag: bool) -> None:
     """Setting the log DEBUG level
 
     Args:
@@ -71,8 +71,7 @@ def platform_information() -> None:
     logger.debug(f'    - Python:    {platform.python_version()} {python_rev}')
 
 
-
-def config_YoJenkins(profile:str) -> Type[YoJenkins]:
+def config_YoJenkins(profile: str) -> Type[YoJenkins]:
     """TODO Docstring
 
     Args:
@@ -98,7 +97,11 @@ def config_YoJenkins(profile:str) -> Type[YoJenkins]:
     return YoJenkins(Auth_obj)
 
 
-def standard_out(data:dict, opt_pretty:bool=False, opt_yaml:bool=False, opt_xml:bool=False, opt_toml:bool=False) -> None:
+def standard_out(data: dict,
+                 opt_pretty: bool = False,
+                 opt_yaml: bool = False,
+                 opt_xml: bool = False,
+                 opt_toml: bool = False) -> None:
     """TODO Docstring
 
     Args:
@@ -143,9 +146,7 @@ def standard_out(data:dict, opt_pretty:bool=False, opt_yaml:bool=False, opt_xml:
             print(json.dumps(data))
 
 
-
-
-def is_full_url(url:str) -> bool:
+def is_full_url(url: str) -> bool:
     """TODO Docstring
 
     Args:
@@ -167,5 +168,5 @@ def is_full_url(url:str) -> bool:
     return is_valid_url
 
 
-def server_target_check(target:str) -> bool:
+def server_target_check(target: str) -> bool:
     pass

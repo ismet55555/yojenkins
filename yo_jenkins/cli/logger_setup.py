@@ -6,10 +6,8 @@ from logging.handlers import RotatingFileHandler
 
 import coloredlogs
 
-
 # Turn off info level logging for jons2xml
 logging.getLogger("dicttoxml").setLevel(logging.ERROR)
-
 
 # Setting up log file handler
 file_handler = RotatingFileHandler(filename='yo-jenkins.log', mode='w', maxBytes=5000000, backupCount=0)
@@ -24,11 +22,9 @@ log_format = '[%(asctime)s] [%(relativeCreated)-4d] [%(filename)-22s:%(lineno)4s
 
 # Basic Configurations
 logger = logging.basicConfig(level=logging.INFO,
-                    format=log_format,
-                    datefmt='%H:%M:%S',
-                    handlers=[file_handler, stdout_handler])
+                             format=log_format,
+                             datefmt='%H:%M:%S',
+                             handlers=[file_handler, stdout_handler])
 
 # Applying color to the output logs
-coloredlogs.install(fmt=log_format,
-                    datefmt='%H:%M:%S',
-                    logger=logger)
+coloredlogs.install(fmt=log_format, datefmt='%H:%M:%S', logger=logger)

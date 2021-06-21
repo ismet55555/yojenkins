@@ -15,13 +15,21 @@ def format_output(decorated_function):
     Returns:
         None
     """
-    @click.option('-p', '--pretty', type=bool, default=False,  required=False, is_flag=True, help='Output in pretty human readable format')
+
+    @click.option('-p',
+                  '--pretty',
+                  type=bool,
+                  default=False,
+                  required=False,
+                  is_flag=True,
+                  help='Output in pretty human readable format')
     @click.option('-y', '--yaml', type=bool, default=False, required=False, is_flag=True, help='Output in YAML format')
     @click.option('-x', '--xml', type=bool, default=False, required=False, is_flag=True, help='Output in XML format')
     @click.option('-t', '--toml', type=bool, default=False, required=False, is_flag=True, help='Output in TOML format')
     @functools.wraps(decorated_function)
     def wrapper(*args, **kwds):
         return decorated_function(*args, **kwds)
+
     return wrapper
 
 
@@ -39,10 +47,16 @@ def debug(decorated_function):
 
     # TODO: Just call/move the debug log level update function here
 
-    @click.option('--debug', type=bool, default=False, required=False, is_flag=True, help='Enable debug level log messages')
+    @click.option('--debug',
+                  type=bool,
+                  default=False,
+                  required=False,
+                  is_flag=True,
+                  help='Enable debug level log messages')
     @functools.wraps(decorated_function)
     def wrapper(*args, **kwds):
         return decorated_function(*args, **kwds)
+
     return wrapper
 
 
@@ -57,12 +71,13 @@ def profile(decorated_function):
     Returns:
         None
     """
+
     @click.option('--profile', type=str, required=False, is_flag=False, help='Authentication profile for command')
     @functools.wraps(decorated_function)
     def wrapper(*args, **kwds):
         return decorated_function(*args, **kwds)
-    return wrapper
 
+    return wrapper
 
 
 def list(decorated_function):
@@ -76,9 +91,10 @@ def list(decorated_function):
     Returns:
         None
     """
+
     @click.option('-l', '--list', type=bool, default=False, required=False, is_flag=True, help='Output as list')
     @functools.wraps(decorated_function)
     def wrapper(*args, **kwds):
         return decorated_function(*args, **kwds)
-    return wrapper
 
+    return wrapper
