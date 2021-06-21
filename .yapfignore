@@ -57,4 +57,4 @@ test/
 
 # Specific files
 setup.py
-yo_jenkins\__main__.py
+**/__main__.py
