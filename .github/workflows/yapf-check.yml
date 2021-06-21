@@ -13,7 +13,7 @@ jobs:
       - name: yapf
         uses: AlexanderMelde/yapf-action@master
         with:
-          args: --recursive --in-place --verbose .
+          args: --recursive --verbose .
 
       - name: Check for modified files
         id: git-check
