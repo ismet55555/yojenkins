@@ -1,12 +1,25 @@
-# Docker
+# Docker Setup
 
-**TODO**
+This document outlines how to install Docker on your system
 
 ## MacOS
-**TODO**
+- Docker Desktop
+    - https://docs.docker.com/docker-for-mac/install/
+
+- homebrew
+    ```bash
+    brew cask install docker
+    ```
 
 ## Windows
-**TODO**
+- Docker Desktop
+    - https://docs.docker.com/docker-for-windows/install/
+
+- Chocolatey
+    ```
+    choco install docker-desktop
+    ```
+
 
 
 ## Ubuntu

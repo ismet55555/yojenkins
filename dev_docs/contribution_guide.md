@@ -89,7 +89,7 @@ Also, note that as of now there are no sufficient tests setup (ie. pytest, unite
 3. Run `yapf` formatter
     - `yapf --in-place --recursive .`
 
-3. Run 'pylint` code linter
+3. Run `pylint` code linter
     - `pylint yo_jenkins --report y`
 
 
