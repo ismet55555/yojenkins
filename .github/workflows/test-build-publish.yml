@@ -15,7 +15,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest] #, windows-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
         python-version: [3.9]
 
     steps:
@@ -58,7 +58,7 @@ jobs:
 
 
   build-n-ship:
-    name: Building and Shipping 📦 to TestPyPI
+    name: Building and Shipping 📦 to PyPI
     needs: [test]
     runs-on: ubuntu-latest
 
