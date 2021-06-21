@@ -10,15 +10,13 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
 
-      # - name: yapf
-      #   uses: AlexanderMelde/yapf-action@master
-      #   with:
-      #     args: --recursive --verbose
-
       - name: yapf setup
         run: |
           python -m pip install --upgrade pip
           pip install yapf
+
+      - name: Show files
+        run: ls -la
 
       - name: yapf run
         run: yapf --in-place --recursive --verbose .
@@ -35,10 +33,3 @@ jobs:
           git remote set-url origin https://x-access-token:${{ secrets.YO_JENKINS_YAPF }}@github.com/${{ github.repository }}
           git commit -am "YAPF formatting check automated changes"
           git push
-
-      # - name: Push changes
-      #   if: steps.git-check.outputs.modified == 'true'
-      #   uses: ad-m/github-push-action@master
-      #   with:
-      #     github_token: ${{ secrets.YO_JENKINS_YAPF }}
-      #     branch: ${{ github.ref }}
