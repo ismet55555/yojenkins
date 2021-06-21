@@ -57,3 +57,4 @@ test/
 
 # Specific files
 setup.py
+__main__.py
