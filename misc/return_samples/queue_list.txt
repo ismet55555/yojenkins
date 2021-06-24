@@ -14,7 +14,7 @@
             'task': {'_class': 'hudson.model.FreeStyleProject',
                      'color': 'red_anime',
                      'name': 'SOAP-Eratocode',
-                     'url': 'https://***REMOVED***.com/job/***REMOVED***/job/Non-Prod-Jobs/job/BankApiX/job/Auto-Scheduled-Jobs/job/SOAP/job/SOAP-Eratocode/'},
+                     'url': 'https://localhost:8080/job/***REMOVED***/job/Non-Prod-Jobs/job/ApiX/job/Auto-Scheduled-Jobs/job/SOAP/job/SOAP-Eratocode/'},
             'url': 'queue/item/244405/',
             'why': 'Build #96 is already in progress (ETA: N/A)'},
 
@@ -30,8 +30,8 @@
                                     {'_class': 'com.***REMOVED***.rebuild.RebuildCause',
                                      'shortDescription': 'Rebuilds build #17',
                                      'upstreamBuild': 17,
-                                     'upstreamProject': '***REMOVED***/Non-Prod-Jobs/***REMOVED***/test_job',
-                                     'upstreamUrl': 'job/***REMOVED***/job/Non-Prod-Jobs/job/***REMOVED***/job/test_job/'}]}],
+                                     'upstreamProject': '***REMOVED***/Non-Prod-Jobs/Something/test_job',
+                                     'upstreamUrl': 'job/***REMOVED***/job/Non-Prod-Jobs/job/Something/job/test_job/'}]}],
             'blocked': False,
             'buildable': True,
             'buildableStartMilliseconds': 1615075410734,
@@ -43,9 +43,9 @@
             'task': {'_class': 'hudson.model.FreeStyleProject',
                      'color': 'aborted',
                      'name': 'test_job',
-                     'url': 'https://***REMOVED***.com/job/***REMOVED***/job/Non-Prod-Jobs/job/***REMOVED***/job/test_job/'},
+                     'url': 'https://localhost:8080/job/***REMOVED***/job/Non-Prod-Jobs/job/Something/job/test_job/'},
             'url': 'queue/item/246284/',
-            'why': '‘j2x-ecs-bogie-regular-us-west-2-stable-zb4g8’ is reserved '
+            'why': '‘j2x-ecs-doggy-regular-us-west-2-stable-zb4g8’ is reserved '
                    'for jobs with matching label expression; '
                    '‘j2x-ecs-rhel7-regular-us-east-1-stable-kr5pw’ is offline; '
                    '‘win2012-general-10.21.136.139’ is reserved for jobs with '
@@ -92,6 +92,6 @@
             'task': {'_class': 'hudson.model.FreeStyleProject',
                      'color': 'notbuilt',
                      'name': 'auto-rehydrate',
-                     'url': 'https://***REMOVED***.com/job/***REMOVED***/job/Non-Prod-Jobs/job/rdt_em/job/RDTjobs/job/auto-rehydrate/'},
+                     'url': 'https://localhost:8080/job/***REMOVED***/job/Non-Prod-Jobs/job/rdt_em/job/RDTjobs/job/auto-rehydrate/'},
             'url': 'queue/item/168753/',
             'why': 'There are no nodes with the label ‘chefdk’'}]}

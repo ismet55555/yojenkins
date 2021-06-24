@@ -207,7 +207,7 @@ def format_name(name: str) -> str:
     """Format / clean up the passed name
 
     Details: The formatting includes it:
-        - /***REMOVED***/job/Non-Prod-Jobs/job/***REMOVED***/job/job --> /***REMOVED***/Non-Prod-Jobs/***REMOVED***/job
+        - /***REMOVED***/job/Non-Prod-Jobs/job/Something/job/job --> /***REMOVED***/Non-Prod-Jobs/Something/job
         - remove `job/`, `view/`, `change-requests/` 
         - remove leading or trailing `/`
 

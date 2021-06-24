@@ -119,7 +119,7 @@
                 ]
             },
             "remoteUrls": [
-                "https://github.cloud.capitalone.com/bogie/jenkins-pipeline-library.git"
+                "https://github.com/doggy/jenkins-pipeline-library.git"
             ],
             "scmName": ""
         },
@@ -166,7 +166,7 @@
                 ]
             },
             "remoteUrls": [
-                "git@github.cloud.capitalone.com:***REMOVED***/***REMOVED***.git"
+                "git@github.com:cool/***REMOVED***.git"
             ],
             "scmName": ""
         },
@@ -289,7 +289,7 @@
                 ]
             },
             "remoteUrls": [
-                "https://github.cloud.capitalone.com/bogie-gears/autocruise-express-service.git"
+                "https://github.com/doggy-gears/autocruise-express-service.git"
             ],
             "scmName": ""
         },
@@ -407,7 +407,7 @@
                 ]
             },
             "remoteUrls": [
-                "https://github.cloud.capitalone.com/bogie-gears/autocruise-express-service.git"
+                "https://github.com/doggy-gears/autocruise-express-service.git"
             ],
             "scmName": ""
         },
@@ -448,13 +448,13 @@
                 {
                     "_class": "hudson.plugins.git.GitChangeSet",
                     "affectedPaths": [
-                        "***REMOVED***file"
+                        "doggyfile"
                     ],
                     "author": {
-                        "absoluteUrl": "https://***REMOVED***.com/user/***REMOVED***",
+                        "absoluteUrl": "https://localhost:8080/user/***REMOVED***",
                         "fullName": "Handzic, Ismet (CONT)"
                     },
-                    "authorEmail": "ismet.handzic@capitalone.com",
+                    "authorEmail": "ismet.handzic@gmail.com",
                     "comment": "changed cucumber report location\n",
                     "commitId": "7c7acd21264820bd57f8a80db848e4a5a9d29139",
                     "date": "2021-03-24 13:59:19 -0400",
@@ -463,7 +463,7 @@
                     "paths": [
                         {
                             "editType": "edit",
-                            "file": "***REMOVED***file"
+                            "file": "doggyfile"
                         }
                     ],
                     "timestamp": 1616608759000
@@ -474,7 +474,7 @@
     ],
     "culprits": [
         {
-            "absoluteUrl": "https://***REMOVED***.com/user/***REMOVED***",
+            "absoluteUrl": "https://localhost:8080/user/***REMOVED***",
             "fullName": "Handzic, Ismet (CONT)"
         }
     ],
@@ -485,21 +485,21 @@
     "estimatedDuration": 3402174,
     "estimatedDurationFormatted": "0:56:42.174000",
     "executor": null,
-    "fullDisplayName": "***REMOVED*** \u00bb ***REMOVED*** \u00bb ***REMOVED*** \u00bb master #5",
+    "fullDisplayName": "doggy master #5",
     "id": "5",
     "keepLog": false,
     "nextBuild": {
         "number": 6,
-        "url": "https://***REMOVED***.com/job/***REMOVED***/job/***REMOVED***/job/***REMOVED***/job/master/6/"
+        "url": "https://localhost:8080/job/doggy/job/cool/job/***REMOVED***/job/master/6/"
     },
     "number": 5,
     "previousBuild": {
         "number": 4,
-        "url": "https://***REMOVED***.com/job/***REMOVED***/job/***REMOVED***/job/***REMOVED***/job/master/4/"
+        "url": "https://localhost:8080/job/doggy/job/cool/job/***REMOVED***/job/master/4/"
     },
     "queueId": 261759,
     "result": "FAILURE",
     "startDatetime": "Wednesday, March 24, 2021 02:29:40",
     "timestamp": 1616610580282,
-    "url": "https://***REMOVED***.com/job/***REMOVED***/job/***REMOVED***/job/***REMOVED***/job/master/5/"
+    "url": "https://localhost:8080/job/doggy/job/cool/job/***REMOVED***/job/master/5/"
 }
