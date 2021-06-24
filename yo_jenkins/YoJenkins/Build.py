@@ -311,7 +311,7 @@ class Build():
         Returns:
             TODO
         """
-        # FIXME: yo-jenkins build stages --url https://***REMOVED***.com/job/***REMOVED***/job/Non-Prod-Jobs/job/***REMOVED***/job/test_job/46/
+        # FIXME: yo-jenkins build stages --url https://localhost:8080/job/***REMOVED***/job/Non-Prod-Jobs/job/Something/job/test_job/46/
         #        yields 404 in running build. Maybe issue with formatting of the url to name?
 
         # TODO: Pass a list of build numbers

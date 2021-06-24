@@ -16,7 +16,7 @@ set -e
 # Assign default values if parameters are not passed into script
 PASSWORD=${1:-'<DEFAULT PASSWORD>'}
 USERNAME=${2:-'***REMOVED***'}
-JENKINS_SERVER_URL=${3:-"https://***REMOVED***.com"}
+JENKINS_SERVER_URL=${3:-"https://localhost:8080"}
 NEW_TOKEN_NAME=${4:-"My-new-generated-api-token"}  # No spaces
 
 echo "Password: ****"

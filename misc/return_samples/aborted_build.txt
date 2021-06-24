@@ -47,7 +47,7 @@
  'estimatedDuration': 430305,
  'estimatedDurationFormatted': '0:07:10.305000',
  'executor': None,
- 'fullDisplayName': '***REMOVED*** » Non-Prod-Jobs » ***REMOVED*** » test_job #13',
+ 'fullDisplayName': '***REMOVED*** » Non-Prod-Jobs » Something » test_job #13',
  'id': '13',
  'keepLog': False,
  'number': 13,
@@ -55,4 +55,4 @@
  'result': 'ABORTED',
  'startDatetime': 'Saturday, March 06, 2021 03:52:39',
  'timestamp': 1615063959723,
- 'url': 'https://***REMOVED***.com/job/***REMOVED***/job/Non-Prod-Jobs/job/***REMOVED***/job/test_job/13/'}
+ 'url': 'https://localhost:8080/job/***REMOVED***/job/Non-Prod-Jobs/job/Something/job/test_job/13/'}

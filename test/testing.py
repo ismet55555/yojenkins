@@ -20,7 +20,7 @@ jenkins_server_url = 'base_url'
 
 
 # Get Build information
-job_url = f"{jenkins_server_url}/job/***REMOVED***/job/money-movement/job/mf-status-tracker/job/master/"
+job_url = f"{jenkins_server_url}/job/doggy/job/money-movement/job/mf-status-tracker/job/master/"
 build_number = 16
 request_url = f"{job_url}/{build_number}/wfapi/describe"
 print(request_url)

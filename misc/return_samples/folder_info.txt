@@ -29,13 +29,13 @@
         }
     ],
     "description": null,
-    "displayName": "***REMOVED***-infra",
+    "displayName": "cool-infra",
     "displayNameOrNull": null,
-    "fullDisplayName": "***REMOVED*** \u00bb ***REMOVED*** \u00bb ***REMOVED***-infra",
-    "fullName": "***REMOVED***/***REMOVED***/***REMOVED***-infra",
+    "fullDisplayName": "doggy  cool-infra",
+    "fullName": "doggy/cool/cool-infra",
     "healthReport": [
         {
-            "description": "Worst health: ***REMOVED*** \u00bb ***REMOVED*** \u00bb ***REMOVED***-infra \u00bb PR-15: Build stability: All recent builds failed.",
+            "description": "Worst health: doggy  PR-15: Build stability: All recent builds failed.",
             "iconClassName": "icon-health-00to19",
             "iconUrl": "health-00to19.png",
             "score": 0
@@ -76,107 +76,107 @@
             "_class": "org.jenkinsci.plugins.workflow.job.WorkflowJob",
             "color": "notbuilt",
             "name": "AO-000_-_update-for-funding-and-dep-accts",
-            "url": "https://***REMOVED***.com/job/***REMOVED***/job/***REMOVED***/job/***REMOVED***-infra/job/AO-000_-_update-for-funding-and-dep-accts/"
+            "url": "https://localhost:8080/job/doggy/job/cool/job/cool-infra/job/AO-000_-_update-for-funding-and-dep-accts/"
         },
         {
             "_class": "org.jenkinsci.plugins.workflow.job.WorkflowJob",
             "color": "notbuilt",
             "name": "AO-12130",
-            "url": "https://***REMOVED***.com/job/***REMOVED***/job/***REMOVED***/job/***REMOVED***-infra/job/AO-12130/"
+            "url": "https://localhost:8080/job/doggy/job/cool/job/cool-infra/job/AO-12130/"
         },
         {
             "_class": "org.jenkinsci.plugins.workflow.job.WorkflowJob",
             "color": "notbuilt",
             "name": "Instance-update",
-            "url": "https://***REMOVED***.com/job/***REMOVED***/job/***REMOVED***/job/***REMOVED***-infra/job/Instance-update/"
+            "url": "https://localhost:8080/job/doggy/job/cool/job/cool-infra/job/Instance-update/"
         },
         {
             "_class": "org.jenkinsci.plugins.workflow.job.WorkflowJob",
             "color": "disabled",
             "name": "PR-12",
-            "url": "https://***REMOVED***.com/job/***REMOVED***/job/***REMOVED***/job/***REMOVED***-infra/job/PR-12/"
+            "url": "https://localhost:8080/job/doggy/job/cool/job/cool-infra/job/PR-12/"
         },
         {
             "_class": "org.jenkinsci.plugins.workflow.job.WorkflowJob",
             "color": "disabled",
             "name": "PR-13",
-            "url": "https://***REMOVED***.com/job/***REMOVED***/job/***REMOVED***/job/***REMOVED***-infra/job/PR-13/"
+            "url": "https://localhost:8080/job/doggy/job/cool/job/cool-infra/job/PR-13/"
         },
         {
             "_class": "org.jenkinsci.plugins.workflow.job.WorkflowJob",
             "color": "disabled",
             "name": "PR-14",
-            "url": "https://***REMOVED***.com/job/***REMOVED***/job/***REMOVED***/job/***REMOVED***-infra/job/PR-14/"
+            "url": "https://localhost:8080/job/doggy/job/cool/job/cool-infra/job/PR-14/"
         },
         {
             "_class": "org.jenkinsci.plugins.workflow.job.WorkflowJob",
             "color": "disabled",
             "name": "PR-15",
-            "url": "https://***REMOVED***.com/job/***REMOVED***/job/***REMOVED***/job/***REMOVED***-infra/job/PR-15/"
+            "url": "https://localhost:8080/job/doggy/job/cool/job/cool-infra/job/PR-15/"
         },
         {
             "_class": "org.jenkinsci.plugins.workflow.job.WorkflowJob",
             "color": "disabled",
             "name": "PR-16",
-            "url": "https://***REMOVED***.com/job/***REMOVED***/job/***REMOVED***/job/***REMOVED***-infra/job/PR-16/"
+            "url": "https://localhost:8080/job/doggy/job/cool/job/cool-infra/job/PR-16/"
         },
         {
             "_class": "org.jenkinsci.plugins.workflow.job.WorkflowJob",
             "color": "disabled",
             "name": "PR-17",
-            "url": "https://***REMOVED***.com/job/***REMOVED***/job/***REMOVED***/job/***REMOVED***-infra/job/PR-17/"
+            "url": "https://localhost:8080/job/doggy/job/cool/job/cool-infra/job/PR-17/"
         },
         {
             "_class": "org.jenkinsci.plugins.workflow.job.WorkflowJob",
             "color": "blue",
             "name": "avr%2Fprodw2-cluster-831e1d",
-            "url": "https://***REMOVED***.com/job/***REMOVED***/job/***REMOVED***/job/***REMOVED***-infra/job/avr%252Fprodw2-cluster-831e1d/"
+            "url": "https://localhost:8080/job/doggy/job/cool/job/cool-infra/job/avr%252Fprodw2-cluster-831e1d/"
         },
         {
             "_class": "org.jenkinsci.plugins.workflow.job.WorkflowJob",
             "color": "notbuilt",
             "name": "develop",
-            "url": "https://***REMOVED***.com/job/***REMOVED***/job/***REMOVED***/job/***REMOVED***-infra/job/develop/"
+            "url": "https://localhost:8080/job/doggy/job/cool/job/cool-infra/job/develop/"
         },
         {
             "_class": "org.jenkinsci.plugins.workflow.job.WorkflowJob",
             "color": "blue",
             "name": "master",
-            "url": "https://***REMOVED***.com/job/***REMOVED***/job/***REMOVED***/job/***REMOVED***-infra/job/master/"
+            "url": "https://localhost:8080/job/doggy/job/cool/job/cool-infra/job/master/"
         },
         {
             "_class": "org.jenkinsci.plugins.workflow.job.WorkflowJob",
             "color": "notbuilt",
             "name": "qae-beef-up",
-            "url": "https://***REMOVED***.com/job/***REMOVED***/job/***REMOVED***/job/***REMOVED***-infra/job/qae-beef-up/"
+            "url": "https://localhost:8080/job/doggy/job/cool/job/cool-infra/job/qae-beef-up/"
         },
         {
             "_class": "org.jenkinsci.plugins.workflow.job.WorkflowJob",
             "color": "notbuilt",
             "name": "splunk_input",
-            "url": "https://***REMOVED***.com/job/***REMOVED***/job/***REMOVED***/job/***REMOVED***-infra/job/splunk_input/"
+            "url": "https://localhost:8080/job/doggy/job/cool/job/cool-infra/job/splunk_input/"
         }
     ],
-    "name": "***REMOVED***-infra",
+    "name": "cool-infra",
     "primaryView": {
         "_class": "jenkins.branch.MultiBranchProjectViewHolder$ViewImpl",
         "name": "default",
-        "url": "https://***REMOVED***.com/job/***REMOVED***/job/***REMOVED***/job/***REMOVED***-infra/"
+        "url": "https://localhost:8080/job/doggy/job/cool/job/cool-infra/"
     },
     "sources": [
         {}
     ],
-    "url": "https://***REMOVED***.com/job/***REMOVED***/job/***REMOVED***/job/***REMOVED***-infra/",
+    "url": "https://localhost:8080/job/doggy/job/cool/job/cool-infra/",
     "views": [
         {
             "_class": "jenkins.branch.MultiBranchProjectViewHolder$ViewImpl",
             "name": "change-requests",
-            "url": "https://***REMOVED***.com/job/***REMOVED***/job/***REMOVED***/job/***REMOVED***-infra/view/change-requests/"
+            "url": "https://localhost:8080/job/doggy/job/cool/job/cool-infra/view/change-requests/"
         },
         {
             "_class": "jenkins.branch.MultiBranchProjectViewHolder$ViewImpl",
             "name": "default",
-            "url": "https://***REMOVED***.com/job/***REMOVED***/job/***REMOVED***/job/***REMOVED***-infra/"
+            "url": "https://localhost:8080/job/doggy/job/cool/job/cool-infra/"
         }
     ]
 }
