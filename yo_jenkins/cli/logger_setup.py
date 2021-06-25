@@ -18,13 +18,13 @@ stdout_handler = logging.StreamHandler(sys.stdout)
 # Defining the logger
 # NOTE: More items: https://docs.python.org/3/library/logging.html#logrecord-attributes
 # NOTE: Excluding %(levelname)-8s
-log_format = '[%(asctime)s] [%(relativeCreated)-4d] [%(filename)-22s:%(lineno)4s] %(message)s'
+LOG_FORMAT = '[%(asctime)s] [%(relativeCreated)-4d] [%(filename)-22s:%(lineno)4s] %(message)s'
 
 # Basic Configurations
-logger = logging.basicConfig(level=logging.INFO,
-                             format=log_format,
-                             datefmt='%H:%M:%S',
-                             handlers=[file_handler, stdout_handler])
+logging.basicConfig(level=logging.INFO,
+                    format=LOG_FORMAT,
+                    datefmt='%H:%M:%S',
+                    handlers=[file_handler, stdout_handler])
 
 # Applying color to the output logs
-coloredlogs.install(fmt=log_format, datefmt='%H:%M:%S', logger=logger)
+coloredlogs.install(fmt=LOG_FORMAT, datefmt='%H:%M:%S')

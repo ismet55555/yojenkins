@@ -113,7 +113,7 @@ class Folder():
         if folder_name or folder_url:
             # Only recursively search the specified folder name
             logger.debug(f'Searching folder in sub-folder "{folder_name if folder_name else folder_url}"')
-            logger.debug(f'Folder depth does not apply. Only looking in this specific folder for subfolders')
+            logger.debug('Folder depth does not apply. Only looking in this specific folder for subfolders')
             items = self.item_list(folder_name=folder_name, folder_url=folder_url)[0]
         else:
             # Search entire Jenkins
@@ -378,7 +378,7 @@ class Folder():
             try:
                 with open(filepath, 'w+') as file:
                     file.write(content_to_write)
-                logger.debug(f'Successfully wrote configurations to file')
+                logger.debug('Successfully wrote configurations to file')
             except Exception as e:
                 logger.debug('Failed to write configurations to file. Exception: {e}')
                 return "", False

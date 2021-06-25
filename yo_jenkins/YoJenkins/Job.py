@@ -122,7 +122,7 @@ class Job():
         if folder_name or folder_url:
             # Only recursively search the specified folder name
             logger.debug(f'Searching jobs in sub-folder "{folder_name if folder_name else folder_url}"')
-            logger.debug(f'Folder depth does not apply. Only looking in this specific folder for job')
+            logger.debug('Folder depth does not apply. Only looking in this specific folder for job')
             items = self.Folder.item_list(folder_name=folder_name, folder_url=folder_url)[0]
         else:
             # Search entire Jenkins
@@ -419,7 +419,7 @@ class Job():
             queue_info['fullUrl'] = self.REST.get_server_url().strip('/') + '/' + queue_info['url']
             queue_info['jobUrl'] = queue_info['task']['url']
             queue_info['jobFullName'] = utility.url_to_name(queue_info['jobUrl'])
-            queue_info['folderUrl'] = utility.url_to_other_url(queue_info['fullUrl'], target_url='folder')
+            queue_info['folderUrl'] = utility.build_url_to_other_url(queue_info['fullUrl'], target_url='folder')
             queue_info['folderFullName'] = utility.url_to_name(queue_info['folderUrl'])
             queue_info['serverURL'] = utility.item_url_to_server_url(queue_info['url'])
             queue_info['serverDomain'] = utility.item_url_to_server_url(queue_info['url'], False)
@@ -484,7 +484,7 @@ class Job():
                 'Failed to abort build queue. Specified build queue number may be wrong or build may have already started'
             )
             logger.error('The following jobs are currently in queue:')
-            queue_list = self.queue_list()
+            queue_list = self.in_queue_check()
             for i, queue_item in enumerate(queue_list):
                 logger.error(f'  {i+1}. Queue ID: {queue_item["id"]} - Job URL: {queue_item["task"]["url"]}')
 
@@ -571,7 +571,7 @@ class Job():
             try:
                 with open(filepath, 'w+') as file:
                     file.write(content_to_write)
-                logger.debug(f'Successfully wrote configurations to file')
+                logger.debug('Successfully wrote configurations to file')
             except Exception as e:
                 logger.debug(f'Failed to write configurations to file. Exception: {e}')
                 return "", False

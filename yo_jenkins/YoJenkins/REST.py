@@ -3,7 +3,7 @@
 import logging
 from pprint import pprint
 from time import perf_counter
-from typing import Dict, List, Tuple, Type
+from typing import Dict, Tuple
 
 import requests
 from requests_futures.sessions import FuturesSession

@@ -100,7 +100,7 @@ class Build():
                                                        'get',
                                                        is_endpoint=False)
             if not success:
-                logger.debug(f'Failed to request build information')
+                logger.debug('Failed to request build information')
                 return {}
 
         # Check if found item type/class is a build
@@ -188,7 +188,7 @@ class Build():
             logger.debug('The specified build was not found in job')
             logger.debug('Looking for build in the server build queue ...')
             if build_url:
-                job_url = utility.url_to_other_url(build_url)
+                job_url = utility.build_url_to_other_url(build_url)
             elif job_name:
                 pass
             elif job_url:
@@ -246,7 +246,7 @@ class Build():
             # Get build info request
             build_info = self.info(build_url, job_name, job_url, build_number, latest)
             if not build_info:
-                logger.debug(f'Failed to abort build. Build does not exist or may be queued')
+                logger.debug('Failed to abort build. Build does not exist or may be queued')
                 return 0
             url = build_info['url']
 
@@ -254,10 +254,10 @@ class Build():
         logger.debug(f'Aborting build: {url} ...')
         request_url = f"{url.strip('/')}/stop"
         if not self.REST.request(request_url, 'post', is_endpoint=False)[2]:
-            logger.debug(f'Failed to abort build. Build may not exist or is queued')
+            logger.debug('Failed to abort build. Build may not exist or is queued')
             return 0
 
-        logger.debug(f'Successfully aborted build')
+        logger.debug('Successfully aborted build')
 
         return utility.build_url_to_build_number(build_url=url)
 
@@ -284,7 +284,7 @@ class Build():
             # Get build info request
             build_info = self.info(build_url, job_name, job_url, build_number, latest)
             if not build_info:
-                logger.debug(f'Build does not exist or may be queued')
+                logger.debug('Build does not exist or may be queued')
                 return 0
             url = build_info['url']
 
@@ -292,7 +292,7 @@ class Build():
         logger.debug(f'Deleting build: {url} ...')
         request_url = f"{url.strip('/')}/doDelete"
         if not self.REST.request(request_url, 'post', is_endpoint=False)[2]:
-            logger.debug(f'Failed to delete build. Build may not exist or is queued')
+            logger.debug('Failed to delete build. Build may not exist or is queued')
             return 0
 
         return utility.build_url_to_build_number(build_url=url)
@@ -320,7 +320,7 @@ class Build():
             # Get build info request
             build_info = self.info(build_url, job_name, job_url, build_number, latest)
             if not build_info:
-                logger.debug(f'Build does not exist or may be queued')
+                logger.debug('Build does not exist or may be queued')
                 return [], []
             build_url = build_info['url']
 
@@ -329,7 +329,7 @@ class Build():
         request_url = f"{build_url.strip('/')}/wfapi/describe"
         return_content, _, return_success = self.REST.request(request_url, 'get', is_endpoint=False)
         if not return_success or not return_content:
-            logger.debug(f'Failed to get build stages. Build may not exist, is queued, or is not a staged build')
+            logger.debug('Failed to get build stages. Build may not exist, is queued, or is not a staged build')
             return [], []
 
         # Getting the stage items
@@ -407,7 +407,7 @@ class Build():
             # Get build info request
             build_info = self.info(job_name=job_name, job_url=job_url, build_number=build_number, latest=latest)
             if not build_info:
-                logger.debug(f'Build does not exist or may be queued')
+                logger.debug('Build does not exist or may be queued')
                 return False
             url = build_info['url']
 
@@ -426,9 +426,9 @@ class Build():
                     with open(os.path.join(download_dir, filename), 'wb') as f:
                         for chunk in r.iter_content(chunk_size=8192):
                             if chunk: f.write(chunk)
-                logger.debug(f'Successfully download build logs to file')
+                logger.debug('Successfully download build logs to file')
             except Exception as e:
-                logger.debug(f'Failed to download or save logs for build. Exception: {e}')
+                logger.debug('Failed to download or save logs for build. Exception: {e}')
                 return False
         else:
             # Stream the logs to console
@@ -439,7 +439,7 @@ class Build():
                                                                       is_endpoint=False,
                                                                       json_content=False)
                 if not return_success or not return_content:
-                    logger.debug(f'Failed to get console logs. Build may not exist or is queued')
+                    logger.debug('Failed to get console logs. Build may not exist or is queued')
                     return False
 
                 # If tail/last part of the log was specified
@@ -455,9 +455,9 @@ class Build():
                 logger.debug('Printing out console text logs ...')
                 print(return_content)
             else:
-                logger.debug(f'Following/streaming logs from server ...')
+                logger.debug('Following/streaming logs from server ...')
                 logger.debug(
-                    f'NOTE: Jenkins server does not support requesting partial byte ranges, MUST download entire log to get log message differences'
+                    'NOTE: Jenkins server does not support requesting partial byte ranges, MUST download entire log to get log message differences'
                 )
                 auth = requests.auth.HTTPBasicAuth(self.REST.username, self.REST.api_token)
                 old_dict = {}
@@ -495,7 +495,7 @@ class Build():
 
                             print(diff_text)
                         else:
-                            logger.debug(f'NO content length difference')
+                            logger.debug('NO content length difference')
                 except KeyboardInterrupt as e:
                     logger.debug('Keyboard Interrupt (CTRL-C) by user. Stopping log following ...')
         return True
@@ -522,7 +522,7 @@ class Build():
             logger.debug('NO build URL passed. Getting build information ...')
             build_info = self.info(build_url, job_name, job_url, build_number, latest)
             if not build_info:
-                logger.debug(f'Build does not exist or may be queued')
+                logger.debug('Build does not exist or may be queued')
                 return 0
             build_url = build_info['url']
 
@@ -558,7 +558,7 @@ class Build():
             # Get build info request
             build_info = self.info(build_url, job_name, job_url, build_number, latest)
             if not build_info:
-                logger.debug(f'Build does not exist or may be queued')
+                logger.debug('Build does not exist or may be queued')
                 return 0
             url = build_info['url']
 

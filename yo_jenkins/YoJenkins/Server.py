@@ -53,7 +53,7 @@ class Server():
 
         people_info, _, success = self.REST.request('asynchPeople/api/json?depth=1', 'get', is_endpoint=True)
         if not success:
-            logger.debug(f'Failed to fetch server plugin information')
+            logger.debug('Failed to fetch server plugin information')
             return [], []
         people_info = people_info['users']
         people_info_list = [f"{p['user']['fullName']}" for p in people_info]
@@ -115,7 +115,7 @@ class Server():
 
         plugins_info, _, success = self.REST.request('pluginManager/api/json?depth=2', 'get', is_endpoint=True)
         if not success:
-            logger.debug(f'Failed to fetch server plugin information')
+            logger.debug('Failed to fetch server plugin information')
             return [], []
 
         plugins_info = plugins_info['plugins']
@@ -152,7 +152,7 @@ class Server():
                                           json_content=True,
                                           allow_redirect=False)
         if not success:
-            logger.debug(f'Failed to initiate server restart')
+            logger.debug('Failed to initiate server restart')
             return [], []
         return success
 
@@ -172,7 +172,7 @@ class Server():
                                           json_content=False,
                                           allow_redirect=False)
         if not success:
-            logger.debug(f'Failed to initiate server shutdown')
+            logger.debug('Failed to initiate server shutdown')
             return [], []
         return success
 
