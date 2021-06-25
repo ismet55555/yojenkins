@@ -62,11 +62,11 @@ def load_contents_from_remote_yaml_file_url(remote_file_url: str, allow_redirect
     # Get request headers
     logger.debug(f'Getting remote file HTTP request headers for "{remote_file_url}" ...')
     try:
-        h = requests.head(remote_file_url)
+        return_content = requests.head(remote_file_url)
     except Exception as e:
         logger.debug(f'Failed to request headers. Exception: {e}')
         return {}
-    header = h.headers
+    header = return_content.headers
 
     # Check if file is below size limit
     content_length = int(header['Content-length']) / 1000000
@@ -127,13 +127,13 @@ def append_lines_to_beginning_of_file(filepath: str, lines_to_append: List[str])
     # TODO: Check if file exists
     logger.debug(f'Appending lines of text to the beginning of file: {filepath} ...')
     try:
-        f = open(filepath, 'r+')
-        lines_old = f.readlines()  # read old content
+        open_file = open(filepath, 'r+')
+        lines_old = open_file.readlines()  # read old content
         lines = lines_to_append + lines_old
-        f.seek(0)
+        open_file.seek(0)
         for line in lines:
-            f.write(line)
-        f.close()
+            open_file.write(line)
+        open_file.close()
     except Exception as e:
         # TODO: Specify exception
         logger.error(f'Failed to append lines of text to the beginning of file ({filepath}). Exception: {e}')
@@ -605,11 +605,11 @@ def get_resource_dir(project_dir: str = 'yo_jenkins', sample_path: str = 'sound'
     }
 
     dirs = []
-    for v in possible_dirs.values():
-        if isinstance(v, list):
-            dirs.extend(v)
+    for possible_dir in possible_dirs.values():
+        if isinstance(possible_dir, list):
+            dirs.extend(possible_dir)
         else:
-            dirs.append(v)
+            dirs.append(possible_dir)
 
     logger.debug('Searching project resource directory ...')
     resource_dir_path = ''

@@ -18,8 +18,8 @@ else:
     import winsound
 
 from ..YoJenkins.Status import Color, Sound, Status
-
 from . import monitor_utility as mu
+
 
 # Getting the logger reference
 logger = logging.getLogger()
@@ -77,7 +77,7 @@ class Monitor:
 
         Args:
             halfdely (bool): If True, refresh specified 1/10th of second, else refresh 25.5 seconds
-        Returns: 
+        Returns:
             None
         """
         # Hiding the cursor
@@ -102,7 +102,7 @@ class Monitor:
 
         Args:
             scr (obj): Handle for curses terminal screen handle
-        Returns: 
+        Returns:
             None
         """
         # Getting the screen height and width
@@ -166,7 +166,7 @@ class Monitor:
         Args:
             scr (obj): Handle for curses terminal screen handle
 
-        Returns: 
+        Returns:
             None
         """
         for status_item in Status:
