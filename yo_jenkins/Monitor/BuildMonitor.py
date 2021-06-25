@@ -5,7 +5,7 @@ import logging
 import os
 import sys
 import threading
-from pprint import pprint
+# from pprint import pprint
 from time import sleep, time, perf_counter
 
 from yo_jenkins.YoJenkins.Status import StageStatus, Status
@@ -97,7 +97,7 @@ class BuildMonitor(Monitor):
         keystroke = 0
 
         # Debug stuff
-        loop_total_time = 0
+        # loop_total_time = 0
 
         # Main Loop
         while True:
