@@ -26,6 +26,13 @@
          python setup.py install
          ```
 
+
+## Jenkins Plugin Requirements
+- [Folders](https://plugins.jenkins.io/cloudbees-folder/)
+- [Next Build Number](https://plugins.jenkins.io/next-build-number/)
+- [Promoted Builds](https://plugins.jenkins.io/promoted-builds/)
+
+
 ## Main Menu
 
 ```txt
