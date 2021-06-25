@@ -6,6 +6,7 @@ import re
 import site
 import sysconfig
 import webbrowser
+from pathlib import Path
 from typing import Dict, List, Tuple
 from urllib.parse import urljoin, urlparse
 
@@ -554,7 +555,7 @@ def queue_find(all_queue_info: dict, job_name: str = '', job_url: str = '', firs
                 break
 
     if not queue_item_matches:
-        logger.debug(f'Failed to find job in build queue')
+        logger.debug('Failed to find job in build queue')
 
     return queue_item_matches
 
@@ -610,7 +611,7 @@ def get_resource_dir(project_dir: str = 'yo_jenkins', sample_path: str = 'sound'
         else:
             dirs.append(v)
 
-    logger.debug(f'Searching project resource directory ...')
+    logger.debug('Searching project resource directory ...')
     resource_dir_path = ''
     for dir in dirs:
         if os.path.exists(os.path.join(dir, project_dir, sample_path)):
@@ -620,7 +621,7 @@ def get_resource_dir(project_dir: str = 'yo_jenkins', sample_path: str = 'sound'
         logger.debug(f'    - {dir} - NOT FOUND')
 
     if not resource_dir_path:
-        logger.debug(f'Failed to find included data directory')
+        logger.debug('Failed to find included data directory')
         return ''
 
     return resource_dir_path

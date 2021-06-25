@@ -326,9 +326,9 @@ class Stage():
             try:
                 with open(os.path.join(download_dir, filename), 'w+') as file:
                     file.write(stage_log_text)
-                logger.debug(f'Successfully write build logs to file')
+                logger.debug('Successfully write build logs to file')
             except Exception as e:
-                logger.debug('Failed to write logs to file. Exception: {e}')
+                logger.debug(f'Failed to write logs to file. Exception: {e}')
                 return False
         else:
             # Output to console

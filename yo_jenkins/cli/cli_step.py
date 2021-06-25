@@ -32,12 +32,12 @@ def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profil
         click.echo(click.style(f'INPUT ERROR: Step url is not a URL: {step_url}', fg='bright_red', bold=True))
         sys.exit(1)
 
-    JY = cu.config_YoJenkins(profile)
+    jy_obj = cu.config_yo_jenkins(profile)
 
     # Request the data
-    data = JY.Step.info(step_url=step_url)
+    data = jy_obj.Step.info(step_url=step_url)
 
     if not data:
-        click.echo(click.style(f'No step information', fg='bright_red', bold=True))
+        click.echo(click.style('No step information', fg='bright_red', bold=True))
         sys.exit(1)
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)

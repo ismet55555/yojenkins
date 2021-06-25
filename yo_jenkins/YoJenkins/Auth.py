@@ -7,7 +7,7 @@ from datetime import datetime
 from getpass import getpass
 from pathlib import Path
 from pprint import pprint
-from typing import Dict, List, Tuple, Type
+from typing import Dict, Tuple
 
 import click
 import yaml
@@ -113,12 +113,12 @@ class Auth:
         """
         # Ask for anything not passed
         if not token_name:
-            prompt_text = colors.BOLD + colors.YELLOW + f"Enter desired API TOKEN NAME: " + colors.NORMAL
+            prompt_text = colors.BOLD + colors.YELLOW + "Enter desired API TOKEN NAME: " + colors.NORMAL
             token_name = input(prompt_text)
             logger.debug(f'User input: {token_name}')
 
         if not server_base_url:
-            prompt_text = colors.BOLD + colors.YELLOW + f"Enter Jenkins SERVER BASE URL: " + colors.NORMAL
+            prompt_text = colors.BOLD + colors.YELLOW + "Enter Jenkins SERVER BASE URL: " + colors.NORMAL
             server_base_url = input(prompt_text)
             logger.debug(f'User input: {server_base_url}')
 
@@ -165,7 +165,7 @@ class Auth:
         try:
             generated_token = request_return_content['data']['tokenValue']
             logger.debug(f'Successfully generated server API token "{token_name}"!')
-        except Exception as e:
+        except Exception:
             logger.debug('Failed to find "tokenValue" in the POST request return header')
             generated_token = ''
 
@@ -208,12 +208,12 @@ class Auth:
 
         # Check if needed information is listed in the profile
         if 'jenkins_server_url' not in profile_info:
-            logger.debug(f'No "jenkins_server_url" key listed in profile')
+            logger.debug('No "jenkins_server_url" key listed in profile')
             server_url = ''
         else:
             server_url = profile_info['jenkins_server_url']
         if 'username' not in profile_info:
-            logger.debug(f'No "username" key listed in profile')
+            logger.debug('No "username" key listed in profile')
             username = ''
         else:
             username = profile_info['username']
@@ -268,11 +268,11 @@ class Auth:
             # Adding the profile
             print('')
             print(f'Credentials profile file found in current user home directory: {file_path}')
-            print(f'Adding a new profile to the current credentials profile file ...')
+            print('Adding a new profile to the current credentials profile file ...')
             print('Please enter the following information to add a profile:')
             print('')
         else:
-            logger.debug(f'Credentials file NOT found in current user home directory')
+            logger.debug('Credentials file NOT found in current user home directory')
             logger.debug(f'Creating credentials file in current user home directory: {self._cred_config_filename} ...')
 
             # Create new profile from scratch
@@ -287,7 +287,7 @@ class Auth:
             print('')
 
         # Prompting user for details
-        profile_name = input(colors.BOLD + colors.YELLOW + f'[ OPTIONAL ] Enter PROFILE NAME (default):  ' +
+        profile_name = input(colors.BOLD + colors.YELLOW + '[ OPTIONAL ] Enter PROFILE NAME (default):  ' +
                              colors.NORMAL)
         profile_name = 'default' if not profile_name else profile_name
         if profile_name in profiles[self._required_top_level_key]:
@@ -296,12 +296,12 @@ class Auth:
             print('')
         profiles['profiles'][profile_name] = {}
         profiles['profiles'][profile_name]['jenkins_server_url'] = input(
-            colors.BOLD + colors.YELLOW + f'[ REQUIRED ] Enter Jenkins SERVER BASE URL:  ' + colors.NORMAL)
+            colors.BOLD + colors.YELLOW + '[ REQUIRED ] Enter Jenkins SERVER BASE URL:  ' + colors.NORMAL)
         profiles['profiles'][profile_name]['username'] = input(colors.BOLD + colors.YELLOW +
-                                                               f'[ REQUIRED ] Enter USERNAME:  ' + colors.NORMAL)
+                                                               '[ REQUIRED ] Enter USERNAME:  ' + colors.NORMAL)
         if not api_token:
             profiles['profiles'][profile_name]['api_token'] = input(colors.BOLD + colors.YELLOW +
-                                                                    f'[ OPTIONAL ] Enter API TOKEN:  ' + colors.NORMAL)
+                                                                    '[ OPTIONAL ] Enter API TOKEN:  ' + colors.NORMAL)
         else:
             print('')
             print(colors.BOLD + 'WARNING: Adding provided API token to this profile' + colors.NORMAL)
@@ -352,8 +352,8 @@ class Auth:
         success, config_filepath = self.detect_configuration_file()
         if not success:
             # If no configuration file found, configure one
-            logger.debug(f'No credentials file found. Configuring one ...')
-            success, config_filepath, self.configure()
+            logger.debug('No credentials file found. Configuring one ...')
+            success = self.configure()
             if not success:
                 return {}
         else:
@@ -406,7 +406,7 @@ class Auth:
                 logger.debug(f'Failed to find the profile specified with --profile "{profile}" in the profiles loaded')
                 return {}
         else:
-            logger.debug(f'Argument "--profile" was not specified')
+            logger.debug('Argument "--profile" was not specified')
 
         # PRIORITY 2 - Environmental Variable
         if not profile_selected:
@@ -431,9 +431,9 @@ class Auth:
             if profile in profile_items:
                 profile_selected = profile_items[profile]
                 profile_selected['profile'] = profile
-                logger.debug(f'Successfully found "default" profile in the configuration file')
+                logger.debug('Successfully found "default" profile in the configuration file')
             else:
-                logger.debug(f'Default profile "default" not found')
+                logger.debug('Default profile "default" not found')
 
         # PRIORITY 4 - Any other active one
         if not profile_selected:
@@ -453,7 +453,7 @@ class Auth:
         # Show the partial info of the loaded profile
         self.jenkins_profile = profile_selected
 
-        logger.debug(f'The following profile has been loaded:')
+        logger.debug('The following profile has been loaded:')
         logger.debug(f'    - Profile:             {self.jenkins_profile["profile"]}')
         logger.debug(f'    - Jenkins Server URL:  {self.jenkins_profile["jenkins_server_url"]}')
         logger.debug(f'    - Username:            {self.jenkins_profile["username"]}')
@@ -476,7 +476,7 @@ class Auth:
             self.jenkins_profile = profile_info
 
         if not self.jenkins_profile:
-            logger.debug(f'No credential profile loaded')
+            logger.debug('No credential profile loaded')
             return False
 
         # Check if server url has a protocol schema
@@ -535,11 +535,11 @@ class Auth:
                 click.style(f'Jenkins server connection failed (Server: {self.jenkins_profile["jenkins_server_url"]})',
                             fg='bright_red',
                             bold=True))
-            click.echo(click.style(f'Possible causes:', fg='bright_red'))
+            click.echo(click.style('Possible causes:', fg='bright_red'))
             click.echo(
                 click.style(f'  - Wrong Jenkins server URL: {self.jenkins_profile["jenkins_server_url"]}',
                             fg='bright_red'))
-            click.echo(click.style(f'  - Network/Internet is down', fg='bright_red'))
+            click.echo(click.style('  - Network/Internet is down', fg='bright_red'))
             click.echo(click.style('Possible solutions:', fg='bright_red'))
             click.echo(click.style('   - Fix yo network connection to server', fg='bright_red'))
             return False
@@ -552,16 +552,16 @@ class Auth:
                 click.style(f'Jenkins server authentication failed (Username: {self.jenkins_profile["username"]})',
                             fg='bright_red',
                             bold=True))
-            click.echo(click.style(f'Possible causes:', fg='bright_red'))
+            click.echo(click.style('Possible causes:', fg='bright_red'))
             click.echo(
                 click.style(f'    - Wrong Jenkins server URL: {self.jenkins_profile["jenkins_server_url"]}',
                             fg='bright_red'))
             click.echo(click.style(f'    - Incorrect username: {self.jenkins_profile["username"]}', fg='bright_red'))
-            click.echo(click.style(f'    - Incorrect, removed, or expired API Token', fg='bright_red'))
+            click.echo(click.style('    - Incorrect, removed, or expired API Token', fg='bright_red'))
             click.echo(
                 click.style(f'    - Username, {self.jenkins_profile["username"]}, does not have permission',
                             fg='bright_red'))
-            click.echo(click.style(f'    - Jenkins server is still in the process of starting up', fg='bright_red'))
+            click.echo(click.style('    - Jenkins server is still in the process of starting up', fg='bright_red'))
             click.echo(click.style('Possible solutions:', fg='bright_red'))
             click.echo(click.style('    - yo-jenkins auth token', fg='bright_red'))
             click.echo(click.style('    - yo-jenkins auth configure', fg='bright_red'))
@@ -599,17 +599,17 @@ class Auth:
         Returns:
             True if successfully authenticated, else False
         """
-        logger.debug(f'Verifying server authentication by requesting user information ...')
+        logger.debug('Verifying server authentication by requesting user information ...')
         try:
             request_url = self.jenkins_profile['jenkins_server_url'].strip('/') + "/me/api/json"
         except:
-            logger.debug(f'Failed to find jenkins_server_url. Profile may not have loaded correctly')
+            logger.debug('Failed to find jenkins_server_url. Profile may not have loaded correctly')
             return False
         request_success = self.REST.request(target=request_url, is_endpoint=False, request_type='head')[2]
         if not request_success:
-            logger.debug(f'Failed server authentication')
+            logger.debug('Failed server authentication')
             return False
-        logger.debug(f'Successfully authenticated')
+        logger.debug('Successfully authenticated')
         return True
 
     def user(self) -> Dict:

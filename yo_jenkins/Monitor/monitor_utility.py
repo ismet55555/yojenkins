@@ -130,14 +130,14 @@ def load_keys() -> dict:
     """
     Load all keyboard keys available to user in program
 
-    Usage: KEYS['DOWN']
+    Usage: ui_keys['DOWN']
 
     Args:
         None
     Returns: 
-        KEYS (dict): Dictionary of references to curses keys
+        ui_keys (dict): Dictionary of references to curses keys
     """
-    KEYS = {
+    ui_keys = {
         "ABORT": (ord('a'), ord('A')),
         "BUILD": (ord('b'), ord('B')),
         "DOWN": (curses.KEY_DOWN, ord('j')),
@@ -154,7 +154,7 @@ def load_keys() -> dict:
         "SPACE": (32, ord(' ')),
         "UP": (curses.KEY_UP, ord('k'))
     }
-    return KEYS
+    return ui_keys
 
 
 def get_center_x(scr, line: str) -> int:
@@ -428,7 +428,7 @@ def draw_text(scr,
     if center_x and not x:
         x = get_center_x(scr, text)
     if center_y and not y:
-        y = get_center_y(scr, text)
+        y = get_center_y(scr)
 
     # Draw
     scr.addstr(y, x, text, color | decor)

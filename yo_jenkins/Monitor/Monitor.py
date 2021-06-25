@@ -116,9 +116,9 @@ class Monitor:
             scr.addstr(1, 1, f"[Terminal Size: W:{term_width}, H:{term_height}]", self.color['grey-light'])
 
         k = 0
-        KEYS = mu.load_keys()
+        ui_keys = mu.load_keys()
         while not self.terminal_size_good:
-            if k in KEYS['QUIT']:
+            if k in ui_keys['QUIT']:
                 self.all_threads_enabled = False
                 sys.exit(0)
 
@@ -314,7 +314,7 @@ class Monitor:
         Returns:
             TODO
         """
-        logger.debug(f'Pausing all monitor threads ...')
+        logger.debug('Pausing all monitor threads ...')
 
         # Set the monitoring thread flag down
         self.paused = True
