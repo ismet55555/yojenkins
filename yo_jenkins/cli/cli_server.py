@@ -273,10 +273,9 @@ def server_teardown(remove_volume: bool, remove_image: bool):
     except Exception:
         click.echo(click.style('Failed to detect a previous server deployment', fg='bright_red', bold=True))
         click.echo(
-            click.style(
-                'If you think there was a previously successfull deployment, use Docker to remove it manually',
-                fg='bright_red',
-                bold=True))
+            click.style('If you think there was a previously successfull deployment, use Docker to remove it manually',
+                        fg='bright_red',
+                        bold=True))
         sys.exit(1)
 
     # Filter out named volumes only

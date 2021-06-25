@@ -51,8 +51,7 @@ env.bak/
 venv.bak/
 
 # Other
-dev_docs/
-misc/
+dev_things/
 test/
 
 # Specific files

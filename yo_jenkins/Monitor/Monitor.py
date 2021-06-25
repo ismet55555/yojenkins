@@ -20,7 +20,6 @@ else:
 from ..YoJenkins.Status import Color, Sound, Status
 from . import monitor_utility as mu
 
-
 # Getting the logger reference
 logger = logging.getLogger()
 

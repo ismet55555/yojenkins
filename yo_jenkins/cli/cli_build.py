@@ -216,14 +216,14 @@ def stages(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, prof
     # Request the data
     if valid_url_format:
         data, data_list = jy_obj.Build.stage_list(build_url=build_url,
-                                              job_url=job,
-                                              build_number=build_number,
-                                              latest=latest)
+                                                  job_url=job,
+                                                  build_number=build_number,
+                                                  latest=latest)
     else:
         data, data_list = jy_obj.Build.stage_list(build_url=build_url,
-                                              job_name=job,
-                                              build_number=build_number,
-                                              latest=latest)
+                                                  job_name=job,
+                                                  build_number=build_number,
+                                                  latest=latest)
 
     if not data:
         click.echo(click.style('failed', fg='bright_red', bold=True))
@@ -264,20 +264,20 @@ def logs(profile: str, job: str, build_number: int, build_url: str, latest: bool
     # Request the data
     if valid_url_format:
         data = jy_obj.Build.logs(build_url=build_url,
-                             job_url=job,
-                             build_number=build_number,
-                             latest=latest,
-                             tail=tail,
-                             download_dir=download_dir,
-                             follow=follow)
+                                 job_url=job,
+                                 build_number=build_number,
+                                 latest=latest,
+                                 tail=tail,
+                                 download_dir=download_dir,
+                                 follow=follow)
     else:
         data = jy_obj.Build.logs(build_url=build_url,
-                             job_name=job,
-                             build_number=build_number,
-                             latest=latest,
-                             tail=tail,
-                             download_dir=download_dir,
-                             follow=follow)
+                                 job_name=job,
+                                 build_number=build_number,
+                                 latest=latest,
+                                 tail=tail,
+                                 download_dir=download_dir,
+                                 follow=follow)
 
     if not data:
         click.echo(click.style('failed', fg='bright_red', bold=True))
@@ -355,16 +355,16 @@ def monitor(profile: str, job: str, build_number: int, build_url: str, latest: b
     # Request the data
     if valid_url_format:
         data = jy_obj.Build.monitor(build_url=build_url,
-                                job_url=job,
-                                build_number=build_number,
-                                latest=latest,
-                                sound=sound)
+                                    job_url=job,
+                                    build_number=build_number,
+                                    latest=latest,
+                                    sound=sound)
     else:
         data = jy_obj.Build.monitor(build_url=build_url,
-                                job_name=job,
-                                build_number=build_number,
-                                latest=latest,
-                                sound=sound)
+                                    job_name=job,
+                                    build_number=build_number,
+                                    latest=latest,
+                                    sound=sound)
 
     if not data:
         click.echo(click.style('failed', fg='bright_red', bold=True))
