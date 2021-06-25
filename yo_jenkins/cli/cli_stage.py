@@ -43,16 +43,16 @@ def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profil
     # Request the data
     if valid_url_format:
         data = jy_obj.Stage.info(stage_name=stage_name,
-                             build_url=build_url,
-                             job_url=job,
-                             build_number=build_number,
-                             latest=latest)
+                                 build_url=build_url,
+                                 job_url=job,
+                                 build_number=build_number,
+                                 latest=latest)
     else:
         data = jy_obj.Stage.info(stage_name=stage_name,
-                             build_url=build_url,
-                             job_name=job,
-                             build_number=build_number,
-                             latest=latest)
+                                 build_url=build_url,
+                                 job_name=job,
+                                 build_number=build_number,
+                                 latest=latest)
 
     if not data:
         click.echo(click.style('no stage information', fg='bright_red', bold=True))
@@ -90,16 +90,16 @@ def status(profile: str, stage_name: str, job: str, build_number: int, build_url
     # Request the data
     if valid_url_format:
         data = jy_obj.Stage.status_text(stage_name=stage_name,
-                                    build_url=build_url,
-                                    job_url=job,
-                                    build_number=build_number,
-                                    latest=latest)
+                                        build_url=build_url,
+                                        job_url=job,
+                                        build_number=build_number,
+                                        latest=latest)
     else:
         data = jy_obj.Stage.status_text(stage_name=stage_name,
-                                    build_url=build_url,
-                                    job_name=job,
-                                    build_number=build_number,
-                                    latest=latest)
+                                        build_url=build_url,
+                                        job_name=job,
+                                        build_number=build_number,
+                                        latest=latest)
 
     if not data:
         click.echo(click.style('no status found', fg='bright_red', bold=True))
@@ -121,8 +121,8 @@ def status(profile: str, stage_name: str, job: str, build_number: int, build_url
     click.echo(click.style(f'{data}', fg=output_fg, bold=True))
 
 
-def steps(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, opt_list: bool, stage_name: str, job: str,
-          build_number: int, build_url: str, latest: bool) -> None:
+def steps(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, opt_list: bool,
+          stage_name: str, job: str, build_number: int, build_url: str, latest: bool) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -152,16 +152,16 @@ def steps(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profi
     # Request the data
     if valid_url_format:
         data, data_list = jy_obj.Stage.step_list(stage_name=stage_name,
-                                             build_url=build_url,
-                                             job_url=job,
-                                             build_number=build_number,
-                                             latest=latest)
+                                                 build_url=build_url,
+                                                 job_url=job,
+                                                 build_number=build_number,
+                                                 latest=latest)
     else:
         data, data_list = jy_obj.Stage.step_list(stage_name=stage_name,
-                                             build_url=build_url,
-                                             job_name=job,
-                                             build_number=build_number,
-                                             latest=latest)
+                                                 build_url=build_url,
+                                                 job_name=job,
+                                                 build_number=build_number,
+                                                 latest=latest)
 
     if not data:
         click.echo(click.style('failed', fg='bright_red', bold=True))
@@ -202,18 +202,18 @@ def logs(profile: str, stage_name: str, job: str, build_number: int, build_url: 
     # Request the data
     if valid_url_format:
         data = jy_obj.Stage.logs(stage_name=stage_name,
-                             build_url=build_url,
-                             job_url=job,
-                             build_number=build_number,
-                             latest=latest,
-                             download_dir=download_dir)
+                                 build_url=build_url,
+                                 job_url=job,
+                                 build_number=build_number,
+                                 latest=latest,
+                                 download_dir=download_dir)
     else:
         data = jy_obj.Stage.logs(stage_name=stage_name,
-                             build_url=build_url,
-                             job_name=job,
-                             build_number=build_number,
-                             latest=latest,
-                             download_dir=download_dir)
+                                 build_url=build_url,
+                                 job_name=job,
+                                 build_number=build_number,
+                                 latest=latest,
+                                 download_dir=download_dir)
 
     if not data:
         click.echo(click.style('failed', fg='bright_red', bold=True))

@@ -169,7 +169,12 @@ class JobMonitor(Monitor):
                 y_row += 1
             else:
                 y_row += 3
-                mu.draw_text(scr, 'NO DATA', y_row, center_x=True, color=self.color['normal'], decor=self.decor['bold'])
+                mu.draw_text(scr,
+                             'NO DATA',
+                             y_row,
+                             center_x=True,
+                             color=self.color['normal'],
+                             decor=self.decor['bold'])
                 y_row += 2
                 mu.draw_text(scr,
                              'ಠ_ಠ  ¯\_(⊙︿⊙)_/¯',

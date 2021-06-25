@@ -52,14 +52,14 @@ def search(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, prof
     jy_obj = cu.config_yo_jenkins(profile)
     if cu.is_full_url(search_folder):
         data, data_list = jy_obj.Folder.search(search_pattern=search_pattern,
-                                           folder_url=search_folder,
-                                           folder_depth=depth,
-                                           fullname=fullname)
+                                               folder_url=search_folder,
+                                               folder_depth=depth,
+                                               fullname=fullname)
     else:
         data, data_list = jy_obj.Folder.search(search_pattern=search_pattern,
-                                           folder_name=search_folder,
-                                           folder_depth=depth,
-                                           fullname=fullname)
+                                               folder_name=search_folder,
+                                               folder_depth=depth,
+                                               fullname=fullname)
 
     if not data:
         click.echo(click.style('"not found', fg='bright_red', bold=True))
@@ -205,16 +205,16 @@ def config(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_
     jy_obj = cu.config_yo_jenkins(profile)
     if cu.is_full_url(folder):
         data, write_success = jy_obj.Folder.config(filepath=filepath,
-                                               folder_url=folder,
-                                               opt_json=opt_json,
-                                               opt_yaml=opt_yaml,
-                                               opt_toml=opt_toml)
+                                                   folder_url=folder,
+                                                   opt_json=opt_json,
+                                                   opt_yaml=opt_yaml,
+                                                   opt_toml=opt_toml)
     else:
         data, write_success = jy_obj.Folder.config(filepath=filepath,
-                                               folder_name=folder,
-                                               opt_json=opt_json,
-                                               opt_yaml=opt_yaml,
-                                               opt_toml=opt_toml)
+                                                   folder_name=folder,
+                                                   opt_json=opt_json,
+                                                   opt_yaml=opt_yaml,
+                                                   opt_toml=opt_toml)
 
     if not data:
         click.echo(click.style('failed', fg='bright_red', bold=True))

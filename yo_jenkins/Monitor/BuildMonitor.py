@@ -238,7 +238,12 @@ class BuildMonitor(Monitor):
                     y_row += 1
             else:
                 y_row += 3
-                mu.draw_text(scr, 'NO DATA', y_row, center_x=True, color=self.color['normal'], decor=self.decor['bold'])
+                mu.draw_text(scr,
+                             'NO DATA',
+                             y_row,
+                             center_x=True,
+                             color=self.color['normal'],
+                             decor=self.decor['bold'])
                 y_row += 2
                 mu.draw_text(scr,
                              'ಠ_ಠ  ¯\_(⊙︿⊙)_/¯',
@@ -536,6 +541,7 @@ class BuildMonitor(Monitor):
             ), daemon=False).start()
         except Exception as error:
             logger.error(
-                f'Failed to start build info monitoring thread for {build_url}. Exception: {error}. Type: {type(error)}')
+                f'Failed to start build info monitoring thread for {build_url}. Exception: {error}. Type: {type(error)}'
+            )
 
         return True
