@@ -50,6 +50,9 @@ jobs:
       - name: Show All dependencies
         run: pipenv graph
 
+      - name: Code Linting
+        run: pipenv run pylint yo_jenkins --fail-under=7
+
       - name: Build the package
         run: pipenv run python setup.py install --verbose
 
