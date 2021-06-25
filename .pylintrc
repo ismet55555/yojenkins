@@ -12,10 +12,10 @@ extension-pkg-allow-list=
 extension-pkg-whitelist=
 
 # Specify a score threshold to be exceeded before program exits with error.
-fail-under=10.0
+fail-under=7.0
 
 # Files or directories to be skipped. They should be base names, not paths.
-ignore=CVS,env,venv,ENV,dev_docs,misc,test
+ignore=CVS,env,venv,ENV,test,dev_things
 
 # Files or directories matching the regex patterns are skipped. The regex
 # matches against base names, not paths.
@@ -172,7 +172,7 @@ evaluation=10.0 - ((float(5 * error + warning + refactor + convention) / stateme
 output-format=colorized
 
 # Tells whether to display a full report or only the messages.
-reports=no
+reports=yes
 
 # Activate the evaluation score.
 score=yes
@@ -379,7 +379,7 @@ ignore-docstrings=yes
 ignore-imports=no
 
 # Minimum lines number of a similarity.
-min-similarity-lines=5
+min-similarity-lines=15
 
 
 [SPELLING]
