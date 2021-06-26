@@ -7,7 +7,7 @@ from pprint import pprint
 import setuptools
 
 # Package version number (Updated via bump2version tool)
-__version__ = "0.0.25"
+__version__ = "0.0.26"
 
 def check_py_version():
     """Check the python version"""
