@@ -293,11 +293,7 @@ class Job():
 
         return build_number
 
-    def build_number_exist(self,
-                           build_number: int,
-                           job_info: dict,
-                           job_name: str = '',
-                           job_url: str = '') -> bool:
+    def build_number_exist(self, build_number: int, job_info: dict, job_name: str = '', job_url: str = '') -> bool:
         """TODO Docstring
 
         Args:
