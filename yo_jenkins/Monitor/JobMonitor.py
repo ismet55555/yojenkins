@@ -8,10 +8,9 @@ import threading
 from datetime import datetime
 from pprint import pprint
 from time import perf_counter, sleep, time
-from typing import Dict, List, Tuple, Type
 
 from yo_jenkins.Monitor.Monitor import Monitor
-from yo_jenkins.YoJenkins.Status import (BuildStatus, Color, Sound, StageStatus, Status)
+from yo_jenkins.YoJenkins.Status import BuildStatus
 
 from . import monitor_utility as mu
 

@@ -1,21 +1,20 @@
 #!/usr/bin/env python3
 
-import curses
+# import curses
 import logging
-import os
-import sys
-import textwrap
-import threading
-from pprint import pprint
-from time import sleep, time
-from typing import Dict, List, Tuple, Type
+# import os
+# import sys
+# import textwrap
+# import threading
+# from pprint import pprint
+# from time import sleep, time
 
-from yo_jenkins.YoJenkins.Status import BuildStatus, Color, Sound, StageStatus, Status
+# from yo_jenkins.YoJenkins.Status import BuildStatus, Color, Sound, StageStatus, Status
 
 # from Monitor.Monitor import Monitor
 from yo_jenkins.Monitor.Monitor import Monitor
 
-from . import monitor_utility as mu
+# from . import monitor_utility as mu
 
 # Getting the logger reference
 logger = logging.getLogger()
@@ -38,3 +37,5 @@ class FolderMonitor(Monitor):
         """
         # Get attributes form super (parent) class
         super().__init__()
+
+        print(Build)
