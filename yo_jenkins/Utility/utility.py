@@ -613,15 +613,40 @@ def get_resource_dir(project_dir: str = 'yo_jenkins', sample_path: str = 'sound'
 
     logger.debug('Searching project resource directory ...')
     resource_dir_path = ''
-    for dir in dirs:
-        if os.path.exists(os.path.join(dir, project_dir, sample_path)):
-            resource_dir_path = os.path.join(dir, project_dir)
-            logger.debug(f'    - {dir} - FOUND')
+    for d in dirs:
+        if os.path.exists(os.path.join(d, project_dir, sample_path)):
+            resource_dir_path = os.path.join(d, project_dir)
+            logger.debug(f'    - {d} - FOUND')
             break
-        logger.debug(f'    - {dir} - NOT FOUND')
+        logger.debug(f'    - {d} - NOT FOUND')
 
     if not resource_dir_path:
         logger.debug('Failed to find included data directory')
         return ''
 
     return resource_dir_path
+
+
+def item_exists_in_folder(item_name: str, folder_url: str, item_type: str, REST: object):
+    """Checking if the item exists within the specified folder
+
+    Args:
+        TODO
+
+    Returns:
+        TODO
+    """
+    item_type_info = getattr(JenkinsItemClasses, item_type)
+    prefix = item_type_info.value['prefix']
+
+    item_url = urljoin(folder_url, f'{prefix}/{item_name}')
+
+    logger.debug(f'Checking if {item_type} "{item_name}" already exists within folder "{folder_url}" ...')
+    item_exists = REST.request(f'{item_url.strip("/")}/api/json', 'head', is_endpoint=False)[2]
+    if item_exists:
+        logger.debug(f'Found existing {item_type} "{item_name}" within "{folder_url}"')
+        return True
+    else:
+        logger.debug(f'Did not found {item_type} "{item_name}" within "{folder_url}"')
+
+    return item_exists

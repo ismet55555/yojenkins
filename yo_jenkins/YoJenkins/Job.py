@@ -6,8 +6,8 @@ import re
 from datetime import timedelta
 from pprint import pprint
 from time import perf_counter
-from typing import Dict, List, Tuple, Type
-from urllib.parse import urlencode
+from typing import Dict, Tuple
+from urllib.parse import urlencode, urljoin
 
 import jenkins
 import toml
@@ -78,9 +78,9 @@ class Job():
                 try:
                     if re.search(search_pattern, list_item[dict_key], re.IGNORECASE):
                         self.search_results.append(list_item)
-                except re.error as e:
+                except re.error as error:
                     logger.debug(
-                        f'Error while applying REGEX pattern "{search_pattern}" to "{list_item[dict_key]}". Exception: {e}'
+                        f'Error while applying REGEX pattern "{search_pattern}" to "{list_item[dict_key]}". Exception: {error}'
                     )
                     break
 
@@ -129,8 +129,8 @@ class Job():
             logger.debug(f'Searching jobs in ALL Jenkins. Folder depth: "{folder_depth}"')
             try:
                 items = self.JenkinsSDK.get_all_jobs(folder_depth=folder_depth)
-            except jenkins.JenkinsException as e:
-                error_no_html = e.args[0].split("\n")[0]
+            except jenkins.JenkinsException as error:
+                error_no_html = error.args[0].split("\n")[0]
                 logger.debug(f'Error while getting all items. Exception: {error_no_html}')
 
                 # TODO: Catch authentication error "[401]: Unauthorized"
@@ -295,7 +295,7 @@ class Job():
 
     def build_number_exist(self,
                            build_number: int,
-                           job_info: dict = {},
+                           job_info: dict,
                            job_name: str = '',
                            job_url: str = '') -> bool:
         """TODO Docstring
@@ -749,7 +749,9 @@ class Job():
         if utility.has_special_char(name):
             return False
 
-        # TODO: Check if job already exists
+        # Check if job already exists
+        if utility.item_exists_in_folder(name, folder_url, "job", self.REST):
+            return False
 
         # Use job config from file
         if config:
@@ -764,7 +766,7 @@ class Job():
         if not config:
             config_definition = JenkinsItemConfig.job.value['blank'].encode('utf-8')
 
-        logger.debug(f'Creating job "{name}" ...')
+        logger.debug(f'Creating job "{name}" within folder "{folder_url}" "...')
         endpoint = f'createItem?name={name}'
         headers = {'Content-Type': 'application/xml; charset=utf-8'}
         _, _, success = self.REST.request(f'{folder_url.strip("/")}/{endpoint}',
