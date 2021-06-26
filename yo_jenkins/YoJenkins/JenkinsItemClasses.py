@@ -15,8 +15,10 @@ class JenkinsItemClasses(Enum):
         - `JenkinsItemClasses.view.value['item_type']`
     """
     folder = {
-        "item_type": "jobs",
-        "prefix": "job",
+        "item_type":
+            "jobs",
+        "prefix":
+            "job",
         "class_type": [
             'com.cloudbees.hudson.plugins.folder.Folder',
             'org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject',
@@ -24,8 +26,10 @@ class JenkinsItemClasses(Enum):
         ]
     }
     view = {
-        "item_type": "views",
-        "prefix": "view",
+        "item_type":
+            "views",
+        "prefix":
+            "view",
         "class_type": [
             'hudson.model.AllView', 'hudson.model.ListView', 'jenkins.branch.MultiBranchProjectViewHolder$ViewImpl'
         ]
