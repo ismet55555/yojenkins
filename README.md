@@ -4,6 +4,10 @@
 
 `yo-jenkins` is a command line interface (CLI) tool to monitor, manage, and have fun with a Jenkins server.  
 
+**NOTE:** *This tool is in **pre-alpha** release phase. Please report any issues, odd behavior, or suggestions. Read more about the [release cycle](https://en.wikipedia.org/wiki/Software_release_life_cycle).*
+
+&nbsp;
+
 # Installation
 
 1. Install system dependencies for `simpleaudio` sound Python package
@@ -93,12 +97,21 @@ Commands:
 
 ```
 
-<!-- ################################################ -->
+# Report Bugs and Issues
+As with any other software, issues do come up during various usage scenarios that may not be accounted for during development and testing. **Help from real users is enormously helpful.**
+
+Please report and bugs and odd behaviors to [GitHub Issues](https://github.com/ismet55555/yo-jenkins/issues/new?assignees=&labels=&template=bug_report.md&title=).
+
+If possible, please include the command that caused the issue with `--debug`.
+
+For example:
+
+```bash
+yo-jenkins server server-deploy --debug
+```
 
 # Contributors
 **Ismet Handžić** - GitHub: [@ismet55555](https://github.com/ismet55555)
-
-<!-- ################################################ -->
 
 # Licence
 This project is licensed under the *GNU General Public License Version 3* License. Please see the [LICENSE](LICENSE) file for details. Also a complete [history of this licence](https://en.wikipedia.org/wiki/GNU_General_Public_License).

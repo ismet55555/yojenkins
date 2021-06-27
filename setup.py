@@ -89,7 +89,7 @@ setuptools.setup(
             ]
         },
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 2 - Pre-Alpha',
         'License :: OSI Approved :: Apache Software License',
         'Natural Language :: English',
         'Intended Audience :: System Administrators',
