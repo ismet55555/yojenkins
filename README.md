@@ -16,6 +16,7 @@
 
 
 2. Install `yo-jenkins`
+    - Depending on your access rights, you may need to add `--user` to the below commands
     - **Option 1:** From Python Package Index (PYPI) using `pip`
       - ```bash
         pip install yo-jenkins
@@ -24,6 +25,10 @@
    - **Option 2:** Download all files in this GitHub repository and install using the included `setup.py`
      - ```bash
          python setup.py install
+
+        - OR -
+
+         pip install .
          ```
 
 

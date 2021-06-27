@@ -3,7 +3,7 @@
 --------------------  INFO  ----------------------
 Job:        master
 Build:      41
-Folder:     doggy/cool/***REMOVED***
+Folder:     doggy/cool/prospects
 Server:     https://somejenkinsaddress.com/
 Executor:   Linux-Ubuntu-2004
 
