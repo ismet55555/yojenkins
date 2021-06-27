@@ -4,7 +4,7 @@
 
 `yo-jenkins` is a command line interface (CLI) tool to monitor, manage, and have fun with a Jenkins server.  
 
-## Installation
+# Installation
 
 1. Install system dependencies for `simpleaudio` sound Python package
    - | Platform 	| Command                                                                        	|
@@ -26,19 +26,34 @@
      - ```bash
          python setup.py install
 
-        - OR -
+        # OR
 
          pip install .
          ```
 
 
-## Jenkins Plugin Requirements
-- [Folders](https://plugins.jenkins.io/cloudbees-folder/)
-- [Next Build Number](https://plugins.jenkins.io/next-build-number/)
-- [Promoted Builds](https://plugins.jenkins.io/promoted-builds/)
+# Jenkins Plugin Requirements
+
+The following Jenkins plugin are required for `yo-jenkins` to use all its functionalities. In order to install a plugin, go to *Manage Jenkins > Manage Plugins > Available*
+- [Folders](https://plugins.jenkins.io/cloudbees-folder/) (cloudbees-folder)
+- [Next Build Number](https://plugins.jenkins.io/next-build-number/) (next-build-number)
+- [Promoted Builds](https://plugins.jenkins.io/promoted-builds/) (promoted-builds)
 
 
-## Main Menu
+# Local Jenkins Server Setup Using Docker
+
+`yo-jenkins` offers an easy way to quickly set up a local Jenkins server within a Docker container. This server is setup and ready to go to tinker with `yo-jenkins`. 
+
+**NOTE:** You must have Docker on running. See [Docker installation guide](dev_things\docker.md).
+
+Run the following command to set up a local Jenkins server:
+```bash
+yo-jenkins server server-deploy
+```
+
+Use `--help` for available options, and use `--debug` to troubleshoot any issues.
+
+# Main Menu
 
 ```txt
 
@@ -66,13 +81,14 @@ Options:
   --help         Show this message and exit.
 
 Commands:
-  auth    Manage authentication and profiles
-  build   Manage builds
-  folder  Manage folders
-  job     Manage jobs
-  node    Manage nodes
-  server  Manage server
-  stage   Manage build stages
-  step    Manage stage steps
+  auth     Manage authentication and profiles
+  build    Manage builds
+  folder   Manage folders
+  job      Manage jobs
+  node     Manage nodes
+  server   Manage server
+  stage    Manage build stages
+  step     Manage stage steps
+  utility  Utility and more
 
 ```
