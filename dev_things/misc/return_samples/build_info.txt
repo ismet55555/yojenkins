@@ -7,7 +7,7 @@
                 {
                     "_class": "hudson.model.Cause$UserIdCause",
                     "shortDescription": "Started by user Handzic, Ismet (CONT)",
-                    "userId": "***REMOVED***",
+                    "userId": "ezg822",
                     "userName": "Handzic, Ismet (CONT)"
                 }
             ]
@@ -38,7 +38,7 @@
         },
         {},
         {
-            "_class": "com.***REMOVED***.jenkins.plugins.bfa.model.FailureCauseBuildAction"
+            "_class": "com.sonyericsson.jenkins.plugins.bfa.model.FailureCauseBuildAction"
         },
         {},
         {},
@@ -65,7 +65,7 @@
     "estimatedDuration": 97975,
     "estimatedDurationFormatted": "0:01:37.975000",
     "executor": null,
-    "fullDisplayName": "***REMOVED*** \u00bb Non-Prod-Jobs \u00bb Something \u00bb test_job #32",
+    "fullDisplayName": "Non-PAR \u00bb Non-Prod-Jobs \u00bb Something \u00bb test_job #32",
     "id": "32",
     "keepLog": false,
     "number": 32,
@@ -73,5 +73,5 @@
     "result": "ABORTED",
     "startDatetime": "Thursday, March 18, 2021 11:35:27",
     "timestamp": 1616124927588,
-    "url": "https://localhost:8080/job/***REMOVED***/job/Non-Prod-Jobs/job/Something/job/test_job/32/"
+    "url": "https://localhost:8080/job/Non-PAR/job/Non-Prod-Jobs/job/Something/job/test_job/32/"
 }

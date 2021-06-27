@@ -166,7 +166,7 @@
                 ]
             },
             "remoteUrls": [
-                "git@github.com:cool/***REMOVED***.git"
+                "git@github.com:cool/prospects.git"
             ],
             "scmName": ""
         },
@@ -417,7 +417,7 @@
         {},
         {},
         {
-            "_class": "com.***REMOVED***.jenkins.plugins.bfa.model.FailureCauseBuildAction"
+            "_class": "com.sonyericsson.jenkins.plugins.bfa.model.FailureCauseBuildAction"
         },
         {},
         {},
@@ -451,7 +451,7 @@
                         "doggyfile"
                     ],
                     "author": {
-                        "absoluteUrl": "https://localhost:8080/user/***REMOVED***",
+                        "absoluteUrl": "https://localhost:8080/user/ezg822",
                         "fullName": "Handzic, Ismet (CONT)"
                     },
                     "authorEmail": "ismet.handzic@gmail.com",
@@ -474,7 +474,7 @@
     ],
     "culprits": [
         {
-            "absoluteUrl": "https://localhost:8080/user/***REMOVED***",
+            "absoluteUrl": "https://localhost:8080/user/ezg822",
             "fullName": "Handzic, Ismet (CONT)"
         }
     ],
@@ -490,16 +490,16 @@
     "keepLog": false,
     "nextBuild": {
         "number": 6,
-        "url": "https://localhost:8080/job/doggy/job/cool/job/***REMOVED***/job/master/6/"
+        "url": "https://localhost:8080/job/doggy/job/cool/job/prospects/job/master/6/"
     },
     "number": 5,
     "previousBuild": {
         "number": 4,
-        "url": "https://localhost:8080/job/doggy/job/cool/job/***REMOVED***/job/master/4/"
+        "url": "https://localhost:8080/job/doggy/job/cool/job/prospects/job/master/4/"
     },
     "queueId": 261759,
     "result": "FAILURE",
     "startDatetime": "Wednesday, March 24, 2021 02:29:40",
     "timestamp": 1616610580282,
-    "url": "https://localhost:8080/job/doggy/job/cool/job/***REMOVED***/job/master/5/"
+    "url": "https://localhost:8080/job/doggy/job/cool/job/prospects/job/master/5/"
 }

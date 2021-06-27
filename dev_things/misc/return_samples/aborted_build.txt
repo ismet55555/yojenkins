@@ -3,7 +3,7 @@
               'causes': [{'_class': 'hudson.model.Cause$UserIdCause',
                           'shortDescription': 'Started by user Handzic, Ismet '
                                               '(CONT)',
-                          'userId': '***REMOVED***',
+                          'userId': 'ezg822',
                           'userName': 'Handzic, Ismet (CONT)'}]},
              {'_class': 'com.cloudbees.plugins.deployer.DeployNowRunAction',
               'oneClickDeployPossible': False,
@@ -24,7 +24,7 @@
              {},
              {'_class': 'jenkins.model.InterruptedBuildAction'},
              {},
-             {'_class': 'com.***REMOVED***.jenkins.plugins.bfa.model.FailureCauseBuildAction'},
+             {'_class': 'com.sonyericsson.jenkins.plugins.bfa.model.FailureCauseBuildAction'},
              {},
              {},
              {},
@@ -47,7 +47,7 @@
  'estimatedDuration': 430305,
  'estimatedDurationFormatted': '0:07:10.305000',
  'executor': None,
- 'fullDisplayName': '***REMOVED*** » Non-Prod-Jobs » Something » test_job #13',
+ 'fullDisplayName': 'Non-PAR » Non-Prod-Jobs » Something » test_job #13',
  'id': '13',
  'keepLog': False,
  'number': 13,
@@ -55,4 +55,4 @@
  'result': 'ABORTED',
  'startDatetime': 'Saturday, March 06, 2021 03:52:39',
  'timestamp': 1615063959723,
- 'url': 'https://localhost:8080/job/***REMOVED***/job/Non-Prod-Jobs/job/Something/job/test_job/13/'}
+ 'url': 'https://localhost:8080/job/Non-PAR/job/Non-Prod-Jobs/job/Something/job/test_job/13/'}

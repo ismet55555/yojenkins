@@ -11,7 +11,7 @@ from pprint import pprint
 valid_urls = [
     'https://www.google.com',
     'https://localhost:8080/job/doggy/job/Transfers/job/bmm-acl/job/master/',
-    'https://***REMOVED***:5000/job/doggy/job/Transfers/job/bmm-acl/job/master/',
+    'https://retailjenkins:5000/job/doggy/job/Transfers/job/bmm-acl/job/master/',
     'https://128.0.0.1:5000/job/doggy/job/Transfers/job/bmm-acl/job/master/',
     '128.0.0.1:5000/job/doggy/job/Transfers/job/bmm-acl/job/master/',
     'http://jenksintest:5000',

@@ -2,7 +2,7 @@
 
 ----------------------  INFO  ------------------------
 Job:        master
-Folder:     doggy/cool/***REMOVED***
+Folder:     doggy/cool/prospects
 Server:     https://somejenkinsaddress.com/
 
 ---------------------  BUILDS  ----------------------
