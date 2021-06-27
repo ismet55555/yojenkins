@@ -19,7 +19,7 @@ logger.info('START')
 
 # Connecting to Jenkins (Exception handling: jenkins.JenkinsException)
 J = jenkins.Jenkins(
-    url='https://***REMOVED***.com/',
+    url='https://localhost:8080/',
     username='***REMOVED***',
     password='11e575255371c28c3f0b5482257e65a58f',
     timeout=5
@@ -47,10 +47,10 @@ print('Hello %s from Jenkins %s' % (user['fullName'], version))
 
 
 
-job_name = '***REMOVED***/Small-Business-Money-Movement/mf-status-tracker/***REMOVED***-migration-FROM-money-movement'
-# job_name = '***REMOVED***/job/Small-Business-Money-Movement/job/mf-status-tracker/job/***REMOVED***-migration-FROM-money-movement'
-job_name = "https://***REMOVED***.com/job/***REMOVED***/job/Non-Prod-Jobs/job/***REMOVED***/"
-job_name = "***REMOVED***/***REMOVED***/tools-out-of-wallet-sessions-api/master"
+job_name = 'doggy/Small-Business-Money-Movement/mf-status-tracker/doggy-migration-FROM-money-movement'
+# job_name = 'doggy/job/Small-Business-Money-Movement/job/mf-status-tracker/job/doggy-migration-FROM-money-movement'
+job_name = "https://localhost:8080/job/***REMOVED***/job/Non-Prod-Jobs/job/Something/"
+job_name = "doggy/cool/tools-out-of-wallet-sessions-api/master"
 
 
 # # See if job exists (True or None)

@@ -6,7 +6,7 @@
 
 ## Installation
 
-1. Install system dependencies for `simpleaudio` sound python package
+1. Install system dependencies for `simpleaudio` sound Python package
    - | Platform 	| Command                                                                        	|
      |----------	|--------------------------------------------------------------------------------	|
      | MacOS    	| Not needed                                                                     	|
@@ -16,15 +16,27 @@
 
 
 2. Install `yo-jenkins`
-    - **Option 1:** From Python Package Index (PYPI)
+    - Depending on your access rights, you may need to add `--user` to the below commands
+    - **Option 1:** From Python Package Index (PYPI) using `pip`
       - ```bash
         pip install yo-jenkins
         ```
 
-   - **Option 2:** Install using the included `setup.py`
+   - **Option 2:** Download all files in this GitHub repository and install using the included `setup.py`
      - ```bash
          python setup.py install
+
+        - OR -
+
+         pip install .
          ```
+
+
+## Jenkins Plugin Requirements
+- [Folders](https://plugins.jenkins.io/cloudbees-folder/)
+- [Next Build Number](https://plugins.jenkins.io/next-build-number/)
+- [Promoted Builds](https://plugins.jenkins.io/promoted-builds/)
+
 
 ## Main Menu
 

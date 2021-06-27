@@ -5,7 +5,8 @@ import logging
 import re
 from pprint import pprint
 from time import perf_counter
-from typing import Dict, List, Tuple, Type
+from typing import Dict, Tuple
+from urllib.parse import urljoin
 
 import toml
 import xmltodict
@@ -113,7 +114,7 @@ class Folder():
         if folder_name or folder_url:
             # Only recursively search the specified folder name
             logger.debug(f'Searching folder in sub-folder "{folder_name if folder_name else folder_url}"')
-            logger.debug(f'Folder depth does not apply. Only looking in this specific folder for subfolders')
+            logger.debug('Folder depth does not apply. Only looking in this specific folder for subfolders')
             items = self.item_list(folder_name=folder_name, folder_url=folder_url)[0]
         else:
             # Search entire Jenkins
@@ -378,7 +379,7 @@ class Folder():
             try:
                 with open(filepath, 'w+') as file:
                     file.write(content_to_write)
-                logger.debug(f'Successfully wrote configurations to file')
+                logger.debug('Successfully wrote configurations to file')
             except Exception as e:
                 logger.debug('Failed to write configurations to file. Exception: {e}')
                 return "", False
@@ -421,7 +422,7 @@ class Folder():
             logger.debug(f'Failed to match supported items to create: {supported_create_items}')
             return False
 
-        # Use config from file
+        # Use item configuration from file if provided
         if config:
             logger.debug(f'Opening and reading file: {config} ...')
             try:
@@ -434,14 +435,22 @@ class Folder():
         if type == 'folder':
             endpoint = f'createItem?name={name}'
             config_definition = JenkinsItemConfig.folder.value['blank'].encode('utf-8')
+            prefix = JenkinsItemClasses.folder.value['prefix']
         elif type == 'view':
             endpoint = f'createView?name={name}'
             config_definition = JenkinsItemConfig.view.value['blank'].encode('utf-8')
+            prefix = JenkinsItemClasses.view.value['prefix']
         elif type == 'job':
             endpoint = f'createItem?name={name}'
             config_definition = JenkinsItemConfig.job.value['blank'].encode('utf-8')
+            prefix = JenkinsItemClasses.job.value['prefix']
         headers = {'Content-Type': 'application/xml; charset=utf-8'}
 
+        # Checking if the item exists
+        if utility.item_exists_in_folder(name, folder_url, type, self.REST):
+            return False
+
+        # Creating the item
         logger.debug(f'Creating "{type}" item "{name}" ...')
         _, _, success = self.REST.request(f'{folder_url.strip("/")}/{endpoint}',
                                           'post',
@@ -451,6 +460,7 @@ class Folder():
         logger.debug(
             f'Successfully created "{type}" item "{name}"' if success else f'Failed to create "{type}" item "{name}"')
 
+        # Close the potentially open item configuration file
         try:
             config_file.close()
         except:
@@ -486,6 +496,9 @@ class Folder():
             logger.debug('New item name is a blank')
             return False
         if utility.has_special_char(new_name):
+            return False
+
+        if not utility.item_exists_in_folder(original_name, folder_url, "folder", self.REST):
             return False
 
         logger.debug(f'Copying original item "{original_name}" to new item "{new_name}" ...')

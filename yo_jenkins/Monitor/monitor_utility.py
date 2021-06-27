@@ -18,7 +18,7 @@ def logging_console(enabled: bool = True) -> None:
     Args:
         None
 
-    Returns: 
+    Returns:
         None
     """
     # FIXME: Instead of blindly indexing a handler, find/match the right one
@@ -62,7 +62,7 @@ def load_curses_colors_decor() -> Tuple[dict, dict]:
     Args:
         None
 
-    Returns: 
+    Returns:
         color (dict): Curses color references
         decor (dict): Curses decoration/style references
     """
@@ -130,14 +130,14 @@ def load_keys() -> dict:
     """
     Load all keyboard keys available to user in program
 
-    Usage: KEYS['DOWN']
+    Usage: ui_keys['DOWN']
 
     Args:
         None
-    Returns: 
-        KEYS (dict): Dictionary of references to curses keys
+    Returns:
+        ui_keys (dict): Dictionary of references to curses keys
     """
-    KEYS = {
+    ui_keys = {
         "ABORT": (ord('a'), ord('A')),
         "BUILD": (ord('b'), ord('B')),
         "DOWN": (curses.KEY_DOWN, ord('j')),
@@ -154,7 +154,7 @@ def load_keys() -> dict:
         "SPACE": (32, ord(' ')),
         "UP": (curses.KEY_UP, ord('k'))
     }
-    return KEYS
+    return ui_keys
 
 
 def get_center_x(scr, line: str) -> int:
@@ -164,7 +164,7 @@ def get_center_x(scr, line: str) -> int:
     Args:
         display_width (int) : The character width of the screen/space/display
         line (int)          : Line of text
-    Returns: 
+    Returns:
         (int): Horizontal character number
     """
     # Getting the screen height and width
@@ -178,7 +178,7 @@ def get_center_y(scr) -> int:
 
     Args:
         display_width (int) : The character height of the screen/space/display
-    Returns: 
+    Returns:
         (int): Vertical character number
     """
     # Getting the screen height and width
@@ -194,7 +194,7 @@ def truncate_text(text: str, length_limit: int) -> str:
     Args:
         text (str)         : The character height of the screen/space/display
         length_limit (int) : Length limit of the text
-    Returns: 
+    Returns:
         truncated_text (str): The truncated line of text
     """
     truncated_text = text
@@ -214,7 +214,7 @@ def get_message_box_size(term_height: int, term_width: int, message_lines: list)
         term_height (int)    : Number of rows/lines in terminal
         term_width (int)     : Number of columns in terminal
         message_lines (list) : Lines of text in each list item
-    Returns: 
+    Returns:
         box_height (int) : Height of message box (rows/lines)
         box_width (int)  : Width of message box (columns)
         box_y (int)      : Vertical position of box in terminal
@@ -237,7 +237,7 @@ def get_progress_bar(exam_progress: float, bar_char_width=60, bar_char_full='|',
         bar_char_width (int)  : Total width of progress bar, columns of text
         bar_char_full (str)   : Symbol for filled
         bar_char_empty (str)  : Symbol for empty
-    Returns: 
+    Returns:
         (str) : Progress bar as text
     """
     # TODO: Different colors for different parts of the progress bar somehow
@@ -261,7 +261,7 @@ def draw_screen_border(scr, color: list) -> None:
     Parameters:
         scr (obj)   : Handle for curses terminal screen handle
         color (list): Foreground and background color (ie. [250, 0])
-    Returns: 
+    Returns:
         None
     """
     scr.attron(color)
@@ -289,7 +289,7 @@ def draw_horizontal_header(scr,
         text   : (Optional) Text in center of seperator. Must be smaller than `width` (default: None)
         color  : (Optional) Foreground and background color (ie. `[250, 0]`)
 
-    Returns: 
+    Returns:
         None
     """
     # Getting the screen height and width
@@ -321,7 +321,7 @@ def draw_horizontal_seperator(scr, row: int, color: list = [], symbol: str = '-'
         color       : (Optional) Foreground and background color (ie. [250, 0])
         symbol      : (Optional) The symbol used as the seperator
         text        : (Optional) Text in center of seperator
-    Returns: 
+    Returns:
         None
     """
     # Getting the screen height and width
@@ -347,7 +347,7 @@ def draw_vertical_seperator(scr, x: int, color: list) -> None:
         scr (obj)   : Handle for curses terminal screen handle
         x (int)     : The column number from left of the screen
         color (list): Foreground and background color (ie. [250, 0])
-    Returns: 
+    Returns:
         None
     """
     # TODO: Currently unused but may come in handy
@@ -361,7 +361,7 @@ def draw_message_box(scr, message_lines: list, justify: str = 'center') -> None:
         scr (obj)            : Handle for curses terminal screen handle
         message_lines (list) : Lines of text in each list item
         justify              : Text justification. `center`, `left`
-    Returns: 
+    Returns:
         None
     """
     term_height, term_width = scr.getmaxyx()
@@ -411,7 +411,7 @@ def draw_text(scr,
         decor    : Decoration of text
         center_y : Vertically center the text on screen
         center_x : Horizontally center the text on screen
-    Returns: 
+    Returns:
         None
     """
     # Set to default color and decor if not passed
@@ -428,7 +428,7 @@ def draw_text(scr,
     if center_x and not x:
         x = get_center_x(scr, text)
     if center_y and not y:
-        y = get_center_y(scr, text)
+        y = get_center_y(scr)
 
     # Draw
     scr.addstr(y, x, text, color | decor)
@@ -444,7 +444,7 @@ def paint_background(scr, color: int = 0) -> None:
     Args:
         scr   : Handle for curses terminal screen handle
         color : Color index (0 - 255) (default: 0 - black)
-    Returns: 
+    Returns:
         None
     """
     # Getting the screen height and width

@@ -32,7 +32,7 @@ def set_debug_log_level(debug_flag: bool) -> None:
     """
     if debug_flag:
         logging_level = logging.DEBUG
-        click.echo(click.style(f'\n[ LOGGING LEVEL ] : DEBUG\n', fg='bright_yellow', bold=True))
+        click.echo(click.style('\n[ LOGGING LEVEL ] : DEBUG\n', fg='bright_yellow', bold=True))
         line = '[  TIME  ] [ MS ] [FILENAME              :  LN] MESSAGE'
         click.echo(click.style(line, fg='bright_yellow', bold=True))
         line = '---------------------------------------------------------------------------'
@@ -62,7 +62,7 @@ def platform_information() -> None:
     python_rev = f'(REV:{platform.python_revision()})' if platform.python_revision() else ''
 
     # System information
-    logger.debug(f'System information:')
+    logger.debug('System information:')
     logger.debug(f'    - System:    {platform.system()}')
     logger.debug(f'    - Release:   {platform.uname().release}')
     logger.debug(f'    - Version:   {platform.version()}')
@@ -71,7 +71,7 @@ def platform_information() -> None:
     logger.debug(f'    - Python:    {platform.python_version()} {python_rev}')
 
 
-def config_YoJenkins(profile: str) -> Type[YoJenkins]:
+def config_yo_jenkins(profile: str) -> Type[YoJenkins]:
     """TODO Docstring
 
     Args:
@@ -86,12 +86,12 @@ def config_YoJenkins(profile: str) -> Type[YoJenkins]:
 
     # Get the credential profile
     if not Auth_obj.get_configurations(profile):
-        click.echo(click.style(f'Failed to find any credentials', fg='bright_red', bold=True))
+        click.echo(click.style('Failed to find any credentials', fg='bright_red', bold=True))
         sys.exit(1)
 
     # Create authentication
     if not Auth_obj.create_auth():
-        click.echo(click.style(f'Failed authentication', fg='bright_red', bold=True))
+        click.echo(click.style('Failed authentication', fg='bright_red', bold=True))
         sys.exit(1)
 
     return YoJenkins(Auth_obj)
@@ -111,7 +111,7 @@ def standard_out(data: dict,
         TODO
     """
     # Strip away any empty items in the iterable data
-    logger.debug(f'Removing all empty items in iterable data ...')
+    logger.debug('Removing all empty items in iterable data ...')
     data = iter_data_empty_item_stripper(data)
 
     if opt_pretty:
@@ -122,7 +122,10 @@ def standard_out(data: dict,
         if isinstance(data, dict) or isinstance(data, list):
             data = readfromstring(json.dumps(data))
             data_xml = json2xml.Json2xml(data, pretty=opt_pretty).to_xml()
-            print(data_xml) if opt_pretty else print(data_xml.decode())
+            if opt_pretty:
+                print(data_xml)
+            else:
+                print(data_xml.decode())
         else:
             # When configs are fetched in XML format
             print(data)

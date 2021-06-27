@@ -14,10 +14,7 @@ from yo_jenkins.cli.cli_utility import set_debug_log_level
 logger = logging.getLogger()
 
 if sys.version_info < (3, 7):
-    click.echo(
-        click.style(f'Your Python version ({sys.version_info.major}.{sys.version_info.minor}) is not supported',
-                    fg='bright_red',
-                    bold=True))
+    click.echo(click.style('Your Python version ({}.{}) is not supported'.format(sys.version_info.major, sys.version_info.minor), fg='bright_red', bold=True))
     click.echo(click.style('Must have Python 3.7 or higher', fg='bright_red', bold=True))
     sys.exit(1)
 
@@ -1024,6 +1021,56 @@ def info(ctx, debug, pretty, yaml, xml, toml, profile, url):
         cli_step.info(pretty, yaml, xml, toml, profile, url)
     else:
         click.echo(ctx.get_help())
+
+
+##############################################################################
+#                             UTILITY
+##############################################################################
+@main.group(short_help='\tUtility and more')
+def utility():
+    """UTILITY AND MORE"""
+    pass
+
+@utility.command(short_help='\tShow the manual')
+@cli_decorators.debug
+def manual(ctx, debug):
+    set_debug_log_level(debug)
+    click.echo(click.style('TODO', fg='yellow',))
+
+
+@utility.command(short_help='\tUpdate yo-jenkins')
+@cli_decorators.debug
+def update(ctx, debug):
+    set_debug_log_level(debug)
+    click.echo(click.style('TODO', fg='yellow',))
+
+@utility.command(short_help='\tReport a bug')
+@cli_decorators.debug
+def bug_report(ctx, debug):
+    set_debug_log_level(debug)
+    click.echo(click.style('TODO', fg='yellow',))
+
+@utility.command(short_help='\tRequest a feature')
+@cli_decorators.debug
+def feature_request(ctx, debug):
+    set_debug_log_level(debug)
+    click.echo(click.style('TODO', fg='yellow',))
+
+@utility.command(short_help='\tShow the command history for each profile')
+@cli_decorators.debug
+@cli_decorators.profile
+def history(ctx, debug, profile):
+    set_debug_log_level(debug)
+    click.echo(click.style('TODO', fg='yellow',))
+
+@utility.command(short_help='\tSend a generic REST request to server')
+@cli_decorators.debug
+@cli_decorators.profile
+def rest_request(ctx, debug, profile):
+    set_debug_log_level(debug)
+    click.echo(click.style('TODO', fg='yellow',))
+
+
 
 
 ##############################################################################

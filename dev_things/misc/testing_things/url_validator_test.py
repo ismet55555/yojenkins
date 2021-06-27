@@ -10,10 +10,10 @@ from pprint import pprint
 
 valid_urls = [
     'https://www.google.com',
-    'https://***REMOVED***.com/job/***REMOVED***/job/Transfers/job/bmm-acl/job/master/',
-    'https://retailjenkins:5000/job/***REMOVED***/job/Transfers/job/bmm-acl/job/master/',
-    'https://128.0.0.1:5000/job/***REMOVED***/job/Transfers/job/bmm-acl/job/master/',
-    '128.0.0.1:5000/job/***REMOVED***/job/Transfers/job/bmm-acl/job/master/',
+    'https://localhost:8080/job/doggy/job/Transfers/job/bmm-acl/job/master/',
+    'https://retailjenkins:5000/job/doggy/job/Transfers/job/bmm-acl/job/master/',
+    'https://128.0.0.1:5000/job/doggy/job/Transfers/job/bmm-acl/job/master/',
+    '128.0.0.1:5000/job/doggy/job/Transfers/job/bmm-acl/job/master/',
     'http://jenksintest:5000',
     'http://jenksintest:5000',
     'udp://jenksintest:5000',

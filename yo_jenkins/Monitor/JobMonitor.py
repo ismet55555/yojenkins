@@ -8,10 +8,9 @@ import threading
 from datetime import datetime
 from pprint import pprint
 from time import perf_counter, sleep, time
-from typing import Dict, List, Tuple, Type
 
 from yo_jenkins.Monitor.Monitor import Monitor
-from yo_jenkins.YoJenkins.Status import (BuildStatus, Color, Sound, StageStatus, Status)
+from yo_jenkins.YoJenkins.Status import BuildStatus
 
 from . import monitor_utility as mu
 
@@ -81,7 +80,7 @@ class JobMonitor(Monitor):
 
         # Setting up basic stuff for curses and load keys
         self.basic_screen_setup(halfdelay=True)
-        KEYS = mu.load_keys()
+        ui_keys = mu.load_keys()
 
         # User key input (ASCII value)
         keystroke = 0
@@ -99,18 +98,18 @@ class JobMonitor(Monitor):
             ########################################################################################
 
             # Check user keyboard input
-            if keystroke in KEYS['QUIT']:
+            if keystroke in ui_keys['QUIT']:
                 self.quit += 1
-            elif keystroke in KEYS['BUILD']:
+            elif keystroke in ui_keys['BUILD']:
                 self.job_build += 1
-            elif keystroke in KEYS['RESUME']:
+            elif keystroke in ui_keys['RESUME']:
                 self.quit = 0
                 self.job_build = 0
-            elif keystroke in KEYS['PAUSE']:
+            elif keystroke in ui_keys['PAUSE']:
                 self.paused = not self.paused
-            elif keystroke in KEYS['HELP']:
+            elif keystroke in ui_keys['HELP']:
                 self.help = not self.help
-            elif keystroke in KEYS['OPEN']:
+            elif keystroke in ui_keys['OPEN']:
                 if job_url:
                     self.Job.browser_open(job_url=job_url)
 
@@ -126,36 +125,36 @@ class JobMonitor(Monitor):
             ########################################################################################
 
             # TOP HEADER
-            y = 1
+            y_row = 1
 
             if logger.level < 20:
                 pass
             else:
                 mu.draw_text(scr,
                              'JOB MONITOR',
-                             y,
+                             y_row,
                              center_x=True,
                              color=self.color['grey-light'],
                              decor=self.decor['bold'])
 
-            y += 1
+            y_row += 1
 
             # Draw header divider
-            mu.draw_horizontal_seperator(scr, y, self.color['grey-dark'])
-            y += 2
+            mu.draw_horizontal_seperator(scr, y_row, self.color['grey-dark'])
+            y_row += 2
 
             ########################################################################################
 
             # INFO SECTION
-            x = [3, 16]
+            x_col = [3, 16]
             if self.job_info_data:
                 # Get the job_url
                 job_url = self.job_info_data['url']
 
                 # INFO
-                mu.draw_horizontal_header(scr, y, x[0], term_width - 5, '-', 'INFO',
+                mu.draw_horizontal_header(scr, y_row, x_col[0], term_width - 5, '-', 'INFO',
                                           self.color['normal'] | self.decor['bold'])
-                y += 1
+                y_row += 1
 
                 job_info_items = {
                     'Job': self.job_info_data['displayName'],
@@ -163,32 +162,37 @@ class JobMonitor(Monitor):
                     'Server': self.job_info_data['serverURL'],
                 }
                 for i, (key, value) in enumerate(job_info_items.items()):
-                    mu.draw_text(scr, f'{key}:', y, x[0], decor=self.decor['bold'])
-                    mu.draw_text(scr, mu.truncate_text(f'{value}', term_width - 5 - 12), y, x[1])
-                    y += 1
-                y += 1
+                    mu.draw_text(scr, f'{key}:', y_row, x_col[0], decor=self.decor['bold'])
+                    mu.draw_text(scr, mu.truncate_text(f'{value}', term_width - 5 - 12), y_row, x_col[1])
+                    y_row += 1
+                y_row += 1
             else:
-                y += 3
-                mu.draw_text(scr, 'NO DATA', y, center_x=True, color=self.color['normal'], decor=self.decor['bold'])
-                y += 2
+                y_row += 3
                 mu.draw_text(scr,
-                             'ಠ_ಠ  ¯\_(⊙︿⊙)_/¯',
-                             y,
+                             'NO DATA',
+                             y_row,
                              center_x=True,
                              color=self.color['normal'],
                              decor=self.decor['bold'])
-            y += 1
+                y_row += 2
+                mu.draw_text(scr,
+                             'ಠ_ಠ  ¯\_(⊙︿⊙)_/¯',
+                             y_row,
+                             center_x=True,
+                             color=self.color['normal'],
+                             decor=self.decor['bold'])
+            y_row += 1
 
             ########################################################################################
 
             # BUILDS SECTION
             if self.job_info_data and self.builds_data:
-                x = [3, 12, 32, 52]
+                x_col = [3, 12, 32, 52]
 
                 # Header
-                mu.draw_horizontal_header(scr, y, x[0], term_width - 5, '-', 'BUILDS',
+                mu.draw_horizontal_header(scr, y_row, x_col[0], term_width - 5, '-', 'BUILDS',
                                           self.color['normal'] | self.decor['bold'])
-                y += 1
+                y_row += 1
 
                 # Loop through all listed builds
                 for i, build in enumerate(self.builds_data):
@@ -196,18 +200,18 @@ class JobMonitor(Monitor):
 
                     # Build name
                     line = build["displayName"] if "displayName" in build else build["number"]
-                    mu.draw_text(scr, f'{build["displayName"]}', y, x[0])
+                    mu.draw_text(scr, f'{build["displayName"]}', y_row, x_col[0])
 
                     # Datetime
                     line = datetime.fromtimestamp(build['timestamp'] / 1000.0).strftime("%m/%d - %H:%M")
-                    mu.draw_text(scr, line, y, x[1])
+                    mu.draw_text(scr, line, y_row, x_col[1])
 
                     # Build Run duration
                     if build['durationFormatted'] != None:
                         line = build['durationFormatted']
                     else:
                         line = build['elapsedFormatted']
-                    mu.draw_text(scr, line, y, x[2])
+                    mu.draw_text(scr, line, y_row, x_col[2])
 
                     # Build Status
                     if 'resultText' in build and build['resultText'] != None:
@@ -215,22 +219,22 @@ class JobMonitor(Monitor):
                     else:
                         line = BuildStatus.unknown.value
                     status_color = self.status_to_color(line)
-                    mu.draw_text(scr, line, y, x[3], color=self.color[status_color])
+                    mu.draw_text(scr, line, y_row, x_col[3], color=self.color[status_color])
 
                     # Return down
-                    y += 1
+                    y_row += 1
             else:
                 # Change the minimum window height limit (no stages section)
                 self.height_limit = 17
 
             # Divider
-            y = term_height - 4
-            mu.draw_horizontal_seperator(scr, y, self.color['grey-dark'])
+            y_row = term_height - 4
+            mu.draw_horizontal_seperator(scr, y_row, self.color['grey-dark'])
 
             ########################################################################################
 
             # SERVER STATUS
-            y = term_height - 3
+            y_row = term_height - 3
             if self.server_status_data:
                 auth_status = False if 'auth' not in self.server_status_data else self.server_status_data["auth"]
                 reach_status = False if 'reachable' not in self.server_status_data else self.server_status_data[
@@ -238,13 +242,13 @@ class JobMonitor(Monitor):
                 line = f'Server Status: Reachable: {reach_status}, Authenticated: {auth_status}'
             else:
                 line = f'Server Status: NO DATA'
-            mu.draw_text(scr, line, y, center_x=True, color=self.color['grey-dark'])
+            mu.draw_text(scr, line, y_row, center_x=True, color=self.color['grey-dark'])
 
             ########################################################################################
 
             # User key input instructions
-            y = term_height - 2
-            mu.draw_text(scr, 'Press "H" for keyboard shortcuts', y, center_x=True, color=self.color['grey-dark'])
+            y_row = term_height - 2
+            mu.draw_text(scr, 'Press "H" for keyboard shortcuts', y_row, center_x=True, color=self.color['grey-dark'])
 
             ########################################################################################
 

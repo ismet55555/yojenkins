@@ -6,6 +6,7 @@ import re
 import site
 import sysconfig
 import webbrowser
+from pathlib import Path
 from typing import Dict, List, Tuple
 from urllib.parse import urljoin, urlparse
 
@@ -61,11 +62,11 @@ def load_contents_from_remote_yaml_file_url(remote_file_url: str, allow_redirect
     # Get request headers
     logger.debug(f'Getting remote file HTTP request headers for "{remote_file_url}" ...')
     try:
-        h = requests.head(remote_file_url)
+        return_content = requests.head(remote_file_url)
     except Exception as e:
         logger.debug(f'Failed to request headers. Exception: {e}')
         return {}
-    header = h.headers
+    header = return_content.headers
 
     # Check if file is below size limit
     content_length = int(header['Content-length']) / 1000000
@@ -126,13 +127,13 @@ def append_lines_to_beginning_of_file(filepath: str, lines_to_append: List[str])
     # TODO: Check if file exists
     logger.debug(f'Appending lines of text to the beginning of file: {filepath} ...')
     try:
-        f = open(filepath, 'r+')
-        lines_old = f.readlines()  # read old content
+        open_file = open(filepath, 'r+')
+        lines_old = open_file.readlines()  # read old content
         lines = lines_to_append + lines_old
-        f.seek(0)
+        open_file.seek(0)
         for line in lines:
-            f.write(line)
-        f.close()
+            open_file.write(line)
+        open_file.close()
     except Exception as e:
         # TODO: Specify exception
         logger.error(f'Failed to append lines of text to the beginning of file ({filepath}). Exception: {e}')
@@ -207,7 +208,7 @@ def format_name(name: str) -> str:
     """Format / clean up the passed name
 
     Details: The formatting includes it:
-        - /***REMOVED***/job/Non-Prod-Jobs/job/***REMOVED***/job/job --> /***REMOVED***/Non-Prod-Jobs/***REMOVED***/job
+        - /***REMOVED***/job/Non-Prod-Jobs/job/Something/job/job --> /***REMOVED***/Non-Prod-Jobs/Something/job
         - remove `job/`, `view/`, `change-requests/` 
         - remove leading or trailing `/`
 
@@ -554,7 +555,7 @@ def queue_find(all_queue_info: dict, job_name: str = '', job_url: str = '', firs
                 break
 
     if not queue_item_matches:
-        logger.debug(f'Failed to find job in build queue')
+        logger.debug('Failed to find job in build queue')
 
     return queue_item_matches
 
@@ -604,23 +605,48 @@ def get_resource_dir(project_dir: str = 'yo_jenkins', sample_path: str = 'sound'
     }
 
     dirs = []
-    for v in possible_dirs.values():
-        if isinstance(v, list):
-            dirs.extend(v)
+    for possible_dir in possible_dirs.values():
+        if isinstance(possible_dir, list):
+            dirs.extend(possible_dir)
         else:
-            dirs.append(v)
+            dirs.append(possible_dir)
 
-    logger.debug(f'Searching project resource directory ...')
+    logger.debug('Searching project resource directory ...')
     resource_dir_path = ''
-    for dir in dirs:
-        if os.path.exists(os.path.join(dir, project_dir, sample_path)):
-            resource_dir_path = os.path.join(dir, project_dir)
-            logger.debug(f'    - {dir} - FOUND')
+    for d in dirs:
+        if os.path.exists(os.path.join(d, project_dir, sample_path)):
+            resource_dir_path = os.path.join(d, project_dir)
+            logger.debug(f'    - {d} - FOUND')
             break
-        logger.debug(f'    - {dir} - NOT FOUND')
+        logger.debug(f'    - {d} - NOT FOUND')
 
     if not resource_dir_path:
-        logger.debug(f'Failed to find included data directory')
+        logger.debug('Failed to find included data directory')
         return ''
 
     return resource_dir_path
+
+
+def item_exists_in_folder(item_name: str, folder_url: str, item_type: str, REST: object):
+    """Checking if the item exists within the specified folder
+
+    Args:
+        TODO
+
+    Returns:
+        TODO
+    """
+    item_type_info = getattr(JenkinsItemClasses, item_type)
+    prefix = item_type_info.value['prefix']
+
+    item_url = urljoin(folder_url, f'{prefix}/{item_name}')
+
+    logger.debug(f'Checking if {item_type} "{item_name}" already exists within folder "{folder_url}" ...')
+    item_exists = REST.request(f'{item_url.strip("/")}/api/json', 'head', is_endpoint=False)[2]
+    if item_exists:
+        logger.debug(f'Found existing {item_type} "{item_name}" within "{folder_url}"')
+        return True
+    else:
+        logger.debug(f'Did not found {item_type} "{item_name}" within "{folder_url}"')
+
+    return item_exists

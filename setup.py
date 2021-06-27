@@ -7,13 +7,15 @@ from pprint import pprint
 import setuptools
 
 # Package version number (Updated via bump2version tool)
-__version__ = "0.0.23"
+__version__ = "0.0.26"
 
 def check_py_version():
     """Check the python version"""
     if sys.version_info < (3, 7):
-        print(f'Your Python version ({sys.version_info.major}.{sys.version_info.minor}) is not supported')
-        print('Must have Python 3.7 or higher')
+        print('Your Python version ({}.{}) is not supported'.format(sys.version_info.major, sys.version_info.minor))
+        print('Must have Python version 3.7 or higher')
+        if sys.version_info.major < 3:
+            print('You may have used "python" where you needed to use "python3"?')
         sys.exit(1)
 
 def get_requirements():

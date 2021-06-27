@@ -24,17 +24,17 @@ def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profil
     """
     if job and not build_number and not latest:
         click.echo(
-            click.style(f'INPUT ERROR: For job, either specify --number or --latest. See --help',
+            click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
                         fg='bright_red',
                         bold=True))
         sys.exit(1)
 
-    JY = cu.config_YoJenkins(profile)
+    jy_obj = cu.config_yo_jenkins(profile)
 
     # Verify URLs
     if build_url:
         if not cu.is_full_url(build_url):
-            click.echo(click.style(f'build url not formatted correctly', fg='bright_red', bold=True))
+            click.echo(click.style('build url not formatted correctly', fg='bright_red', bold=True))
             sys.exit(1)
         valid_url_format = True
     else:
@@ -42,12 +42,12 @@ def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profil
 
     # Request the data
     if valid_url_format:
-        data = JY.Build.info(build_url=build_url, job_url=job, build_number=build_number, latest=latest)
+        data = jy_obj.Build.info(build_url=build_url, job_url=job, build_number=build_number, latest=latest)
     else:
-        data = JY.Build.info(build_url=build_url, job_name=job, build_number=build_number, latest=latest)
+        data = jy_obj.Build.info(build_url=build_url, job_name=job, build_number=build_number, latest=latest)
 
     if not data:
-        click.echo(click.style(f'No build information', fg='bright_red', bold=True))
+        click.echo(click.style('no build information', fg='bright_red', bold=True))
         sys.exit(1)
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
@@ -63,17 +63,17 @@ def status(profile: str, job: str, build_number: int, build_url: str, latest: bo
     """
     if job and not build_number and not latest:
         click.echo(
-            click.style(f'INPUT ERROR: For job, either specify --number or --latest. See --help',
+            click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
                         fg='bright_red',
                         bold=True))
         sys.exit(1)
 
-    JY = cu.config_YoJenkins(profile)
+    jy_obj = cu.config_yo_jenkins(profile)
 
     # Verify URLs
     if build_url:
         if not cu.is_full_url(build_url):
-            click.echo(click.style(f'build url not formatted correctly', fg='bright_red', bold=True))
+            click.echo(click.style('build url not formatted correctly', fg='bright_red', bold=True))
             sys.exit(1)
         valid_url_format = True
     else:
@@ -81,12 +81,12 @@ def status(profile: str, job: str, build_number: int, build_url: str, latest: bo
 
     # Request the data
     if valid_url_format:
-        data = JY.Build.status_text(build_url=build_url, job_url=job, build_number=build_number, latest=latest)
+        data = jy_obj.Build.status_text(build_url=build_url, job_url=job, build_number=build_number, latest=latest)
     else:
-        data = JY.Build.status_text(build_url=build_url, job_name=job, build_number=build_number, latest=latest)
+        data = jy_obj.Build.status_text(build_url=build_url, job_name=job, build_number=build_number, latest=latest)
 
     if not data:
-        click.echo(click.style(f'No status found', fg='bright_red', bold=True))
+        click.echo(click.style('No status found', fg='bright_red', bold=True))
         sys.exit(1)
 
     # Color for output
@@ -116,17 +116,17 @@ def abort(profile: str, job: str, build_number: int, build_url: str, latest: boo
     """
     if job and not build_number and not latest:
         click.echo(
-            click.style(f'INPUT ERROR: For job, either specify --number or --latest. See --help',
+            click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
                         fg='bright_red',
                         bold=True))
         sys.exit(1)
 
-    JY = cu.config_YoJenkins(profile)
+    jy_obj = cu.config_yo_jenkins(profile)
 
     # Verify URLs
     if build_url:
         if not cu.is_full_url(build_url):
-            click.echo(click.style(f'build url not formatted correctly', fg='bright_red', bold=True))
+            click.echo(click.style('build url not formatted correctly', fg='bright_red', bold=True))
             sys.exit(1)
         valid_url_format = True
     else:
@@ -134,15 +134,15 @@ def abort(profile: str, job: str, build_number: int, build_url: str, latest: boo
 
     # Request the data
     if valid_url_format:
-        data = JY.Build.abort(build_url=build_url, job_url=job, build_number=build_number, latest=latest)
+        data = jy_obj.Build.abort(build_url=build_url, job_url=job, build_number=build_number, latest=latest)
     else:
-        data = JY.Build.abort(build_url=build_url, job_name=job, build_number=build_number, latest=latest)
+        data = jy_obj.Build.abort(build_url=build_url, job_name=job, build_number=build_number, latest=latest)
 
     if not data:
-        click.echo(click.style(f'Failed to abort build', fg='bright_red', bold=True))
+        click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
 
-    click.echo(click.style(f'{data}', fg='bright_green', bold=True))
+    click.echo(click.style('success', fg='bright_green', bold=True))
 
 
 def delete(profile: str, job: str, build_number: int, build_url: str, latest: bool) -> None:
@@ -156,17 +156,17 @@ def delete(profile: str, job: str, build_number: int, build_url: str, latest: bo
     """
     if job and not build_number and not latest:
         click.echo(
-            click.style(f'INPUT ERROR: For job, either specify --number or --latest. See --help',
+            click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
                         fg='bright_red',
                         bold=True))
         sys.exit(1)
 
-    JY = cu.config_YoJenkins(profile)
+    jy_obj = cu.config_yo_jenkins(profile)
 
     # Verify URLs
     if build_url:
         if not cu.is_full_url(build_url):
-            click.echo(click.style(f'build url not formatted correctly', fg='bright_red', bold=True))
+            click.echo(click.style('build url not formatted correctly', fg='bright_red', bold=True))
             sys.exit(1)
         valid_url_format = True
     else:
@@ -174,15 +174,15 @@ def delete(profile: str, job: str, build_number: int, build_url: str, latest: bo
 
     # Request the data
     if valid_url_format:
-        data = JY.Build.delete(build_url=build_url, job_url=job, build_number=build_number, latest=latest)
+        data = jy_obj.Build.delete(build_url=build_url, job_url=job, build_number=build_number, latest=latest)
     else:
-        data = JY.Build.delete(build_url=build_url, job_name=job, build_number=build_number, latest=latest)
+        data = jy_obj.Build.delete(build_url=build_url, job_name=job, build_number=build_number, latest=latest)
 
     if not data:
-        click.echo(click.style(f'Failed to delete build', fg='bright_red', bold=True))
+        click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
 
-    click.echo(click.style(f'{data}', fg='bright_green', bold=True))
+    click.echo(click.style('{data}', fg='bright_green', bold=True))
 
 
 def stages(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, opt_list: bool, job: str,
@@ -197,17 +197,17 @@ def stages(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, prof
     """
     if job and not build_number and not latest:
         click.echo(
-            click.style(f'INPUT ERROR: For job, either specify --number or --latest. See --help',
+            click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
                         fg='bright_red',
                         bold=True))
         sys.exit(1)
 
-    JY = cu.config_YoJenkins(profile)
+    jy_obj = cu.config_yo_jenkins(profile)
 
     # Verify URLs
     if build_url:
         if not cu.is_full_url(build_url):
-            click.echo(click.style(f'build url not formatted correctly', fg='bright_red', bold=True))
+            click.echo(click.style('build url not formatted correctly', fg='bright_red', bold=True))
             sys.exit(1)
         valid_url_format = True
     else:
@@ -215,18 +215,18 @@ def stages(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, prof
 
     # Request the data
     if valid_url_format:
-        data, data_list = JY.Build.stage_list(build_url=build_url,
-                                              job_url=job,
-                                              build_number=build_number,
-                                              latest=latest)
+        data, data_list = jy_obj.Build.stage_list(build_url=build_url,
+                                                  job_url=job,
+                                                  build_number=build_number,
+                                                  latest=latest)
     else:
-        data, data_list = JY.Build.stage_list(build_url=build_url,
-                                              job_name=job,
-                                              build_number=build_number,
-                                              latest=latest)
+        data, data_list = jy_obj.Build.stage_list(build_url=build_url,
+                                                  job_name=job,
+                                                  build_number=build_number,
+                                                  latest=latest)
 
     if not data:
-        click.echo(click.style(f'Failed to get build stages', fg='bright_red', bold=True))
+        click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
 
     data = data_list if opt_list else data
@@ -245,17 +245,17 @@ def logs(profile: str, job: str, build_number: int, build_url: str, latest: bool
     """
     if job and not build_number and not latest:
         click.echo(
-            click.style(f'INPUT ERROR: For job, either specify --number or --latest. See --help',
+            click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
                         fg='bright_red',
                         bold=True))
         sys.exit(1)
 
-    JY = cu.config_YoJenkins(profile)
+    jy_obj = cu.config_yo_jenkins(profile)
 
     # Verify URLs
     if build_url:
         if not cu.is_full_url(build_url):
-            click.echo(click.style(f'build url not formatted correctly', fg='bright_red', bold=True))
+            click.echo(click.style('build url not formatted correctly', fg='bright_red', bold=True))
             sys.exit(1)
         valid_url_format = True
     else:
@@ -263,28 +263,28 @@ def logs(profile: str, job: str, build_number: int, build_url: str, latest: bool
 
     # Request the data
     if valid_url_format:
-        data = JY.Build.logs(build_url=build_url,
-                             job_url=job,
-                             build_number=build_number,
-                             latest=latest,
-                             tail=tail,
-                             download_dir=download_dir,
-                             follow=follow)
+        data = jy_obj.Build.logs(build_url=build_url,
+                                 job_url=job,
+                                 build_number=build_number,
+                                 latest=latest,
+                                 tail=tail,
+                                 download_dir=download_dir,
+                                 follow=follow)
     else:
-        data = JY.Build.logs(build_url=build_url,
-                             job_name=job,
-                             build_number=build_number,
-                             latest=latest,
-                             tail=tail,
-                             download_dir=download_dir,
-                             follow=follow)
+        data = jy_obj.Build.logs(build_url=build_url,
+                                 job_name=job,
+                                 build_number=build_number,
+                                 latest=latest,
+                                 tail=tail,
+                                 download_dir=download_dir,
+                                 follow=follow)
 
     if not data:
-        click.echo(click.style(f'failed', fg='bright_red', bold=True))
+        click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
 
     if download_dir:
-        click.echo(click.style(f'success', fg='bright_green', bold=True))
+        click.echo(click.style('success', fg='bright_green', bold=True))
 
 
 def browser(profile: str, job: str, build_number: int, build_url: str, latest: bool) -> None:
@@ -298,17 +298,17 @@ def browser(profile: str, job: str, build_number: int, build_url: str, latest: b
     """
     if job and not build_number and not latest:
         click.echo(
-            click.style(f'INPUT ERROR: For job, either specify --number or --latest. See --help',
+            click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
                         fg='bright_red',
                         bold=True))
         sys.exit(1)
 
-    JY = cu.config_YoJenkins(profile)
+    jy_obj = cu.config_yo_jenkins(profile)
 
     # Verify URLs
     if build_url:
         if not cu.is_full_url(build_url):
-            click.echo(click.style(f'build url not formatted correctly', fg='bright_red', bold=True))
+            click.echo(click.style('build url not formatted correctly', fg='bright_red', bold=True))
             sys.exit(1)
         valid_url_format = True
     else:
@@ -316,12 +316,12 @@ def browser(profile: str, job: str, build_number: int, build_url: str, latest: b
 
     # Request the data
     if valid_url_format:
-        data = JY.Build.browser_open(build_url=build_url, job_url=job, build_number=build_number, latest=latest)
+        data = jy_obj.Build.browser_open(build_url=build_url, job_url=job, build_number=build_number, latest=latest)
     else:
-        data = JY.Build.browser_open(build_url=build_url, job_name=job, build_number=build_number, latest=latest)
+        data = jy_obj.Build.browser_open(build_url=build_url, job_name=job, build_number=build_number, latest=latest)
 
     if not data:
-        click.echo(click.style(f'failed', fg='bright_red', bold=True))
+        click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
 
 
@@ -336,17 +336,17 @@ def monitor(profile: str, job: str, build_number: int, build_url: str, latest: b
     """
     if job and not build_number and not latest:
         click.echo(
-            click.style(f'INPUT ERROR: For job, either specify --number or --latest. See --help',
+            click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
                         fg='bright_red',
                         bold=True))
         sys.exit(1)
 
-    JY = cu.config_YoJenkins(profile)
+    jy_obj = cu.config_yo_jenkins(profile)
 
     # Verify URLs
     if build_url:
         if not cu.is_full_url(build_url):
-            click.echo(click.style(f'build url not formatted correctly', fg='bright_red', bold=True))
+            click.echo(click.style('build url not formatted correctly', fg='bright_red', bold=True))
             sys.exit(1)
         valid_url_format = True
     else:
@@ -354,18 +354,18 @@ def monitor(profile: str, job: str, build_number: int, build_url: str, latest: b
 
     # Request the data
     if valid_url_format:
-        data = JY.Build.monitor(build_url=build_url,
-                                job_url=job,
-                                build_number=build_number,
-                                latest=latest,
-                                sound=sound)
+        data = jy_obj.Build.monitor(build_url=build_url,
+                                    job_url=job,
+                                    build_number=build_number,
+                                    latest=latest,
+                                    sound=sound)
     else:
-        data = JY.Build.monitor(build_url=build_url,
-                                job_name=job,
-                                build_number=build_number,
-                                latest=latest,
-                                sound=sound)
+        data = jy_obj.Build.monitor(build_url=build_url,
+                                    job_name=job,
+                                    build_number=build_number,
+                                    latest=latest,
+                                    sound=sound)
 
     if not data:
-        click.echo(click.style(f'failed', fg='bright_red', bold=True))
+        click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)

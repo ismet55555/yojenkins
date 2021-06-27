@@ -28,10 +28,9 @@ def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profil
     Returns:
         TODO
     """
-    JY = cu.config_YoJenkins(profile)
-    data = JY.Server.info()
+    data = cu.config_yo_jenkins(profile).Server.info()
     if not data:
-        click.echo(click.style(f'No server information', fg='bright_red', bold=True))
+        click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
@@ -47,10 +46,9 @@ def people(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, prof
     Returns:
         TODO
     """
-    JY = cu.config_YoJenkins(profile)
-    data, data_list = JY.Server.people()
+    data, data_list = cu.config_yo_jenkins(profile).Server.people()
     if not data:
-        click.echo(click.style(f'failed', fg='bright_red', bold=True))
+        click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
     data = data_list if opt_list else data
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
@@ -67,13 +65,13 @@ def queue(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profi
     Returns:
         TODO
     """
-    JY = cu.config_YoJenkins(profile)
+    yj = cu.config_yo_jenkins(profile)
     if opt_list:
-        data = JY.Server.queue_list()  # TODO: Combine with server_queue_list adding a list argument
+        data = yj.Server.queue_list()  # TODO: Combine with server_queue_list adding a list argument
     else:
-        data = JY.Server.queue_info()
+        data = yj.Server.queue_info()
     if not data:
-        click.echo(click.style(f'No build queue found', fg='bright_red', bold=True))
+        click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
@@ -89,12 +87,10 @@ def plugins(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, pro
     Returns:
         TODO
     """
-    JY = cu.config_YoJenkins(profile)
-    data, data_list = JY.Server.plugin_list()
+    data, data_list = cu.config_yo_jenkins(profile).Server.plugin_list()
     if not data:
-        click.echo(click.style(f'No server plugin info found', fg='bright_red', bold=True))
+        click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
-
     data = data_list if opt_list else data
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
@@ -108,10 +104,9 @@ def browser(profile: str) -> None:
     Returns:
         TODO
     """
-    JY = cu.config_YoJenkins(profile)
-    data = JY.Server.browser_open()
+    data = cu.config_yo_jenkins(profile).Server.browser_open()
     if not data:
-        click.echo(click.style(f'failed', fg='bright_red', bold=True))
+        click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
 
 
@@ -126,13 +121,12 @@ def reachable(profile: str, timeout: int) -> None:
     Returns:
         TODO
     """
-    A = Auth()
-    if not A.get_configurations(profile):
-        click.echo(click.style(f'Failed to find any credentials', fg='bright_red', bold=True))
+    auth = Auth()
+    if not auth.get_configurations(profile):
+        click.echo(click.style('failed to find any credentials', fg='bright_red', bold=True))
         sys.exit(1)
-    JY = YoJenkins(Auth_obj=A)
-    if not JY.REST.is_reachable(A.jenkins_profile['jenkins_server_url'], timeout=timeout):
-        click.echo(click.style(f'false', fg='bright_red', bold=True))
+    if not YoJenkins(Auth_obj=auth).REST.is_reachable(auth.jenkins_profile['jenkins_server_url'], timeout=timeout):
+        click.echo(click.style('false', fg='bright_red', bold=True))
         sys.exit(1)
     click.echo(click.style('true', fg='bright_green', bold=True))
 
@@ -148,9 +142,8 @@ def quiet(profile: str, off: bool):
     Returns:
         TODO
     """
-    JY = cu.config_YoJenkins(profile)
-    if not JY.Server.quiet(off=off):
-        click.echo(click.style(f'failed', fg='bright_red', bold=True))
+    if not cu.config_yo_jenkins(profile).Server.quiet(off=off):
+        click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
     click.echo(click.style('success', fg='bright_green', bold=True))
 
@@ -166,9 +159,8 @@ def restart(profile: str, force: bool):
     Returns:
         TODO
     """
-    JY = cu.config_YoJenkins(profile)
-    if not JY.Server.restart(force=force):
-        click.echo(click.style(f'failed', fg='bright_red', bold=True))
+    if not cu.config_yo_jenkins(profile).Server.restart(force=force):
+        click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
     click.echo(click.style('success', fg='bright_green', bold=True))
 
@@ -184,9 +176,8 @@ def shutdown(profile: str, force: bool):
     Returns:
         TODO
     """
-    JY = cu.config_YoJenkins(profile)
-    if not JY.Server.shutdown(force=force):
-        click.echo(click.style(f'failed', fg='bright_red', bold=True))
+    if not cu.config_yo_jenkins(profile).Server.shutdown(force=force):
+        click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
     click.echo(click.style('success', fg='bright_green', bold=True))
 
@@ -204,12 +195,12 @@ def server_deploy(config_file: str, plugins_file: str, protocol_schema: str, hos
     Returns:
         TODO
     """
-    click.echo(f'Setting up a local Jenkins development server. Hold tight, this may take a minute ...')
+    click.echo('Setting up a local Jenkins development server. Hold tight, this may take a minute ...')
 
     # TODO: Check if the docker server deployment file is there. If so, show that it is being renewed.
 
     # Creat object
-    DJS = DockerJenkinsServer(config_file=config_file,
+    djs = DockerJenkinsServer(config_file=config_file,
                               plugins_file=plugins_file,
                               protocol_schema=protocol_schema,
                               host=host,
@@ -225,15 +216,15 @@ def server_deploy(config_file: str, plugins_file: str, protocol_schema: str, hos
                               password=password if password else "password")
 
     # Initialize docker client
-    if not DJS.docker_client_init():
-        click.echo(click.style(f'Failed to connect to local docker client', fg='bright_red', bold=True))
+    if not djs.docker_client_init():
+        click.echo(click.style('Failed to connect to local docker client', fg='bright_red', bold=True))
         sys.exit(1)
 
     # Setup the server
-    deployed, success = DJS.setup()
+    deployed, success = djs.setup()
     if not success:
-        click.echo(click.style(f'Failed to setup server', fg='bright_red', bold=True))
-        click.echo(click.style(f'Items deployed for partial deployment:', fg='bright_red', bold=True))
+        click.echo(click.style('Failed to setup server', fg='bright_red', bold=True))
+        click.echo(click.style('Items deployed for partial deployment:', fg='bright_red', bold=True))
         if deployed:
             click.echo(click.style(deployed, fg='bright_red', bold=True))
         sys.exit(1)
@@ -241,7 +232,7 @@ def server_deploy(config_file: str, plugins_file: str, protocol_schema: str, hos
     # Write current server docker attributes to file
     filepath = os.path.join(get_resource_dir(), 'server_docker_settings', 'last_deploy_info.json')
     if not filepath:
-        click.echo(click.style(f'Failed to find yo-jenkins included data directory', fg='bright_red', bold=True))
+        click.echo(click.style('Failed to find yo-jenkins included data directory', fg='bright_red', bold=True))
         sys.exit(1)
     logger.debug(f'Writing server deploy information to file: {filepath}')
     with open(os.path.join(filepath), 'w') as file:
@@ -279,31 +270,30 @@ def server_teardown(remove_volume: bool, remove_image: bool):
         with open(os.path.join(filepath), 'r') as file:
             deployed = json.load(file)
         logger.debug(f'Successfully found and loaded server deployment info file: {deployed}')
-    except Exception as e:
-        click.echo(click.style(f'Failed to detect a previous server deployment', fg='bright_red', bold=True))
+    except Exception:
+        click.echo(click.style('Failed to detect a previous server deployment', fg='bright_red', bold=True))
         click.echo(
-            click.style(
-                f'If you think there was a previously successfull deployment, use Docker to remove it manually',
-                fg='bright_red',
-                bold=True))
+            click.style('If you think there was a previously successfull deployment, use Docker to remove it manually',
+                        fg='bright_red',
+                        bold=True))
         sys.exit(1)
 
     # Filter out named volumes only
     volumes_named_only = [list(l.values())[0] for l in deployed["volumes"] if 'named' in l]
 
     # Creat object
-    DJS = DockerJenkinsServer(image_fullname=deployed['image'],
+    djs = DockerJenkinsServer(image_fullname=deployed['image'],
                               new_volume_name=volumes_named_only[0],
                               container_name=deployed['container'])
 
     # Initialize docker client
-    if not DJS.docker_client_init():
-        click.echo(click.style(f'Failed to connect to local docker client', fg='bright_red', bold=True))
+    if not djs.docker_client_init():
+        click.echo(click.style('Failed to connect to local docker client', fg='bright_red', bold=True))
         sys.exit(1)
 
     # Remove the resources
-    if not DJS.clean(remove_volume, remove_image):
-        click.echo(click.style(f'Failed to remove Jenkins server', fg='bright_red', bold=True))
+    if not djs.clean(remove_volume, remove_image):
+        click.echo(click.style('Failed to remove Jenkins server', fg='bright_red', bold=True))
         sys.exit(1)
 
     # Remove the deployment info file
