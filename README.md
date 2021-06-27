@@ -92,3 +92,13 @@ Commands:
   utility  Utility and more
 
 ```
+
+<!-- ################################################ -->
+
+# Contributors
+**Ismet Handžić** - GitHub: [@ismet55555](https://github.com/ismet55555)
+
+<!-- ################################################ -->
+
+# Licence
+This project is licensed under the *GNU General Public License Version 3* License. Please see the [LICENSE](LICENSE) file for details. Also a complete [history of this licence](https://en.wikipedia.org/wiki/GNU_General_Public_License).

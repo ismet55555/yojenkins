@@ -74,7 +74,7 @@ setuptools.setup(
     maintainer="Ismet Handzic",
     description="A CLI tool to manage and have fun with Jenkins server",
     keywords="jenkins monitor manage job build fun",
-    url="https://ismethandzic.com/",
+    url="https://github.com/ismet55555/yo-jenkins",
     packages=setuptools.find_packages(),
     install_requires=get_requirements(),
     include_package_data=True,
