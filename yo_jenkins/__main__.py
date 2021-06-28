@@ -7,10 +7,10 @@ import sys
 import click
 
 from yo_jenkins import __version__
-from yo_jenkins.Cli import logger_setup  # Keep this line, sets up logger
-from yo_jenkins.Cli import (cli_auth, cli_build, cli_decorators, cli_folder,
+from yo_jenkins.cli import logger_setup  # Keep this line, sets up logger
+from yo_jenkins.cli import (cli_auth, cli_build, cli_decorators, cli_folder,
                             cli_job, cli_server, cli_stage, cli_step, cli_tools)
-from yo_jenkins.Cli.cli_utility import set_debug_log_level
+from yo_jenkins.cli.cli_utility import set_debug_log_level
 
 logger = logging.getLogger()
 

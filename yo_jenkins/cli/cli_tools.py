@@ -4,7 +4,7 @@ import logging
 import sys
 
 import click
-from yo_jenkins.Cli import cli_utility as cu
+from yo_jenkins.cli import cli_utility as cu
 from yo_jenkins.Tools import Package
 
 # Getting the logger reference
