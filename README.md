@@ -97,7 +97,7 @@ Commands:
   server   Manage server
   stage    Manage build stages
   step     Manage stage steps
-  utility  Utility and more
+  tools    Tools and more
 
 ```
 
