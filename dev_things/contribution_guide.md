@@ -90,7 +90,7 @@ Also, note that as of now there are no sufficient tests setup (ie. pytest, unite
     - `yapf --in-place --recursive .`
 
 3. Run `pylint` code linter
-    - `pylint yo_jenkins --fail-under=7 --reports y`
+    - `pylint yo_jenkins --fail-under=8 --reports y`
 
 
 ## Adding a New Dependency *(If needed)*

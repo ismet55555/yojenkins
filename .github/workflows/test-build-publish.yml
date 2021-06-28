@@ -51,7 +51,7 @@ jobs:
         run: pipenv graph
 
       - name: Code Linting
-        run: pipenv run pylint yo_jenkins --fail-under=7.5
+        run: pipenv run pylint yo_jenkins --fail-under=8.0
 
       - name: Build the package
         run: pipenv run python setup.py install --verbose

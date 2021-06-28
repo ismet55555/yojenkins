@@ -2,10 +2,10 @@
 
 import logging
 import os
-from pprint import pprint
+# from pprint import pprint
 from time import perf_counter
 from datetime import datetime
-from typing import Dict, List, Tuple
+from typing import Tuple
 
 import docker
 from yo_jenkins.Utility.utility import get_resource_path
@@ -37,8 +37,6 @@ class DockerJenkinsServer():
 
         Args:
             None
-
-        TODO: ADD DEFAULTS BACK IN CLI __main.py__
 
         Returns:
             None

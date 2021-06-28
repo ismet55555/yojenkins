@@ -7,9 +7,9 @@ import sys
 import click
 
 from yo_jenkins import __version__
-from yo_jenkins.Cli import logger_setup
+from yo_jenkins.Cli import logger_setup  # Keep this line, sets up logger
 from yo_jenkins.Cli import (cli_auth, cli_build, cli_decorators, cli_folder,
-                            cli_job, cli_server, cli_stage, cli_step)
+                            cli_job, cli_server, cli_stage, cli_step, cli_tools)
 from yo_jenkins.Cli.cli_utility import set_debug_log_level
 
 logger = logging.getLogger()
@@ -97,7 +97,7 @@ def verify(debug, profile):
 @cli_decorators.debug
 def wipe(debug):
     set_debug_log_level(debug)
-    click.echo(click.style('TODO', fg='yellow',))
+    click.echo(click.style('TODO :-/', fg='yellow',))
 
 @auth.command(short_help='\tShow current user information')
 @cli_decorators.debug
@@ -242,7 +242,7 @@ def server_teardown(debug, remove_volume, remove_image):
 # @cli_decorators.debug
 # def server_check(debug):
 #     set_debug_log_level(debug)
-#     click.echo(click.style('TODO', fg='yellow',))
+#     click.echo(click.style('TODO :-/', fg='yellow',))
 
 
 
@@ -259,7 +259,7 @@ def node():
 @cli_decorators.profile
 def info(debug, profile):
     set_debug_log_level(debug)
-    click.echo(click.style('TODO', fg='yellow',))
+    click.echo(click.style('TODO :-/', fg='yellow',))
 
 # TODO:
 #   - Info
@@ -491,7 +491,7 @@ def queue_check(debug, pretty, yaml, xml, toml, profile, job, id):
 def queue_cancel(debug, profile, id):
     set_debug_log_level(debug)
     # cli_job.queue_cancel(profile, id)
-    click.echo(click.style('TODO', fg='yellow',))
+    click.echo(click.style('TODO :-/', fg='yellow',))
 
 @job.command(short_help='\tOpen job in web browser')
 @cli_decorators.debug
@@ -822,51 +822,62 @@ def info(ctx, debug, pretty, yaml, xml, toml, profile, url):
 ##############################################################################
 #                             UTILITY
 ##############################################################################
-@main.group(short_help='\tUtility and more')
-def utility():
+@main.group(short_help='\tTools and more')
+def tools():
     """UTILITY AND MORE"""
     pass
 
-@utility.command(short_help='\tShow the manual')
+@tools.command(short_help='\tShow the manual')
 @cli_decorators.debug
-def manual(ctx, debug):
+def manual(debug):
     set_debug_log_level(debug)
-    click.echo(click.style('TODO', fg='yellow',))
+    click.echo(click.style('TODO :-/', fg='yellow',))
 
-
-@utility.command(short_help='\tUpdate yo-jenkins')
+@tools.command(short_help='\tUpgrade yo-jenkins')
 @cli_decorators.debug
-def update(ctx, debug):
+@click.option('--user', type=bool, required=False, is_flag=True, help='Install to the Python user install directory for your platform')
+@click.option('--proxy', type=str, required=False, help='Specify a proxy in the form [user:passwd@]proxy.server:port')
+def upgrade(debug, user, proxy):
     set_debug_log_level(debug)
-    click.echo(click.style('TODO', fg='yellow',))
+    cli_tools.upgrade(user, proxy)
 
-@utility.command(short_help='\tReport a bug')
+@tools.command(short_help='\tRemove yo-jenkins')
 @cli_decorators.debug
-def bug_report(ctx, debug):
+def remove(debug):
     set_debug_log_level(debug)
-    click.echo(click.style('TODO', fg='yellow',))
+    cli_tools.remove()
 
-@utility.command(short_help='\tRequest a feature')
+@tools.command(short_help='\tReport a bug')
 @cli_decorators.debug
-def feature_request(ctx, debug):
+def bug_report( debug):
     set_debug_log_level(debug)
-    click.echo(click.style('TODO', fg='yellow',))
+    click.echo(click.style('TODO :-/', fg='yellow',))
 
-@utility.command(short_help='\tShow the command history for each profile')
+@tools.command(short_help='\tRequest a feature')
+@cli_decorators.debug
+def feature_request(debug):
+    set_debug_log_level(debug)
+    click.echo(click.style('TODO :-/', fg='yellow',))
+
+@tools.command(short_help='\tShow the command history for each profile')
 @cli_decorators.debug
 @cli_decorators.profile
-def history(ctx, debug, profile):
+def history(debug, profile):
     set_debug_log_level(debug)
-    click.echo(click.style('TODO', fg='yellow',))
+    click.echo(click.style('TODO :-/', fg='yellow',))
 
-@utility.command(short_help='\tSend a generic REST request to server')
+@tools.command(short_help='\tSend a generic REST request to server')
 @cli_decorators.debug
 @cli_decorators.profile
-def rest_request(ctx, debug, profile):
+def rest_request(debug, profile):
     set_debug_log_level(debug)
-    click.echo(click.style('TODO', fg='yellow',))
+    click.echo(click.style('TODO :-/', fg='yellow',))
 
-
+@tools.command(short_help='\tSend a e-mail recommendation for this software')
+@cli_decorators.debug
+def recommend(debug):
+    set_debug_log_level(debug)
+    click.echo(click.style('TODO :-/', fg='yellow',))
 
 
 ##############################################################################
