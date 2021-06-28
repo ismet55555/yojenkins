@@ -35,6 +35,7 @@
          pip install .
          ```
 
+&nbsp;
 
 # Jenkins Plugin Requirements
 
@@ -43,6 +44,7 @@ The following Jenkins plugin are required for `yo-jenkins` to use all its functi
 - [Next Build Number](https://plugins.jenkins.io/next-build-number/) (next-build-number)
 - [Promoted Builds](https://plugins.jenkins.io/promoted-builds/) (promoted-builds)
 
+&nbsp;
 
 # Local Jenkins Server Setup Using Docker
 
@@ -56,6 +58,8 @@ yo-jenkins server server-deploy
 ```
 
 Use `--help` for available options, and use `--debug` to troubleshoot any issues.
+
+&nbsp;
 
 # Main Menu
 
@@ -97,21 +101,23 @@ Commands:
 
 ```
 
+&nbsp;
+
 # Report Bugs and Issues
 As with any other software, issues do come up during various usage scenarios that may not be accounted for during development and testing. **Help from real users is enormously helpful.**
 
-Please report and bugs and odd behaviors to [GitHub Issues](https://github.com/ismet55555/yo-jenkins/issues/new?assignees=&labels=&template=bug_report.md&title=).
-
-If possible, please include the command that caused the issue with `--debug`.
-
-For example:
+Please report and bugs and odd behaviors to [GitHub Issues](https://github.com/ismet55555/yo-jenkins/issues/new?assignees=&labels=&template=bug_report.md&title=). If possible, please include the command that caused the issue with `--debug`. For example:
 
 ```bash
 yo-jenkins server server-deploy --debug
 ```
 
+&nbsp;
+
 # Contributors
 **Ismet Handžić** - GitHub: [@ismet55555](https://github.com/ismet55555)
+
+&nbsp;
 
 # Licence
 This project is licensed under the *GNU General Public License Version 3* License. Please see the [LICENSE](LICENSE) file for details. Also a complete [history of this licence](https://en.wikipedia.org/wiki/GNU_General_Public_License).

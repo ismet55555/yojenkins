@@ -570,7 +570,7 @@ def get_resource_path(relative_path: str) -> str:
         Included resource path
     """
     # Get the path in python site packages
-    resource_dir = get_resource_dir()
+    resource_dir = get_project_dir()
     resource_path = os.path.abspath(os.path.join(resource_dir, relative_path))
 
     # If the file has not been found and it is on windows, try APPDATA directory
@@ -581,17 +581,18 @@ def get_resource_path(relative_path: str) -> str:
     return resource_path
 
 
-def get_resource_dir(project_dir: str = 'yo_jenkins', sample_path: str = 'sound') -> str:
+def get_project_dir(project_dir: str = 'yo_jenkins', sample_path: str = 'resources') -> str:
     """Getting the path to the directory containing project resources
     
     Details:
         Effectively this function is looking through all possible package locations
     and checking if it contains a directory with the project name
 
-    FIXME: Probably only need the relative path!
+    NOTE: Probably only need the relative path!
 
     Args:
-        TODO
+        project_dir : The name of the project's directory
+        sample_path : A directory that is directly inside the project directory (ie. yo_jenkins/resources)
 
     Returns:
         Project directory absolute path

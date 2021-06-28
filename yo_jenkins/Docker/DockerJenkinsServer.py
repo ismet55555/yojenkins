@@ -18,7 +18,7 @@ class DockerJenkinsServer():
     """Class managing containerized Jenkins instance"""
 
     def __init__(self,
-                 config_file: str = 'server_docker_settings/config_as_code.yaml',
+                 config_file: str = 'Docker/server_docker_settings/config_as_code.yaml',
                  plugins_file: str = 'plugins.txt',
                  protocol_schema: str = 'http',
                  host: str = 'localhost',
@@ -49,7 +49,7 @@ class DockerJenkinsServer():
         self.docker_registry = registry
         self.image_base_image = image_base
         self.image_base_version = 'latest'
-        self.image_dockerfile_dir = get_resource_path(os.path.join('server_docker_settings'))
+        self.image_dockerfile_dir = get_resource_path(os.path.join('resources', 'server_docker_settings'))
         self.image_fullname = image_fullname
         self.image_rebuild = image_rebuild
         self.image_build_args = {

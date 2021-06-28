@@ -7,9 +7,9 @@ import sys
 import os
 
 import click
-from yo_jenkins.Setup import DockerJenkinsServer
+from yo_jenkins.Docker import DockerJenkinsServer
 from yo_jenkins.YoJenkins import Auth, YoJenkins
-from yo_jenkins.Utility.utility import get_resource_path, get_resource_dir
+from yo_jenkins.Utility.utility import get_resource_path, get_project_dir
 
 from . import cli_utility as cu
 
@@ -230,7 +230,7 @@ def server_deploy(config_file: str, plugins_file: str, protocol_schema: str, hos
         sys.exit(1)
 
     # Write current server docker attributes to file
-    filepath = os.path.join(get_resource_dir(), 'server_docker_settings', 'last_deploy_info.json')
+    filepath = os.path.join(get_project_dir(), 'resources', 'server_docker_settings', 'last_deploy_info.json')
     if not filepath:
         click.echo(click.style('Failed to find yo-jenkins included data directory', fg='bright_red', bold=True))
         sys.exit(1)
@@ -264,7 +264,7 @@ def server_teardown(remove_volume: bool, remove_image: bool):
         TODO
     """
     # Load deployment info file with deployment information
-    filepath = get_resource_path(os.path.join('server_docker_settings', 'last_deploy_info.json'))
+    filepath = get_resource_path(os.path.join('resources', 'server_docker_settings', 'last_deploy_info.json'))
     logger.debug(f'Detecting server deployment info file: {filepath} ...')
     try:
         with open(os.path.join(filepath), 'r') as file:

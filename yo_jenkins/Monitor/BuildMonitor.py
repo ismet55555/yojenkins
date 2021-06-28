@@ -87,7 +87,7 @@ class BuildMonitor(Monitor):
         ui_keys = mu.load_keys()
 
         # Sound effect related
-        self.sound_directory = get_resource_path(os.path.join('sound'))
+        self.sound_directory = get_resource_path(os.path.join('resources', 'sound'))
         sound_notify_msg_time = 0
         sound_notify_msg_show = False
         sound_notify_msg_box_timing = False

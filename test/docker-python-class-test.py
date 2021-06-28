@@ -2,7 +2,7 @@
 
 import logging
 from pprint import pprint
-from yo_jenkins.Setup.DockerJenkinsServer import DockerJenkinsServer
+from yo_jenkins.Docker.DockerJenkinsServer import DockerJenkinsServer
 
 # Setup a message logging
 log_format = '[%(asctime)s] [%(relativeCreated)-4d] [%(filename)-23s:%(lineno)4s] %(message)s'
