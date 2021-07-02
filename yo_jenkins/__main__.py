@@ -838,26 +838,30 @@ def manual(debug):
 @click.option('--user', type=bool, required=False, is_flag=True, help='Install to the Python user install directory for your platform')
 @click.option('--proxy', type=str, required=False, help='Specify a proxy in the form [user:passwd@]proxy.server:port')
 def upgrade(debug, user, proxy):
+    """Install the latest version of yo-jenkins. This is a thin wrapper to 'pip install'"""
     set_debug_log_level(debug)
     cli_tools.upgrade(user, proxy)
 
 @tools.command(short_help='\tRemove yo-jenkins')
 @cli_decorators.debug
 def remove(debug):
+    """Uninstall yo-jenkins"""
     set_debug_log_level(debug)
     cli_tools.remove()
 
 @tools.command(short_help='\tReport a bug')
 @cli_decorators.debug
 def bug_report( debug):
+    """This command will open a web browser to report a bug"""
     set_debug_log_level(debug)
-    click.echo(click.style('TODO :-/', fg='yellow',))
+    cli_tools.bug_report()
 
 @tools.command(short_help='\tRequest a feature')
 @cli_decorators.debug
 def feature_request(debug):
+    """This command will open a web browser to request a feature"""
     set_debug_log_level(debug)
-    click.echo(click.style('TODO :-/', fg='yellow',))
+    cli_tools.feature_request()
 
 @tools.command(short_help='\tShow the command history for each profile')
 @cli_decorators.debug
