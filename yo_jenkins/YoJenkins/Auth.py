@@ -20,6 +20,11 @@ from . import colors
 # Getting the logger reference
 logger = logging.getLogger()
 
+CONFIG_DIR_NAME = '.yo-jenkins'
+CREDS_FILE_NAME = 'credentials'
+PROFILE_ENV_VAR = 'YOJENKINS_PROFILE'
+REQ_TOP_LEVEL_KEY = 'profiles'
+
 
 class Auth:
     """Handeling of authentication and profile management functionality"""
@@ -43,14 +48,6 @@ class Auth:
         # JenkinsSDK object - Instantiated in create_auth()
         self.JenkinsSDK = None
 
-        # TODO: Refer to configuration file as credentials file
-
-        self._cred_config_dir = Path.home()
-        self._cred_config_filename = '.yo-jenkins.conf'
-
-        self._profile_env_var = 'YOJENKINS_PROFILE'
-        self._required_top_level_key = 'profiles'
-
         self.jenkins_profile = {}
         self.jenkins_username = ''
         self.jenkins_api_token = ''
@@ -69,7 +66,7 @@ class Auth:
             True if successfull, else False
         """
         # Storing configurations in file
-        output_path = os.path.join(self._cred_config_dir, self._cred_config_filename)
+        output_path = os.path.join(os.path.join(Path.home(), CONFIG_DIR_NAME), CREDS_FILE_NAME)
         logger.debug(f'Saving new file: "{output_path}" ...')
         with open(os.path.join(output_path), 'w') as file:  # Overwrite previous content
             yaml.dump(profiles, file)
@@ -181,7 +178,7 @@ class Auth:
             Server API Token
         """
         # Check if the credential config file exists
-        file_exists, file_path = self.detect_configuration_file()
+        file_exists, file_path = self.detect_creds_file()
         if not file_exists:
             return
 
@@ -191,15 +188,14 @@ class Auth:
             return
 
         # Check if passed profile is part of the credential config file
-        logger.debug(
-            f'Currently listed profile names: {", ".join(list(profiles[self._required_top_level_key].keys()))}')
-        if profile_name not in profiles[self._required_top_level_key]:
+        logger.debug(f'Currently listed profile names: {", ".join(list(profiles[REQ_TOP_LEVEL_KEY].keys()))}')
+        if profile_name not in profiles[REQ_TOP_LEVEL_KEY]:
             logger.debug(
                 f'Failed to find the --profile specified profile name ("{profile_name}") in the credential configuration file'
             )
             return
 
-        profile_info = profiles[self._required_top_level_key][profile_name]
+        profile_info = profiles[REQ_TOP_LEVEL_KEY][profile_name]
         logger.debug(f'Profile {profile_name} loaded')
         logger.debug(f'Profile info: {profile_info}')
 
@@ -224,7 +220,7 @@ class Auth:
             return
 
         # Store the API token
-        profiles[self._required_top_level_key][profile_name]['api_token'] = api_token
+        profiles[REQ_TOP_LEVEL_KEY][profile_name]['api_token'] = api_token
 
         success = self.__update_profiles(profiles=profiles)
         if not success:
@@ -245,8 +241,18 @@ class Auth:
         Returns:
             This is a description of what is returned.
         """
+        # Creating configuration directory if it does not exist
+        config_dir_abs_path = os.path.join(Path.home(), CONFIG_DIR_NAME)
+        if not self.detect_config_dir()[0]:
+            logger.debug(f'Creating configuration directory in user home directory: {config_dir_abs_path}')
+            try:
+                os.makedirs(config_dir_abs_path)
+                logger.debug(f'Successfully created configuration directory: {config_dir_abs_path}')
+            except Exception as error:
+                logger.debug(f'Failed to create configuration directory "{config_dir_abs_path}": Exception:{error}')
+
         # Checking if credential config file exists
-        file_exists, file_path = self.detect_configuration_file()
+        file_exists, file_path = self.detect_creds_file()
         if file_exists:
             logger.debug(f'Credentials file found in current user home directory: {file_path}')
             logger.debug(f'Loading credentials file: {file_path} ...')
@@ -257,13 +263,11 @@ class Auth:
                 return False
 
             # Check if top level / parent key is in the config cred file
-            if self._required_top_level_key not in profiles.keys():
+            if REQ_TOP_LEVEL_KEY not in profiles.keys():
                 logger.debug(
-                    f'The loaded credentials configuration file does not include a "{self._required_top_level_key}" section'
-                )
+                    f'The loaded credentials configuration file does not include a "{REQ_TOP_LEVEL_KEY}" section')
                 return False
-            logger.debug(
-                f'Currently listed profile names: {", ".join(list(profiles[self._required_top_level_key].keys()))}')
+            logger.debug(f'Currently listed profile names: {", ".join(list(profiles[REQ_TOP_LEVEL_KEY].keys()))}')
 
             # Adding the profile
             print('')
@@ -272,25 +276,26 @@ class Auth:
             print('Please enter the following information to add a profile:')
             print('')
         else:
-            logger.debug('Credentials file NOT found in current user home directory')
-            logger.debug(f'Creating credentials file in current user home directory: {self._cred_config_filename} ...')
+            creds_file_abs_path = os.path.join(config_dir_abs_path, CREDS_FILE_NAME)
+
+            logger.debug('Credentials file NOT found in current user configuration directory')
+            logger.debug(f'Creating credentials file: {creds_file_abs_path} ...')
 
             # Create new profile from scratch
             profiles = {}
-            profiles[self._required_top_level_key] = {}
+            profiles[REQ_TOP_LEVEL_KEY] = {}
 
             print('')
-            print(f'Credentials profile file ({self._cred_config_filename}) NOT found in current user home directory')
-            print(
-                f'Creating a new credentials profile file: {os.path.join(file_path, self._cred_config_filename)} ...')
-            print('Please enter the following information to create your first profile:')
+            print(f'Credentials profile file ({CREDS_FILE_NAME}) NOT found in configuration directory')
+            print(f'Creating a new credentials profile file: {creds_file_abs_path} ...')
+            print('Please enter the following information to create your first profile entry:')
             print('')
 
         # Prompting user for details
         profile_name = input(colors.BOLD + colors.YELLOW + '[ OPTIONAL ] Enter PROFILE NAME (default):  ' +
                              colors.NORMAL)
         profile_name = 'default' if not profile_name else profile_name
-        if profile_name in profiles[self._required_top_level_key]:
+        if profile_name in profiles[REQ_TOP_LEVEL_KEY]:
             print('')
             print(f'WARNING : You are about to overwrite the current profile "{profile_name}"')
             print('')
@@ -311,7 +316,26 @@ class Auth:
 
         return self.__update_profiles(profiles=profiles)
 
-    def detect_configuration_file(self) -> Tuple[bool, str]:
+    def detect_config_dir(self) -> Tuple[bool, str]:
+        """Detect/find the configuration directory in the home directory
+
+        Args:
+            None
+
+        Returns:
+            Success, Directory path of the credentials profile file
+        """
+        home_dir = Path.home()
+        if not os.path.exists(home_dir):
+            logger.debug(f'Home directory does not exist: {home_dir}')
+            return False, ''
+        config_dir_abs_path = os.path.join(home_dir, CONFIG_DIR_NAME)
+        if not os.path.exists(config_dir_abs_path):
+            logger.debug(f'Configuration directory does not exist: {config_dir_abs_path}')
+            return False, ''
+        return True, config_dir_abs_path
+
+    def detect_creds_file(self) -> Tuple[bool, str]:
         """Detect/find the credentials profile file in the home directory
 
         Args:
@@ -320,18 +344,19 @@ class Auth:
         Returns:
             Success, File path of the credentials profile file
         """
-        # Defining directories to look for
-        files_in_home_dir = [f for f in os.listdir(Path.home()) if os.path.isfile(os.path.join(Path.home(), f))]
+        if not self.detect_config_dir()[0]:
+            return False, ''
+        config_dir_abs_path = os.path.join(Path.home(), CONFIG_DIR_NAME)
 
         # Seeing if configuration file is in specified directories
-        if self._cred_config_filename in files_in_home_dir:
-            # Check if file exists in user home directory
+        if os.path.exists(os.path.join(config_dir_abs_path, CREDS_FILE_NAME)):
             logger.debug(
-                f'Configuration file "{self._cred_config_filename }" found in user home directory: {Path.home()}')
-            config_filepath = os.path.join(Path.home(), self._cred_config_filename)
+                f'Configuration file "{CREDS_FILE_NAME}" found in user configuration directory: {config_dir_abs_path}')
+            config_filepath = os.path.join(config_dir_abs_path, CREDS_FILE_NAME)
             return True, config_filepath
         else:
-            logger.debug(f'Configuration file "{self._cred_config_filename }" NOT found in home directory')
+            logger.debug(
+                f'Configuration file "{CREDS_FILE_NAME}" NOT found in configuration directory: {config_dir_abs_path}')
             return False, ''
 
     def get_configurations(self, profile: str = '') -> Dict:
@@ -339,7 +364,7 @@ class Auth:
 
         Details: The order (preference) of specified profile credentials to get are the following:
             - Passed `profile` argument
-            - Environmental Variable as specified in `self._profile_env_var`
+            - Environmental Variable as specified in `PROFILE_ENV_VAR`
             - Profile listed as `default` in the credentials profile file
             - Any other / first profile set to active
 
@@ -349,7 +374,7 @@ class Auth:
         Returns:
             The credential information of the specified credentials profile
         """
-        success, config_filepath = self.detect_configuration_file()
+        success, config_filepath = self.detect_creds_file()
         if not success:
             # If no configuration file found, configure one
             logger.debug('No credentials file found. Configuring one ...')
@@ -410,20 +435,20 @@ class Auth:
 
         # PRIORITY 2 - Environmental Variable
         if not profile_selected:
-            if self._profile_env_var in os.environ:
-                profile = os.getenv(self._profile_env_var)
+            if PROFILE_ENV_VAR in os.environ:
+                profile = os.getenv(PROFILE_ENV_VAR)
                 if profile in profile_items:
                     profile_selected = profile_items[profile]
                     profile_selected['profile'] = profile
                     logger.debug(
-                        f'Successfully matched set {self._profile_env_var } environmental variable value "{profile}"')
+                        f'Successfully matched set {PROFILE_ENV_VAR } environmental variable value "{profile}"')
                 else:
                     logger.debug(
-                        f'Failed to find the set environmental variable {self._profile_env_var} "{profile}" in the profiles loaded'
+                        f'Failed to find the set environmental variable {PROFILE_ENV_VAR} "{profile}" in the profiles loaded'
                     )
                     return {}
             else:
-                logger.debug(f'Environmental Variable "{self._profile_env_var}" not set')
+                logger.debug(f'Environmental Variable "{PROFILE_ENV_VAR}" not set')
 
         # PRIORITY 3 - "default" profile
         if not profile_selected:
@@ -582,7 +607,7 @@ class Auth:
         Returns:
             Contents of the credentials profile file
         """
-        success, config_filepath = self.detect_configuration_file()
+        success, config_filepath = self.detect_creds_file()
         if not success:
             # If no configuration file found
             return {}
