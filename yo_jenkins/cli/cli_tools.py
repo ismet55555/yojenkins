@@ -43,10 +43,7 @@ def remove() -> None:
         TODO
     """
     if click.confirm('Are you sure you want to remove yo-jenkins?'):
-        if not Package.uninstall():
-            click.echo(click.style('failed to remove', fg='bright_red', bold=True))
-            sys.exit(1)
-        click.echo(click.style('successfully removed', fg='bright_green', bold=True))
+        Package.uninstall()
 
 
 def bug_report() -> None:
