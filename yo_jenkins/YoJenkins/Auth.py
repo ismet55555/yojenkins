@@ -10,7 +10,7 @@ from pprint import pprint
 from typing import Dict, Tuple
 
 import click
-import yaml
+import toml
 from jenkins import Jenkins as JenkinsSDK
 from yo_jenkins.Utility import utility
 from yo_jenkins.YoJenkins.REST import REST
@@ -23,7 +23,6 @@ logger = logging.getLogger()
 CONFIG_DIR_NAME = '.yo-jenkins'
 CREDS_FILE_NAME = 'credentials'
 PROFILE_ENV_VAR = 'YOJENKINS_PROFILE'
-REQ_TOP_LEVEL_KEY = 'profiles'
 
 
 class Auth:
@@ -57,7 +56,7 @@ class Auth:
         """Create/Update the current credentials profile file
 
         Details: This method will overwrite any previous file content.
-                 It will also add a file prefix for yaml formats
+                 It will also add a file prefix for TOML formats
 
         Args:
             profiles : All profile info to be written to file
@@ -67,14 +66,12 @@ class Auth:
         """
         # Storing configurations in file
         output_path = os.path.join(os.path.join(Path.home(), CONFIG_DIR_NAME), CREDS_FILE_NAME)
-        logger.debug(f'Saving new file: "{output_path}" ...')
+        logger.debug(f'Saving new file (TOML format): "{output_path}" ...')
         with open(os.path.join(output_path), 'w') as file:  # Overwrite previous content
-            yaml.dump(profiles, file)
+            toml.dump(profiles, file)
 
-        # Add top file prefix for yaml file format
-        lines_new = [
-            f'# -*- mode: yaml -*-{os.linesep}', f'# vim: set filetype=yaml{os.linesep}', f'---{os.linesep * 3}'
-        ]
+        # Add top file prefix for TOML file format
+        lines_new = [f'# -*- mode: toml -*-{os.linesep}', f'# vim: set filetype=toml{os.linesep}']
         success = utility.append_lines_to_beginning_of_file(output_path, lines_new)
         if not success:
             return False
@@ -183,19 +180,11 @@ class Auth:
             return
 
         # Load the current cred config file
-        profiles = utility.load_contents_from_local_yaml_file(file_path)
+        profiles = utility.load_contents_from_local_toml_file(file_path)
         if not profiles:
             return
 
-        # Check if passed profile is part of the credential config file
-        logger.debug(f'Currently listed profile names: {", ".join(list(profiles[REQ_TOP_LEVEL_KEY].keys()))}')
-        if profile_name not in profiles[REQ_TOP_LEVEL_KEY]:
-            logger.debug(
-                f'Failed to find the --profile specified profile name ("{profile_name}") in the credential configuration file'
-            )
-            return
-
-        profile_info = profiles[REQ_TOP_LEVEL_KEY][profile_name]
+        profile_info = profiles[profile_name]
         logger.debug(f'Profile {profile_name} loaded')
         logger.debug(f'Profile info: {profile_info}')
 
@@ -220,7 +209,7 @@ class Auth:
             return
 
         # Store the API token
-        profiles[REQ_TOP_LEVEL_KEY][profile_name]['api_token'] = api_token
+        profiles[profile_name]['api_token'] = api_token
 
         success = self.__update_profiles(profiles=profiles)
         if not success:
@@ -258,16 +247,10 @@ class Auth:
             logger.debug(f'Loading credentials file: {file_path} ...')
 
             # Load the current cred config file
-            profiles = utility.load_contents_from_local_yaml_file(file_path)
+            profiles = utility.load_contents_from_local_toml_file(file_path)
             if not profiles:
                 return False
-
-            # Check if top level / parent key is in the config cred file
-            if REQ_TOP_LEVEL_KEY not in profiles.keys():
-                logger.debug(
-                    f'The loaded credentials configuration file does not include a "{REQ_TOP_LEVEL_KEY}" section')
-                return False
-            logger.debug(f'Currently listed profile names: {", ".join(list(profiles[REQ_TOP_LEVEL_KEY].keys()))}')
+            logger.debug(f'Currently listed profile names: {", ".join(list(profiles.keys()))}')
 
             # Adding the profile
             print('')
@@ -283,7 +266,6 @@ class Auth:
 
             # Create new profile from scratch
             profiles = {}
-            profiles[REQ_TOP_LEVEL_KEY] = {}
 
             print('')
             print(f'Credentials profile file ({CREDS_FILE_NAME}) NOT found in configuration directory')
@@ -295,24 +277,25 @@ class Auth:
         profile_name = input(colors.BOLD + colors.YELLOW + '[ OPTIONAL ] Enter PROFILE NAME (default):  ' +
                              colors.NORMAL)
         profile_name = 'default' if not profile_name else profile_name
-        if profile_name in profiles[REQ_TOP_LEVEL_KEY]:
+        if profile_name in profiles:
             print('')
             print(f'WARNING : You are about to overwrite the current profile "{profile_name}"')
             print('')
-        profiles['profiles'][profile_name] = {}
-        profiles['profiles'][profile_name]['jenkins_server_url'] = input(
-            colors.BOLD + colors.YELLOW + '[ REQUIRED ] Enter Jenkins SERVER BASE URL:  ' + colors.NORMAL)
-        profiles['profiles'][profile_name]['username'] = input(colors.BOLD + colors.YELLOW +
-                                                               '[ REQUIRED ] Enter USERNAME:  ' + colors.NORMAL)
+        profiles[profile_name] = {}
+        profiles[profile_name]['jenkins_server_url'] = input(colors.BOLD + colors.YELLOW +
+                                                             '[ REQUIRED ] Enter Jenkins SERVER BASE URL:  ' +
+                                                             colors.NORMAL)
+        profiles[profile_name]['username'] = input(colors.BOLD + colors.YELLOW + '[ REQUIRED ] Enter USERNAME:  ' +
+                                                   colors.NORMAL)
         if not api_token:
-            profiles['profiles'][profile_name]['api_token'] = input(colors.BOLD + colors.YELLOW +
-                                                                    '[ OPTIONAL ] Enter API TOKEN:  ' + colors.NORMAL)
+            profiles[profile_name]['api_token'] = input(colors.BOLD + colors.YELLOW +
+                                                        '[ OPTIONAL ] Enter API TOKEN:  ' + colors.NORMAL)
         else:
             print('')
             print(colors.BOLD + 'WARNING: Adding provided API token to this profile' + colors.NORMAL)
             print('')
-            profiles['profiles'][profile_name]['api_token'] = api_token
-        profiles['profiles'][profile_name]['active'] = True
+            profiles[profile_name]['api_token'] = api_token
+        profiles[profile_name]['active'] = True
 
         return self.__update_profiles(profiles=profiles)
 
@@ -374,33 +357,21 @@ class Auth:
         Returns:
             The credential information of the specified credentials profile
         """
-        success, config_filepath = self.detect_creds_file()
-        if not success:
+        creds_file_abs_path = os.path.join(Path.home(), CONFIG_DIR_NAME, CREDS_FILE_NAME)
+        if not self.detect_creds_file()[0]:
             # If no configuration file found, configure one
             logger.debug('No credentials file found. Configuring one ...')
             success = self.configure()
             if not success:
                 return {}
-        else:
-            # Loading configurations file
-            configs = utility.load_contents_from_local_yaml_file(config_filepath)
-            if not configs:
-                return {}
 
-        # Check if top level parent profile section is there
-        profile_top_key_name = ''
-        required_top_level_key = ['prof', 'profile', 'profiles', 'creds', 'credential', 'credentials', 'stuff']
-        for top_key_name in required_top_level_key:
-            if top_key_name in list(configs.keys()):
-                profile_top_key_name = top_key_name
-                break
-        if not profile_top_key_name:
-            logger.debug(f'Failed to find the following top level key in configuration file: {required_top_level_key}')
+        # Loading configurations file
+        configs = utility.load_contents_from_local_toml_file(creds_file_abs_path)
+        if not configs:
             return {}
-        logger.debug(f'Successfully found top level section key in the configuration file: "{profile_top_key_name}"')
 
         # Get the listed profiles
-        profile_items_all = configs[profile_top_key_name]
+        profile_items_all = configs
         logger.debug(f'Number of listed profiles found: {len(profile_items_all)}')
 
         # Filter out the profiles that are misconfigured (missing keys)
@@ -613,7 +584,7 @@ class Auth:
             return {}
 
         # Loading configurations file
-        return utility.load_contents_from_local_yaml_file(config_filepath)
+        return utility.load_contents_from_local_toml_file(config_filepath)
 
     def verify(self) -> bool:
         """Verify/Check if current credentials can authenticate with server

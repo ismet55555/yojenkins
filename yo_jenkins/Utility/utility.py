@@ -12,28 +12,50 @@ from urllib.parse import urljoin, urlparse
 
 import requests
 import yaml
+import toml
 from yo_jenkins.YoJenkins.JenkinsItemClasses import JenkinsItemClasses
 
 logger = logging.getLogger()
 
 
 def load_contents_from_local_yaml_file(local_file_path: str) -> Dict:
-    """Loading a local file contents
+    """Loading a local file contents in YAML format
 
     Parameters:
-        local_file_path (str) : Path to a local file to be loaded
+        local_file_path (str) : Path to a local YAML file to be loaded
     Returns: 
-        file_contents (dict) : The contents of the file
+        file_contents (dict) : The contents of the YAML file
     """
 
-    logger.debug(f"Loading specified local config file: '{local_file_path}' ...")
+    logger.debug(f"Loading specified local file: '{local_file_path}' ...")
     try:
         with open(local_file_path, 'r') as file:
             file_contents = yaml.safe_load(file)
-        logger.debug("Successfully loaded local config file")
-    except Exception as e:
+        logger.debug("Successfully loaded local file")
+    except Exception as error:
         # TODO: Make Exception more specific
-        logger.debug(f"Failed to load specified local config file: '{local_file_path}'. Exception: {e}")
+        logger.debug(f"Failed to load specified local file: '{local_file_path}'. Exception: {error}")
+        return {}
+    return file_contents
+
+
+def load_contents_from_local_toml_file(local_file_path: str) -> Dict:
+    """Loading a local file contents in TOML format
+
+    Parameters:
+        local_file_path (str) : Path to a local TOML file to be loaded
+    Returns: 
+        file_contents (dict) : The contents of the TOML file
+    """
+
+    logger.debug(f"Loading specified local file: '{local_file_path}' ...")
+    try:
+        with open(local_file_path, 'r') as file:
+            file_contents = toml.load(file)
+        logger.debug("Successfully loaded local file")
+    except Exception as error:
+        # TODO: Make Exception more specific
+        logger.debug(f"Failed to load specified local file: '{local_file_path}'. Exception: {error}")
         return {}
     return file_contents
 
