@@ -30,6 +30,12 @@ def load_contents_from_local_file(file_type: str, local_file_path: str) -> Dict:
         file_contents (dict) : The contents of file
     """
     file_type = file_type.lower()
+
+    # Check if file exists
+    if not os.path.isfile(local_file_path):
+        logger.debug(f'Failed to find file: {local_file_path}')
+        return {}
+
     logger.debug(f"Loading specified local .{file_type} file: '{local_file_path}' ...")
     try:
         with open(local_file_path, 'r') as file:
@@ -144,7 +150,7 @@ def append_lines_to_file(filepath: str, lines_to_append: List[str], location: st
 
     # Check if file exists
     if not os.path.isfile(filepath):
-        logger.debug(f'File "{filepath}" does not exist')
+        logger.debug(f'Failed to find file: {filepath}')
         return False
 
     logger.debug(f'Appending lines of text to the {location} of file: {filepath} ...')

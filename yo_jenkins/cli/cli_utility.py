@@ -22,13 +22,12 @@ from yo_jenkins import __version__
 from yo_jenkins.YoJenkins import REST, Auth, YoJenkins  # isort:skip
 from yo_jenkins.Utility.utility import iter_data_empty_item_stripper, load_contents_from_local_file  # isort:skip
 
-
 # Getting the logger reference
 logger = logging.getLogger()
 
 # TODO: Find centralized location for these static values
 CONFIG_DIR_NAME = '.yo-jenkins'
-HISTORY_FILE = 'history'
+HISTORY_FILE_NAME = 'history'
 COMMAND_HISTORY_FORMAT = 'json'
 DEFAULT_PROFILE_NAME = 'default'
 MAX_PROFILE_HISTORY_LENGTH = 1000
@@ -221,7 +220,7 @@ def log_to_history(decorated_function) -> None:
             profile_name = DEFAULT_PROFILE_NAME
 
         # Check if history file exists
-        history_file_path = os.path.join(os.path.join(Path.home(), CONFIG_DIR_NAME), HISTORY_FILE)
+        history_file_path = os.path.join(os.path.join(Path.home(), CONFIG_DIR_NAME), HISTORY_FILE_NAME)
         if not os.path.isfile(history_file_path):
             logger.debug(f'Failed to find command history file: "{history_file_path}"')
             logger.debug(f'Creating command history file ...')

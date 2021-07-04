@@ -819,7 +819,7 @@ def info(ctx, debug, pretty, yaml, xml, toml, profile, url):
 
 
 ##############################################################################
-#                             UTILITY
+#                             TOOLS
 ##############################################################################
 @main.group(short_help='\tTools and more')
 def tools():
@@ -862,12 +862,13 @@ def feature_request(debug):
     set_debug_log_level(debug)
     cli_tools.feature_request()
 
-@tools.command(short_help='\tShow the command history for each profile')
+@tools.command(short_help='\tShow detailed command usage history')
 @cli_decorators.debug
-@cli_decorators.profile
-def history(debug, profile):
+@click.option('--profile', type=str, required=False, is_flag=False, help='Filter by profile name')
+@click.option('--clear', type=bool, required=False, default=False, is_flag=True, help='Clear the history file')
+def history(debug, profile, clear):
     set_debug_log_level(debug)
-    click.echo(click.style('TODO :-/', fg='yellow',))
+    cli_tools.history(profile, clear)
 
 @tools.command(short_help='\tSend a generic REST request to server')
 @cli_decorators.debug
