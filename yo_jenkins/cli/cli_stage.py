@@ -4,14 +4,15 @@ import logging
 import sys
 
 import click
+from yo_jenkins.cli import cli_utility as cu
+from yo_jenkins.cli.cli_utility import log_to_history
 from yo_jenkins.YoJenkins.Status import Status
-
-from . import cli_utility as cu
 
 # Getting the logger reference
 logger = logging.getLogger()
 
 
+@log_to_history
 def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, stage_name: str, job: str,
          build_number: int, build_url: str, latest: bool) -> None:
     """TODO Docstring
@@ -60,6 +61,7 @@ def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profil
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
+@log_to_history
 def status(profile: str, stage_name: str, job: str, build_number: int, build_url: str, latest: bool) -> None:
     """TODO Docstring
 
@@ -121,6 +123,7 @@ def status(profile: str, stage_name: str, job: str, build_number: int, build_url
     click.echo(click.style(f'{data}', fg=output_fg, bold=True))
 
 
+@log_to_history
 def steps(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, opt_list: bool,
           stage_name: str, job: str, build_number: int, build_url: str, latest: bool) -> None:
     """TODO Docstring
@@ -171,6 +174,7 @@ def steps(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profi
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
+@log_to_history
 def logs(profile: str, stage_name: str, job: str, build_number: int, build_url: str, latest: bool,
          download_dir: bool) -> None:
     """TODO Docstring

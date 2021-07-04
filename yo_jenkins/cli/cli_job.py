@@ -3,17 +3,17 @@
 import json
 import logging
 import sys
-from pprint import pprint
 
 import click
 import xmltodict
-
-from . import cli_utility as cu
+from yo_jenkins.cli import cli_utility as cu
+from yo_jenkins.cli.cli_utility import log_to_history
 
 # Getting the logger reference
 logger = logging.getLogger()
 
 
+@log_to_history
 def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, job: str) -> None:
     """TODO Docstring
 
@@ -35,6 +35,7 @@ def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profil
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
+@log_to_history
 def search(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, search_pattern: str,
            search_folder: str, depth: int, fullname: bool, opt_list: bool) -> None:
     """TODO Docstring
@@ -64,6 +65,7 @@ def search(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, prof
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
+@log_to_history
 def build_list(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, job: str,
                opt_list: bool) -> None:
     """TODO Docstring
@@ -87,6 +89,7 @@ def build_list(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, 
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
+@log_to_history
 def build_next(profile: str, job: str) -> None:
     """TODO Docstring
 
@@ -109,6 +112,7 @@ def build_next(profile: str, job: str) -> None:
     click.echo(click.style(f'{data}', fg='bright_green', bold=True))
 
 
+@log_to_history
 def build_last(profile: str, job: str) -> None:
     """TODO Docstring
 
@@ -131,6 +135,7 @@ def build_last(profile: str, job: str) -> None:
     click.echo(click.style(f'{data}', fg='bright_green', bold=True))
 
 
+@log_to_history
 def build_set(profile: str, job: str, build_number: int) -> None:
     """TODO Docstring
 
@@ -153,6 +158,7 @@ def build_set(profile: str, job: str, build_number: int) -> None:
     click.echo(click.style(f'{build_number}', fg='bright_green', bold=True))
 
 
+@log_to_history
 def build_exist(profile: str, job: str, build_number: int) -> None:
     """TODO Docstring
 
@@ -175,6 +181,7 @@ def build_exist(profile: str, job: str, build_number: int) -> None:
     click.echo(click.style('true', fg='bright_green', bold=True))
 
 
+@log_to_history
 def build(profile: str, job: str, parameters: tuple) -> None:
     """TODO Docstring
 
@@ -201,6 +208,7 @@ def build(profile: str, job: str, parameters: tuple) -> None:
     click.echo(click.style(f'success. queue number: {data}', fg='bright_green', bold=True))
 
 
+@log_to_history
 def queue_check(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, job: str,
                 opt_id: bool) -> None:
     """TODO Docstring
@@ -228,6 +236,7 @@ def queue_check(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool,
         cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
+@log_to_history
 def browser(profile: str, job: str) -> None:
     """TODO Docstring
 
@@ -248,6 +257,7 @@ def browser(profile: str, job: str) -> None:
         sys.exit(1)
 
 
+@log_to_history
 def config(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_json: bool, profile: str, job: str,
            filepath: str) -> None:
     """TODO Docstring
@@ -288,6 +298,7 @@ def config(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
+@log_to_history
 def disable(profile: str, job: str) -> None:
     """TODO Docstring
 
@@ -309,6 +320,7 @@ def disable(profile: str, job: str) -> None:
     click.echo(click.style('success', fg='bright_green', bold=True))
 
 
+@log_to_history
 def enable(profile: str, job: str) -> None:
     """TODO Docstring
 
@@ -330,6 +342,7 @@ def enable(profile: str, job: str) -> None:
     click.echo(click.style('success', fg='bright_green', bold=True))
 
 
+@log_to_history
 def rename(profile: str, job: str, new_name: str) -> None:
     """TODO Docstring
 
@@ -351,6 +364,7 @@ def rename(profile: str, job: str, new_name: str) -> None:
     click.echo(click.style('success', fg='bright_green', bold=True))
 
 
+@log_to_history
 def delete(profile: str, job: str) -> None:
     """TODO Docstring
 
@@ -372,6 +386,7 @@ def delete(profile: str, job: str) -> None:
     click.echo(click.style('success', fg='bright_green', bold=True))
 
 
+@log_to_history
 def wipe(profile: str, job: str) -> None:
     """TODO Docstring
 
@@ -393,6 +408,7 @@ def wipe(profile: str, job: str) -> None:
     click.echo(click.style('success', fg='bright_green', bold=True))
 
 
+@log_to_history
 def monitor(profile: str, job: str, sound: bool) -> None:
     """TODO Docstring
 
@@ -413,6 +429,7 @@ def monitor(profile: str, job: str, sound: bool) -> None:
         sys.exit(1)
 
 
+@log_to_history
 def create(profile: str, name: str, folder: str, config: str) -> None:
     """TODO Docstring
 

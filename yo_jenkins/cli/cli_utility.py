@@ -2,9 +2,13 @@
 
 import json
 import logging
+import os
 import platform
 import sys
-from pprint import pprint
+from datetime import datetime
+from inspect import getfullargspec
+from pathlib import Path
+from shlex import quote
 from typing import Type
 
 import click
@@ -13,12 +17,22 @@ import yaml
 from json2xml import json2xml
 from json2xml.utils import readfromstring
 from urllib3.util import parse_url
-from yo_jenkins.YoJenkins import REST, Auth, YoJenkins
-from yo_jenkins.Utility.utility import iter_data_empty_item_stripper
 from yo_jenkins import __version__
+
+from yo_jenkins.YoJenkins import REST, Auth, YoJenkins  # isort:skip
+from yo_jenkins.Utility.utility import iter_data_empty_item_stripper, load_contents_from_local_file  # isort:skip
 
 # Getting the logger reference
 logger = logging.getLogger()
+
+# TODO: Find centralized location for these static values
+CONFIG_DIR_NAME = '.yo-jenkins'
+HISTORY_FILE_NAME = 'history'
+COMMAND_HISTORY_FORMAT = 'json'
+DEFAULT_PROFILE_NAME = 'default'
+MAX_PROFILE_HISTORY_LENGTH = 1000
+CLI_CMD_PATH = sys.argv[0]
+CLI_CMD_ARGS = ' '.join([quote(s) for s in sys.argv[1:]])
 
 
 def set_debug_log_level(debug_flag: bool) -> None:
@@ -173,3 +187,79 @@ def is_full_url(url: str) -> bool:
 
 def server_target_check(target: str) -> bool:
     pass
+
+
+def log_to_history(decorated_function) -> None:
+    """This function decorates a function that is a cli command.
+    The function will log the CLI command and its info to the command history.
+
+    Details: Add this function like "@log_to_history" to a function
+
+    Args:
+        decorated_function : Function that is decorated
+
+    Returns:
+        None
+    """
+    # Get the profile argument index
+    argspec = getfullargspec(decorated_function)
+    try:
+        arg_index = argspec.args.index('profile')
+    except ValueError:
+        arg_index = -1
+
+    def wrapper(*args, **kwargs) -> None:
+        # Get the profile name for the command
+        if arg_index >= 0:
+            profile_name = args[arg_index]
+        else:
+            # NOTE: If no profile is used by the decorated function, use the default profile name
+            profile_name = DEFAULT_PROFILE_NAME
+        if profile_name is None:
+            # NOTE: If function has profile argument, but none was passed, use the default profile name
+            profile_name = DEFAULT_PROFILE_NAME
+
+        # Check if history file exists
+        history_file_path = os.path.join(os.path.join(Path.home(), CONFIG_DIR_NAME), HISTORY_FILE_NAME)
+        if not os.path.isfile(history_file_path):
+            logger.debug(f'Failed to find command history file: "{history_file_path}"')
+            logger.debug(f'Creating command history file ...')
+            try:
+                open(history_file_path, 'w').close()
+            except Exception as error:
+                logger.debug(f'Failed to create new command history file: {error}')
+
+        # Load the history file content
+        file_contents = load_contents_from_local_file(COMMAND_HISTORY_FORMAT, history_file_path)
+        if not file_contents:
+            logger.debug("Command history file is blank")
+
+        # If profile history length is too long, remove the oldest history item
+        if profile_name in file_contents:
+            if len(file_contents[profile_name]) > MAX_PROFILE_HISTORY_LENGTH:
+                file_contents[profile_name].pop(0)
+
+        # Add the command to the history file
+        logger.debug(f'Logging command to command history file: "{history_file_path}" ...')
+        if profile_name not in file_contents:
+            file_contents[profile_name] = []
+
+        command_info = {
+            'tool_path': CLI_CMD_PATH,
+            'arguments': CLI_CMD_ARGS,
+            'timestamp': datetime.now().timestamp(),
+            'datetime': datetime.now().strftime("%A, %B %d, %Y %I:%M:%S"),
+            'tool_version': __version__
+        }
+        file_contents[profile_name].append(command_info)
+
+        # Add to file, overwritting entire file
+        try:
+            with open(history_file_path, 'w') as outfile:
+                json.dump(file_contents, outfile, indent=4)
+        except Exception as error:
+            logger.debug(f'Failed to write command history file: {error}')
+
+        return decorated_function(*args, **kwargs)
+
+    return wrapper

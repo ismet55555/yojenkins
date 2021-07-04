@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
-import click
 import functools
+
+import click
 
 
 def format_output(decorated_function):

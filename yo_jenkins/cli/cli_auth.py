@@ -5,12 +5,14 @@ import sys
 
 import click
 from yo_jenkins.cli import cli_utility as cu
+from yo_jenkins.cli.cli_utility import log_to_history
 from yo_jenkins.YoJenkins import REST, Auth
 
 # Getting the logger reference
 logger = logging.getLogger()
 
 
+@log_to_history
 def configure(api_token: str) -> None:
     """TODO Docstring
 
@@ -29,6 +31,7 @@ def configure(api_token: str) -> None:
     click.echo(click.style('Successfully configured credentials file', fg='bright_green', bold=True))
 
 
+@log_to_history
 def token(profile: str) -> None:
     """TODO Docstring
 
@@ -54,6 +57,7 @@ def token(profile: str) -> None:
     click.echo(click.style(data, fg='bright_green', bold=True))
 
 
+@log_to_history
 def show(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool) -> None:
     """TODO Docstring
 
@@ -73,6 +77,7 @@ def show(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool) -> Non
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
+@log_to_history
 def verify(profile: str) -> None:
     """TODO Docstring
 
@@ -99,6 +104,7 @@ def verify(profile: str) -> None:
     click.echo(click.style('success', fg='bright_green', bold=True))
 
 
+@log_to_history
 def user(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str) -> None:
     """TODO Docstring
 

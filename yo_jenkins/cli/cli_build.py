@@ -4,14 +4,16 @@ import logging
 import sys
 
 import click
+from yo_jenkins.cli.cli_utility import log_to_history
 from yo_jenkins.YoJenkins.Status import Status
 
-from . import cli_utility as cu
+from yo_jenkins.cli import cli_utility as cu
 
 # Getting the logger reference
 logger = logging.getLogger()
 
 
+@log_to_history
 def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, job: str, build_number: int,
          build_url: str, latest: bool) -> None:
     """TODO Docstring
@@ -52,6 +54,7 @@ def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profil
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
+@log_to_history
 def status(profile: str, job: str, build_number: int, build_url: str, latest: bool) -> None:
     """TODO Docstring
 
@@ -105,6 +108,7 @@ def status(profile: str, job: str, build_number: int, build_url: str, latest: bo
     click.echo(click.style(f'{data}', fg=output_fg, bold=True))
 
 
+@log_to_history
 def abort(profile: str, job: str, build_number: int, build_url: str, latest: bool) -> None:
     """TODO Docstring
 
@@ -145,6 +149,7 @@ def abort(profile: str, job: str, build_number: int, build_url: str, latest: boo
     click.echo(click.style('success', fg='bright_green', bold=True))
 
 
+@log_to_history
 def delete(profile: str, job: str, build_number: int, build_url: str, latest: bool) -> None:
     """TODO Docstring
 
@@ -185,6 +190,7 @@ def delete(profile: str, job: str, build_number: int, build_url: str, latest: bo
     click.echo(click.style('{data}', fg='bright_green', bold=True))
 
 
+@log_to_history
 def stages(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, opt_list: bool, job: str,
            build_number: int, build_url: str, latest: bool) -> None:
     """TODO Docstring
@@ -233,6 +239,7 @@ def stages(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, prof
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
+@log_to_history
 def logs(profile: str, job: str, build_number: int, build_url: str, latest: bool, tail: float, download_dir: bool,
          follow: bool) -> None:
     """TODO Docstring
@@ -287,6 +294,7 @@ def logs(profile: str, job: str, build_number: int, build_url: str, latest: bool
         click.echo(click.style('success', fg='bright_green', bold=True))
 
 
+@log_to_history
 def browser(profile: str, job: str, build_number: int, build_url: str, latest: bool) -> None:
     """TODO Docstring
 
@@ -325,6 +333,7 @@ def browser(profile: str, job: str, build_number: int, build_url: str, latest: b
         sys.exit(1)
 
 
+@log_to_history
 def monitor(profile: str, job: str, build_number: int, build_url: str, latest: bool, sound: bool) -> None:
     """TODO Docstring
 

@@ -3,17 +3,17 @@
 import json
 import logging
 import sys
-from pprint import pprint
 
 import click
 import xmltodict
-
-from . import cli_utility as cu
+from yo_jenkins.cli import cli_utility as cu
+from yo_jenkins.cli.cli_utility import log_to_history
 
 # Getting the logger reference
 logger = logging.getLogger()
 
 
+@log_to_history
 def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, folder: str) -> None:
     """TODO Docstring
 
@@ -37,6 +37,7 @@ def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profil
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
+@log_to_history
 def search(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, search_pattern: str,
            search_folder: str, depth: int, fullname: bool, opt_list: bool) -> None:
     """TODO Docstring
@@ -68,6 +69,7 @@ def search(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, prof
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
+@log_to_history
 def subfolders(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, folder: str,
                opt_list: bool) -> None:
     """TODO Docstring
@@ -93,6 +95,7 @@ def subfolders(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, 
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
+@log_to_history
 def jobs(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, folder: str,
          opt_list: bool) -> None:
     """TODO Docstring
@@ -118,6 +121,7 @@ def jobs(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profil
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
+@log_to_history
 def views(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, folder: str,
           opt_list: int) -> None:
     """TODO Docstring
@@ -143,6 +147,7 @@ def views(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profi
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
+@log_to_history
 def items(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, folder: str,
           opt_list: int) -> None:
     """TODO Docstring
@@ -168,6 +173,7 @@ def items(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profi
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
+@log_to_history
 def browser(profile: str, folder: str) -> None:
     """TODO Docstring
 
@@ -190,6 +196,7 @@ def browser(profile: str, folder: str) -> None:
         sys.exit(1)
 
 
+@log_to_history
 def config(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_json: bool, profile: str, folder: str,
            filepath: str) -> None:
     """TODO Docstring
@@ -232,6 +239,7 @@ def config(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
+@log_to_history
 def create(profile: str, name: str, folder: str, type: str, config: str) -> None:
     """TODO Docstring
 
@@ -255,6 +263,7 @@ def create(profile: str, name: str, folder: str, type: str, config: str) -> None
     click.echo(click.style('success', fg='bright_green', bold=True))
 
 
+@log_to_history
 def copy(profile: str, folder: str, original_name: str, new_name: str) -> None:
     """TODO Docstring
 
@@ -280,6 +289,7 @@ def copy(profile: str, folder: str, original_name: str, new_name: str) -> None:
     click.echo(click.style('success', fg='bright_green', bold=True))
 
 
+@log_to_history
 def delete(profile: str, folder: str) -> None:
     """TODO Docstring
 

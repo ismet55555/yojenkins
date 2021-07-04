@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import json
 import logging
 import os
 import re
@@ -11,64 +12,63 @@ from typing import Dict, List, Tuple
 from urllib.parse import urljoin, urlparse
 
 import requests
-import yaml
 import toml
+import yaml
+from yo_jenkins import __version__
 from yo_jenkins.YoJenkins.JenkinsItemClasses import JenkinsItemClasses
 
 logger = logging.getLogger()
 
 
-def load_contents_from_local_yaml_file(local_file_path: str) -> Dict:
-    """Loading a local file contents in YAML format
+def load_contents_from_local_file(file_type: str, local_file_path: str) -> Dict:
+    """Loading a local file contents
 
     Parameters:
-        local_file_path (str) : Path to a local YAML file to be loaded
-    Returns: 
-        file_contents (dict) : The contents of the YAML file
-    """
-
-    logger.debug(f"Loading specified local file: '{local_file_path}' ...")
-    try:
-        with open(local_file_path, 'r') as file:
-            file_contents = yaml.safe_load(file)
-        logger.debug("Successfully loaded local file")
-    except Exception as error:
-        # TODO: Make Exception more specific
-        logger.debug(f"Failed to load specified local file: '{local_file_path}'. Exception: {error}")
-        return {}
-    return file_contents
-
-
-def load_contents_from_local_toml_file(local_file_path: str) -> Dict:
-    """Loading a local file contents in TOML format
-
-    Parameters:
+        file_type (str)       : Type of file to be loaded ie. 'yaml', 'toml', 'json'
         local_file_path (str) : Path to a local TOML file to be loaded
     Returns: 
-        file_contents (dict) : The contents of the TOML file
+        file_contents (dict) : The contents of file
     """
+    file_type = file_type.lower()
 
-    logger.debug(f"Loading specified local file: '{local_file_path}' ...")
+    # Check if file exists
+    if not os.path.isfile(local_file_path):
+        logger.debug(f'Failed to find file: {local_file_path}')
+        return {}
+
+    logger.debug(f"Loading specified local .{file_type} file: '{local_file_path}' ...")
     try:
         with open(local_file_path, 'r') as file:
-            file_contents = toml.load(file)
-        logger.debug("Successfully loaded local file")
+            if file_type == 'yaml':
+                file_contents = yaml.safe_load(file)
+            elif file_type == 'toml':
+                file_contents = toml.load(file)
+            elif file_type == 'json':
+                file_contents = json.load(file)
+            else:
+                logger.debug(f"Unknown file type passed: '{file_type}'")
+                raise ValueError(f"Unknown file type passed: '{file_type}'")
+        logger.debug(f"Successfully loaded local .{file_type} file")
     except Exception as error:
-        # TODO: Make Exception more specific
-        logger.debug(f"Failed to load specified local file: '{local_file_path}'. Exception: {error}")
+        logger.debug(f"Failed to load specified local .{file_type} file: '{local_file_path}'. Exception: {error}")
         return {}
     return file_contents
 
 
-def load_contents_from_remote_yaml_file_url(remote_file_url: str, allow_redirects: bool = True) -> Dict:
+def load_contents_from_remote_file_url(file_type: str, remote_file_url: str, allow_redirects: bool = True) -> Dict:
     """Loading a remote yaml file contents over HTTP
 
+    # FIXME: Make it able to load toml, json, and yaml file types
+
     Args:
+        file_type (str)       : Type of file to be loaded ie. 'yaml', 'toml', 'json'
         remote_file_url (url)  : Remote URL location of file to be loaded
         allow_redirects (bool) : If True allow redirects to another URL (default True)
     Returns: 
         file_contents (Dict) : The contents of the file
     """
+    file_type = file_type.lower()
+
     # Getting name of file from URL
     remote_filename = Path(remote_file_url).name
     logger.debug(f'Requested remote filename parsed: {remote_filename}')
@@ -120,7 +120,6 @@ def load_contents_from_remote_yaml_file_url(remote_file_url: str, allow_redirect
         # Loading the yaml file content
         logger.debug("Loading contents of remote file ...")
         try:
-            # open(os.path.join(local_dir, remote_filename), 'wb').write(remote_request.content)
             file_contents = yaml.safe_load(remote_request.content)
         except Exception as e:
             logger.debug(f'Failed loading requested file. Exception: {e}')
@@ -133,8 +132,8 @@ def load_contents_from_remote_yaml_file_url(remote_file_url: str, allow_redirect
     return file_contents
 
 
-def append_lines_to_beginning_of_file(filepath: str, lines_to_append: List[str]) -> bool:
-    """Add lines to the beginning to a text based file
+def append_lines_to_file(filepath: str, lines_to_append: List[str], location: str = 'beginning') -> bool:
+    """Add lines to the end to a text based file
 
     Details: The passed list is parsed and each list item is a separate line added
              to the beginning of the file
@@ -142,23 +141,38 @@ def append_lines_to_beginning_of_file(filepath: str, lines_to_append: List[str])
     Args:
         filepath        : Path to the file
         lines_to_append : List of strings, each item a line to append
+        location        : Location of where to append lines, 'beginning' or 'end' (default 'beginning')
 
     Returns:
         True if successfully appended, else False
     """
-    # TODO: Check if file exists
-    logger.debug(f'Appending lines of text to the beginning of file: {filepath} ...')
+    location = location.lower()
+
+    # Check if file exists
+    if not os.path.isfile(filepath):
+        logger.debug(f'Failed to find file: {filepath}')
+        return False
+
+    logger.debug(f'Appending lines of text to the {location} of file: {filepath} ...')
     try:
-        open_file = open(filepath, 'r+')
-        lines_old = open_file.readlines()  # read old content
-        lines = lines_to_append + lines_old
-        open_file.seek(0)
-        for line in lines:
-            open_file.write(line)
-        open_file.close()
-    except Exception as e:
-        # TODO: Specify exception
-        logger.error(f'Failed to append lines of text to the beginning of file ({filepath}). Exception: {e}')
+        if location == 'beginning':
+            open_file = open(filepath, 'r+')
+            lines_old = open_file.readlines()  # read old content
+            lines = lines_to_append + lines_old
+            open_file.seek(0)
+            for line in lines:
+                open_file.write(line)
+            open_file.close()
+        elif location == 'end':
+            open_file = open(filepath, 'a')
+            for line in lines_to_append:
+                open_file.write(line)
+            open_file.close()
+        else:
+            logger.debug(f'Unsupported append file location: {location}')
+            return False
+    except Exception as error:
+        logger.error(f'Failed to append lines of text to the end of file ({filepath}). Exception: {error}')
         return False
     return True
 
