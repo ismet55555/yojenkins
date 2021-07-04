@@ -4,13 +4,14 @@ import logging
 import sys
 
 import click
-
-from . import cli_utility as cu
+from yo_jenkins.cli import cli_utility as cu
+from yo_jenkins.cli.cli_utility import log_to_history
 
 # Getting the logger reference
 logger = logging.getLogger()
 
 
+@log_to_history
 def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, step_url: str) -> None:
     """TODO Docstring
 

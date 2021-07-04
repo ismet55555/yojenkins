@@ -4,8 +4,9 @@ import logging
 import sys
 
 import click
-from yo_jenkins.Utility.utility import browser_open
+from yo_jenkins.cli.cli_utility import log_to_history
 from yo_jenkins.Tools import Package
+from yo_jenkins.Utility.utility import browser_open
 
 # Getting the logger reference
 logger = logging.getLogger()
@@ -14,6 +15,7 @@ BUG_REPORT_URL = "https://github.com/ismet55555/yo-jenkins/issues/new?assignees=
 FEATURE_REQUEST_URL = "https://github.com/ismet55555/yo-jenkins/issues/new?assignees=&labels=&template=feature_request.md&title="
 
 
+@log_to_history
 def upgrade(user: bool, proxy: str) -> None:
     """TODO Docstring
 
@@ -31,6 +33,7 @@ def upgrade(user: bool, proxy: str) -> None:
     click.echo(click.style('successfully upgraded', fg='bright_green', bold=True))
 
 
+@log_to_history
 def remove() -> None:
     """TODO Docstring
 
@@ -46,6 +49,7 @@ def remove() -> None:
         Package.uninstall()
 
 
+@log_to_history
 def bug_report() -> None:
     """TODO Docstring
 
@@ -66,6 +70,7 @@ def bug_report() -> None:
     return success
 
 
+@log_to_history
 def feature_request() -> None:
     """TODO Docstring
 
