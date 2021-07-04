@@ -20,6 +20,7 @@ from . import colors
 # Getting the logger reference
 logger = logging.getLogger()
 
+# TODO: Find centralized location for these static values
 CONFIG_DIR_NAME = '.yo-jenkins'
 CREDS_FILE_NAME = 'credentials'
 PROFILE_ENV_VAR = 'YOJENKINS_PROFILE'
@@ -72,7 +73,7 @@ class Auth:
 
         # Add top file prefix for TOML file format
         lines_new = [f'# -*- mode: toml -*-{os.linesep}', f'# vim: set filetype=toml{os.linesep}']
-        success = utility.append_lines_to_beginning_of_file(output_path, lines_new)
+        success = utility.append_lines_to_file(output_path, lines_new, 'beginning')
         if not success:
             return False
 
@@ -180,7 +181,7 @@ class Auth:
             return
 
         # Load the current cred config file
-        profiles = utility.load_contents_from_local_toml_file(file_path)
+        profiles = utility.load_contents_from_local_file("toml", file_path)
         if not profiles:
             return
 
@@ -247,7 +248,7 @@ class Auth:
             logger.debug(f'Loading credentials file: {file_path} ...')
 
             # Load the current cred config file
-            profiles = utility.load_contents_from_local_toml_file(file_path)
+            profiles = utility.load_contents_from_local_file("toml", file_path)
             if not profiles:
                 return False
             logger.debug(f'Currently listed profile names: {", ".join(list(profiles.keys()))}')
@@ -366,7 +367,7 @@ class Auth:
                 return {}
 
         # Loading configurations file
-        configs = utility.load_contents_from_local_toml_file(creds_file_abs_path)
+        configs = utility.load_contents_from_local_file("toml", creds_file_abs_path)
         if not configs:
             return {}
 
@@ -584,7 +585,7 @@ class Auth:
             return {}
 
         # Loading configurations file
-        return utility.load_contents_from_local_toml_file(config_filepath)
+        return utility.load_contents_from_local_file("toml", config_filepath)
 
     def verify(self) -> bool:
         """Verify/Check if current credentials can authenticate with server

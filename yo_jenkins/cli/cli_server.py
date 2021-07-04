@@ -2,14 +2,13 @@
 
 import json
 import logging
-from pprint import pprint
-import sys
 import os
+import sys
 
 import click
 from yo_jenkins.Docker import DockerJenkinsServer
+from yo_jenkins.Utility.utility import (get_project_dir, get_resource_path, log_to_history)
 from yo_jenkins.YoJenkins import Auth, YoJenkins
-from yo_jenkins.Utility.utility import get_resource_path, get_project_dir
 
 from . import cli_utility as cu
 
@@ -17,6 +16,7 @@ from . import cli_utility as cu
 logger = logging.getLogger()
 
 
+@log_to_history
 def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str) -> None:
     """TODO Docstring
 
@@ -35,6 +35,7 @@ def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profil
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
+@log_to_history
 def people(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, opt_list: bool) -> None:
     """TODO Docstring
 
@@ -54,6 +55,7 @@ def people(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, prof
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
+@log_to_history
 def queue(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, opt_list: bool) -> None:
     """TODO Docstring
 
@@ -76,6 +78,7 @@ def queue(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profi
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
+@log_to_history
 def plugins(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, opt_list: bool) -> None:
     """TODO Docstring
 
@@ -95,6 +98,7 @@ def plugins(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, pro
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
+@log_to_history
 def browser(profile: str) -> None:
     """TODO Docstring
 
@@ -110,6 +114,7 @@ def browser(profile: str) -> None:
         sys.exit(1)
 
 
+@log_to_history
 def reachable(profile: str, timeout: int) -> None:
     """TODO Docstring
 
@@ -131,6 +136,7 @@ def reachable(profile: str, timeout: int) -> None:
     click.echo(click.style('true', fg='bright_green', bold=True))
 
 
+@log_to_history
 def quiet(profile: str, off: bool):
     """TODO Docstring
 
@@ -148,6 +154,7 @@ def quiet(profile: str, off: bool):
     click.echo(click.style('success', fg='bright_green', bold=True))
 
 
+@log_to_history
 def restart(profile: str, force: bool):
     """TODO Docstring
 
@@ -165,6 +172,7 @@ def restart(profile: str, force: bool):
     click.echo(click.style('success', fg='bright_green', bold=True))
 
 
+@log_to_history
 def shutdown(profile: str, force: bool):
     """TODO Docstring
 
@@ -182,6 +190,7 @@ def shutdown(profile: str, force: bool):
     click.echo(click.style('success', fg='bright_green', bold=True))
 
 
+@log_to_history
 def server_deploy(config_file: str, plugins_file: str, protocol_schema: str, host: str, port: int, image_base: str,
                   image_rebuild: bool, new_volume: bool, new_volume_name: str, bind_mount_dir: str,
                   container_name: str, registry: str, admin_user: str, password: str) -> None:
@@ -252,6 +261,7 @@ def server_deploy(config_file: str, plugins_file: str, protocol_schema: str, hos
                     bold=True))
 
 
+@log_to_history
 def server_teardown(remove_volume: bool, remove_image: bool):
     """TODO Docstring
 

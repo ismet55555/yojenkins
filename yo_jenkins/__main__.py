@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import logging
-from pprint import pprint
 import sys
 
 import click
