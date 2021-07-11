@@ -59,7 +59,7 @@ Use `--help` for available options, and use `--debug` to troubleshoot any issues
 
 ```txt
 
-Usage: __main__.py [OPTIONS] COMMAND [ARGS]...
+Usage: yo-jenkins [OPTIONS] COMMAND [ARGS]...
 
                         YO-JENKINS (Version: 0.0.0) 
 
