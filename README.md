@@ -56,7 +56,32 @@
 
 # Quick Start
 
-TODO
+- **(Optional)** Start up a local Jenkins server using Docker:
+  - ```sh
+    yo-jenkins server server-deploy
+    ```
+
+- Configure your first profile. Profiles are stored in the home directory in the `.yo-jenkins` directory.
+  - ```sh
+    yo-jenkins auth configure
+    ```
+
+- Generate a Jenkins server API token and add it to your first profile:
+  - ```sh
+    yo-jenkins auth token --profile <PROFILE NAME>`
+    ```
+
+- Verify that you can access the Jenkins server:
+  - ```sh
+    yo-jenkins auth verify
+    ```
+- Now start trying some things:
+  - ```sh
+    Get sever info:       yo-jenkins server info
+    Get your user info:   yo-jenkins auth user
+    Search a job:         yo-jenkins job search some-job-name --fullname --yaml --list
+    Monitor a build:      yo-jenkins build monitor some-job-name --latest --sound
+    ```
 
 # Installation
 
