@@ -7,7 +7,8 @@ docker==5.0.0
 json2xml==3.6.0
 python-jenkins==1.8.0.0a0
 PyYAML==5.4.1
-requests-cache==0.7.0.dev452
 requests-futures==1.0.0
+pyreadline==2.1
 simpleaudio==1.0.4; platform_system != "Windows"
 windows-curses==2.2.0; platform_system == "Windows"
+pywin32==227; platform_system == "Windows"
