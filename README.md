@@ -1,6 +1,42 @@
+<p align="center"><img width="150" alt="portfolio_view" src="https://raw.githubusercontent.com/ismet55555/yo-jenkins/readme_work/dev_things/assets/logo_final.png"></p>
+
 <h1 align="center">yo-jenkins</h1>
 
 <!-- [![Testing, Building, and Publishing](https://github.com/ismet55555/yo-jenkins/actions/workflows/test-build-publish.yml/badge.svg?branch=main)](https://github.com/ismet55555/yo-jenkins/actions/workflows/test-build-publish.yml) -->
+
+
+<!-- Licence Shield from https://shields.io/-->
+<p align="center">
+
+<a href="https://pypi.org/project/yo-jenkins/">
+  <img alt="PYPI Version" src="https://img.shields.io/pypi/v/yo-jenkins?color=blue">
+</a>
+
+<a href="https://pypi.org/project/yo-jenkins/">
+  <img alt="Python Versions" src="https://img.shields.io/pypi/pyversions/yo-jenkins">
+</a>
+
+<a href="https://pypi.org/project/yo-jenkins/">
+  <img alt="Packaging Format" src="https://img.shields.io/pypi/format/yo-jenkins">
+</a>
+
+<a href="https://pypi.org/project/yo-jenkins/">
+  <img alt="PYPI Status" src="https://img.shields.io/pypi/status/yo-jenkins">
+</a>
+
+<a href="https://github.com/ismet55555/yo-jenkins/blob/main/LICENSE">
+  <img alt="Licence" src="https://img.shields.io/github/license/ismet55555/yo-jenkins">
+</a>
+
+<!-- <a href="https://travis-ci.com/github/ismet55555/exam-terminal">
+  <img alt="Build Status" src="https://img.shields.io/travis/com/ismet55555/exam-terminal/master">
+</a>
+
+<a href="https://www.codacy.com/gh/ismet55555/exam-terminal/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ismet55555/exam-terminal&amp;utm_campaign=Badge_Grade">
+  <img src="https://app.codacy.com/project/badge/Grade/dc108e18f27b4b86a9f6304745e6869c"/>
+</a> -->
+</p>
+
 
 `yo-jenkins` is a command line interface (CLI) tool to monitor, manage, and have fun with a Jenkins server.  
 
@@ -55,45 +91,9 @@ yo-jenkins server server-deploy
 
 Use `--help` for available options, and use `--debug` to troubleshoot any issues.
 
-# Main Menu
+# Usage
 
-```txt
-
-Usage: yo-jenkins [OPTIONS] COMMAND [ARGS]...
-
-                        YO-JENKINS (Version: 0.0.0) 
-
-  yo-jenkins is a tool that is focused on interfacing with Jenkins server from
-  the comfort of the beloved command line.  This tool can also be used as a
-  middleware utility, generating and passing Jenkins information or automating
-  tasks.
-
-  QUICK START:
-
-      1. Configure yo profile:  yo-jenkins auth configure
-
-      2. Add yo API token:      yo-jenkins auth token --profile <PROFILE>
-
-      3. Verify yo creds:       yo-jenkins auth verify
-
-      4. Explore yo-jenkins
-
-Options:
-  -v, --version  Show the version
-  --help         Show this message and exit.
-
-Commands:
-  auth     Manage authentication and profiles
-  build    Manage builds
-  folder   Manage folders
-  job      Manage jobs
-  node     Manage nodes
-  server   Manage server
-  stage    Manage build stages
-  step     Manage stage steps
-  tools    Tools and more
-
-```
+<p align="center"><img width="150" alt="portfolio_view" src="https://raw.githubusercontent.com/ismet55555/yo-jenkins/readme_work/dev_things/assets/help_carbon.png"></p>
 
 &nbsp;
 
