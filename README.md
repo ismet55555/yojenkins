@@ -112,7 +112,7 @@
 
 # Usage
 
-Each top level command has sub-commands. For example, `yo-jenkins server` has sub-commands `server-deploy` and `server-start`.
+Each top level command has sub-commands. For example, `yo-jenkins server` has sub-commands `server-deploy` and `server-start`. To see the sub-commands of a command, or to see the options of a command, use the `--help` option.
 
 ```txt
 Usage: yo-jenkins [OPTIONS] COMMAND [ARGS]...
