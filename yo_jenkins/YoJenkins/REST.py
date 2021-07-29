@@ -20,11 +20,7 @@ logger = logging.getLogger()
 class REST:
     """Handeling of REST requests"""
 
-    def __init__(self,
-                 username: str = '',
-                 api_token: str = '',
-                 server_url: str = '',
-                 session=None) -> None:
+    def __init__(self, username: str = '', api_token: str = '', server_url: str = '', session=None) -> None:
         """TODO Docstring
 
         Args:
