@@ -68,7 +68,7 @@
 
 - Generate a Jenkins server API token and add it to your first profile:
   - ```sh
-    yo-jenkins auth token --profile <PROFILE NAME>`
+    yo-jenkins auth token --profile <PROFILE NAME>
     ```
 
 - Verify that you can access the Jenkins server:
@@ -78,7 +78,7 @@
 - Now start trying some things:
   - ```sh
     Get sever info:       yo-jenkins server info
-    Get your user info:   yo-jenkins auth user
+    Get your user info:   yo-jenkins auth user --pretty
     Search a job:         yo-jenkins job search some-job-name --fullname --yaml --list
     Monitor a build:      yo-jenkins build monitor some-job-name --latest --sound
     ```

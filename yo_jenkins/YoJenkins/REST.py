@@ -7,7 +7,6 @@ from typing import Dict, Tuple
 
 import requests
 from requests_futures.sessions import FuturesSession
-from requests_cache import CachedSession
 from requests.auth import HTTPBasicAuth
 
 # Getting the logger reference
@@ -21,12 +20,7 @@ logger = logging.getLogger()
 class REST:
     """Handeling of REST requests"""
 
-    def __init__(self,
-                 username: str = '',
-                 api_token: str = '',
-                 server_url: str = '',
-                 session=None,
-                 is_cached: bool = False) -> None:
+    def __init__(self, username: str = '', api_token: str = '', server_url: str = '', session=None) -> None:
         """TODO Docstring
 
         Args:
@@ -39,14 +33,9 @@ class REST:
             TODO
         """
         # Request session
-        self.is_cached = is_cached
         if not session:
-            if is_cached:
-                logger.debug('Starting new CACHED requests session ...')
-                self.request_session = CachedSession(backend='sqlite', expire_after=2)
-            else:
-                logger.debug('Starting new requests session (Type: FuturesSession) ...')
-                self.request_session = FuturesSession(max_workers=16)
+            logger.debug('Starting new requests session (Type: FuturesSession) ...')
+            self.request_session = FuturesSession(max_workers=16)
         else:
             # Convert to future session
             logger.debug('Converting request session to FutureSession ...')
@@ -122,19 +111,6 @@ class REST:
         else:
             logger.debug('Failed. Server cannot be reached or is offline')
             return False
-
-    def clear_cache(self):
-        """TODO Docstring
-
-        Args:
-            TODO
-
-        Returns:
-            TODO
-        """
-        if self.is_cached:
-            self.request_session.cache.clear()
-            logger.debug('Successfully cleared request session cache')
 
     def request(self,
                 target: str,

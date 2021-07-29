@@ -22,7 +22,6 @@ docker = "*"
 json2xml = "*"
 python-jenkins = "*"
 pyyaml = "*"
-requests-cache = "*"
 requests_futures = "*"
 simpleaudio = {version = "*", platform_system = "!= 'Windows'"}
 toml = "*"
