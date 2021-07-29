@@ -32,7 +32,7 @@ COMMAND_HISTORY_FORMAT = 'json'
 DEFAULT_PROFILE_NAME = 'default'
 MAX_PROFILE_HISTORY_LENGTH = 1000
 CLI_CMD_PATH = sys.argv[0]
-CLI_CMD_ARGS = ' '.join([quote(s) for s in sys.argv[1:]])
+CLI_CMD_ARGS = ' '.join([quote(arg) for arg in sys.argv[1:]])
 
 
 def set_debug_log_level(debug_flag: bool) -> None:
