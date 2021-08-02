@@ -92,7 +92,7 @@ def verify(profile: str) -> None:
     auth = Auth(REST())
 
     # Get the credential profile
-    if not auth.get_configurations(profile):
+    if not auth.get_credentials(profile):
         click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
 

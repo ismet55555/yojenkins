@@ -128,7 +128,7 @@ def reachable(profile: str, timeout: int) -> None:
         TODO
     """
     auth = Auth()
-    if not auth.get_configurations(profile):
+    if not auth.get_credentials(profile):
         click.echo(click.style('failed to find any credentials', fg='bright_red', bold=True))
         sys.exit(1)
     if not YoJenkins(Auth_obj=auth).REST.is_reachable(auth.jenkins_profile['jenkins_server_url'], timeout=timeout):

@@ -25,12 +25,13 @@ from yo_jenkins.Utility.utility import iter_data_empty_item_stripper, load_conte
 # Getting the logger reference
 logger = logging.getLogger()
 
-# TODO: Find centralized location for these static values
+
 CONFIG_DIR_NAME = '.yo-jenkins'
 HISTORY_FILE_NAME = 'history'
 COMMAND_HISTORY_FORMAT = 'json'
 DEFAULT_PROFILE_NAME = 'default'
 MAX_PROFILE_HISTORY_LENGTH = 1000
+
 CLI_CMD_PATH = sys.argv[0]
 CLI_CMD_ARGS = ' '.join([quote(arg) for arg in sys.argv[1:]])
 
@@ -96,10 +97,8 @@ def config_yo_jenkins(profile: str) -> Type[YoJenkins]:
     """
     Auth_obj = Auth(REST())
 
-    # TODO: Rename configurations to credentials
-
     # Get the credential profile
-    if not Auth_obj.get_configurations(profile):
+    if not Auth_obj.get_credentials(profile):
         click.echo(click.style('Failed to find any credentials', fg='bright_red', bold=True))
         sys.exit(1)
 

@@ -6,7 +6,8 @@ import sys
 from pathlib import Path
 
 import click
-from yo_jenkins.cli.cli_utility import (COMMAND_HISTORY_FORMAT, CONFIG_DIR_NAME, HISTORY_FILE_NAME, log_to_history)
+from yo_jenkins.cli import cli_utility as cu
+from yo_jenkins.cli.cli_utility import (CONFIG_DIR_NAME, HISTORY_FILE_NAME, log_to_history)
 from yo_jenkins.Tools import Package
 from yo_jenkins.Utility.utility import (browser_open, load_contents_from_local_file)
 
@@ -146,3 +147,32 @@ def history(profile: str, clear: bool) -> None:
     else:
         for profile_name in contents:
             output_history_to_console(contents[profile_name], profile_name)
+
+
+@log_to_history
+def rest_request(profile: str) -> None:
+    """TODO Docstring
+
+    Details: TODO
+
+    Args:
+        TODO
+
+    Returns:
+        TODO
+    """
+    jy_obj = cu.config_yo_jenkins(profile)
+
+    print(jy_obj.REST.get_server_url())
+    response = jy_obj.REST.request(
+
+    # TODO: Look at other usages of REST.request()
+    # TODO: Think about parsing the response and displaying it in a more readable format
+
+    # job_info, _, success = self.REST.request(f'{job_url.strip("/")}/api/json', 'get', is_endpoint=False)
+
+    # endpoint = f'queue/cancelItem?id={build_queue_number}'
+    # return_content = self.REST.request(endpoint, 'post', is_endpoint=True)[0]
+
+
+    

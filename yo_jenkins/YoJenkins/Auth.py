@@ -343,7 +343,7 @@ class Auth:
                 f'Configuration file "{CREDS_FILE_NAME}" NOT found in configuration directory: {config_dir_abs_path}')
             return False, ''
 
-    def get_configurations(self, profile: str = '') -> Dict:
+    def get_credentials(self, profile: str = '') -> Dict:
         """Get the contents of the credentials profiles file
 
         Details: The order (preference) of specified profile credentials to get are the following:
@@ -367,12 +367,12 @@ class Auth:
                 return {}
 
         # Loading configurations file
-        configs = utility.load_contents_from_local_file("toml", creds_file_abs_path)
-        if not configs:
+        creds_info = utility.load_contents_from_local_file("toml", creds_file_abs_path)
+        if not creds_info:
             return {}
 
         # Get the listed profiles
-        profile_items_all = configs
+        profile_items_all = creds_info
         logger.debug(f'Number of listed profiles found: {len(profile_items_all)}')
 
         # Filter out the profiles that are misconfigured (missing keys)

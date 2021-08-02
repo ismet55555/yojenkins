@@ -1,7 +1,0 @@
-# -*- mode: yaml -*-
-# vim: set filetype=yaml
----
-
-terminal:
-    min_height_rows: 40
-    min_width_columns: 79

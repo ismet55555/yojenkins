@@ -133,8 +133,8 @@ class REST:
 
         Args:
             target         : Request URL target. Does not include server_url
-            is_endpoint    : If True, add the object stored server URL, else do not
-            request_type   : Type of request. Currently `get` and `post` only
+            is_endpoint    : If True, add the object-stored server URL address, else do not
+            request_type   : Type of request. Currently `get`, `post`, `head` only
             json_content   : If True, parse as json/dict, else return raw content text
             auth           : Credentials in (username, password) format
             auth_needed    : If True, use credentials, else do not
