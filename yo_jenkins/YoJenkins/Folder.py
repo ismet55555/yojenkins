@@ -430,6 +430,7 @@ class Folder():
                 config_definition = config_file.read()
             except Exception as e:
                 logger.debug(f'Failed to open and read file. Exception: {e}')
+                return False
 
         # Use blank item config
         if type == 'folder':
