@@ -140,6 +140,7 @@ class REST:
             auth_needed    : If True, use credentials, else do not
             new_session    : If True, create a new connection sessions, else re-use previous/default session
             params         : Parameters passed with the request
+            data           : Data passed with the request
             headers        : Headers passed with the request
             timeout        : Number of seconds to wait for request
             allow_redirect : If True, allow request redirection to other URLs
@@ -246,9 +247,9 @@ class REST:
                 # Check for json parsing errors
                 try:
                     return_content = response.json()
-                except Exception as e:
+                except Exception as error:
                     # TODO: Specify json parse error
-                    logger.debug(f"Failed to parse request return as JSON. Possible HTML content. Exception: {e})")
+                    logger.debug(f"Failed to parse request return as JSON. Possible HTML content. Exception: {error})")
             else:
                 return_content = response.text
         else:
