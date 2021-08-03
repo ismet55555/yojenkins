@@ -11,13 +11,14 @@
 #
 ##############################################################################
 
+# Stop on first error
 set -e
 
 # Assign default values if parameters are not passed into script
 PASSWORD=${1:-'password'}
 USERNAME=${2:-'admin'}
 JENKINS_SERVER_URL=${3:-"http://localhost:8080"}
-SCRIPT_COMMAND=${4:-"println(Jenkins.instance.pluginManager.plugins)"}  # No spaces
+SCRIPT_COMMAND=${4:-"println(Jenkins.instance.pluginManager.plugins)"}
 
 echo "Password: ****"
 echo "Username: ${USERNAME}"
@@ -33,17 +34,15 @@ CRUMB=$(curl ${JENKINS_SERVER_URL}/crumbIssuer/api/xml?xpath=concat\(//crumbRequ
         --user "${USERNAME}:${PASSWORD}" )
 echo "Cookie: ${CRUMB}"
 
-
 # Execute the script
 echo
 echo "Sending groovy script ..."
 curl -X POST ${JENKINS_SERVER_URL}/scriptText \
-        -d "script=${SCRIPT_COMMAND}" \
+        --data "script=${SCRIPT_COMMAND}" \
         --silent \
         --header ${CRUMB} \
         --cookie temp_cookie_file \
         --user "${USERNAME}:${PASSWORD}"
-
 
 # Remove the cookie file
 echo

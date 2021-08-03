@@ -196,3 +196,58 @@ def rest_request(profile: str, request_text: str, request_type: str, raw: bool, 
     else:
         click.echo(
             click.style('Content returned, however possible HTML content. Try --raw.', fg='bright_red', bold=True))
+
+
+@log_to_history
+def run_script(profile: str, script_text: str, script_filepath: str, output_filepath: str) -> None:
+    """TODO
+
+    Details: TODO: 
+
+    Args:
+        TODO 
+
+    Returns:
+        None
+    """
+    jy_obj = cu.config_yo_jenkins(profile)
+
+    # Prepare the commands/script
+    if script_text:
+        script_text = script_text.strip().replace('  ', ' ')
+        script = script_text
+    elif script_filepath:
+        logger.debug(f'Loading specified script form file: {script_filepath} ...')
+        try:
+            with open(os.path.join(script_filepath), 'r') as open_file:
+                script = open_file.read()
+            script_size = os.path.getsize(script_filepath)
+            logger.debug(f'Successfully loaded script file ({script_size} Bytes)')
+        except FileNotFoundError as error:
+            click.echo(
+                click.style(f'Failed to find specified script file ({script_filepath})', fg='bright_red', bold=True))
+            sys.exit(1)
+
+    # Send the request to the server
+    content, header, success = jy_obj.REST.request(target='scriptText',
+                                                   request_type='post',
+                                                   data={'script': script},
+                                                   json_content=False)
+
+    if not success:
+        logger.debug(f'Return headers: {header}')
+        click.echo(click.style('Failed to make script run request', fg='bright_red', bold=True))
+        sys.exit(1)
+
+    # Save script result to file
+    if output_filepath:
+        logger.debug(f'Saving script result into file: {output_filepath} ...')
+        try:
+            with open(output_filepath, 'w+') as file:
+                file.write(content)
+            logger.debug('Successfully wrote script result to file')
+        except Exception as error:
+            logger.debug(f'Failed to write script result to file. Exception: {error}')
+            return "", False
+
+    click.echo(content)

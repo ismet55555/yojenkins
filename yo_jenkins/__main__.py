@@ -843,7 +843,7 @@ def upgrade(debug, user, proxy):
 @tools.command(short_help='\tRemove yo-jenkins')
 @cli_decorators.debug
 def remove(debug):
-    """Uninstall yo-jenkins"""
+    """Uninstall yo-jenkins using pip"""
     set_debug_log_level(debug)
     cli_tools.remove()
 
@@ -877,14 +877,40 @@ def history(debug, profile, clear):
 @click.option('--raw', type=bool, required=False, default=False, is_flag=True, help='Return raw return text')
 @click.option('--clean-html', type=bool, required=False, default=False, is_flag=True, help='Clean any HTML tags from return')
 def rest_request(debug, profile, request_text, request_type, raw, clean_html):
+    """Use this command to send REST calls to the server.
+    The request will be send with the proper authentication form your profile.
+    This can be useful if yo-jenkins does not have the functionality you need.
+
+    EXAMPLE:
+
+        yo-jenkins tools rest-request "me/api/json"    
+    """
     set_debug_log_level(debug)
     cli_tools.rest_request(profile, request_text, request_type, raw, clean_html)
 
-# @tools.command(short_help='\tSend a e-mail recommendation for this software')
-# @cli_decorators.debug
-# def recommend(debug):
-#     set_debug_log_level(debug)
-#     click.echo(click.style('TODO :-/', fg='yellow',))
+
+@tools.command(short_help='\tRun Groovy script on server, return result')
+@cli_decorators.debug
+@cli_decorators.profile
+@click.option('--text', type=str, required=False, help='Command(s) to run entered as text')
+@click.option('--file', type=click.Path(file_okay=True, dir_okay=False), required=False, is_flag=False, help='File containing command(s) to run')
+@click.option('--output', type=click.Path(file_okay=True, dir_okay=False), required=False, is_flag=False, help='Save the result to this file')
+@click.pass_context
+def run_script(ctx, debug, profile, text, file, output):
+    """Use this command to execute a Groovy script, as text or in a file,
+    on the Jenkins server and return the output
+    
+    EXAMPLES:
+    
+        yo-jenkins tools script --text "println('hello you')"
+
+        yo-jenkins tools script --file ./my_script.groovy
+    """
+    set_debug_log_level(debug)
+    if text or file:
+        cli_tools.run_script(profile, text, file, output)
+    else:
+        click.echo(ctx.get_help())
 
 
 ##############################################################################
