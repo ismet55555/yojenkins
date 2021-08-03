@@ -25,7 +25,6 @@ from yo_jenkins.Utility.utility import iter_data_empty_item_stripper, load_conte
 # Getting the logger reference
 logger = logging.getLogger()
 
-
 CONFIG_DIR_NAME = '.yo-jenkins'
 HISTORY_FILE_NAME = 'history'
 COMMAND_HISTORY_FORMAT = 'json'
@@ -222,7 +221,7 @@ def log_to_history(decorated_function) -> None:
         history_file_path = os.path.join(os.path.join(Path.home(), CONFIG_DIR_NAME), HISTORY_FILE_NAME)
         if not os.path.isfile(history_file_path):
             logger.debug(f'Failed to find command history file: "{history_file_path}"')
-            logger.debug(f'Creating command history file ...')
+            logger.debug('Creating command history file ...')
             try:
                 open(history_file_path, 'w').close()
             except Exception as error:

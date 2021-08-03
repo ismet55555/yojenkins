@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import json
 import logging
 import os
 import sys
@@ -9,7 +10,7 @@ import click
 from yo_jenkins.cli import cli_utility as cu
 from yo_jenkins.cli.cli_utility import (CONFIG_DIR_NAME, HISTORY_FILE_NAME, log_to_history)
 from yo_jenkins.Tools import Package
-from yo_jenkins.Utility.utility import (browser_open, load_contents_from_local_file)
+from yo_jenkins.Utility.utility import (browser_open, html_clean, load_contents_from_local_file)
 
 # Getting the logger reference
 logger = logging.getLogger()
@@ -150,29 +151,48 @@ def history(profile: str, clear: bool) -> None:
 
 
 @log_to_history
-def rest_request(profile: str) -> None:
-    """TODO Docstring
+def rest_request(profile: str, request_text: str, request_type: str, raw: bool, clean_html: bool) -> None:
+    """Send a generic REST request to Jenkins Server using the loaded credentials
 
-    Details: TODO
+    Details: TODO: 
 
     Args:
-        TODO
+        profile (str): The name of the credentials profile
+        request_text (str): The text of the request to send
+        request_type (str): The type of request to send
+        raw (bool): Whether to return the raw response or formatted JSON
+        clean_html (bool): Whether to clean the HTML tags from the response 
 
     Returns:
-        TODO
+        None
     """
     jy_obj = cu.config_yo_jenkins(profile)
+    request_text = request_text.strip('/')
+    content, header, success = jy_obj.REST.request(
+        target=request_text,
+        request_type=request_type,
+        json_content=(not raw),
+    )
 
-    print(jy_obj.REST.get_server_url())
-    response = jy_obj.REST.request(
+    if not success:
+        click.echo(click.style('Failed to make request', fg='bright_red', bold=True))
+        sys.exit(1)
 
-    # TODO: Look at other usages of REST.request()
-    # TODO: Think about parsing the response and displaying it in a more readable format
+    if request_type == 'HEAD':
+        print(header)
+        sys.exit(0)
 
-    # job_info, _, success = self.REST.request(f'{job_url.strip("/")}/api/json', 'get', is_endpoint=False)
-
-    # endpoint = f'queue/cancelItem?id={build_queue_number}'
-    # return_content = self.REST.request(endpoint, 'post', is_endpoint=True)[0]
-
-
-    
+    if content:
+        if clean_html:
+            try:
+                print(html_clean(content))
+            except Exception:
+                print(content)
+        else:
+            try:
+                print(json.dumps(content, indent=4))
+            except Exception:
+                print(content)
+    else:
+        click.echo(
+            click.style('Content returned, however possible HTML content. Try --raw.', fg='bright_red', bold=True))

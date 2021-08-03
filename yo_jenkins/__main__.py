@@ -869,26 +869,16 @@ def history(debug, profile, clear):
     set_debug_log_level(debug)
     cli_tools.history(profile, clear)
 
-
-
-
-
-
-
-
 @tools.command(short_help='\tSend a generic REST request to server')
 @cli_decorators.debug
 @cli_decorators.profile
-def rest_request(debug, profile):
+@click.argument('request_text', nargs=1, type=str, required=True)
+@click.option('--request-type', type=click.Choice(['GET', 'POST', 'HEAD'], case_sensitive=False), default='GET', required=False, help='Type of REST request [default: GET]')
+@click.option('--raw', type=bool, required=False, default=False, is_flag=True, help='Return raw return text')
+@click.option('--clean-html', type=bool, required=False, default=False, is_flag=True, help='Clean any HTML tags from return')
+def rest_request(debug, profile, request_text, request_type, raw, clean_html):
     set_debug_log_level(debug)
-    cli_tools.rest_request(profile)
-    # click.echo(click.style('TODO :-/', fg='yellow',))
-
-
-
-
-
-
+    cli_tools.rest_request(profile, request_text, request_type, raw, clean_html)
 
 # @tools.command(short_help='\tSend a e-mail recommendation for this software')
 # @cli_decorators.debug
@@ -911,16 +901,4 @@ if __name__ == "__main__":
     Returns:
         None
     """
-    # try:
     main()
-    # except Exception as e:
-    #     click.echo(click.style(f"Uh-Oh, something is not right. yo-jenkins crashed!\n", fg='red'))
-
-    #     exc_type, exc_obj, exc_tb = sys.exc_info()
-    #     fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-
-    #     click.echo(click.style(f"  - ERROR:   {e}", fg='red'))
-    #     click.echo(click.style(f"  - TYPE:    {exc_type}", fg='red'))
-    #     click.echo(click.style(f"  - FILE:    {fname}", fg='red'))
-    #     click.echo(click.style(f"  - LINE:    {exc_tb.tb_lineno}\n", fg='red'))
-
