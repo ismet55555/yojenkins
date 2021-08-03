@@ -245,8 +245,13 @@ def server_deploy(config_file: str, plugins_file: str, protocol_schema: str, hos
         click.echo(click.style('Failed to find yo-jenkins included data directory', fg='bright_red', bold=True))
         sys.exit(1)
     logger.debug(f'Writing server deploy information to file: {filepath}')
-    with open(os.path.join(filepath), 'w') as file:
-        json.dump(deployed, file, indent=4, sort_keys=True)
+    try:
+        with open(os.path.join(filepath), 'w') as file:
+            json.dump(deployed, file, indent=4, sort_keys=True)
+    except PermissionError as error:
+        logger.error(f'Server deployed, however failed to write server deploy information to file: {error}')
+        logger.error('yo-jenkins resources may have been installed under root or a restricted account')
+        sys.exit(1)
 
     volumes_named = [list(l.values())[0] for l in deployed["volumes"]]
 

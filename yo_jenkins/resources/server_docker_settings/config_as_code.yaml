@@ -20,8 +20,8 @@
 ##############################################################################
 
 jenkins:
-  systemMessage: "ATTENTION: THIS JENKINS SERVER IS FOR DEVELOPMENT AND TESTING ONLY!\n
-      This server was set up by yo-jenkins\n
+  systemMessage: "ATTENTION: This Jenkins server is for development and testing only!\n
+      This server was set up by YO-JENKINS\n
       Enjoy responsibly!\n\n"
   numExecutors: 4
   scmCheckoutRetryCount: 2
