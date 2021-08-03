@@ -421,11 +421,12 @@ class Build():
             filename = f'build-logs_{datetime.now().strftime("%m-%d-%Y_%I-%M-%S")}{self.build_logs_extension}'
             logger.debug(f'Downloading console text logs to local file "{filename}" ...')
             try:
-                with requests.get(request_url, auth=auth, stream=True, timeout=10) as r:
-                    r.raise_for_status()
-                    with open(os.path.join(download_dir, filename), 'wb') as f:
-                        for chunk in r.iter_content(chunk_size=8192):
-                            if chunk: f.write(chunk)
+                with requests.get(request_url, auth=auth, stream=True, timeout=10) as open_request:
+                    open_request.raise_for_status()
+                    with open(os.path.join(download_dir, filename), 'wb') as open_file:
+                        for chunk in open_request.iter_content(chunk_size=8192):
+                            if chunk:
+                                open_file.write(chunk)
                 logger.debug('Successfully download build logs to file')
             except Exception as e:
                 logger.debug('Failed to download or save logs for build. Exception: {e}')

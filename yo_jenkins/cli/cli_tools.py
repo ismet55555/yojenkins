@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 
+import json
 import logging
 import os
 import sys
 from pathlib import Path
 
 import click
-from yo_jenkins.cli.cli_utility import (COMMAND_HISTORY_FORMAT, CONFIG_DIR_NAME, HISTORY_FILE_NAME, log_to_history)
+from yo_jenkins.cli import cli_utility as cu
+from yo_jenkins.cli.cli_utility import (CONFIG_DIR_NAME, HISTORY_FILE_NAME, log_to_history)
 from yo_jenkins.Tools import Package
-from yo_jenkins.Utility.utility import (browser_open, load_contents_from_local_file)
+from yo_jenkins.Utility.utility import (browser_open, html_clean, load_contents_from_local_file)
 
 # Getting the logger reference
 logger = logging.getLogger()
@@ -146,3 +148,51 @@ def history(profile: str, clear: bool) -> None:
     else:
         for profile_name in contents:
             output_history_to_console(contents[profile_name], profile_name)
+
+
+@log_to_history
+def rest_request(profile: str, request_text: str, request_type: str, raw: bool, clean_html: bool) -> None:
+    """Send a generic REST request to Jenkins Server using the loaded credentials
+
+    Details: TODO: 
+
+    Args:
+        profile (str): The name of the credentials profile
+        request_text (str): The text of the request to send
+        request_type (str): The type of request to send
+        raw (bool): Whether to return the raw response or formatted JSON
+        clean_html (bool): Whether to clean the HTML tags from the response 
+
+    Returns:
+        None
+    """
+    jy_obj = cu.config_yo_jenkins(profile)
+    request_text = request_text.strip('/')
+    content, header, success = jy_obj.REST.request(
+        target=request_text,
+        request_type=request_type,
+        json_content=(not raw),
+    )
+
+    if not success:
+        click.echo(click.style('Failed to make request', fg='bright_red', bold=True))
+        sys.exit(1)
+
+    if request_type == 'HEAD':
+        print(header)
+        sys.exit(0)
+
+    if content:
+        if clean_html:
+            try:
+                print(html_clean(content))
+            except Exception:
+                print(content)
+        else:
+            try:
+                print(json.dumps(content, indent=4))
+            except Exception:
+                print(content)
+    else:
+        click.echo(
+            click.style('Content returned, however possible HTML content. Try --raw.', fg='bright_red', bold=True))

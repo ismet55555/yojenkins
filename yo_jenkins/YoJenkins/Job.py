@@ -4,10 +4,9 @@ import json
 import logging
 import re
 from datetime import timedelta
-from pprint import pprint
 from time import perf_counter
 from typing import Dict, Tuple
-from urllib.parse import urlencode, urljoin
+from urllib.parse import urlencode
 
 import jenkins
 import toml
@@ -568,8 +567,8 @@ class Job():
                 with open(filepath, 'w+') as file:
                     file.write(content_to_write)
                 logger.debug('Successfully wrote configurations to file')
-            except Exception as e:
-                logger.debug(f'Failed to write configurations to file. Exception: {e}')
+            except Exception as error:
+                logger.debug(f'Failed to write configurations to file. Exception: {error}')
                 return "", False
 
         return return_content, True
@@ -757,6 +756,7 @@ class Job():
                 config_definition = config_file.read()
             except Exception as e:
                 logger.debug(f'Failed to open and read file. Exception: {e}')
+                return False
 
         # Use blank job config
         if not config:
@@ -774,7 +774,7 @@ class Job():
 
         try:
             config_file.close()
-        except:
+        except Exception:
             pass
 
         return success
