@@ -164,7 +164,7 @@ In order to check/install a plugin, go to *Manage Jenkins > Manage Plugins > Ins
 
 `yo-jenkins` offers an easy way to quickly set up a local Jenkins server within a Docker container. This server is setup and ready to go to tinker with `yo-jenkins`. 
 
-**NOTE:** You must have Docker on running. See [Docker installation guide](dev_things\docker.md).
+**NOTE:** You must have Docker on running. See [Docker installation guide](dev_things/docker.md).
 
 Run the following command to set up a local Jenkins server:
 ```bash
