@@ -8,7 +8,8 @@ import click
 from yo_jenkins import __version__
 from yo_jenkins.cli import logger_setup  # Keep this line, sets up logger
 from yo_jenkins.cli import (cli_auth, cli_build, cli_decorators, cli_folder,
-                            cli_job, cli_server, cli_stage, cli_step, cli_tools)
+                            cli_job, cli_node, cli_server, cli_stage, cli_step,
+                            cli_tools)
 from yo_jenkins.cli.cli_utility import set_debug_log_level
 
 logger = logging.getLogger()
@@ -253,18 +254,24 @@ def node():
     """NODE MANAGEMENT"""
     pass
 
-@node.command(short_help='\tServer information')
+@node.command(short_help='\tCreate a local node/agent using Docker')
+@cli_decorators.debug
+def node_deploy(debug):
+    set_debug_log_level(debug)
+    cli_node.node_deploy()
+
+@node.command(short_help='\tNode information')
 @cli_decorators.debug
 @cli_decorators.profile
 def info(debug, profile):
     set_debug_log_level(debug)
     click.echo(click.style('TODO :-/', fg='yellow',))
 
+
 # TODO:
 #   - Info
 #   - List
 #   - Delete
-#   - Type
 #   - Toggle offline/online
 
 
