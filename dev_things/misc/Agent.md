@@ -1,13 +1,15 @@
 # Node/Agent Creation with Docker
 
 ## Goal
-1. Setup a ephemeral node/agent (Only started once job is run, Docker based)
+
+1. Setup a permanent node/agent
+   1. Locally - Through an created docker container (created with yo-jenkins or independently)
+   2. Remotely - Public IP address or DNS reference
+
+2. Setup a ephemeral node/agent (Only started once job is run, Docker based)
    1. Locally - Same architecture as host
    2. Remotely - Public IP address or DNS reference
 
-2. Setup a persistent node/agent - Can we do this?
-   1. Locally - Through an created docker container (created with yo-jenkins or independently)
-   2. Remotely - Public IP address or DNS reference
 
 3. Ability to prepare/setup an existing remote host via SSH
    1. Install and configure docker
@@ -19,8 +21,20 @@ Consider passing json format for ssh and node parameters as text or as a file.
     - `ssh-info "{'port': 2222, 'jenkins-cred-id': 23lj3332}"`
     - `ssh-info ./ssh-info.json`
 
+### Prepare Mode - HOLD OFF FOR NOW
 ```
-# Permanent Mode
+yo-jenkins node prepare <HOST ADDRESS>
+    --ssh-port <PORT NUMBER>
+    --ssh-user <USERNAME>
+    --ssh-public-key-file <KEY FILE PATH> 
+    --ssh-public-key-text <KEY TEXT>
+    --system-type <ubuntu, amazonlinux, macos, windows>
+    --custom-script <PATH TO SCRIPT>
+```
+
+### Permanent Mode
+Only need to do api calls to Jenkins Server to set up.
+```
 yo-jenkins node setup-permanent
     --type <docker-local, docker-remote, remote>
     --ssh-port <PORT NUMBER>
@@ -35,8 +49,10 @@ yo-jenkins node setup-permanent
     --node-name <NAME>
     --node-description <DESCRIPTION>
     --node-labels <LABEL1,LABEL2>
+```
 
-# Ephemeral Mode
+### Ephemeral Mode
+```
 yo-jenkins node setup-ephemeral 3.23.24.154  <--- can be "local"
   --name agent1
   --labels linux,test
@@ -58,6 +74,7 @@ yo-jenkins node setup-ephemeral 3.23.24.154  <--- can be "local"
        - Install and configure docker
        - `export JENKINS_AGENT_SSH_PUBKEY="<PUBLIC KEY>"`
        - `docker run --rm --name jenkins-ssh-agent jenkins/ssh-agent $JENKINS_AGENT_SSH_PUBKEY`
+- 
      - Container on remote host **(FAILED SSH AUTHENTICATION)**
        - Install and configure docker
        - Ensure SSHD is running inside the container
@@ -90,7 +107,9 @@ yo-jenkins node setup-ephemeral 3.23.24.154  <--- can be "local"
    - Permanent Node
    - Remote Root Directory: `/home/jenkins`
    - Launch agents with SSH
-      - Host: Host of host or docker container
+      - Host: IP or DNS of the agent host
+        - If local Docker container, specify the IP of the container:
+          - `docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' <CONTAINER>`
       - Credentials: Add private key in Jenkins credentials, User: Jenkins
       - Host Key Verification Strategy
          - Local Docker: No host key verification strategy
@@ -180,12 +199,21 @@ yo-jenkins node setup-ephemeral 3.23.24.154  <--- can be "local"
         --instance-type t2.micro \
         --key-name aws-key-1 \
         --security-group-ids sg-5dd41e7a \
-        --subnet-id subnet-5b44903d
+        --subnet-id subnet-5b44903d \
+        --user-data file:///home/ismet/Projects/yo-jenkins/yo_jenkins/resources/scripts/node_prepare_amazonlinux2.sh
     ```
-  - Remove one and only EC2 instance
+  - SSH in
+    ```
+    ssh -i /home/ismet/.ssh/aws-key-1.pem \
+        -o StrictHostKeyChecking=no \
+        ec2-user@$(aws ec2 describe-instances \
+        | jq -r '.Reservations[].Instances[] | select(.State.Name == "running").PublicDnsName')
+    ```
+  - Remove the running instance
     ```
     aws ec2 terminate-instances \
-        --instance-ids $(aws ec2 describe-instances | jq -r ".Reservations[0].Instances[0].InstanceId")
+        --instance-ids $(aws ec2 describe-instances \
+        | jq -r '.Reservations[].Instances[] | select(.State.Name == "running").InstanceId')
     ```
 
 ---

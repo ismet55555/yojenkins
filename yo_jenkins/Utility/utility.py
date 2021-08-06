@@ -687,3 +687,11 @@ def item_exists_in_folder(item_name: str, folder_url: str, item_type: str, REST:
         logger.debug(f'Did not found {item_type} "{item_name}" within "{folder_url}"')
 
     return item_exists
+
+
+def am_i_inside_docker():
+    path = '/proc/self/cgroup'
+    return (
+        os.path.exists('/.dockerenv') or
+        os.path.isfile(path) and any('docker' in line for line in open(path))
+    )

@@ -20,7 +20,7 @@ from urllib3.util import parse_url
 from yo_jenkins import __version__
 
 from yo_jenkins.YoJenkins import REST, Auth, YoJenkins  # isort:skip
-from yo_jenkins.Utility.utility import iter_data_empty_item_stripper, load_contents_from_local_file  # isort:skip
+from yo_jenkins.Utility.utility import iter_data_empty_item_stripper, load_contents_from_local_file, am_i_inside_docker  # isort:skip
 
 # Getting the logger reference
 logger = logging.getLogger()
@@ -82,6 +82,7 @@ def platform_information() -> None:
     logger.debug(f'    - Version:   {platform.version()}')
     logger.debug(f'    - Machine:   {platform.uname().machine}')
     logger.debug(f'    - Processor: {platform.uname().processor}')
+    logger.debug(f'    - In Docker: {am_i_inside_docker()}')
     logger.debug(f'    - Python:    {platform.python_version()} {python_rev}')
 
 

@@ -254,11 +254,23 @@ def node():
     """NODE MANAGEMENT"""
     pass
 
-@node.command(short_help='\tCreate a local node/agent using Docker')
+@node.command(short_help='\tPrepare a remote machine to become a node/agent')
 @cli_decorators.debug
-def node_deploy(debug):
+def prepare(debug):
     set_debug_log_level(debug)
-    cli_node.node_deploy()
+    cli_node.prepare()
+
+@node.command(short_help='\tSetup a local or remote persistant node/agent')
+@cli_decorators.debug
+def setup_permanent(debug):
+    set_debug_log_level(debug)
+    cli_node.setup_permanent()
+
+@node.command(short_help='\tSetup a local or remote ephemeral/as-needed node/agent')
+@cli_decorators.debug
+def setup_ephemeral(debug):
+    set_debug_log_level(debug)
+    cli_node.setup_ephemeral()
 
 @node.command(short_help='\tNode information')
 @cli_decorators.debug
