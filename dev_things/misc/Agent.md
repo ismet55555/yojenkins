@@ -15,8 +15,29 @@
 
 ## Usage
 
+Consider passing json format for ssh and node parameters as text or as a file.
+    - `ssh-info "{'port': 2222, 'jenkins-cred-id': 23lj3332}"`
+    - `ssh-info ./ssh-info.json`
+
 ```
-yo-jenkins node node-deploy 3.23.24.154  <--- can be "local"
+# Permanent Mode
+yo-jenkins node setup-permanent
+    --type <docker-local, docker-remote, remote>
+    --ssh-port <PORT NUMBER>
+    --ssh-jenkins-cred-id <CREDENTIAL ID>
+    --ssh-private-key-text <KEY TEXT>
+    --ssh-private-key-file <KEY FILE PATH>
+    --ssh-user <USERNAME>
+    --ssh-public-key-file <KEY FILE PATH> 
+    --ssh-public-key-text <KEY TEXT>
+    --remote-java-path <PATH>
+    --remote-root-dir /home/jenkins
+    --node-name <NAME>
+    --node-description <DESCRIPTION>
+    --node-labels <LABEL1,LABEL2>
+
+# Ephemeral Mode
+yo-jenkins node setup-ephemeral 3.23.24.154  <--- can be "local"
   --name agent1
   --labels linux,test
   --image my_repo/my_image:latest         <--- default image "jenkins/ssh-agent:alpine"
@@ -31,23 +52,50 @@ yo-jenkins node node-deploy 3.23.24.154  <--- can be "local"
 
 ## Manual Setup Process for Persistent Node
 
-1. Independently, setup host
-   1. Add `jenkins` user: `sudo adduser jenkins --shell /bin/bash`
-   2. Log in as `jenkins` user: `su jenkins`
-   3. Install and configure Docker
-   4. Add public key to `~/.ssh/authorized_keys`
-   5. Setup and start SSHD service
-   6. Install Java
-   7. If using Docker: `docker run --name jenkins-ssh-agent jenkins/ssh-agent $JENKINS_AGENT_SSH_PUBKEY`
+### Independently, setup agent host
+   - Running in Docker container
+     - Container on same host as master node
+       - Install and configure docker
+       - `export JENKINS_AGENT_SSH_PUBKEY="<PUBLIC KEY>"`
+       - `docker run --rm --name jenkins-ssh-agent jenkins/ssh-agent $JENKINS_AGENT_SSH_PUBKEY`
+     - Container on remote host **(FAILED SSH AUTHENTICATION)**
+       - Install and configure docker
+       - Ensure SSHD is running inside the container
+       - If in cloud, ensure security groups allow inbound TCP port 2222
+       - `export JENKINS_AGENT_SSH_PUBKEY="<PUBLIC KEY>"`
+       - `docker run --rm --publish 2222:22 --name jenkins-ssh-agent jenkins/ssh-agent $JENKINS_AGENT_SSH_PUBKEY`
+       - `ssh <USER>@<HOST> -p 2222`
 
-2. Manage Jenkins > Manage Nodes and Clouds > Add Node
-   1. Permanent Node
-   2. Remote Root Directory: `/home/jenkins`
-   3. Launch agents with SSH
-      1. Host: Host of host or docker container
-      2. Credentials: Add private key in Jenkins credentials, User: Jenkins
-      3. No host key verification startegy
-      4. Advanced -> Java Path: Path to host's java binary (ie. `/usr/local/openjdk-8/bin/java`)
+   - Running on host OS
+      - *(If needed)* Setup and start SSHD service as `root`
+         - Ubuntu: `apt-get -y install openssh-server && systemctl enable ssh && systemctl start ssh`
+         - AWSLinux: `yum -y install openssh-server && systemctl enable sshd && systemctl start sshd`
+      - Install Java as `root` user
+          - AWS EC2: `amazon-linux-extras install -y java-openjdk11 && which java`
+      - Add `jenkins` user 
+        - `adduser jenkins --shell /bin/bash && awk -F: '{ print $1}' /etc/passwd`
+      - Log in as `jenkins` user
+        - `su jenkins`
+      - Create `authorized_keys` file
+        - `mkdir -p /home/jenkins/.ssh`
+      - Add public key to `authorized_keys` file
+        - `echo "<PUBLIC KEY>" >> home/jenkins/.ssh/authorized_keys`
+        - Or copy existing authorized keys file to jenkins user
+      - Assign the right permissions
+        - `chmod 0700 /home/jenkins/.ssh`
+        - `chmod 0600 /home/jenkins/.ssh/authorized_keys`
+
+### Setup the agent in Jenkins Server
+   - Go to: Manage Jenkins > Manage Nodes and Clouds > Add Node
+   - Permanent Node
+   - Remote Root Directory: `/home/jenkins`
+   - Launch agents with SSH
+      - Host: Host of host or docker container
+      - Credentials: Add private key in Jenkins credentials, User: Jenkins
+      - Host Key Verification Strategy
+         - Local Docker: No host key verification strategy
+         - Remote System: Manually trusted verification strategy
+      - Advanced -> Java Path: Path to host's java binary (ie. `/usr/bin/java`)
 
 
 ## Manual Setup Process for Ephemeral Node
@@ -55,24 +103,25 @@ yo-jenkins node node-deploy 3.23.24.154  <--- can be "local"
 1. Manage Jenkins > Manage Nodes and Clouds > Configure Clouds
 
 2. Docker Cloud Details
-   - Docker Host URI: unix:///var/run/docker.sock
+   - Docker Host URI: `unix:///var/run/docker.sock`
    - Enabled
-   - Advanced > Docker Hostname or IP address: 172.17.0.1 (Host IP for Docker Gateway)
+   - Advanced > Docker Hostname or IP address: `172.17.0.1` (Host IP for Docker Gateway)
    - Test Connection
 
 3. Docker Agent Templates...
-   - Docker Image: jenkins/ssh-agent
+   - Docker Image: `jenkins/ssh-agent`
      - Must have SSHD running
      - Must have Java installed
    - Connect with SSH
      - Inject SSH Key
        - User: `jenkins`
        - Advanced > JavaPath: `/usr/local/openjdk-8/bin/java`
-     - Use configured SSH Credentials (DID NOT WORK)
+     - Use configured SSH Credentials **(DID NOT WORK)**
        - SSH Credentials: Private key is stored in Jenkins credentials
        - Host Key Verification Strategy: Known hosts file Verification Strategy
    - Node Properties
      - Environment Variables: `JENKINS_AGENT_SSH_PUBKEY`: `[YOUR PUBLIC KEY]`
+     - NOTE: Check out how `jenkins/ssh-agent` is using this environment variable
 
 
 ---
@@ -92,7 +141,7 @@ yo-jenkins node node-deploy 3.23.24.154  <--- can be "local"
 ## Next Steps
 
 1. Set up remote agent on AWS EC2 via SSH
-2. 
+2. Adding a persistent agent to jenkins with yo-jenkins
 
 ---
 
@@ -116,11 +165,28 @@ yo-jenkins node node-deploy 3.23.24.154  <--- can be "local"
         --ssh-password password
         --ssh-private-key path_to_key
 
-- Condigure Cloud - Docker
+- COnfigure Cloud - Docker
   - Connect with JNLP 
   - Attach Docker container 
     - https://www.bogotobogo.com/DevOps/Docker/Docker-Jenkins-Master-Slave-Agent-ssh.php
     - Image Used: jenkins/inbound-agent
+
+- AWS EC2 Instance:
+  - Create
+    ```
+    aws ec2 run-instances \
+        --image-id ami-0c2b8ca1dad447f8a \
+        --count 1 \
+        --instance-type t2.micro \
+        --key-name aws-key-1 \
+        --security-group-ids sg-5dd41e7a \
+        --subnet-id subnet-5b44903d
+    ```
+  - Remove one and only EC2 instance
+    ```
+    aws ec2 terminate-instances \
+        --instance-ids $(aws ec2 describe-instances | jq -r ".Reservations[0].Instances[0].InstanceId")
+    ```
 
 ---
 
@@ -148,3 +214,11 @@ yo-jenkins node node-deploy 3.23.24.154  <--- can be "local"
   - Java location: `which java`
   - All users: `awk -F: '{ print $1}' /etc/passwd`
 
+- Docker on AWS Linux
+  - `amazon-linux-extras install -y docker && yum install -y docker && service docker start && usermod -a -G docker jenkins && logout`
+
+- As root, setup and configure `jenkins` user
+  - `adduser jenkins --shell /bin/bash && awk -F: '{ print $1}' /etc/passwd`
+  - `su jenkins`
+  - `mkdir -p /home/jenkins/.ssh && touch home/jenkins/.ssh/authorized_keys`
+  - `chmod 0700 /home/jenkins/.ssh && chmod 0600 /home/jenkins/.ssh/authorized_keys`
