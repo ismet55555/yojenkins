@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 
 import logging
-import sys
 
-from yo_jenkins.YoJenkins.Auth import Auth
-from yo_jenkins.YoJenkins.Server import Server
+from yo_jenkins.YoJenkins.Build import Build
 from yo_jenkins.YoJenkins.Folder import Folder
 from yo_jenkins.YoJenkins.Job import Job
-from yo_jenkins.YoJenkins.Build import Build
+from yo_jenkins.YoJenkins.Node import Node
+from yo_jenkins.YoJenkins.Server import Server
 from yo_jenkins.YoJenkins.Stage import Stage
 from yo_jenkins.YoJenkins.Step import Step
 
@@ -35,6 +34,7 @@ class YoJenkins:
 
         self.JenkinsSDK = self.Auth.JenkinsSDK
         self.Server = Server(self.REST, self.Auth)
+        self.Node = Node(self.REST, self.Auth)
         self.Folder = Folder(self.REST, self.JenkinsSDK)
 
         self.Build = Build(self.REST, self.Auth)

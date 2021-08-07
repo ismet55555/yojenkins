@@ -1,0 +1,41 @@
+{
+    "Jenkins-Crumb": "${JENKINS_CRUMB}",
+    "": [
+        "hudson.plugins.sshslaves.SSHLauncher",
+        "hudson.slaves.RetentionStrategy$Always"
+    ],
+    "launcher": {
+        "": "2",
+        "$class": "hudson.plugins.sshslaves.SSHLauncher",
+        "credentialsId": "d436fff1-af1c-45df-8cb6-3907d119b8fa",
+        "host": "9.9.9.9",
+        "javaPath": "",
+        "jvmOptions": "",
+        "launchTimeoutSeconds": "",
+        "maxNumRetries": "",
+        "port": "22",
+        "prefixStartSlaveCmd": "",
+        "suffixStartSlaveCmd": "",
+        "retryWaitTime": "",
+        "sshHostKeyVerificationStrategy": {
+            "$class": "hudson.plugins.sshslaves.verifiers.ManuallyTrustedKeyVerificationStrategy",
+            "requireInitialManualTrust": true,
+            "stapler-class": "hudson.plugins.sshslaves.verifiers.ManuallyTrustedKeyVerificationStrategy"
+        },
+        "stapler-class": "hudson.plugins.sshslaves.SSHLauncher"
+    },
+    "retentionStrategy": {
+        "$class": "hudson.slaves.RetentionStrategy$Always",
+        "stapler-class": "hudson.slaves.RetentionStrategy$Always"
+    },
+    "type": "hudson.slaves.DumbSlave",
+    "mode": "NORMAL",
+    "name": "${NODE_NAME}",
+    "numExecutors": "1",
+    "remoteFS": "/home/jenkins",
+    "nodeDescription": "Agent node description",
+    "labelString": "agent-node-label",
+    "nodeProperties": {
+        "stapler-class-bag": "true"
+    }
+}

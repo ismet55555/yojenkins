@@ -110,7 +110,9 @@ yo-jenkins node setup-ephemeral 3.23.24.154  <--- can be "local"
       - Host: IP or DNS of the agent host
         - If local Docker container, specify the IP of the container:
           - `docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' <CONTAINER>`
-      - Credentials: Add private key in Jenkins credentials, User: Jenkins
+      - Credentials: Add private key in Jenkins credentials
+        - User: jenkins
+        - SSH Private Key
       - Host Key Verification Strategy
          - Local Docker: No host key verification strategy
          - Remote System: Manually trusted verification strategy

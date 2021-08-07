@@ -32,8 +32,9 @@ def prepare() -> None:
     pass
 
 
+
 @log_to_history
-def setup_permanent() -> None:
+def create_permanent(profile: str) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -44,35 +45,6 @@ def setup_permanent() -> None:
     Returns:
         TODO
     """
-    pass
+    yj = cu.config_yo_jenkins(profile)
+    yj.Node.create_permanent()
 
-
-@log_to_history
-def setup_ephemeral() -> None:
-    """TODO Docstring
-
-    Details: TODO
-
-    Args:
-        TODO
-
-    Returns:
-        TODO
-    """
-    pass
-
-
-@log_to_history
-def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str) -> None:
-    """TODO Docstring
-
-    Details: TODO
-
-    Args:
-        TODO
-
-    Returns:
-        TODO
-    """
-    # TODO
-    pass
