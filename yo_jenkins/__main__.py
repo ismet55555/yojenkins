@@ -249,7 +249,7 @@ def server_teardown(debug, remove_volume, remove_image):
 ##############################################################################
 #                             NODE
 ##############################################################################
-@main.group(short_help='\tManage nodes')
+@main.group(short_help='\tManage nodes/agents')
 def node():
     """NODE MANAGEMENT"""
     pass
@@ -260,17 +260,24 @@ def prepare(debug):
     set_debug_log_level(debug)
     cli_node.prepare()
 
+
+
+
 @node.command(short_help='\tSetup a local or remote persistant node/agent')
 @cli_decorators.debug
-def setup_permanent(debug):
+@cli_decorators.profile
+def create_permanent(debug, profile):
     set_debug_log_level(debug)
-    cli_node.setup_permanent()
+    cli_node.create_permanent(profile)
+
+
+
 
 @node.command(short_help='\tSetup a local or remote ephemeral/as-needed node/agent')
 @cli_decorators.debug
-def setup_ephemeral(debug):
+def create_ephemeral(debug):
     set_debug_log_level(debug)
-    cli_node.setup_ephemeral()
+    cli_node.create_ephemeral()
 
 @node.command(short_help='\tNode information')
 @cli_decorators.debug
@@ -279,12 +286,80 @@ def info(debug, profile):
     set_debug_log_level(debug)
     click.echo(click.style('TODO :-/', fg='yellow',))
 
+@node.command(short_help='\tList all all nodes connected to main server')
+@cli_decorators.debug
+@cli_decorators.profile
+def list(debug, profile):
+    set_debug_log_level(debug)
+    click.echo(click.style('TODO :-/', fg='yellow',))
 
-# TODO:
-#   - Info
-#   - List
-#   - Delete
-#   - Toggle offline/online
+@node.command(short_help='\tDelete a node/agent')
+@cli_decorators.debug
+@cli_decorators.profile
+def delete(debug, profile):
+    set_debug_log_level(debug)
+    click.echo(click.style('TODO :-/', fg='yellow',))
+
+@node.command(short_help='\tDisable a node/agent')
+@cli_decorators.debug
+@cli_decorators.profile
+def disable(debug, profile):
+    set_debug_log_level(debug)
+    click.echo(click.style('TODO :-/', fg='yellow',))
+
+@node.command(short_help='\tEnable a node/agent')
+@cli_decorators.debug
+@cli_decorators.profile
+def enable(debug, profile):
+    set_debug_log_level(debug)
+    click.echo(click.style('TODO :-/', fg='yellow',))
+
+@node.command(short_help='\tNode logs')
+@cli_decorators.debug
+@cli_decorators.profile
+def logs(debug, profile):
+    set_debug_log_level(debug)
+    click.echo(click.style('TODO :-/', fg='yellow',))
+
+
+
+##############################################################################
+#                             CREDENTIALS
+##############################################################################
+@main.group(short_help='\tManage credentials')
+def credentials():
+    """CREDENTIALS MANAGEMENT"""
+    pass
+
+@credentials.command(short_help='\tList credentials')
+@cli_decorators.debug
+def list(debug):
+    set_debug_log_level(debug)
+    click.echo(click.style('TODO :-/', fg='yellow',))
+
+@credentials.command(short_help='\tCreate new credentials to use with Jenkins')
+@cli_decorators.debug
+def create(debug):
+    set_debug_log_level(debug)
+    click.echo(click.style('TODO :-/', fg='yellow',))
+
+@credentials.command(short_help='\tConfigure existing credentials')
+@cli_decorators.debug
+def config(debug):
+    set_debug_log_level(debug)
+    click.echo(click.style('TODO :-/', fg='yellow',))
+
+@credentials.command(short_help='\tCredentials information')
+@cli_decorators.debug
+def info(debug):
+    set_debug_log_level(debug)
+    click.echo(click.style('TODO :-/', fg='yellow',))
+
+@credentials.command(short_help='\tRemove credentials')
+@cli_decorators.debug
+def delete(debug):
+    set_debug_log_level(debug)
+    click.echo(click.style('TODO :-/', fg='yellow',))
 
 
 
