@@ -259,8 +259,6 @@ def server_teardown(debug, remove_volume, remove_image):
     help_options_custom_colors={
         'prepare': 'black',
         'create-ephemeral': 'black',
-        'info': 'black',
-        'list': 'black',
         'delete': 'black',
         'disable': 'black',
         'enable': 'black',
@@ -269,6 +267,26 @@ def server_teardown(debug, remove_volume, remove_image):
 def node():
     """NODE MANAGEMENT"""
     pass
+
+@node.command(short_help='\tNode information')
+@cli_decorators.debug
+@cli_decorators.format_output
+@cli_decorators.profile
+@click.argument('name', nargs=1, type=str, required=True)
+@click.option('-d', '--depth', type=int, default=0, required=False, help='Search depth from root directory')
+def info(debug, pretty, yaml, xml, toml, profile, name, depth):
+    set_debug_log_level(debug)
+    cli_node.info(pretty, yaml, xml, toml, profile, name, depth)
+
+@node.command(short_help='\tList all all nodes')
+@cli_decorators.debug
+@cli_decorators.profile
+@cli_decorators.format_output
+@cli_decorators.list
+@click.option('-d', '--depth', type=int, default=0, required=False, help='Search depth from root directory')
+def list(debug, profile, pretty, yaml, xml, toml, list, depth):
+    set_debug_log_level(debug)
+    cli_node.list(pretty, yaml, xml, toml, list, profile, depth)
 
 @node.command(short_help='\tPrepare a remote machine to become a node')
 @cli_decorators.debug
@@ -327,20 +345,6 @@ def create_permanent(debug, profile, **kwargs):
 def create_ephemeral(debug):
     set_debug_log_level(debug)
     cli_node.create_ephemeral()
-
-@node.command(short_help='\tNode information')
-@cli_decorators.debug
-@cli_decorators.profile
-def info(debug, profile):
-    set_debug_log_level(debug)
-    click.echo(click.style('TODO :-/', fg='yellow',))
-
-@node.command(short_help='\tList all all nodes connected to main server')
-@cli_decorators.debug
-@cli_decorators.profile
-def list(debug, profile):
-    set_debug_log_level(debug)
-    click.echo(click.style('TODO :-/', fg='yellow',))
 
 @node.command(short_help='\tDelete a node')
 @cli_decorators.debug
@@ -455,7 +459,7 @@ def search(debug, pretty, yaml, xml, toml, profile, search_pattern, search_folde
 @cli_decorators.format_output
 @cli_decorators.profile
 @click.argument('folder', nargs=1, type=str, required=True)
-
+@cli_decorators.list
 def subfolders(debug, pretty, yaml, xml, toml, profile, folder, list):
     set_debug_log_level(debug)
     cli_folder.subfolders(pretty, yaml, xml, toml, profile, folder, list)

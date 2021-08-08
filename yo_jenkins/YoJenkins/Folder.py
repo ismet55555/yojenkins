@@ -156,7 +156,9 @@ class Folder():
         if folder_name and not folder_url:
             folder_url = utility.name_to_url(self.REST.get_server_url(), folder_name)
 
-        folder_info, _, success = self.REST.request(folder_url.strip('/') + '/api/json', 'get', is_endpoint=False)
+        folder_info, _, success = self.REST.request(folder_url.strip('/') + '/api/json',
+                                                    request_type='get',
+                                                    is_endpoint=False)
         if not success:
             logger.debug(f'Failed to find folder info: {folder_url}')
             return {}

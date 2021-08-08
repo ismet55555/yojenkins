@@ -2,8 +2,10 @@
 
 import json
 import logging
+from typing import Tuple
 
 from yo_jenkins.Utility import utility
+from yo_jenkins.YoJenkins.JenkinsItemClasses import JenkinsItemClasses
 
 # Getting the logger reference
 logger = logging.getLogger()
@@ -26,7 +28,34 @@ class Node():
 
         self.server_base_url = self.Auth.jenkins_profile['jenkins_server_url']
 
-    def exists(self, name: str) -> bool:
+    def info(self, node_name: str, depth: int = 0) -> Tuple[list, list]:
+        """TODO Docstring
+
+        Details: TODO
+
+        Args:
+            node_name: TODO
+            depth: TODO
+
+        Returns:
+            TODO
+        """
+        logger.debug(f'Getting info for node: {node_name} ...')
+
+        # Account for special case of "master" node
+        if node_name == 'master':
+            node_name = '(master)'
+
+        node_info, _, success = self.REST.request(target=f"computer/{node_name}/api/json?depth={depth}",
+                                                  request_type='get',
+                                                  is_endpoint=True,
+                                                  json_content=True)
+        if not success:
+            logger.debug(f'Failed to find folder info: {node_info}')
+            return {}
+        return node_info
+
+    def list(self, depth: int = 0) -> bool:
         """TODO Docstring
 
         Details: TODO
@@ -37,18 +66,30 @@ class Node():
         Returns:
             TODO
         """
-        logger.debug(f'Checking if node/agent exists: {name}')
+        logger.debug('Getting a list of all nodes ...')
 
-        request = "computer/doGetItem"
+        nodes_info, _, success = self.REST.request(target=f"computer/api/json?depth={depth}",
+                                                   request_type='get',
+                                                   is_endpoint=True,
+                                                   json_content=True)
+        if not success:
+            logger.debug('Failed to get any nodes ...')
+            return {}
 
-        params = {'name': name}
+        if "computer" not in nodes_info:
+            logger.debug('Failed to find "computer" section in return content')
+            return False
 
-        content, headers, success = self.REST.request(target=request,
-                                                      request_type='get',
-                                                      is_endpoint=True,
-                                                      json_content=False,
-                                                      data=params)
-        return success
+        node_list, node_list_name = utility.item_subitem_list(
+            item_info=nodes_info,
+            get_key_info='displayName',
+            item_type=JenkinsItemClasses.node.value['item_type'],
+            item_class_list=JenkinsItemClasses.node.value['class_type'])
+
+        logger.debug(f'Number of nodes found: {len(node_list)}')
+        logger.debug(f'Node names: {node_list_name}')
+
+        return node_list, node_list_name
 
     def create_permanent(self, **kwargs) -> bool:
         """TODO Docstring
