@@ -33,13 +33,11 @@ MAIN_HELP_TEXT = f"""
 
     QUICK START:
 
-        1. Configure yo profile:  yo-jenkins auth configure
-
-        2. Add yo API token:      yo-jenkins auth token --profile <PROFILE>
-
-        3. Verify yo creds:       yo-jenkins auth verify
-
-        4. Explore yo-jenkins
+    \b
+      1. Configure yo profile:  yo-jenkins auth configure
+      2. Add yo API token:      yo-jenkins auth token --profile <PROFILE NAME>
+      3. Verify yo creds:       yo-jenkins auth verify
+      4. Explore yo-jenkins
 """
 
 
@@ -259,7 +257,6 @@ def server_teardown(debug, remove_volume, remove_image):
     help_options_custom_colors={
         'prepare': 'black',
         'create-ephemeral': 'black',
-        'delete': 'black',
         'disable': 'black',
         'enable': 'black',
         'logs': 'black',
@@ -344,14 +341,15 @@ def create_permanent(debug, profile, **kwargs):
 @cli_decorators.debug
 def create_ephemeral(debug):
     set_debug_log_level(debug)
-    cli_node.create_ephemeral()
+    click.echo(click.style('TODO :-/', fg='yellow',))
 
 @node.command(short_help='\tDelete a node')
 @cli_decorators.debug
 @cli_decorators.profile
-def delete(debug, profile):
+@click.argument('name', nargs=1, type=str, required=True)
+def delete(debug, profile, name):
     set_debug_log_level(debug)
-    click.echo(click.style('TODO :-/', fg='yellow',))
+    cli_node.delete(profile, name)
 
 @node.command(short_help='\tDisable a node')
 @cli_decorators.debug

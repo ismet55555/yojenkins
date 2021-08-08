@@ -72,3 +72,21 @@ def create_permanent(profile: str, **kwargs) -> None:
         click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
     click.echo(click.style('success', fg='bright_green', bold=True))
+
+@log_to_history
+def delete(profile: str, node_name: str) -> None:
+    """TODO Docstring
+
+    Details: TODO
+
+    Args:
+        TODO
+
+    Returns:
+        TODO
+    """
+    yj = cu.config_yo_jenkins(profile)
+    if not yj.Node.delete(node_name):
+        click.echo(click.style('failed', fg='bright_red', bold=True))
+        sys.exit(1)
+    click.echo(click.style('success', fg='bright_green', bold=True))

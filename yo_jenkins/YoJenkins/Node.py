@@ -183,5 +183,25 @@ class Node():
                                           is_endpoint=True,
                                           data=params)
 
-        logger.debug('Successfully created node/agent' if success else 'Failed to create node/agent')
+        logger.debug('Successfully created node' if success else 'Failed to create node')
+        return success
+
+
+    def delete(self, node_name: str) -> bool:
+        """TODO Docstring
+
+        Details: TODO
+
+        Args:
+            name: TODO
+
+        Returns:
+            TODO
+        """
+        logger.debug(f'Deleting node: {node_name}')
+        _, _, success = self.REST.request(target=f"computer/{node_name}/doDelete",
+                                                  request_type='post',
+                                                  is_endpoint=True,
+                                                  json_content=False)
+        logger.debug('Successfully deleted node' if success else 'Failed to delete node')
         return success
