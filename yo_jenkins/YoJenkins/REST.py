@@ -12,10 +12,6 @@ from requests.auth import HTTPBasicAuth
 # Getting the logger reference
 logger = logging.getLogger()
 
-# TODO: Septate functionalities
-#       - GET, POST, HEAD
-#       - Time request (request statistics)
-
 
 class REST:
     """Handeling of REST requests"""

@@ -17,9 +17,11 @@
 
 ## Usage
 
-Consider passing json format for ssh and node parameters as text or as a file.
+- Consider passing json format for ssh and node parameters as text or as a file.
     - `ssh-info "{'port': 2222, 'jenkins-cred-id': 23lj3332}"`
     - `ssh-info ./ssh-info.json`
+
+- Have set of common options, and option to pass in a json file
 
 ### Prepare Mode - HOLD OFF FOR NOW
 ```
@@ -35,32 +37,27 @@ yo-jenkins node prepare <HOST ADDRESS>
 ### Permanent Mode
 Only need to do api calls to Jenkins Server to set up.
 ```
-yo-jenkins node setup-permanent
-    --type <docker-local, docker-remote, remote>
+yo-jenkins node setup-permanent [NAME] [HOST] [CRED_ID]
+    --description <DESCRIPTION>
+    --labels <LIST OF LABELS>
+    --executors <NUMBER OF EXECUTORS>
+    --mode <NORMAL or EXCLUSIVE>
+    --retention <Always or Demand>
     --ssh-port <PORT NUMBER>
-    --ssh-jenkins-cred-id <CREDENTIAL ID>
-    --ssh-private-key-text <KEY TEXT>
-    --ssh-private-key-file <KEY FILE PATH>
-    --ssh-user <USERNAME>
-    --ssh-public-key-file <KEY FILE PATH> 
-    --ssh-public-key-text <KEY TEXT>
+    --ssh-verify-type <VERIFY TYPE>
     --remote-java-path <PATH>
-    --remote-root-dir /home/jenkins
-    --node-name <NAME>
-    --node-description <DESCRIPTION>
-    --node-labels <LABEL1,LABEL2>
+    --remote-root-dir <ROOT DIRECTORY>
+    --config-file <PATH TO FILE>
 ```
 
 ### Ephemeral Mode
 ```
-yo-jenkins node setup-ephemeral 3.23.24.154  <--- can be "local"
-  --name agent1
+yo-jenkins node setup-ephemeral [NAME] [HOST] <--- can be "local"
   --labels linux,test
   --image my_repo/my_image:latest         <--- default image "jenkins/ssh-agent:alpine"
   --jenkins-home /home/jenkins
   --user root                             <--- If a custom image is used
   --public-key ~/.ssh/mykey               <--- (SSH credentials or location of private key)
-  --persist                               <--- Persist the agent, deploys and forgets
 ```
 
 

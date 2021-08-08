@@ -600,7 +600,11 @@ def get_resource_path(relative_path: str) -> str:
     """Getting the filepath for existing included resource
 
     Args:
-        TODO
+        relative_path : Relative path within the project directory
+
+    Details:
+        - `get_resource_path(os.path.join('resources', 'server_docker_settings', 'last_deploy_info.json'))`
+        - `get_resource_path(os.path.join('resources', 'scripts', 'some_script.sh'))`
 
     Returns:
         Included resource path
@@ -691,7 +695,4 @@ def item_exists_in_folder(item_name: str, folder_url: str, item_type: str, REST:
 
 def am_i_inside_docker():
     path = '/proc/self/cgroup'
-    return (
-        os.path.exists('/.dockerenv') or
-        os.path.isfile(path) and any('docker' in line for line in open(path))
-    )
+    return (os.path.exists('/.dockerenv') or os.path.isfile(path) and any('docker' in line for line in open(path)))

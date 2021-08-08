@@ -260,18 +260,51 @@ def prepare(debug):
     set_debug_log_level(debug)
     cli_node.prepare()
 
-
-
-
 @node.command(short_help='\tSetup a local or remote persistant node/agent')
 @cli_decorators.debug
 @cli_decorators.profile
-def create_permanent(debug, profile):
+@click.argument('name', nargs=1, type=str, required=True)
+@click.argument('host', nargs=1, type=str, required=True)
+@click.argument('credential', nargs=1, type=str, required=True)
+@click.option('--description', type=str, required=False, help='Agent description')
+@click.option('--executors', default=1, type=int, required=False, show_default=True, help='Number of executors on agent')
+@click.option('--labels', type=str, required=False, help='Labels applied to agent [default: NAME')
+@click.option('--mode', type=click.Choice(['normal', 'exclusive'], case_sensitive=False), default='normal', show_default=True, required=False, help='Available to all or to specified jobs')
+@click.option('--remote-java-dir', default="/usr/bin/java", show_default=True, type=str, required=False, help='Location of Java binary')
+@click.option('--remote-root-dir', default="/home/jenkins", show_default=True, type=str, required=False, help='Directory where agent work is kept')
+@click.option('--retention', type=click.Choice(['always', 'demand'], case_sensitive=False), default='always', show_default=True, required=False, help='Always on or offline when not in use')
+@click.option('--ssh-port', default=22, show_default=True, type=int, required=False, help='SSH port to target')
+@click.option('--ssh-verify', type=click.Choice(['known', 'trusted', 'none'], case_sensitive=False), default='trusted', show_default=True, required=False, help='SSH verification strategy')
+# @click.option('--config-file', type=click.Path(file_okay=True, dir_okay=False), required=False, help='Path to local XML file defining agent')
+def create_permanent(debug, profile, **kwargs):
+    """
+    This command sets up a local or remote node/agent on a virtual machine, container,
+    or physical machine, connecting with SSH. The target system must have the following:
+
+    \b
+    1. A working SSH server installed, running, and accessible form main server
+    2. Java installed
+
+    This command only sets the agent up, but it does not monitor to see if the agent
+    has successfully connected. You will either need to manually check the node in the Jenkins UI,
+    or you can use: "yo-jenkins node status NAME"
+
+    ARGUMENTS:
+
+    \b
+    NAME:        Name of the node/agent
+    HOST:        Hostname or IP address of the node/agent
+    CREDENTIAL:  SSH type credential in Jenkins
+
+    EXAMPLES:
+
+    \b
+    1. yo-jenkins node create-permanent my-agent 192.168.0.23 my-cred --description "My first agent"
+    2. yo-jenkins node create-permanent my-agent 192.168.0.23 15ad1f93-dc24-4f71-b92b-18ae9b13b1d0
+    3. yo-jenkins node create-permanent my-agent ey-yo.com my-cred --labels label1,label2,label3
+    """
     set_debug_log_level(debug)
-    cli_node.create_permanent(profile)
-
-
-
+    cli_node.create_permanent(profile, **kwargs)
 
 @node.command(short_help='\tSetup a local or remote ephemeral/as-needed node/agent')
 @cli_decorators.debug

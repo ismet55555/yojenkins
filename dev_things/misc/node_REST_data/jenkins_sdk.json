@@ -10,7 +10,9 @@
         "retentionStrategy": {
             "stapler-class": "hudson.slaves.RetentionStrategy$Always"
         },
-        "nodeProperties": {"stapler-class-bag": "true"},
+        "nodeProperties": {
+            "stapler-class-bag": "true"
+        },
         "launcher": {
             "stapler-class": "LAUNCHER"
         }

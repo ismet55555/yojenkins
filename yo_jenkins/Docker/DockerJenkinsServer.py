@@ -274,7 +274,10 @@ class DockerJenkinsServer():
 
         # Adding Docker unix socket
         logger.debug('Adding bind mount to Docker unix socket: /var/run/docker.sock ...')
-        mount = docker.types.Mount(target='/var/run/docker.sock', source='/var/run/docker.sock', type='bind', read_only=False)
+        mount = docker.types.Mount(target='/var/run/docker.sock',
+                                   source='/var/run/docker.sock',
+                                   type='bind',
+                                   read_only=False)
         self.volumes_mounts.append(mount)
 
         logger.debug(f'Number of volumes to be mounted to container: {len(self.volumes_mounts)}')
