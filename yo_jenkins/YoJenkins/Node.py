@@ -85,7 +85,6 @@ class Node():
         logger.debug(f'    - Host:       {kwargs["host"]}')
         logger.debug(f'    - Connection: SSH')
 
-
         # SSH Connection verification strategy
         if kwargs['ssh_verify'] == 'known':
             ssh_verify = {"stapler-class": "hudson.plugins.sshslaves.verifiers.KnownHostsFileKeyVerificationStrategy"}

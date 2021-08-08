@@ -4,6 +4,7 @@ import logging
 import sys
 
 import click
+from click_help_colors import HelpColorsCommand, HelpColorsGroup
 
 from yo_jenkins import __version__
 from yo_jenkins.cli import logger_setup  # Keep this line, sets up logger
@@ -58,14 +59,18 @@ def main():
 #                             AUTHENTICATE
 ##############################################################################
 
-@main.group(short_help='\tManage authentication and profiles')
+@main.group(short_help='\tManage authentication and profiles',
+    cls=HelpColorsGroup,
+    help_options_custom_colors={
+        'wipe': 'black'
+        })
 def auth():
     """
     AUTHENTICATION AND PROFILE MANAGEMENT
     """
     pass
 
-@auth.command(short_help='\tConfigure authentication')
+@auth.command(short_help='\tConfigure authentication', cls=HelpColorsCommand, help_options_custom_colors={'--token': 'black'})
 @cli_decorators.debug
 @click.option('--token', type=str, required=False, is_flag=False, help='Authentication token used for setup profile')
 def configure(debug, token):
@@ -249,64 +254,75 @@ def server_teardown(debug, remove_volume, remove_image):
 ##############################################################################
 #                             NODE
 ##############################################################################
-@main.group(short_help='\tManage nodes/agents')
+@main.group(short_help='\tManage nodes',
+    cls=HelpColorsGroup,
+    help_options_custom_colors={
+        'prepare': 'black',
+        'create-ephemeral': 'black',
+        'info': 'black',
+        'list': 'black',
+        'delete': 'black',
+        'disable': 'black',
+        'enable': 'black',
+        'logs': 'black',
+        })
 def node():
     """NODE MANAGEMENT"""
     pass
 
-@node.command(short_help='\tPrepare a remote machine to become a node/agent')
+@node.command(short_help='\tPrepare a remote machine to become a node')
 @cli_decorators.debug
 def prepare(debug):
     set_debug_log_level(debug)
     cli_node.prepare()
 
-@node.command(short_help='\tSetup a local or remote persistant node/agent')
+@node.command(short_help='\tSetup a local or remote persistant node')
 @cli_decorators.debug
 @cli_decorators.profile
 @click.argument('name', nargs=1, type=str, required=True)
 @click.argument('host', nargs=1, type=str, required=True)
 @click.argument('credential', nargs=1, type=str, required=True)
-@click.option('--description', type=str, required=False, help='Agent description')
-@click.option('--executors', default=1, type=click.IntRange(1, 100), required=False, show_default=True, help='Number of executors on agent')
+@click.option('--description', type=str, required=False, help='Node description')
+@click.option('--executors', default=1, type=click.IntRange(1, 100), required=False, show_default=True, help='Number of executors on node')
 @click.option('--labels', type=str, required=False, help='Labels applied to agent [default: NAME]')
 @click.option('--mode', type=click.Choice(['normal', 'exclusive'], case_sensitive=False), default='normal', show_default=True, required=False, help='Available to all or to specified jobs')
 @click.option('--remote-java-dir', default="/usr/bin/java", show_default=True, type=str, required=False, help='Location of Java binary')
-@click.option('--remote-root-dir', default="/home/jenkins", show_default=True, type=str, required=False, help='Directory where agent work is kept')
+@click.option('--remote-root-dir', default="/home/jenkins", show_default=True, type=str, required=False, help='Directory where node work is kept')
 @click.option('--retention', type=click.Choice(['always', 'demand'], case_sensitive=False), default='always', show_default=True, required=False, help='Always on or offline when not in use')
 @click.option('--ssh-port', default=22, show_default=True, type=click.IntRange(1, 64738), required=False, help='SSH port to target')
 @click.option('--ssh-verify', type=click.Choice(['known', 'trusted', 'none'], case_sensitive=False), default='trusted', show_default=True, required=False, help='SSH verification strategy')
 # @click.option('--config-file', type=click.Path(file_okay=True, dir_okay=False), required=False, help='Path to local XML file defining agent')
 def create_permanent(debug, profile, **kwargs):
     """
-    This command sets up a local or remote node/agent on a virtual machine, container,
+    This command sets up a local or remote node on a virtual machine, container,
     or physical machine, connecting with SSH. The target system must have the following:
 
     \b
     - A working SSH server installed, running, and accessible form main server
     - Java installed
 
-    This command only sets the agent up, but it does not monitor to see if the agent
+    This command only sets the node up, but it does not monitor to see if the agent
     has successfully connected. You will either need to manually check the node in the Jenkins UI,
     or you can use: "yo-jenkins node status NAME"
 
     ARGUMENTS:
 
     \b
-      NAME:        Name of the node/agent
-      HOST:        Hostname or IP address of the node/agent
+      NAME:        Name of the node
+      HOST:        Hostname or IP address of the node
       CREDENTIAL:  SSH type credential in Jenkins
 
     EXAMPLES:
 
     \b
-    - yo-jenkins node create-permanent my-agent 192.168.0.23 my-cred --description "My first agent"
-    - yo-jenkins node create-permanent my-agent 192.168.0.23 15ad1f93-dc24-4f71-b92b-18ae9b13b1d0
-    - yo-jenkins node create-permanent my-agent ey-yo.com my-cred --labels label1,label2,label3
+    - yo-jenkins node create-permanent my-node 192.168.0.23 my-cred --description "Yo new node"
+    - yo-jenkins node create-permanent my-node 192.168.0.23 15ad1f93-dc24-4f71-b92b-18ae9b13b1d0
+    - yo-jenkins node create-permanent "Node 1" ey-yo.com my-cred --labels label1,label2,label3
     """
     set_debug_log_level(debug)
     cli_node.create_permanent(profile, **kwargs)
 
-@node.command(short_help='\tSetup a local or remote ephemeral/as-needed node/agent')
+@node.command(short_help='\tSetup a local or remote ephemeral/as-needed node')
 @cli_decorators.debug
 def create_ephemeral(debug):
     set_debug_log_level(debug)
@@ -326,21 +342,21 @@ def list(debug, profile):
     set_debug_log_level(debug)
     click.echo(click.style('TODO :-/', fg='yellow',))
 
-@node.command(short_help='\tDelete a node/agent')
+@node.command(short_help='\tDelete a node')
 @cli_decorators.debug
 @cli_decorators.profile
 def delete(debug, profile):
     set_debug_log_level(debug)
     click.echo(click.style('TODO :-/', fg='yellow',))
 
-@node.command(short_help='\tDisable a node/agent')
+@node.command(short_help='\tDisable a node')
 @cli_decorators.debug
 @cli_decorators.profile
 def disable(debug, profile):
     set_debug_log_level(debug)
     click.echo(click.style('TODO :-/', fg='yellow',))
 
-@node.command(short_help='\tEnable a node/agent')
+@node.command(short_help='\tEnable a node')
 @cli_decorators.debug
 @cli_decorators.profile
 def enable(debug, profile):
@@ -359,7 +375,15 @@ def logs(debug, profile):
 ##############################################################################
 #                             CREDENTIALS
 ##############################################################################
-@main.group(short_help='\tManage credentials')
+@main.group(short_help='\tManage credentials',
+cls=HelpColorsGroup,
+    help_options_custom_colors={
+        'list': 'black',
+        'create': 'black',
+        'config': 'black',
+        'info': 'black',
+        'delete': 'black'
+        })
 def credentials():
     """CREDENTIALS MANAGEMENT"""
     pass
@@ -519,7 +543,11 @@ def delete(debug, profile, folder):
 ##############################################################################
 #                             JOB
 ##############################################################################
-@main.group(short_help='\tManage jobs')
+@main.group(short_help='\tManage jobs',
+    cls=HelpColorsGroup,
+    help_options_custom_colors={
+        'queue_cancel': 'black'
+        })
 def job():
     """JOB MANAGEMENT"""
     pass
@@ -947,14 +975,18 @@ def info(ctx, debug, pretty, yaml, xml, toml, profile, url):
 ##############################################################################
 #                             TOOLS
 ##############################################################################
-@main.group(short_help='\tTools and more')
+@main.group(short_help='\tTools and more',
+    cls=HelpColorsGroup,
+    help_options_custom_colors={
+        'docs': 'black'
+        })
 def tools():
     """UTILITY AND MORE"""
     pass
 
-@tools.command(short_help='\tShow the manual')
+@tools.command(short_help='\tOpen browser to the documentation')
 @cli_decorators.debug
-def manual(debug):
+def docs(debug):
     set_debug_log_level(debug)
     click.echo(click.style('TODO :-/', fg='yellow',))
 

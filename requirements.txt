@@ -2,6 +2,7 @@
 
 toml==0.10.2
 click==8.0.1
+click-help-colors==0.9.1
 coloredlogs==15.0.1
 docker==5.0.0
 json2xml==3.6.0
