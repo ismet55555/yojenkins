@@ -214,15 +214,15 @@ def shutdown(debug, profile, force):
 @click.option('--protocol-schema', default='http', type=str, required=False, help='Protocol schema for Jenkins, http, https, etc.')
 @click.option('--host', default='localhost', type=str, required=False, help='Jenkins server host (localhost, 192.168.0.1, etc.)')
 @click.option('--port', default=8080, type=int, required=False, help='Jenkins server port')
-@click.option('--image-base', default='jenkins/jenkins', type=str, required=False, help='Base Jenkins server image (default: jenkins/jenkins)')
+@click.option('--image-base', default='jenkins/jenkins', show_default=True, type=str, required=False, help='Base Jenkins server image')
 @click.option('--image-rebuild', default=False, type=bool, required=False, is_flag=True, help='If image exists, rebuild existing docker image')
-@click.option('--new-volume', default=False, type=bool, required=False, is_flag=True, help='Erase existing Docker data volume from previously created servers (default: off)')
+@click.option('--new-volume', default=False, show_default=True, type=bool, required=False, is_flag=True, help='Erase existing Docker data volume from previously created servers')
 @click.option('--new-volume-name', default='yo-jenkins-jenkins', type=str, required=False, help='Name of the resulting Docker volume')
 @click.option('--bind-mount-dir', default='', type=click.Path(file_okay=False, dir_okay=True), required=False, help='Path of local directory to be bound inside container "/tmp/my_things" directory')
 @click.option('--container-name', default='yo-jenkins-jenkins', type=str, required=False, help='Name of the resulting Docker container')
 @click.option('--registry', default='', type=str, required=False, help='Registry to pull base Jenkins image from')
-@click.option('--admin-user', default='admin', type=str, required=False, help='Set username of admin (default: admin)')
-@click.option('--password', default='', type=str, required=False, help='Set password for admin account (default: password)')
+@click.option('--admin-user', default='admin', show_default=True, type=str, required=False, help='Set username of admin')
+@click.option('--password', default='', type=str, required=False, help='Set password for admin account [default: password]')
 def server_deploy(debug, config_file, plugins_file, protocol_schema, host, port, image_base, image_rebuild, new_volume, new_volume_name, bind_mount_dir, container_name, registry, admin_user, password):
     """ATTENTION: The resulting Jenkins server is for development and testing purposes only. Enjoy responsibly.
     
@@ -234,8 +234,8 @@ def server_deploy(debug, config_file, plugins_file, protocol_schema, host, port,
     cli_server.server_deploy(config_file, plugins_file, protocol_schema, host, port, image_base, image_rebuild, new_volume, new_volume_name, bind_mount_dir, container_name, registry, admin_user, password)
 
 @server.command(short_help='\tRemove a local development server')
-@click.option('--remove-volume', default=False, type=bool, required=False, is_flag=True, help='Also remove the Docker volume used for current server (default: off)')
-@click.option('--remove-image', default=False, type=bool, required=False, is_flag=True, help='Also remove the Docker image used for current server (default: off)')
+@click.option('--remove-volume', default=False, show_default=True, type=bool, required=False, is_flag=True, help='Also remove the Docker volume used for current server')
+@click.option('--remove-image', default=False, show_default=True, type=bool, required=False, is_flag=True, help='Also remove the Docker image used for current server')
 @cli_decorators.debug
 def server_teardown(debug, remove_volume, remove_image):
     set_debug_log_level(debug)
@@ -382,11 +382,11 @@ def config(debug, pretty, yaml, xml, toml, json, profile, name, filepath):
 @cli_decorators.debug
 @cli_decorators.profile
 @click.argument('name', nargs=1, type=str, required=True)
-@click.option('--filepath', type=click.Path(file_okay=True, dir_okay=True), required=True, help='File/Filepath to configurations')
-@click.option('--as-json', type=bool, default=False, required=False, is_flag=True, help='The specified file is in JSON format')
-def reconfig(debug, profile, name, filepath, as_json):
+@click.option('--config-file', type=click.Path(file_okay=True, dir_okay=True), required=True, help='Path to local config file defining node')
+@click.option('--config-is-json', type=bool, default=False, required=False, is_flag=True, help='The specified file is in JSON format')
+def reconfig(debug, profile, name, config_file, config_is_json):
     set_debug_log_level(debug)
-    cli_node.reconfig(profile, name, filepath, as_json)
+    cli_node.reconfig(profile, name, config_file, config_is_json)
 
 @node.command(short_help='\tNode logs')
 @cli_decorators.debug
@@ -534,16 +534,17 @@ def config(debug, pretty, yaml, xml, toml, json, profile, folder, filepath):
     set_debug_log_level(debug)
     cli_folder.config(pretty, yaml, xml, toml, json, profile, folder, filepath)
 
-@folder.command(short_help='\tCreate an item (folder, view, job)')
+@folder.command(short_help='\tCreate an item [folder, view, job]')
 @cli_decorators.debug
 @cli_decorators.profile
 @click.argument('name', nargs=1, type=str, required=True)
 @click.argument('folder', nargs=1, type=str, required=True)
-@click.option('--type', type=click.Choice(['folder', 'view', 'job'], case_sensitive=False), default='folder', required=False, help='Item type created [default: folder]')
-@click.option('-cf', '--config-file', type=click.Path(file_okay=True, dir_okay=False), required=False, help='Path to local XML file defining item')
-def create(debug, profile, name, folder, type, config_file):
+@click.option('--type', type=click.Choice(['folder', 'view', 'job'], case_sensitive=False), default='folder', show_default=True, required=False, help='Item type created')
+@click.option('--config-file', type=click.Path(file_okay=True, dir_okay=False), required=False, help='Path to local XML file defining item')
+@click.option('--config-is-json', type=bool, default=False, required=False, is_flag=True, help='The specified file is in JSON format')
+def create(debug, profile, name, folder, type, config_file, config_is_json):
     set_debug_log_level(debug)
-    cli_folder.create(profile, name, folder, type, config_file)
+    cli_folder.create(profile, name, folder, type, config_file, config_is_json)
 
 @folder.command(short_help='\tCopy an existing item')
 @cli_decorators.debug
@@ -745,10 +746,11 @@ def monitor(debug, profile, job, sound):
 @cli_decorators.profile
 @click.argument('name', nargs=1, type=str, required=True)
 @click.argument('folder', nargs=1, type=str, required=True)
-@click.option('--config', default='', type=click.Path(file_okay=True, dir_okay=False), required=False, help='Config file defining the job')
-def create(debug, profile, name, folder, config):
+@click.option('--config-file', default='', type=click.Path(file_okay=True, dir_okay=False), required=False, help='Path to local config file defining job')
+@click.option('--config-is-json', type=bool, default=False, required=False, is_flag=True, help='The specified file is in JSON format')
+def create(debug, profile, name, folder, config_file, config_is_json):
     set_debug_log_level(debug)
-    cli_job.create(profile, name, folder, config)
+    cli_job.create(profile, name, folder, config_file, config_is_json)
 
 
 
@@ -1057,7 +1059,7 @@ def history(debug, profile, clear):
 @cli_decorators.debug
 @cli_decorators.profile
 @click.argument('request_text', nargs=1, type=str, required=True)
-@click.option('--request-type', type=click.Choice(['GET', 'POST', 'HEAD'], case_sensitive=False), default='GET', required=False, help='Type of REST request [default: GET]')
+@click.option('--request-type', type=click.Choice(['GET', 'POST', 'HEAD'], case_sensitive=False), default='GET', show_default=True, required=False, help='Type of REST request')
 @click.option('--raw', type=bool, required=False, default=False, is_flag=True, help='Return raw return text')
 @click.option('--clean-html', type=bool, required=False, default=False, is_flag=True, help='Clean any HTML tags from return')
 def rest_request(debug, profile, request_text, request_type, raw, clean_html):

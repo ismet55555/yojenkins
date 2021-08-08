@@ -720,7 +720,7 @@ class Job():
             logger.debug('Failed to open monitor for build')
         return success
 
-    def create(self, name: str, folder_name: str = '', folder_url: str = '', config: str = 'config.xml') -> bool:
+    def create(self, name: str, folder_name: str = '', folder_url: str = '', config_file: str = 'config.xml', config_is_json: bool = False) -> bool:
         """TODO Docstring
 
         Args:
@@ -749,25 +749,32 @@ class Job():
             return False
 
         # Use job config from file
-        if config:
-            logger.debug(f'Opening and reading file: {config} ...')
+        if config_file:
+            logger.debug(f'Opening and reading file: {config_file} ...')
             try:
-                config_file = open(config, 'rb')
-                config_definition = config_file.read()
-            except Exception as e:
-                logger.debug(f'Failed to open and read file. Exception: {e}')
+                config_file = open(config_file, 'rb')
+                job_config = config_file.read()
+            except Exception as error:
+                logger.debug(f'Failed to open and read file. Exception: {error}')
                 return False
 
-        # Use blank job config
-        if not config:
-            config_definition = JenkinsItemConfig.job.value['blank'].encode('utf-8')
+            if config_is_json:
+                logger.debug('Converting the specified JSON file to XML format ...')
+                try:
+                    job_config = xmltodict.unparse(json.loads(job_config))
+                except Exception as error:
+                    logger.debug(f'Failed to convert the specified JSON file to XML format. Exception: {error}')
+                    return False
+        else:
+            # Use blank job config template
+            job_config = JenkinsItemConfig.job.value['blank']
 
         logger.debug(f'Creating job "{name}" within folder "{folder_url}" "...')
         endpoint = f'createItem?name={name}'
         headers = {'Content-Type': 'application/xml; charset=utf-8'}
         _, _, success = self.REST.request(f'{folder_url.strip("/")}/{endpoint}',
                                           'post',
-                                          data=config_definition,
+                                          data=job_config.encode('utf-8'),
                                           headers=headers,
                                           is_endpoint=False)
         logger.debug(f'Successfully created item "{name}"' if success else f'Failed to create item "{name}"')

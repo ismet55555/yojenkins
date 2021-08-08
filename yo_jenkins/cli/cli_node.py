@@ -163,7 +163,7 @@ def config(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 @log_to_history
-def reconfig(profile: str, node_name: str, filepath: str, as_json: str) -> None:
+def reconfig(profile: str, node_name: str, config_file: str, config_is_json: str) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -175,7 +175,7 @@ def reconfig(profile: str, node_name: str, filepath: str, as_json: str) -> None:
         TODO
     """
     yj = cu.config_yo_jenkins(profile)
-    success = yj.Node.reconfig(filepath=filepath, node_name=node_name, as_json=as_json)
+    success = yj.Node.reconfig(config_file=config_file, node_name=node_name, config_is_json=config_is_json)
     if not success:
         click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)

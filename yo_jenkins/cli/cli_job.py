@@ -430,7 +430,7 @@ def monitor(profile: str, job: str, sound: bool) -> None:
 
 
 @log_to_history
-def create(profile: str, name: str, folder: str, config: str) -> None:
+def create(profile: str, name: str, folder: str, config_file: str, config_is_json: bool) -> None:
     """TODO Docstring
 
     Args:
@@ -441,9 +441,9 @@ def create(profile: str, name: str, folder: str, config: str) -> None:
     """
     jy_obj = cu.config_yo_jenkins(profile)
     if cu.is_full_url(folder):
-        data = jy_obj.Job.create(name=name, folder_url=folder, config=config)
+        data = jy_obj.Job.create(name=name, folder_url=folder, config_file=config_file, config_is_json=config_is_json)
     else:
-        data = jy_obj.Job.create(name=name, folder_name=folder, config=config)
+        data = jy_obj.Job.create(name=name, folder_name=folder, config_file=config_file, config_is_json=config_is_json)
 
     if not data:
         click.echo(click.style('failed', fg='bright_red', bold=True))

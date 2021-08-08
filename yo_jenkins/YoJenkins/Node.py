@@ -322,7 +322,7 @@ class Node():
         return return_content, True
 
 
-    def reconfig(self, node_name: str, filepath: str = None, as_json: bool = False) -> bool:
+    def reconfig(self, node_name: str, config_file: str = None, config_is_json: bool = False) -> bool:
         """TODO Docstring
 
         Details: TODO
@@ -334,23 +334,23 @@ class Node():
             TODO
         """
         logger.debug(f'Reconfiguring node: {node_name} ...')
-        logger.debug(f'Using the following specified configuration file: {filepath}')
+        logger.debug(f'Using the following specified configuration file: {config_file}')
 
-        logger.debug(f'Checking if file exists: {filepath} ...')
-        if not os.path.isfile(filepath):
+        logger.debug(f'Checking if file exists: {config_file} ...')
+        if not os.path.isfile(config_file):
             logger.debug('Specified configuration file does not exist')
             return False
 
-        logger.debug(f'Reading configuration file: {filepath} ...')
+        logger.debug(f'Reading configuration file: {config_file} ...')
         try:
-            with open(filepath, 'r') as file:
+            with open(config_file, 'rb') as file:
                 node_config = file.read()
             logger.debug('Successfully read configuration file')
         except Exception as e:
             logger.debug(f'Failed to read configuration file. Exception: {e}')
             return False
 
-        if as_json:
+        if config_is_json:
             logger.debug(f'Converting the specified JSON file to XML format ...')
             try:
                 node_config = xmltodict.unparse(json.loads(node_config))

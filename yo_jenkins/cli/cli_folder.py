@@ -240,7 +240,7 @@ def config(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_
 
 
 @log_to_history
-def create(profile: str, name: str, folder: str, type: str, config: str) -> None:
+def create(profile: str, name: str, folder: str, type: str, config: str, config_is_json: bool) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -253,9 +253,9 @@ def create(profile: str, name: str, folder: str, type: str, config: str) -> None
     """
     jy_obj = cu.config_yo_jenkins(profile)
     if cu.is_full_url(folder):
-        data = jy_obj.Folder.create(name=name, type=type, config=config, folder_url=folder)
+        data = jy_obj.Folder.create(name=name, type=type, config=config, folder_url=folder, config_is_json=config_is_json)
     else:
-        data = jy_obj.Folder.create(name=name, type=type, config=config, folder_name=folder)
+        data = jy_obj.Folder.create(name=name, type=type, config=config, folder_name=folder, config_is_json=config_is_json)
 
     if not data:
         click.echo(click.style('failed', fg='bright_red', bold=True))
