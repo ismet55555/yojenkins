@@ -367,7 +367,7 @@ class Folder():
                 content_to_write = return_content
 
             if opt_json:
-                content_to_write = json.dumps(data_ordered_dict)
+                content_to_write = json.dumps(data_ordered_dict, indent=4)
             elif opt_yaml:
                 logger.debug('Converting content to YAML ...')
                 content_to_write = yaml.dump(content_to_write)

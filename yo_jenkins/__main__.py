@@ -367,6 +367,27 @@ def enable(debug, profile, name, message):
     set_debug_log_level(debug)
     cli_node.enable(profile, name, message)
 
+@node.command(short_help='\tGet node configuration')
+@cli_decorators.debug
+@cli_decorators.format_output
+@click.option('-j', '--json', type=bool, default=False, required=False, is_flag=True, help='Output config in JSON format')
+@cli_decorators.profile
+@click.argument('name', nargs=1, type=str, required=True)
+@click.option('--filepath', type=click.Path(file_okay=True, dir_okay=True), required=False, help='File/Filepath to write configurations to')
+def config(debug, pretty, yaml, xml, toml, json, profile, name, filepath):
+    set_debug_log_level(debug)
+    cli_node.config(pretty, yaml, xml, toml, json, profile, name, filepath)
+
+@node.command(short_help='\tReconfigure the node')
+@cli_decorators.debug
+@cli_decorators.profile
+@click.argument('name', nargs=1, type=str, required=True)
+@click.option('--filepath', type=click.Path(file_okay=True, dir_okay=True), required=True, help='File/Filepath to configurations')
+@click.option('--as-json', type=bool, default=False, required=False, is_flag=True, help='The specified file is in JSON format')
+def reconfig(debug, profile, name, filepath, as_json):
+    set_debug_log_level(debug)
+    cli_node.reconfig(profile, name, filepath, as_json)
+
 @node.command(short_help='\tNode logs')
 @cli_decorators.debug
 @cli_decorators.profile

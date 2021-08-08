@@ -293,7 +293,7 @@ def config(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_
     # Converting XML to dict
     # data = json.loads(json.dumps(xmltodict.parse(data)))
 
-    opt_xml = False if any([opt_json, opt_yaml, opt_toml]) else True
+    opt_xml = not any([opt_json, opt_yaml, opt_toml])
     data = data if opt_xml else json.loads(json.dumps(xmltodict.parse(data)))
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
