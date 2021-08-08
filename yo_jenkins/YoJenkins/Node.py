@@ -62,6 +62,7 @@ class Node():
             TODO
         """
         # TODO: Check if the node already exists. Call exists() method. Need info() method.
+        # TODO: Check if credentials exists on server. Check type being SSH
 
         # Checking name for special characters
         if utility.has_special_char(kwargs['name']):
