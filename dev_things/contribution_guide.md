@@ -104,6 +104,7 @@ Also, note that as of now there are no sufficient tests setup (ie. pytest, unite
 3. Lock `Pipfile.lock`
     - `pipenv lock`
     - `--clear` - Clears caches (pipenv, pip, and pip-tools)
+    - `--keep-outdated` - prevents pipenv from updating unrelated locked packages
 
 4. Add the exact package listed in `Pipfile.lock` to `requirements.txt`
 
