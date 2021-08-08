@@ -257,8 +257,6 @@ def server_teardown(debug, remove_volume, remove_image):
     help_options_custom_colors={
         'prepare': 'black',
         'create-ephemeral': 'black',
-        'disable': 'black',
-        'enable': 'black',
         'logs': 'black',
         })
 def node():
@@ -354,16 +352,20 @@ def delete(debug, profile, name):
 @node.command(short_help='\tDisable a node')
 @cli_decorators.debug
 @cli_decorators.profile
-def disable(debug, profile):
+@click.argument('name', nargs=1, type=str, required=True)
+@click.option('--message', type=str, required=False, help='Message for disabling node')
+def disable(debug, profile, name, message):
     set_debug_log_level(debug)
-    click.echo(click.style('TODO :-/', fg='yellow',))
+    cli_node.disable(profile, name, message)
 
 @node.command(short_help='\tEnable a node')
 @cli_decorators.debug
 @cli_decorators.profile
-def enable(debug, profile):
+@click.argument('name', nargs=1, type=str, required=True)
+@click.option('--message', type=str, required=False, help='Message for enabling node')
+def enable(debug, profile, name, message):
     set_debug_log_level(debug)
-    click.echo(click.style('TODO :-/', fg='yellow',))
+    cli_node.enable(profile, name, message)
 
 @node.command(short_help='\tNode logs')
 @cli_decorators.debug

@@ -186,7 +186,6 @@ class Node():
         logger.debug('Successfully created node' if success else 'Failed to create node')
         return success
 
-
     def delete(self, node_name: str) -> bool:
         """TODO Docstring
 
@@ -200,8 +199,68 @@ class Node():
         """
         logger.debug(f'Deleting node: {node_name}')
         _, _, success = self.REST.request(target=f"computer/{node_name}/doDelete",
-                                                  request_type='post',
-                                                  is_endpoint=True,
-                                                  json_content=False)
+                                          request_type='post',
+                                          is_endpoint=True,
+                                          json_content=False)
         logger.debug('Successfully deleted node' if success else 'Failed to delete node')
+        return success
+
+    def disable(self, node_name: str, message: str = None) -> bool:
+        """TODO Docstring
+
+        Details: TODO
+
+        Args:
+            name: TODO
+
+        Returns:
+            TODO
+        """
+        logger.debug(f'Disabling node: {node_name}')
+        logger.debug(f'Message for disabling node: "{message}"')
+
+        # Check if node is disabled already
+        node_info = self.info(node_name=node_name)
+        if not node_info:
+            return False
+
+        if node_info['offline']:
+            logger.debug('Node is already disabled')
+            return True
+
+        _, _, success = self.REST.request(target=f"computer/{node_name}/toggleOffline?offlineMessage={message}",
+                                          request_type='post',
+                                          is_endpoint=True,
+                                          json_content=False)
+        logger.debug('Successfully disabled node' if success else 'Failed to disable node')
+        return success
+
+    def enable(self, node_name: str, message: str = None) -> bool:
+        """TODO Docstring
+
+        Details: TODO
+
+        Args:
+            name: TODO
+
+        Returns:
+            TODO
+        """
+        logger.debug(f'Enabling node: {node_name}')
+        logger.debug(f'Message for enabling node: "{message}"')
+
+        # Check if node is disabled already
+        node_info = self.info(node_name=node_name)
+        if not node_info:
+            return False
+
+        if not node_info['offline']:
+            logger.debug('Node is already enabled')
+            return True
+
+        _, _, success = self.REST.request(target=f"computer/{node_name}/toggleOffline?offlineMessage={message}",
+                                          request_type='post',
+                                          is_endpoint=True,
+                                          json_content=False)
+        logger.debug('Successfully enabled node' if success else 'Failed to enabled node')
         return success

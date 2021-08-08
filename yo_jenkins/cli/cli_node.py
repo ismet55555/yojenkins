@@ -73,6 +73,7 @@ def create_permanent(profile: str, **kwargs) -> None:
         sys.exit(1)
     click.echo(click.style('success', fg='bright_green', bold=True))
 
+
 @log_to_history
 def delete(profile: str, node_name: str) -> None:
     """TODO Docstring
@@ -87,6 +88,44 @@ def delete(profile: str, node_name: str) -> None:
     """
     yj = cu.config_yo_jenkins(profile)
     if not yj.Node.delete(node_name):
+        click.echo(click.style('failed', fg='bright_red', bold=True))
+        sys.exit(1)
+    click.echo(click.style('success', fg='bright_green', bold=True))
+
+
+@log_to_history
+def disable(profile: str, node_name: str, message: str) -> None:
+    """TODO Docstring
+
+    Details: TODO
+
+    Args:
+        TODO
+
+    Returns:
+        TODO
+    """
+    yj = cu.config_yo_jenkins(profile)
+    if not yj.Node.disable(node_name, message):
+        click.echo(click.style('failed', fg='bright_red', bold=True))
+        sys.exit(1)
+    click.echo(click.style('success', fg='bright_green', bold=True))
+
+
+@log_to_history
+def enable(profile: str, node_name: str, message: str) -> None:
+    """TODO Docstring
+
+    Details: TODO
+
+    Args:
+        TODO
+
+    Returns:
+        TODO
+    """
+    yj = cu.config_yo_jenkins(profile)
+    if not yj.Node.enable(node_name, message):
         click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
     click.echo(click.style('success', fg='bright_green', bold=True))
