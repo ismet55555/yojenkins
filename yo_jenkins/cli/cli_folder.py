@@ -234,13 +234,13 @@ def config(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_
     # Converting XML to dict
     # data = json.loads(json.dumps(xmltodict.parse(data)))
 
-    opt_xml = False if any([opt_json, opt_yaml, opt_toml]) else True
+    opt_xml = not any([opt_json, opt_yaml, opt_toml])
     data = data if opt_xml else json.loads(json.dumps(xmltodict.parse(data)))
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
 @log_to_history
-def create(profile: str, name: str, folder: str, type: str, config: str) -> None:
+def create(profile: str, name: str, folder: str, type: str, config: str, config_is_json: bool) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -253,9 +253,17 @@ def create(profile: str, name: str, folder: str, type: str, config: str) -> None
     """
     jy_obj = cu.config_yo_jenkins(profile)
     if cu.is_full_url(folder):
-        data = jy_obj.Folder.create(name=name, type=type, config=config, folder_url=folder)
+        data = jy_obj.Folder.create(name=name,
+                                    type=type,
+                                    config=config,
+                                    folder_url=folder,
+                                    config_is_json=config_is_json)
     else:
-        data = jy_obj.Folder.create(name=name, type=type, config=config, folder_name=folder)
+        data = jy_obj.Folder.create(name=name,
+                                    type=type,
+                                    config=config,
+                                    folder_name=folder,
+                                    config_is_json=config_is_json)
 
     if not data:
         click.echo(click.style('failed', fg='bright_red', bold=True))

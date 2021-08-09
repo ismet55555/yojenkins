@@ -17,6 +17,7 @@ yo-jenkins = {editable = true, path = "."}
 
 [packages]
 click = "*"
+click-help-colors = "*"
 coloredlogs = "*"
 docker = "*"
 json2xml = "*"

@@ -163,3 +163,5 @@ last_deploy_info.json
 config.xml
 config.json
 config.toml
+config.yml
+config.yaml

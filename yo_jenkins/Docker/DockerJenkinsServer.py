@@ -6,6 +6,7 @@ import os
 from time import perf_counter
 from datetime import datetime
 from typing import Tuple
+from grp import getgrnam
 
 import docker
 from yo_jenkins.Utility.utility import get_resource_path
@@ -41,6 +42,9 @@ class DockerJenkinsServer():
         Returns:
             None
         """
+
+        # TODO: Option flag to mount docker socket (for security)
+
         self.docker_client = None
 
         # Image Related
@@ -268,6 +272,14 @@ class DockerJenkinsServer():
             self.volumes_mounts.append(mount)
             volume_mounts_names.append({'named': volume_name})
 
+        # Adding Docker unix socket
+        logger.debug('Adding bind mount to Docker unix socket: /var/run/docker.sock ...')
+        mount = docker.types.Mount(target='/var/run/docker.sock',
+                                   source='/var/run/docker.sock',
+                                   type='bind',
+                                   read_only=False)
+        self.volumes_mounts.append(mount)
+
         logger.debug(f'Number of volumes to be mounted to container: {len(self.volumes_mounts)}')
         return volume_mounts_names
 
@@ -303,6 +315,10 @@ class DockerJenkinsServer():
         Returns:
             TODO
         """
+        # Getting docker group id (Unix only)
+        docker_gid = getgrnam('docker').gr_gid
+        logger.debug(f'Local docker service group id found: {docker_gid}')
+
         logger.debug(f'Creating and running container: {self.container_name} ...')
         try:
             self.docker_client.containers.run(name=self.container_name,
@@ -313,7 +329,8 @@ class DockerJenkinsServer():
                                               restart_policy=self.container_restart_policy,
                                               remove=self.container_remove,
                                               auto_remove=self.container_remove,
-                                              detach=True)
+                                              detach=True,
+                                              group_add=[docker_gid])
         except Exception as e:
             logger.debug(f'Failed to run container: {self.container_name} Exception: {e}')
             return '', ''

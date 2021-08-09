@@ -49,3 +49,8 @@ class JenkinsItemClasses(Enum):
         "prefix": "",
         "class_type": ['hudson.model.Queue$BuildableItem', 'hudson.model.Queue$BlockedItem']
     }
+    node = {
+        "item_type": "computer",
+        "prefix": "",
+        "class_type": ['hudson.slaves.SlaveComputer', 'hudson.slaves.DumbSlave', 'hudson.model.Hudson$MasterComputer']
+    }

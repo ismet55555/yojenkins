@@ -4,11 +4,13 @@ import logging
 import sys
 
 import click
+from click_help_colors import HelpColorsCommand, HelpColorsGroup
 
 from yo_jenkins import __version__
 from yo_jenkins.cli import logger_setup  # Keep this line, sets up logger
 from yo_jenkins.cli import (cli_auth, cli_build, cli_decorators, cli_folder,
-                            cli_job, cli_server, cli_stage, cli_step, cli_tools)
+                            cli_job, cli_node, cli_server, cli_stage, cli_step,
+                            cli_tools)
 from yo_jenkins.cli.cli_utility import set_debug_log_level
 
 logger = logging.getLogger()
@@ -31,13 +33,11 @@ MAIN_HELP_TEXT = f"""
 
     QUICK START:
 
-        1. Configure yo profile:  yo-jenkins auth configure
-
-        2. Add yo API token:      yo-jenkins auth token --profile <PROFILE>
-
-        3. Verify yo creds:       yo-jenkins auth verify
-
-        4. Explore yo-jenkins
+    \b
+      1. Configure yo profile:  yo-jenkins auth configure
+      2. Add yo API token:      yo-jenkins auth token --profile <PROFILE NAME>
+      3. Verify yo creds:       yo-jenkins auth verify
+      4. Explore yo-jenkins
 """
 
 
@@ -57,14 +57,18 @@ def main():
 #                             AUTHENTICATE
 ##############################################################################
 
-@main.group(short_help='\tManage authentication and profiles')
+@main.group(short_help='\tManage authentication and profiles',
+    cls=HelpColorsGroup,
+    help_options_custom_colors={
+        'wipe': 'black'
+        })
 def auth():
     """
     AUTHENTICATION AND PROFILE MANAGEMENT
     """
     pass
 
-@auth.command(short_help='\tConfigure authentication')
+@auth.command(short_help='\tConfigure authentication', cls=HelpColorsCommand, help_options_custom_colors={'--token': 'black'})
 @cli_decorators.debug
 @click.option('--token', type=str, required=False, is_flag=False, help='Authentication token used for setup profile')
 def configure(debug, token):
@@ -210,15 +214,15 @@ def shutdown(debug, profile, force):
 @click.option('--protocol-schema', default='http', type=str, required=False, help='Protocol schema for Jenkins, http, https, etc.')
 @click.option('--host', default='localhost', type=str, required=False, help='Jenkins server host (localhost, 192.168.0.1, etc.)')
 @click.option('--port', default=8080, type=int, required=False, help='Jenkins server port')
-@click.option('--image-base', default='jenkins/jenkins', type=str, required=False, help='Base Jenkins server image (default: jenkins/jenkins)')
+@click.option('--image-base', default='jenkins/jenkins', show_default=True, type=str, required=False, help='Base Jenkins server image')
 @click.option('--image-rebuild', default=False, type=bool, required=False, is_flag=True, help='If image exists, rebuild existing docker image')
-@click.option('--new-volume', default=False, type=bool, required=False, is_flag=True, help='Erase existing Docker data volume from previously created servers (default: off)')
+@click.option('--new-volume', default=False, show_default=True, type=bool, required=False, is_flag=True, help='Erase existing Docker data volume from previously created servers')
 @click.option('--new-volume-name', default='yo-jenkins-jenkins', type=str, required=False, help='Name of the resulting Docker volume')
 @click.option('--bind-mount-dir', default='', type=click.Path(file_okay=False, dir_okay=True), required=False, help='Path of local directory to be bound inside container "/tmp/my_things" directory')
 @click.option('--container-name', default='yo-jenkins-jenkins', type=str, required=False, help='Name of the resulting Docker container')
 @click.option('--registry', default='', type=str, required=False, help='Registry to pull base Jenkins image from')
-@click.option('--admin-user', default='admin', type=str, required=False, help='Set username of admin (default: admin)')
-@click.option('--password', default='', type=str, required=False, help='Set password for admin account (default: password)')
+@click.option('--admin-user', default='admin', show_default=True, type=str, required=False, help='Set username of admin')
+@click.option('--password', default='', type=str, required=False, help='Set password for admin account [default: password]')
 def server_deploy(debug, config_file, plugins_file, protocol_schema, host, port, image_base, image_rebuild, new_volume, new_volume_name, bind_mount_dir, container_name, registry, admin_user, password):
     """ATTENTION: The resulting Jenkins server is for development and testing purposes only. Enjoy responsibly.
     
@@ -230,8 +234,8 @@ def server_deploy(debug, config_file, plugins_file, protocol_schema, host, port,
     cli_server.server_deploy(config_file, plugins_file, protocol_schema, host, port, image_base, image_rebuild, new_volume, new_volume_name, bind_mount_dir, container_name, registry, admin_user, password)
 
 @server.command(short_help='\tRemove a local development server')
-@click.option('--remove-volume', default=False, type=bool, required=False, is_flag=True, help='Also remove the Docker volume used for current server (default: off)')
-@click.option('--remove-image', default=False, type=bool, required=False, is_flag=True, help='Also remove the Docker image used for current server (default: off)')
+@click.option('--remove-volume', default=False, show_default=True, type=bool, required=False, is_flag=True, help='Also remove the Docker volume used for current server')
+@click.option('--remove-image', default=False, show_default=True, type=bool, required=False, is_flag=True, help='Also remove the Docker image used for current server')
 @cli_decorators.debug
 def server_teardown(debug, remove_volume, remove_image):
     set_debug_log_level(debug)
@@ -248,24 +252,196 @@ def server_teardown(debug, remove_volume, remove_image):
 ##############################################################################
 #                             NODE
 ##############################################################################
-@main.group(short_help='\tManage nodes')
+@main.group(short_help='\tManage nodes',
+    cls=HelpColorsGroup,
+    help_options_custom_colors={
+        'prepare': 'black',
+        'create-ephemeral': 'black',
+        'logs': 'black',
+        })
 def node():
     """NODE MANAGEMENT"""
     pass
 
-@node.command(short_help='\tServer information')
+@node.command(short_help='\tNode information')
+@cli_decorators.debug
+@cli_decorators.format_output
+@cli_decorators.profile
+@click.argument('name', nargs=1, type=str, required=True)
+@click.option('-d', '--depth', type=int, default=0, required=False, help='Search depth from root directory')
+def info(debug, pretty, yaml, xml, toml, profile, name, depth):
+    set_debug_log_level(debug)
+    cli_node.info(pretty, yaml, xml, toml, profile, name, depth)
+
+@node.command(short_help='\tList all all nodes')
 @cli_decorators.debug
 @cli_decorators.profile
-def info(debug, profile):
+@cli_decorators.format_output
+@cli_decorators.list
+@click.option('-d', '--depth', type=int, default=0, required=False, help='Search depth from root directory')
+def list(debug, profile, pretty, yaml, xml, toml, list, depth):
+    set_debug_log_level(debug)
+    cli_node.list(pretty, yaml, xml, toml, list, profile, depth)
+
+@node.command(short_help='\tPrepare a remote machine to become a node')
+@cli_decorators.debug
+def prepare(debug):
+    set_debug_log_level(debug)
+    cli_node.prepare()
+
+@node.command(short_help='\tSetup a local or remote persistant node')
+@cli_decorators.debug
+@cli_decorators.profile
+@click.argument('name', nargs=1, type=str, required=True)
+@click.argument('host', nargs=1, type=str, required=True)
+@click.argument('credential', nargs=1, type=str, required=True)
+@click.option('--description', type=str, required=False, help='Node description')
+@click.option('--executors', default=1, type=click.IntRange(1, 100), required=False, show_default=True, help='Number of executors on node')
+@click.option('--labels', type=str, required=False, help='Labels applied to agent [default: NAME]')
+@click.option('--mode', type=click.Choice(['normal', 'exclusive'], case_sensitive=False), default='normal', show_default=True, required=False, help='Available to all or to specified jobs')
+@click.option('--remote-java-dir', default="/usr/bin/java", show_default=True, type=str, required=False, help='Location of Java binary')
+@click.option('--remote-root-dir', default="/home/jenkins", show_default=True, type=str, required=False, help='Directory where node work is kept')
+@click.option('--retention', type=click.Choice(['always', 'demand'], case_sensitive=False), default='always', show_default=True, required=False, help='Always on or offline when not in use')
+@click.option('--ssh-port', default=22, show_default=True, type=click.IntRange(1, 64738), required=False, help='SSH port to target')
+@click.option('--ssh-verify', type=click.Choice(['known', 'trusted', 'none'], case_sensitive=False), default='trusted', show_default=True, required=False, help='SSH verification strategy')
+# @click.option('--config-file', type=click.Path(file_okay=True, dir_okay=False), required=False, help='Path to local XML file defining agent')
+def create_permanent(debug, profile, **kwargs):
+    """
+    This command sets up a local or remote node on a virtual machine, container,
+    or physical machine, connecting with SSH. The target system must have the following:
+
+    \b
+    - A working SSH server installed, running, and accessible form main server
+    - Java installed
+
+    This command only sets the node up, but it does not monitor to see if the agent
+    has successfully connected. You will either need to manually check the node in the Jenkins UI,
+    or you can use: "yo-jenkins node status NAME"
+
+    ARGUMENTS:
+
+    \b
+      NAME:        Name of the node
+      HOST:        Hostname or IP address of the node
+      CREDENTIAL:  SSH type credential in Jenkins
+
+    EXAMPLES:
+
+    \b
+    - yo-jenkins node create-permanent my-node 192.168.0.23 my-cred --description "Yo new node"
+    - yo-jenkins node create-permanent my-node 192.168.0.23 15ad1f93-dc24-4f71-b92b-18ae9b13b1d0
+    - yo-jenkins node create-permanent "Node 1" ey-yo.com my-cred --labels label1,label2,label3
+    """
+    set_debug_log_level(debug)
+    cli_node.create_permanent(profile, **kwargs)
+
+@node.command(short_help='\tSetup a local or remote ephemeral/as-needed node')
+@cli_decorators.debug
+def create_ephemeral(debug):
     set_debug_log_level(debug)
     click.echo(click.style('TODO :-/', fg='yellow',))
 
-# TODO:
-#   - Info
-#   - List
-#   - Delete
-#   - Type
-#   - Toggle offline/online
+@node.command(short_help='\tDelete a node')
+@cli_decorators.debug
+@cli_decorators.profile
+@click.argument('name', nargs=1, type=str, required=True)
+def delete(debug, profile, name):
+    set_debug_log_level(debug)
+    cli_node.delete(profile, name)
+
+@node.command(short_help='\tDisable a node')
+@cli_decorators.debug
+@cli_decorators.profile
+@click.argument('name', nargs=1, type=str, required=True)
+@click.option('--message', type=str, required=False, help='Message for disabling node')
+def disable(debug, profile, name, message):
+    set_debug_log_level(debug)
+    cli_node.disable(profile, name, message)
+
+@node.command(short_help='\tEnable a node')
+@cli_decorators.debug
+@cli_decorators.profile
+@click.argument('name', nargs=1, type=str, required=True)
+@click.option('--message', type=str, required=False, help='Message for enabling node')
+def enable(debug, profile, name, message):
+    set_debug_log_level(debug)
+    cli_node.enable(profile, name, message)
+
+@node.command(short_help='\tGet node configuration')
+@cli_decorators.debug
+@cli_decorators.format_output
+@click.option('-j', '--json', type=bool, default=False, required=False, is_flag=True, help='Output config in JSON format')
+@cli_decorators.profile
+@click.argument('name', nargs=1, type=str, required=True)
+@click.option('--filepath', type=click.Path(file_okay=True, dir_okay=True), required=False, help='File/Filepath to write configurations to')
+def config(debug, pretty, yaml, xml, toml, json, profile, name, filepath):
+    set_debug_log_level(debug)
+    cli_node.config(pretty, yaml, xml, toml, json, profile, name, filepath)
+
+@node.command(short_help='\tReconfigure the node')
+@cli_decorators.debug
+@cli_decorators.profile
+@click.argument('name', nargs=1, type=str, required=True)
+@click.option('--config-file', type=click.Path(file_okay=True, dir_okay=True), required=True, help='Path to local config file defining node')
+@click.option('--config-is-json', type=bool, default=False, required=False, is_flag=True, help='The specified file is in JSON format')
+def reconfig(debug, profile, name, config_file, config_is_json):
+    set_debug_log_level(debug)
+    cli_node.reconfig(profile, name, config_file, config_is_json)
+
+@node.command(short_help='\tNode logs')
+@cli_decorators.debug
+@cli_decorators.profile
+def logs(debug, profile):
+    set_debug_log_level(debug)
+    click.echo(click.style('TODO :-/', fg='yellow',))
+
+
+
+##############################################################################
+#                             CREDENTIALS
+##############################################################################
+@main.group(short_help='\tManage credentials',
+cls=HelpColorsGroup,
+    help_options_custom_colors={
+        'list': 'black',
+        'create': 'black',
+        'config': 'black',
+        'info': 'black',
+        'delete': 'black'
+        })
+def credentials():
+    """CREDENTIALS MANAGEMENT"""
+    pass
+
+@credentials.command(short_help='\tList credentials')
+@cli_decorators.debug
+def list(debug):
+    set_debug_log_level(debug)
+    click.echo(click.style('TODO :-/', fg='yellow',))
+
+@credentials.command(short_help='\tCreate new credentials to use with Jenkins')
+@cli_decorators.debug
+def create(debug):
+    set_debug_log_level(debug)
+    click.echo(click.style('TODO :-/', fg='yellow',))
+
+@credentials.command(short_help='\tConfigure existing credentials')
+@cli_decorators.debug
+def config(debug):
+    set_debug_log_level(debug)
+    click.echo(click.style('TODO :-/', fg='yellow',))
+
+@credentials.command(short_help='\tCredentials information')
+@cli_decorators.debug
+def info(debug):
+    set_debug_log_level(debug)
+    click.echo(click.style('TODO :-/', fg='yellow',))
+
+@credentials.command(short_help='\tRemove credentials')
+@cli_decorators.debug
+def delete(debug):
+    set_debug_log_level(debug)
+    click.echo(click.style('TODO :-/', fg='yellow',))
 
 
 
@@ -304,7 +480,7 @@ def search(debug, pretty, yaml, xml, toml, profile, search_pattern, search_folde
 @cli_decorators.format_output
 @cli_decorators.profile
 @click.argument('folder', nargs=1, type=str, required=True)
-
+@cli_decorators.list
 def subfolders(debug, pretty, yaml, xml, toml, profile, folder, list):
     set_debug_log_level(debug)
     cli_folder.subfolders(pretty, yaml, xml, toml, profile, folder, list)
@@ -358,16 +534,17 @@ def config(debug, pretty, yaml, xml, toml, json, profile, folder, filepath):
     set_debug_log_level(debug)
     cli_folder.config(pretty, yaml, xml, toml, json, profile, folder, filepath)
 
-@folder.command(short_help='\tCreate an item (folder, view, job)')
+@folder.command(short_help='\tCreate an item [folder, view, job]')
 @cli_decorators.debug
 @cli_decorators.profile
 @click.argument('name', nargs=1, type=str, required=True)
 @click.argument('folder', nargs=1, type=str, required=True)
-@click.option('--type', type=click.Choice(['folder', 'view', 'job'], case_sensitive=False), default='folder', required=False, help='Item type created [default: folder]')
-@click.option('-cf', '--config-file', type=click.Path(file_okay=True, dir_okay=False), required=False, help='Path to local XML file defining item')
-def create(debug, profile, name, folder, type, config_file):
+@click.option('--type', type=click.Choice(['folder', 'view', 'job'], case_sensitive=False), default='folder', show_default=True, required=False, help='Item type created')
+@click.option('--config-file', type=click.Path(file_okay=True, dir_okay=False), required=False, help='Path to local XML file defining item')
+@click.option('--config-is-json', type=bool, default=False, required=False, is_flag=True, help='The specified file is in JSON format')
+def create(debug, profile, name, folder, type, config_file, config_is_json):
     set_debug_log_level(debug)
-    cli_folder.create(profile, name, folder, type, config_file)
+    cli_folder.create(profile, name, folder, type, config_file, config_is_json)
 
 @folder.command(short_help='\tCopy an existing item')
 @cli_decorators.debug
@@ -392,7 +569,11 @@ def delete(debug, profile, folder):
 ##############################################################################
 #                             JOB
 ##############################################################################
-@main.group(short_help='\tManage jobs')
+@main.group(short_help='\tManage jobs',
+    cls=HelpColorsGroup,
+    help_options_custom_colors={
+        'queue_cancel': 'black'
+        })
 def job():
     """JOB MANAGEMENT"""
     pass
@@ -565,10 +746,11 @@ def monitor(debug, profile, job, sound):
 @cli_decorators.profile
 @click.argument('name', nargs=1, type=str, required=True)
 @click.argument('folder', nargs=1, type=str, required=True)
-@click.option('--config', default='', type=click.Path(file_okay=True, dir_okay=False), required=False, help='Config file defining the job')
-def create(debug, profile, name, folder, config):
+@click.option('--config-file', default='', type=click.Path(file_okay=True, dir_okay=False), required=False, help='Path to local config file defining job')
+@click.option('--config-is-json', type=bool, default=False, required=False, is_flag=True, help='The specified file is in JSON format')
+def create(debug, profile, name, folder, config_file, config_is_json):
     set_debug_log_level(debug)
-    cli_job.create(profile, name, folder, config)
+    cli_job.create(profile, name, folder, config_file, config_is_json)
 
 
 
@@ -820,14 +1002,18 @@ def info(ctx, debug, pretty, yaml, xml, toml, profile, url):
 ##############################################################################
 #                             TOOLS
 ##############################################################################
-@main.group(short_help='\tTools and more')
+@main.group(short_help='\tTools and more',
+    cls=HelpColorsGroup,
+    help_options_custom_colors={
+        'docs': 'black'
+        })
 def tools():
     """UTILITY AND MORE"""
     pass
 
-@tools.command(short_help='\tShow the manual')
+@tools.command(short_help='\tOpen browser to the documentation')
 @cli_decorators.debug
-def manual(debug):
+def docs(debug):
     set_debug_log_level(debug)
     click.echo(click.style('TODO :-/', fg='yellow',))
 
@@ -873,7 +1059,7 @@ def history(debug, profile, clear):
 @cli_decorators.debug
 @cli_decorators.profile
 @click.argument('request_text', nargs=1, type=str, required=True)
-@click.option('--request-type', type=click.Choice(['GET', 'POST', 'HEAD'], case_sensitive=False), default='GET', required=False, help='Type of REST request [default: GET]')
+@click.option('--request-type', type=click.Choice(['GET', 'POST', 'HEAD'], case_sensitive=False), default='GET', show_default=True, required=False, help='Type of REST request')
 @click.option('--raw', type=bool, required=False, default=False, is_flag=True, help='Return raw return text')
 @click.option('--clean-html', type=bool, required=False, default=False, is_flag=True, help='Clean any HTML tags from return')
 def rest_request(debug, profile, request_text, request_type, raw, clean_html):

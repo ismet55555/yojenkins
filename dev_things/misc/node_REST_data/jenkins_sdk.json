@@ -1,0 +1,20 @@
+{
+    "name": "ec2-agent",
+    "type": "hudson.slaves.DumbSlave$DescriptorImpl",
+    "json": {
+        "nodeDescription": "DESCRIPTION",
+        "numExecutors": "1",
+        "remoteFS": "/home/jenkins",
+        "labelString": "ec2-agent-jenkins",
+        "mode": "NORMAL or EXCLUSIVE",
+        "retentionStrategy": {
+            "stapler-class": "hudson.slaves.RetentionStrategy$Always"
+        },
+        "nodeProperties": {
+            "stapler-class-bag": "true"
+        },
+        "launcher": {
+            "stapler-class": "LAUNCHER"
+        }
+    }
+}

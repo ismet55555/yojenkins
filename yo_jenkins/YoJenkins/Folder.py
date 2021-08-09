@@ -156,7 +156,9 @@ class Folder():
         if folder_name and not folder_url:
             folder_url = utility.name_to_url(self.REST.get_server_url(), folder_name)
 
-        folder_info, _, success = self.REST.request(folder_url.strip('/') + '/api/json', 'get', is_endpoint=False)
+        folder_info, _, success = self.REST.request(folder_url.strip('/') + '/api/json',
+                                                    request_type='get',
+                                                    is_endpoint=False)
         if not success:
             logger.debug(f'Failed to find folder info: {folder_url}')
             return {}
@@ -365,7 +367,7 @@ class Folder():
                 content_to_write = return_content
 
             if opt_json:
-                content_to_write = json.dumps(data_ordered_dict)
+                content_to_write = json.dumps(data_ordered_dict, indent=4)
             elif opt_yaml:
                 logger.debug('Converting content to YAML ...')
                 content_to_write = yaml.dump(content_to_write)
@@ -389,7 +391,8 @@ class Folder():
                type: str = 'folder',
                folder_name: str = '',
                folder_url: str = '',
-               config: str = 'config.xml') -> bool:
+               config: str = 'config.xml',
+               config_is_json: bool = False) -> bool:
         """TODO Docstring
 
         Args:
@@ -425,24 +428,32 @@ class Folder():
             logger.debug(f'Opening and reading file: {config} ...')
             try:
                 config_file = open(config, 'rb')
-                config_definition = config_file.read()
-            except Exception as e:
-                logger.debug(f'Failed to open and read file. Exception: {e}')
+                item_config = config_file.read()
+            except Exception as error:
+                logger.debug(f'Failed to open and read file. Exception: {error}')
                 return False
+
+            if config_is_json:
+                logger.debug('Converting the specified JSON file to XML format ...')
+                try:
+                    item_config = xmltodict.unparse(json.loads(item_config))
+                except Exception as error:
+                    logger.debug(f'Failed to convert the specified JSON file to XML format. Exception: {error}')
+                    return False
 
         # Use blank item config
         if type == 'folder':
             endpoint = f'createItem?name={name}'
-            config_definition = JenkinsItemConfig.folder.value['blank'].encode('utf-8')
-            prefix = JenkinsItemClasses.folder.value['prefix']
+            item_config = JenkinsItemConfig.folder.value['blank']
+            # prefix = JenkinsItemClasses.folder.value['prefix']
         elif type == 'view':
             endpoint = f'createView?name={name}'
-            config_definition = JenkinsItemConfig.view.value['blank'].encode('utf-8')
-            prefix = JenkinsItemClasses.view.value['prefix']
+            item_config = JenkinsItemConfig.view.value['blank']
+            # prefix = JenkinsItemClasses.view.value['prefix']
         elif type == 'job':
             endpoint = f'createItem?name={name}'
-            config_definition = JenkinsItemConfig.job.value['blank'].encode('utf-8')
-            prefix = JenkinsItemClasses.job.value['prefix']
+            item_config = JenkinsItemConfig.job.value['blank']
+            # prefix = JenkinsItemClasses.job.value['prefix']
         headers = {'Content-Type': 'application/xml; charset=utf-8'}
 
         # Checking if the item exists
@@ -453,7 +464,7 @@ class Folder():
         logger.debug(f'Creating "{type}" item "{name}" ...')
         _, _, success = self.REST.request(f'{folder_url.strip("/")}/{endpoint}',
                                           'post',
-                                          data=config_definition,
+                                          data=item_config.encode('utf-8'),
                                           headers=headers,
                                           is_endpoint=False)
         logger.debug(
@@ -462,7 +473,7 @@ class Folder():
         # Close the potentially open item configuration file
         try:
             config_file.close()
-        except:
+        except Exception:
             pass
 
         return success

@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import logging
-from pprint import pprint
 from typing import Dict, List, Tuple
 
 from yo_jenkins.Utility import utility

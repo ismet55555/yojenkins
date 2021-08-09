@@ -154,8 +154,6 @@ def history(profile: str, clear: bool) -> None:
 def rest_request(profile: str, request_text: str, request_type: str, raw: bool, clean_html: bool) -> None:
     """Send a generic REST request to Jenkins Server using the loaded credentials
 
-    Details: TODO: 
-
     Args:
         profile (str): The name of the credentials profile
         request_text (str): The text of the request to send

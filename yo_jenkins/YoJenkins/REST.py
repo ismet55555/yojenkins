@@ -12,10 +12,6 @@ from requests.auth import HTTPBasicAuth
 # Getting the logger reference
 logger = logging.getLogger()
 
-# TODO: Septate functionalities
-#       - GET, POST, HEAD
-#       - Time request (request statistics)
-
 
 class REST:
     """Handeling of REST requests"""
@@ -238,6 +234,8 @@ class REST:
         if not response.ok:
             logger.debug(
                 f'Failed to make {request_type.upper()} request "{request_url}". Server code: {response.status_code}')
+            if response.headers:
+                logger.debug(f'Response headers: {response.headers}')
             return {}, {}, False
 
         # Get the return content and format it
