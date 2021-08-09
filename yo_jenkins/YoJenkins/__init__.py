@@ -1,4 +1,5 @@
 from .Auth import Auth
+from .Credential import Credential
 from .Folder import Folder
 from .JenkinsItemClasses import JenkinsItemClasses
 from .JenkinsItemConfig import JenkinsItemConfig

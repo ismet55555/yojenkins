@@ -18,7 +18,7 @@ logger = logging.getLogger()
 class Node():
     """TODO Node"""
 
-    def __init__(self, REST, Auth) -> None:
+    def __init__(self, REST) -> None:
         """Object constructor method, called at object creation
 
         Args:
@@ -28,9 +28,6 @@ class Node():
             None
         """
         self.REST = REST
-        self.Auth = Auth
-
-        self.server_base_url = self.Auth.jenkins_profile['jenkins_server_url']
 
     def info(self, node_name: str, depth: int = 0) -> Tuple[list, list]:
         """TODO Docstring

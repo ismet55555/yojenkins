@@ -82,7 +82,7 @@ def token(debug, profile):
     set_debug_log_level(debug)
     cli_auth.token(profile)
 
-@auth.command(short_help='\tShow the local credentials file')
+@auth.command(short_help='\tShow the local credentials profiles')
 @cli_decorators.debug
 @cli_decorators.format_output
 def show(debug, pretty, yaml, xml, toml):
@@ -256,6 +256,7 @@ def server_teardown(debug, remove_volume, remove_image):
     cls=HelpColorsGroup,
     help_options_custom_colors={
         'prepare': 'black',
+        'status': 'black',
         'create-ephemeral': 'black',
         'logs': 'black',
         })
@@ -272,6 +273,14 @@ def node():
 def info(debug, pretty, yaml, xml, toml, profile, name, depth):
     set_debug_log_level(debug)
     cli_node.info(pretty, yaml, xml, toml, profile, name, depth)
+
+@node.command(short_help='\tNode status')
+@cli_decorators.debug
+@cli_decorators.profile
+@click.argument('name', nargs=1, type=str, required=True)
+def status(debug, profile, name):
+    set_debug_log_level(debug)
+    click.echo(click.style('TODO :-/', fg='yellow',))
 
 @node.command(short_help='\tList all all nodes')
 @cli_decorators.debug
@@ -398,51 +407,60 @@ def logs(debug, profile):
 
 
 ##############################################################################
-#                             CREDENTIALS
+#                             CREDENTIAL
 ##############################################################################
 @main.group(short_help='\tManage credentials',
 cls=HelpColorsGroup,
     help_options_custom_colors={
         'list': 'black',
         'create': 'black',
-        'config': 'black',
+        'update': 'black',
         'info': 'black',
-        'delete': 'black'
+        'delete': 'black',
+        'move': 'black'
         })
-def credentials():
+def credential():
     """CREDENTIALS MANAGEMENT"""
     pass
 
-@credentials.command(short_help='\tList credentials')
-@cli_decorators.debug
-def list(debug):
-    set_debug_log_level(debug)
-    click.echo(click.style('TODO :-/', fg='yellow',))
-
-@credentials.command(short_help='\tCreate new credentials to use with Jenkins')
-@cli_decorators.debug
-def create(debug):
-    set_debug_log_level(debug)
-    click.echo(click.style('TODO :-/', fg='yellow',))
-
-@credentials.command(short_help='\tConfigure existing credentials')
-@cli_decorators.debug
-def config(debug):
-    set_debug_log_level(debug)
-    click.echo(click.style('TODO :-/', fg='yellow',))
-
-@credentials.command(short_help='\tCredentials information')
+@credential.command(short_help='\tCredential information')
 @cli_decorators.debug
 def info(debug):
     set_debug_log_level(debug)
     click.echo(click.style('TODO :-/', fg='yellow',))
 
-@credentials.command(short_help='\tRemove credentials')
+@credential.command(short_help='\tList credentials')
+@cli_decorators.debug
+def list(debug):
+    set_debug_log_level(debug)
+    click.echo(click.style('TODO :-/', fg='yellow',))
+
+@credential.command(short_help='\tCreate new credentials')
+@cli_decorators.debug
+def create(debug):
+    set_debug_log_level(debug)
+    click.echo(click.style('TODO :-/', fg='yellow',))
+
+@credential.command(short_help='\tRemove credentials')
 @cli_decorators.debug
 def delete(debug):
     set_debug_log_level(debug)
     click.echo(click.style('TODO :-/', fg='yellow',))
 
+@credential.command(short_help='\tReconfigure existing credentials')
+@cli_decorators.debug
+def update(debug):
+    set_debug_log_level(debug)
+    click.echo(click.style('TODO :-/', fg='yellow',))
+
+@credential.command(short_help='\tMove a credential to another location')
+@cli_decorators.debug
+def move(debug):
+    set_debug_log_level(debug)
+    click.echo(click.style('TODO :-/', fg='yellow',))
+
+
+# TODO: Rename reconfig to update!!
 
 
 ##############################################################################
@@ -1069,7 +1087,7 @@ def rest_request(debug, profile, request_text, request_type, raw, clean_html):
 
     EXAMPLE:
 
-        yo-jenkins tools rest-request "me/api/json"    
+      - yo-jenkins tools rest-request "me/api/json"    
     """
     set_debug_log_level(debug)
     cli_tools.rest_request(profile, request_text, request_type, raw, clean_html)
@@ -1088,9 +1106,9 @@ def run_script(ctx, debug, profile, text, file, output):
     
     EXAMPLES:
     
-        yo-jenkins tools script --text "println('hello you')"
-
-        yo-jenkins tools script --file ./my_script.groovy
+    \b
+      - yo-jenkins tools script --text "println('hello you')"
+      - yo-jenkins tools script --file ./my_script.groovy
     """
     set_debug_log_level(debug)
     if text or file:

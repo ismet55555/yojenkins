@@ -54,3 +54,8 @@ class JenkinsItemClasses(Enum):
         "prefix": "",
         "class_type": ['hudson.slaves.SlaveComputer', 'hudson.slaves.DumbSlave', 'hudson.model.Hudson$MasterComputer']
     }
+    credential = {
+        "item_type": "XXXXXXXXXX",
+        "prefix": "",
+        "class_type": ['XXXXXXXXXXXXX']
+    }
