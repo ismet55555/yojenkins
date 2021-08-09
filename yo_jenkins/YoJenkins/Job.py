@@ -720,7 +720,12 @@ class Job():
             logger.debug('Failed to open monitor for build')
         return success
 
-    def create(self, name: str, folder_name: str = '', folder_url: str = '', config_file: str = 'config.xml', config_is_json: bool = False) -> bool:
+    def create(self,
+               name: str,
+               folder_name: str = '',
+               folder_url: str = '',
+               config_file: str = 'config.xml',
+               config_is_json: bool = False) -> bool:
         """TODO Docstring
 
         Args:

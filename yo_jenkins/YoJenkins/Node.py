@@ -321,7 +321,6 @@ class Node():
 
         return return_content, True
 
-
     def reconfig(self, node_name: str, config_file: str = None, config_is_json: bool = False) -> bool:
         """TODO Docstring
 
