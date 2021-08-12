@@ -8,9 +8,9 @@ from click_help_colors import HelpColorsCommand, HelpColorsGroup
 
 from yo_jenkins import __version__
 from yo_jenkins.cli import logger_setup  # Keep this line, sets up logger
-from yo_jenkins.cli import (cli_auth, cli_build, cli_decorators, cli_folder,
-                            cli_job, cli_node, cli_server, cli_stage, cli_step,
-                            cli_tools)
+from yo_jenkins.cli import (cli_auth, cli_build, cli_credential,
+                            cli_decorators, cli_folder, cli_job, cli_node,
+                            cli_server, cli_stage, cli_step, cli_tools)
 from yo_jenkins.cli.cli_utility import set_debug_log_level
 
 logger = logging.getLogger()
@@ -392,7 +392,7 @@ def config(debug, pretty, yaml, xml, toml, json, profile, name, filepath):
 @cli_decorators.profile
 @click.argument('name', nargs=1, type=str, required=True)
 @click.option('--config-file', type=click.Path(file_okay=True, dir_okay=True), required=True, help='Path to local config file defining node')
-@click.option('--config-is-json', type=bool, default=False, required=False, is_flag=True, help='The specified file is in JSON format')
+@click.option('--config-is-json', type=bool, default=False, show_default=True, required=False, is_flag=True, help='The specified file is in JSON format')
 def reconfig(debug, profile, name, config_file, config_is_json):
     set_debug_log_level(debug)
     cli_node.reconfig(profile, name, config_file, config_is_json)
@@ -431,9 +431,17 @@ def info(debug):
 
 @credential.command(short_help='\tList credentials')
 @cli_decorators.debug
-def list(debug):
+@cli_decorators.format_output
+@cli_decorators.list
+@cli_decorators.profile
+# @click.argument('folder', nargs=1, type=str, default="root", required=False)
+@click.option('--folder', type=str, default="root", show_default=True, required=False, help='Credentials folder')
+@click.option('--store', type=str, default="system", show_default=True, required=False, help='Name of credential store')
+@click.option('--domain', type=str, default="global", show_default=True, required=False, help='Message for enabling node')
+@click.option('--keys', type=str, default="all", show_default=True, required=False, help='Credential info keys to return [ie. key1,key2]')
+def list(debug, pretty, yaml, xml, toml, list, profile, folder, store, domain, keys):
     set_debug_log_level(debug)
-    click.echo(click.style('TODO :-/', fg='yellow',))
+    cli_credential.list(pretty, yaml, xml, toml, list, profile, folder, store, domain, keys)
 
 @credential.command(short_help='\tCreate new credentials')
 @cli_decorators.debug

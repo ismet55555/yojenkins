@@ -442,6 +442,10 @@ class Folder():
                     return False
 
         # Use blank item config
+
+        # FIXME: These are not valid XML configs, try json instead
+        # FIXME: This does not account for the name of the item
+
         if type == 'folder':
             endpoint = f'createItem?name={name}'
             item_config = JenkinsItemConfig.folder.value['blank']

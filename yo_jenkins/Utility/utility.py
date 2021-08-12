@@ -696,3 +696,31 @@ def item_exists_in_folder(item_name: str, folder_url: str, item_type: str, REST:
 def am_i_inside_docker():
     path = '/proc/self/cgroup'
     return (os.path.exists('/.dockerenv') or os.path.isfile(path) and any('docker' in line for line in open(path)))
+
+
+def parse_and_check_input_string_list(string_list: str, join_back_char: str) -> list:
+    """Parsing a string list into a list of strings
+
+    Details:
+        - `parse_string_list('a,b,c')` => ['a', 'b', 'c']
+        - `parse_string_list('a,b,c', join_back_char=';')` => ['a;b;c']
+
+    Args:
+        string_list : String list to be parsed
+        join_back_char : Character to join the list items
+
+    Returns:
+        String with items seperated by commas
+    """
+    parsed_items = []
+    for label in string_list.split(','):
+        label = label.strip()
+        if has_special_char(label):
+            return []
+        parsed_items.append(label)
+
+    if join_back_char:
+        parsed_items = join_back_char.join(parsed_items)
+
+    logger.debug(f'Parsed and checked string list: "{string_list}" => "{parsed_items}"')
+    return parsed_items

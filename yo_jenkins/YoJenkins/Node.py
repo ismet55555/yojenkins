@@ -70,7 +70,7 @@ class Node():
                                                    is_endpoint=True,
                                                    json_content=True)
         if not success:
-            logger.debug('Failed to get any nodes ...')
+            logger.debug('Failed to get any nodes')
             return {}
 
         if "computer" not in nodes_info:
@@ -108,14 +108,11 @@ class Node():
 
         # Processing labels
         if kwargs['labels']:
-            labels = []
-            for label in kwargs['labels'].split(','):
-                label = label.strip()
-                if utility.has_special_char(label):
-                    return False
-                labels.append(label)
-            labels = " ".join(labels)
+            labels = utility.parse_and_check_input_string_list(kwargs['labels'], " ")
+            if not labels:
+                return False
         else:
+            # If not list passed, use the node name as label
             labels = kwargs['name']
 
         logger.debug('Creating and configuring a new permanent node/agent ...')

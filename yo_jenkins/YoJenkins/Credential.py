@@ -29,30 +29,7 @@ class Credential():
         """
         self.REST = REST
 
-    def info(self, node_name: str, depth: int = 0) -> Tuple[list, list]:
-        """TODO Docstring
-
-        Details: TODO
-
-        Args:
-            node_name: TODO
-            depth: TODO
-
-        Returns:
-            TODO
-        """
-        logger.debug(f'Getting info for node: {node_name} ...')
-        node_name = "(master)" if node_name == 'master' else node_name  # Special case
-        node_info, _, success = self.REST.request(target=f"computer/{node_name}/api/json?depth={depth}",
-                                                  request_type='get',
-                                                  is_endpoint=True,
-                                                  json_content=True)
-        if not success:
-            logger.debug(f'Failed to find folder info: {node_info}')
-            return {}
-        return node_info
-
-    def list(self, depth: int = 0) -> bool:
+    def list(self, store: str, domain: str, keys: str, folder_name: str = None, folder_url: str = None) -> bool:
         """TODO Docstring
 
         Details: TODO
@@ -63,59 +40,59 @@ class Credential():
         Returns:
             TODO
         """
-        logger.debug('Getting a list of all nodes ...')
+        # Get folder name
+        folder_name_effective = "555"
+        if (not folder_name and not folder_url) or folder_name == "root":
+            folder_name_effective = '.'
+            logger.debug(f'No or root folder passed. Using effective folder name: "{folder_name}"')
+        else:
+            if folder_url:
+                folder_name = utility.url_to_name(folder_url)
+            folder_name_effective = f"job/{folder_name}"
+            store = 'folder'
+            logger.debug(f'Folder name or url passed. Using effective store: "{store}"')
 
-        nodes_info, _, success = self.REST.request(target=f"computer/api/json?depth={depth}",
-                                                   request_type='get',
-                                                   is_endpoint=True,
-                                                   json_content=True)
+        # Get domain
+        domain_effective = domain
+        if domain == "global":
+            domain_effective = "_"
+            logger.debug(f'"{domain}" domain passed. Using effective domain: "{domain_effective}"')
+
+        # Get return keys
+        if keys in ["all", "*", "full"]:
+            keys = "*"
+        else:
+            keys = utility.parse_and_check_input_string_list(keys, ',')
+
+        logger.debug('Getting all credentials for the following:')
+        logger.debug(f'   - Folder: {folder_name if folder_name else folder_url}')
+        logger.debug(f'   - Store:  {store}')
+        logger.debug(f'   - Domain: {domain}')
+        logger.debug(f'   - Keys:   {keys}')
+
+        target = f'{folder_name_effective}/credentials/store/{store}/domain/{domain_effective}/api/json?tree=credentials[{keys}]'
+        credentials_info, _, success = self.REST.request(target=target,
+                                                         request_type='get',
+                                                         is_endpoint=True,
+                                                         json_content=True)
         if not success:
-            logger.debug('Failed to get any nodes ...')
-            return {}
+            logger.debug('Failed to get any credentials')
+            return [], []
 
-        if "computer" not in nodes_info:
-            logger.debug('Failed to find "computer" section in return content')
-            return False
+        if "credentials" not in credentials_info:
+            logger.debug('Failed to find "credentials" section in return content')
+            return [], []
+        credential_list = credentials_info["credentials"]
+        if not any(credential_list):
+            logger.debug('No credentials listed')
+            return [], []
 
-        node_list, node_list_name = utility.item_subitem_list(
-            item_info=nodes_info,
-            get_key_info='displayName',
-            item_type=JenkinsItemClasses.node.value['item_type'],
-            item_class_list=JenkinsItemClasses.node.value['class_type'])
+        # Get a list of only credentail names
+        credential_list_name = [
+            credential["displayName"] for credential in credential_list if "displayName" in credential
+        ]
 
-        logger.debug(f'Number of nodes found: {len(node_list)}')
-        logger.debug(f'Node names: {node_list_name}')
+        logger.debug(f'Number of credentials found: {len(credential_list)}')
+        logger.debug(f'Credentials ids: {credential_list_name}')
 
-        return node_list, node_list_name
-
-    def create(self, **kwargs) -> bool:
-        """TODO Docstring
-
-        Details: TODO
-
-        Args:
-            TODO
-
-        Returns:
-            TODO
-        """
-        pass
-
-    def delete(self, node_name: str) -> bool:
-        """TODO Docstring
-
-        Details: TODO
-
-        Args:
-            name: TODO
-
-        Returns:
-            TODO
-        """
-        logger.debug(f'Deleting node: {node_name}')
-        _, _, success = self.REST.request(target=f"computer/{node_name}/doDelete",
-                                          request_type='post',
-                                          is_endpoint=True,
-                                          json_content=False)
-        logger.debug('Successfully deleted node' if success else 'Failed to delete node')
-        return success
+        return credential_list, credential_list_name
