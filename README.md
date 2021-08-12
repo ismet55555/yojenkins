@@ -1,10 +1,8 @@
 <p align="center"><img width="120
 " alt="portfolio_view" src="https://raw.githubusercontent.com/ismet55555/yo-jenkins/main/dev_things/assets/logo_final.png"></p>
-
 <h1 align="center">yo-jenkins</h1>
 
 
-<!-- Licence Shield from https://shields.io/-->
 <p align="center">
 
 <a href="https://pypi.org/project/yo-jenkins/">
@@ -23,17 +21,30 @@
   <img alt="Licence" src="https://img.shields.io/github/license/ismet55555/yo-jenkins">
 </a>
 
-<!-- <a href="https://travis-ci.com/github/ismet55555/exam-terminal">
-  <img alt="Build Status" src="https://img.shields.io/travis/com/ismet55555/exam-terminal/master">
-</a>
-
-<a href="https://www.codacy.com/gh/ismet55555/exam-terminal/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ismet55555/exam-terminal&amp;utm_campaign=Badge_Grade">
-  <img src="https://app.codacy.com/project/badge/Grade/dc108e18f27b4b86a9f6304745e6869c"/>
-</a> -->
 </p>
 
 
-`yo-jenkins` is a cross-platform command line interface (CLI) tool to monitor, manage, and have fun with a Jenkins server. `yo-jenkins` makes it possible to interact with Jenkins server without using the browser based Jenkins UI. This tool is able to be integrated into a script as middleware in order to automate Jenkins related tasks.
+`yo-jenkins` is a cross-platform command line interface (CLI) tool to monitor, manage, and have fun with a Jenkins server. It makes it possible to interact with Jenkins server without using the browser based Jenkins UI. 
+
+This tool is able to be integrated into a script as middleware in order to automate Jenkins related tasks and enable Jenkins configuration as code.
+
+> **`yo-jenkins` will liberate you and your browser from the Jenkins Web UI**
+
+With `yo-jenkins` you can:
+
+- **Manage autentication**: *Autentication structure similar to AWS CLI*
+- **Manage the server**: *Create, shutdown, view queue, and more*
+- **Manage nodes/agents:** *Create, delete, shut down server, and more*
+- **Manage credentials**: *Create, update, delete, list, and more*
+- **Manage folders:** *Create items, delete items, disable, enable, and more*
+- **Mange jobs:** *Create, delete, trigger, monitor, search, and more*
+- **Manage builds:** *Monitor, abort, tail logs, follow logs, and more*
+- **Manage stages:** *Get info, get logs, view steps, view status*
+- **Manage steps:** *Get info*
+- **Other functions:** *Run groovy scripts remotely, run custom REST calls, view command usage history, and more*
+
+
+
 
 **NOTE:** *This project is in **pre-alpha** release phase. Please report any issues, odd behavior, or suggestions. Read more about the [release cycle](https://en.wikipedia.org/wiki/Software_release_life_cycle).*
 
@@ -56,26 +67,26 @@
 
 # Quick Start
 
-- **(Optional)** Start up a local Jenkins server using Docker:
+- **(Optional)** Start up a local Jenkins server using Docker
   - ```sh
     yo-jenkins server server-deploy
     ```
 
-- Configure your first profile. Profiles are stored in the home directory in the `.yo-jenkins` directory.
+- Configure your first profile. Profiles are stored in the home directory in the `.yo-jenkins` directory
   - ```sh
     yo-jenkins auth configure
     ```
 
-- Generate a Jenkins server API token and add it to your first profile:
+- Generate a Jenkins server API token and add it to your first profile
   - ```sh
     yo-jenkins auth token --profile <PROFILE NAME>
     ```
 
-- Verify that you can access the Jenkins server:
+- Verify that you can access the Jenkins server
   - ```sh
     yo-jenkins auth verify
     ```
-- Now start trying some things:
+- Now start trying some things
   - ```sh
     Get sever info:       yo-jenkins server info
     Get your user info:   yo-jenkins auth user --pretty
@@ -85,29 +96,23 @@
 
 # Installation
 
-1. Install system dependencies for `simpleaudio` sound Python package
-   - | Platform 	| Command                                                                        	|
-     |----------	|--------------------------------------------------------------------------------	|
-     | MacOS    	| Not needed                                                                     	|
-     | Windows  	| Not needed                                                                     	|
-     | Ubuntu   	| `sudo apt update && apt-get install -y python3-dev python3-pip libasound2-dev` 	|
-     | CentOS   	| `sudo yum update && yum install -y python3-devel gcc alsa-lib-devel`           	|
+1. Install system dependencies for `simpleaudio` sound Python package for job and build monitor
+   - | Platform           | Command                                                                        	|
+     |------------------  |--------------------------------------------------------------------------------	|
+     | MacOS and Windows  | Not needed                                                                     	|
+     | Ubuntu             | `sudo apt update && apt-get install -y python3-dev python3-pip libasound2-dev` 	|
+     | CentOS             | `sudo yum update && yum install -y python3-devel gcc alsa-lib-devel`           	|
 
 
 2. Install `yo-jenkins`
-    - Depending on your access rights, you may need to add `--user` to the below commands
-    - **Option 1:** From Python Package Index (PYPI) using `pip`
+    - **Option 1 (Recommended):** Install from Python Package Index (PYPI) using `pip`
       - ```bash
         pip install yo-jenkins
         ```
 
-   - **Option 2:** Download all files in this GitHub repository and install using the included `setup.py`
+   - **Option 2:** Download all files from this GitHub repository and install using the included `setup.py`
      - ```bash
          python setup.py install
-
-        # OR
-
-         pip install .
          ```
 
 # Usage
@@ -115,8 +120,6 @@
 Each top level command has sub-commands. For example, `yo-jenkins server` has sub-commands `server-deploy` and `server-start`. To see the sub-commands of a command, or to see the options of a command, use the `--help` option.
 
 ```txt
-Usage: yo-jenkins [OPTIONS] COMMAND [ARGS]...
-
                         YO-JENKINS (Version: 0.0.0) 
 
   yo-jenkins is a tool that is focused on interfacing with Jenkins server from
@@ -126,28 +129,26 @@ Usage: yo-jenkins [OPTIONS] COMMAND [ARGS]...
 
   QUICK START:
 
-      1. Configure yo profile:  yo-jenkins auth configure
-
-      2. Add yo API token:      yo-jenkins auth token --profile <PROFILE>
-
-      3. Verify yo creds:       yo-jenkins auth verify
-
-      4. Explore yo-jenkins
+    1. Configure yo profile:  yo-jenkins auth configure
+    2. Add yo API token:      yo-jenkins auth token --profile <PROFILE NAME>
+    3. Verify yo creds:       yo-jenkins auth verify
+    4. Explore yo-jenkins
 
 Options:
   -v, --version  Show the version
   --help         Show this message and exit.
 
 Commands:
-  auth     Manage authentication and profiles
-  build    Manage builds
-  folder   Manage folders
-  job      Manage jobs
-  node     Manage nodes
-  server   Manage server
-  stage    Manage build stages
-  step     Manage stage steps
-  tools    Tools and more
+  auth        Manage authentication and profiles
+  build       Manage builds
+  credential  Manage credentials
+  folder      Manage folders
+  job         Manage jobs
+  node        Manage nodes
+  server      Manage server
+  stage       Manage build stages
+  step        Manage stage steps
+  tools       Tools and more
 ```
 
 # Jenkins Plugin Requirements
@@ -164,7 +165,7 @@ In order to check/install a plugin, go to *Manage Jenkins > Manage Plugins > Ins
 
 `yo-jenkins` offers an easy way to quickly set up a local Jenkins server within a Docker container. This server is setup and ready to go to tinker with `yo-jenkins`. 
 
-**NOTE:** You must have Docker on running. See [Docker installation guide](dev_things/docker.md).
+> **NOTE:** You must have Docker installed and running. See [Docker installation guide](dev_things/docker.md).
 
 Run the following command to set up a local Jenkins server:
 ```bash
@@ -204,13 +205,13 @@ Note, your suggestion may be part of the Project plan, so be sure to check the [
 
 This project is an on-going effort, slowly adding various features and improvements. If you would like to contribute, please fork the project, make your changes, and submit a pull request.
 
-**Any help, ideas, or testing is much appreciated.**
+> **Any help, ideas, or testing is much appreciated.**
 
 There is definitely work to be done. If you don't have a genius great idea for the next big change, or if you spot an issue you are able to fix, please checkout the [TODO](https://github.com/ismet55555/yo-jenkins/projects/1) and [FIXME](https://github.com/ismet55555/yo-jenkins/projects/2) or add your own ideas. For guides and information on how to get started and help out, check out the `dev_things` directory.
 
 ## Contributors
 
-- **Ismet Handžić** - GitHub: [@ismet55555](https://github.com/ismet55555)
+- **Ismet Handžić**: GitHub: [@ismet55555](https://github.com/ismet55555)
 
 
 # Licence

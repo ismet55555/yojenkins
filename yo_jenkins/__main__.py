@@ -412,7 +412,6 @@ def logs(debug, profile):
 @main.group(short_help='\tManage credentials',
 cls=HelpColorsGroup,
     help_options_custom_colors={
-        'list': 'black',
         'create': 'black',
         'update': 'black',
         'info': 'black',
