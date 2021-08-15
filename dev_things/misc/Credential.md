@@ -8,7 +8,7 @@
 #### List all
 ```
 yo-jenkins credential list \
-    --store system \             # <--- default: system
+    --folder <folder> \          # <--- default: root
     --domain global \            # <--- default: global ("_")
     --keys id,displayName        # <--- default: *
 ```
@@ -16,16 +16,20 @@ yo-jenkins credential list \
 #### Get info
 ```
 yo-jenkins credential info \
-    --store system \             # <--- default: system
+    --credential <credential> \  # <--- id, name, or url
+    --folder <folder> \          # <--- default: root
     --domain global \            # <--- default: global ("_")
 ```
 
 #### Get configuration
+
+- Templates have place holders: {{ HERE }}
+- Saved as json, but can be outputted in different format
+
 ```
 yo-jenkins credential config \
     --store system \             # <--- default: system
     --domain global \            # <--- default: global ("_")
-    --json
 ```
 
 #### Generate credential template

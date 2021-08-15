@@ -412,6 +412,7 @@ def logs(debug, profile):
 @main.group(short_help='\tManage credentials',
 cls=HelpColorsGroup,
     help_options_custom_colors={
+        'template': 'black',
         'create': 'black',
         'update': 'black',
         'delete': 'black',
@@ -428,7 +429,7 @@ def credential():
 @cli_decorators.profile
 # @click.argument('folder', nargs=1, type=str, default="root", required=False)
 @click.option('--folder', type=str, default="root", show_default=True, required=False, help='Credentials folder')
-@click.option('--domain', type=str, default="global", show_default=True, required=False, help='Message for enabling node')
+@click.option('--domain', type=str, default="global", show_default=True, required=False, help='Credentials domain')
 @click.option('--keys', type=str, default="all", show_default=True, required=False, help='Credential info keys to return [ie. displayName,id,etc]')
 def list(debug, pretty, yaml, xml, toml, list, profile, folder, domain, keys):
     set_debug_log_level(debug)
@@ -439,34 +440,36 @@ def list(debug, pretty, yaml, xml, toml, list, profile, folder, domain, keys):
 @cli_decorators.format_output
 @cli_decorators.profile
 @click.argument('credential', nargs=1, type=str, required=True)
-@click.option('--folder', type=str, default="root", show_default=True, required=False, help='Credentials folder')
-@click.option('--domain', type=str, default="global", show_default=True, required=False, help='Message for enabling node')
+@click.option('--folder', type=str, default="root", show_default=True, required=False, help='Credential folder')
+@click.option('--domain', type=str, default="global", show_default=True, required=False, help='Credential domain')
 def info(debug, pretty, yaml, xml, toml, profile, credential, folder, domain):
     set_debug_log_level(debug)
     cli_credential.info(pretty, yaml, xml, toml, profile, credential, folder, domain)
 
+@credential.command(short_help='\tGet credential configuration')
+@cli_decorators.debug
+@cli_decorators.format_output
+@click.option('-j', '--json', type=bool, default=False, required=False, is_flag=True, help='Output config in JSON format')
+@cli_decorators.profile
+@click.argument('credential', nargs=1, type=str, required=True)
+@click.option('--folder', type=str, default="root", show_default=True, required=False, help='Credential folder')
+@click.option('--domain', type=str, default="global", show_default=True, required=False, help='Credential domain')
+@click.option('--filepath', type=click.Path(file_okay=True, dir_okay=True), required=False, help='File/Filepath to write configurations to')
+def config(debug, pretty, yaml, xml, toml, json, profile, credential, folder, domain, filepath):
+    set_debug_log_level(debug)
+    cli_credential.config(pretty, yaml, xml, toml, json, profile, credential, folder, domain, filepath)
 
-
-
-
-
-
-
-
+@credential.command(short_help='\tOutput a configuration template')
+@cli_decorators.debug
+def template(debug):
+    set_debug_log_level(debug)
+    click.echo(click.style('TODO :-/', fg='yellow',))
 
 @credential.command(short_help='\tCreate new credentials')
 @cli_decorators.debug
 def create(debug):
     set_debug_log_level(debug)
     click.echo(click.style('TODO :-/', fg='yellow',))
-
-
-
-
-
-
-
-
 
 @credential.command(short_help='\tRemove credentials')
 @cli_decorators.debug
@@ -480,7 +483,7 @@ def update(debug):
     set_debug_log_level(debug)
     click.echo(click.style('TODO :-/', fg='yellow',))
 
-@credential.command(short_help='\tMove a credential to another location')
+@credential.command(short_help='\tMove a credential to another folder/domain')
 @cli_decorators.debug
 def move(debug):
     set_debug_log_level(debug)
@@ -568,7 +571,7 @@ def browser(debug, profile, folder):
     set_debug_log_level(debug)
     cli_folder.browser(profile, folder)
 
-@folder.command(short_help='\tFolder XML configuration')
+@folder.command(short_help='\tGet folder configuration')
 @cli_decorators.debug
 @cli_decorators.format_output
 @click.option('-j', '--json', type=bool, default=False, required=False, is_flag=True, help='Output config in JSON format')

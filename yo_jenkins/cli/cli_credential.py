@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 
+import json
 import logging
 import sys
 
 import click
+import xmltodict
 from yo_jenkins.cli import cli_utility as cu
 from yo_jenkins.cli.cli_utility import log_to_history
 
@@ -52,4 +54,38 @@ def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profil
     if not data:
         click.echo(click.style('no credential information', fg='bright_red', bold=True))
         sys.exit(1)
+    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
+
+
+@log_to_history
+def config(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_json: bool, profile: str,
+           credential: str, folder: str, domain: str, filepath: str) -> None:
+    """TODO Docstring
+
+    Details: TODO
+
+    Args:
+        TODO
+
+    Returns:
+        TODO
+    """
+    jy_obj = cu.config_yo_jenkins(profile)
+    data, write_success = jy_obj.Credential.config(credential=credential,
+                                                   folder=folder,
+                                                   domain=domain,
+                                                   opt_json=opt_json,
+                                                   opt_yaml=opt_yaml,
+                                                   opt_toml=opt_toml,
+                                                   filepath=filepath)
+    if not data:
+        click.echo(click.style('failed', fg='bright_red', bold=True))
+        sys.exit(1)
+
+    if not write_success:
+        click.echo(click.style('failed to write', fg='bright_red', bold=True))
+        sys.exit(1)
+
+    opt_xml = not any([opt_json, opt_yaml, opt_toml])
+    data = data if opt_xml else json.loads(json.dumps(xmltodict.parse(data)))
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)

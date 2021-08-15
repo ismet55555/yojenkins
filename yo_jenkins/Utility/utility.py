@@ -13,6 +13,7 @@ from urllib.parse import urljoin, urlparse
 
 import requests
 import toml
+import xmltodict
 import yaml
 from urllib3.util import parse_url
 from yo_jenkins import __version__
@@ -769,3 +770,48 @@ def parse_and_check_input_string_list(string_list: str, join_back_char: str) -> 
 
     logger.debug(f'Parsed and checked string list: "{string_list}" => "{parsed_items}"')
     return parsed_items
+
+
+def write_xml_to_file(xml_content: str,
+                      filepath: str,
+                      opt_json: bool = False,
+                      opt_yaml: bool = False,
+                      opt_toml: bool = False) -> bool:
+    """Writing XML content file in specified format
+
+    Args:
+        xml_content : XML content to be written
+        filepath : Filepath to write the content to
+        opt_json : Write the content as JSON
+        opt_yaml : Write the content as YAML
+        opt_toml : Write the content as TOML
+
+    Returns:
+        True if successful
+    """
+    if any([opt_json, opt_yaml, opt_toml]):
+        logger.debug('Converting content to JSON ...')
+        data_ordered_dict = xmltodict.parse(xml_content)
+        content_to_write = json.loads(json.dumps(data_ordered_dict))
+    else:
+        content_to_write = xml_content  # Keep XML format
+
+    if opt_json:
+        content_to_write = json.dumps(data_ordered_dict, indent=4)
+    elif opt_yaml:
+        logger.debug('Converting content to YAML ...')
+        content_to_write = yaml.dump(content_to_write)
+    elif opt_toml:
+        logger.debug('Converting content to TOML ...')
+        content_to_write = toml.dumps(content_to_write)
+
+    logger.debug(f'Writing fetched configuration to "{filepath}" ...')
+    try:
+        with open(filepath, 'w+') as file:
+            file.write(content_to_write)
+        logger.debug('Successfully wrote configurations to file')
+    except Exception as error:
+        logger.debug('Failed to write configurations to file. Exception: {error}')
+        return False
+
+    return True

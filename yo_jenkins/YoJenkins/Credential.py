@@ -23,18 +23,9 @@ class Credential():
         """
         self.REST = REST
 
-    def list(self, domain: str, keys: str, folder: str = None) -> Tuple[list, list]:
-        """TODO Docstring
-
-        Details: TODO
-
-        Args:
-            name: TODO
-
-        Returns:
-            TODO
-        """
-        # Get folder name and store name
+    @staticmethod
+    def _get_folder_store(folder: str) -> Tuple[str, str]:
+        """Utility method to get credential folder name and domain"""
         if folder and utility.is_full_url(folder):
             folder = utility.url_to_name(folder)
             store = 'folder'
@@ -44,14 +35,37 @@ class Credential():
             store = 'system'
             logger.debug(f'Using effective credential folder name: "" = "{folder}"')
         else:
-            folder = f"job/{folder}"
+            if "job/" not in folder:
+                folder = f"job/{folder}"
             store = 'folder'
+        return folder, store
 
-        # Get domain
+    @staticmethod
+    def _get_domain(domain: str) -> str:
+        """Utility method to get credential domain name"""
         domain_effective = domain
         if domain == "global":
             domain_effective = "_"
             logger.debug(f'Credential domain passed: "{domain}". Using effective domain: "{domain_effective}"')
+        return domain_effective
+
+    def list(self, domain: str, keys: str, folder: str = None) -> Tuple[list, list]:
+        """List all credentials for the specified folder and domain
+
+        Details:
+            - Available credentials key may change over time
+            - May use the Web UI to get a sense what the domain is for a credential
+
+        Args:
+            domain: Credential domain name
+            keys: Credential keys to list
+            folder: Credential folder name
+
+        Returns:
+            List of credentials in dictionary format and a list of credential names
+        """
+        folder, store = self._get_folder_store(folder)
+        domain = self._get_domain(domain)
 
         # Get return keys
         if keys in ["all", "*", "full"]:
@@ -65,7 +79,7 @@ class Credential():
         logger.debug(f'   - Domain: {domain}')
         logger.debug(f'   - Keys:   {keys}')
 
-        target = f'{folder}/credentials/store/{store}/domain/{domain_effective}/api/json?tree=credentials[{keys}]'
+        target = f'{folder}/credentials/store/{store}/domain/{domain}/api/json?tree=credentials[{keys}]'
         credentials_info, _, success = self.REST.request(target=target,
                                                          request_type='get',
                                                          is_endpoint=True,
@@ -88,14 +102,12 @@ class Credential():
         ]
 
         logger.debug(f'Number of credentials found: {len(credential_list)}')
-        logger.debug(f'Credentials ids: {credential_list_name}')
+        logger.debug(f'Found the following credential names: {credential_list_name}')
 
         return credential_list, credential_list_name
 
     def info(self, credential: str, folder: str, domain: str) -> Dict:
-        """TODO Docstring
-
-        Details: TODO
+        """Getting credential info
 
         Args:
             credential: credential name, url, or ID
@@ -112,25 +124,9 @@ class Credential():
             target = f'{credential.strip("/")}/api/json'
             is_endpoint = False
         else:
-            # Get folder name and store name
-            if folder and utility.is_full_url(folder):
-                folder = utility.url_to_name(folder)
-                store = 'folder'
-                logger.debug(f'Credential folder name or url passed. Using effective store: "{store}"')
-            if folder in ['root', '.', 'base']:
-                folder = '.'
-                store = 'system'
-                logger.debug(f'Using effective credential folder name: "" = "{folder}"')
-            else:
-                folder_original = folder
-                folder = f"job/{folder}"
-                store = 'folder'
-
-            # Get domain
-            domain_effective = domain
-            if domain == "global":
-                domain_effective = "_"
-                logger.debug(f'Credential domain passed: "{domain}". Using effective domain: "{domain_effective}"')
+            folder_original = folder
+            folder, store = self._get_folder_store(folder)
+            domain = self._get_domain(domain)
 
             # Get credential ID if the name of credential is given
             if not utility.is_credential_id(credential):
@@ -157,14 +153,66 @@ class Credential():
             logger.debug(f'   - Domain:     {domain}')
             logger.debug(f'   - Credential: {credential}')
 
-            target = f'{folder}/credentials/store/{store}/domain/{domain_effective}/credential/{credential}/api/json'
+            target = f'{folder}/credentials/store/{store}/domain/{domain}/credential/{credential}/api/json'
 
         credential_info, _, success = self.REST.request(target=target,
                                                         request_type='get',
                                                         is_endpoint=is_endpoint,
                                                         json_content=True)
         if not success:
-            logger.debug('Failed to get any credentials')
+            logger.debug('Failed to get credential information')
             return [], []
 
         return credential_info
+
+    def config(self,
+               credential: str,
+               folder: str = None,
+               domain: str = None,
+               filepath: str = None,
+               opt_json: bool = False,
+               opt_yaml: bool = False,
+               opt_toml: bool = False) -> Tuple[str, bool]:
+        """Get the folder configuration (ie .config.xml)
+
+        Args:
+            credential: Credential name, url, or ID
+            folder: Credential folder name or url
+            domain: Credential domain name
+            filepath: Path to the file to be written
+            opt_json: Write in JSON format
+            opt_yaml: Write in YAML format
+            opt_toml: Write in TOML format
+
+        Returns:
+            Folder config.xml contents
+            True if configuration written to file, else False
+        """
+        folder, store = self._get_folder_store(folder)
+        domain = self._get_domain(domain)
+
+        # `<SERVER>/credentials/store/<STORE>/domain/<DOMAIN>/credential/<CRED ID>/config.xml`
+        credential_info = self.info(credential=credential, folder=folder, domain=domain)
+        if not credential_info:
+            logger.debug('Failed to get credential information. No folder name or folder url received')
+            return '', False
+
+        credential_id = credential_info.get('id')
+        if not credential_id:
+            logger.debug('Failed to find "id" key within credential information')
+            return '', False
+
+        target = f'{folder}/credentials/store/{store}/domain/{domain}/credential/{credential_id}/config.xml'
+        logger.debug(f'Fetching XML configurations for credential: "{credential_id}" ...')
+        return_content, _, success = self.REST.request(target=target,
+                                                       request_type='get',
+                                                       json_content=False,
+                                                       is_endpoint=True)
+        logger.debug('Successfully fetched XML configurations' if success else 'Failed to fetch XML configurations')
+
+        if filepath:
+            write_success = utility.write_xml_to_file(return_content, filepath, opt_json, opt_yaml, opt_toml)
+            if not write_success:
+                return "", False
+
+        return return_content, True

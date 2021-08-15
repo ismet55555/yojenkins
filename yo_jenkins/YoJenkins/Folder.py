@@ -330,12 +330,15 @@ class Folder():
                opt_json: bool = False,
                opt_yaml: bool = False,
                opt_toml: bool = False) -> Tuple[str, bool]:
-        """Get the folder XML configuration (config.xml)
+        """Get the folder configuration (ie .config.xml)
 
         Args:
             filepath    : If defined, store fetched data in this file
             folder_name : Folder name to get configurations
             folder_url  : Folder URL to get configurations
+            opt_json    : If True, return data as JSON
+            opt_yaml    : If True, return data as YAML
+            opt_toml    : If True, return data as TOML
 
         Returns:
             Folder config.xml contents
@@ -358,30 +361,8 @@ class Folder():
         logger.debug('Successfully fetched XML configurations' if success else 'Failed to fetch XML configurations')
 
         if filepath:
-            if any([opt_json, opt_yaml, opt_toml]):
-                logger.debug('Converting content to JSON ...')
-                data_ordered_dict = xmltodict.parse(return_content)
-                content_to_write = json.loads(json.dumps(data_ordered_dict))
-            else:
-                # XML Format
-                content_to_write = return_content
-
-            if opt_json:
-                content_to_write = json.dumps(data_ordered_dict, indent=4)
-            elif opt_yaml:
-                logger.debug('Converting content to YAML ...')
-                content_to_write = yaml.dump(content_to_write)
-            elif opt_toml:
-                logger.debug('Converting content to TOML ...')
-                content_to_write = toml.dumps(content_to_write)
-
-            logger.debug(f'Writing fetched configuration to "{filepath}" ...')
-            try:
-                with open(filepath, 'w+') as file:
-                    file.write(content_to_write)
-                logger.debug('Successfully wrote configurations to file')
-            except Exception as e:
-                logger.debug('Failed to write configurations to file. Exception: {e}')
+            write_success = utility.write_xml_to_file(return_content, filepath, opt_json, opt_yaml, opt_toml)
+            if not write_success:
                 return "", False
 
         return return_content, True
