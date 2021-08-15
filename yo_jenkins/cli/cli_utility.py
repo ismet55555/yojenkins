@@ -171,6 +171,11 @@ def is_full_url(url: str) -> bool:
     Returns:
         TODO
     """
+
+    # TODO: Remove this function from this file
+    #       Do url check within the class, not within the cli to not keep repeating it
+    #       In classes use yo_jenkins.Utility.utility.is_full_url()
+
     parsed_url = parse_url(url)
     if all([parsed_url.scheme, parsed_url.netloc, parsed_url.path]):
         is_valid_url = True

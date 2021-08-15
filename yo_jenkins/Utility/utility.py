@@ -14,6 +14,7 @@ from urllib.parse import urljoin, urlparse
 import requests
 import toml
 import yaml
+from urllib3.util import parse_url
 from yo_jenkins import __version__
 from yo_jenkins.YoJenkins.JenkinsItemClasses import JenkinsItemClasses
 
@@ -209,6 +210,50 @@ def iter_data_empty_item_stripper(iter_data):
     if isinstance(iter_data, list):
         return [v for v in map(iter_data_empty_item_stripper, iter_data) if v]
     return iter_data
+
+
+def is_credential_id(text: str) -> bool:
+    """Checking if the entire text is in Jenkins credential ID format
+
+    Args:
+        text: The text to check
+
+    Returns:
+        True if the text is in credential ID format, else False
+    """
+    from re import match
+    regex_pattern = r'^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$'
+    cred_match = match(regex_pattern, text)
+    if cred_match:
+        logger.debug(f'Successfully identified credential ID format')
+    else:
+        logger.debug(f'Failed to identify credential ID format')
+    return cred_match
+
+
+def is_full_url(url: str) -> bool:
+    """TODO Docstring
+
+    Args:
+        TODO
+
+    Returns:
+        TODO
+    """
+
+    # TODO: Replace this same function in cli_utility.py usages with this one within classes
+
+    parsed_url = parse_url(url)
+    if all([parsed_url.scheme, parsed_url.netloc, parsed_url.path]):
+        is_valid_url = True
+    else:
+        is_valid_url = False
+    logger.debug(f'Is valid URL format: {is_valid_url} - {url}')
+    logger.debug(f'    - scheme:  {parsed_url.scheme} - {"OK" if parsed_url.scheme else "MISSING"}')
+    logger.debug(f'    - netloc:  {parsed_url.netloc} - {"OK" if parsed_url.netloc else "MISSING"}')
+    logger.debug(f'    - path:    {parsed_url.path} - {"OK" if parsed_url.path else "MISSING"}')
+
+    return is_valid_url
 
 
 def url_to_name(url: str) -> str:

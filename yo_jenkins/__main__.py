@@ -414,19 +414,12 @@ cls=HelpColorsGroup,
     help_options_custom_colors={
         'create': 'black',
         'update': 'black',
-        'info': 'black',
         'delete': 'black',
         'move': 'black'
         })
 def credential():
     """CREDENTIALS MANAGEMENT"""
     pass
-
-@credential.command(short_help='\tCredential information')
-@cli_decorators.debug
-def info(debug):
-    set_debug_log_level(debug)
-    click.echo(click.style('TODO :-/', fg='yellow',))
 
 @credential.command(short_help='\tList credentials')
 @cli_decorators.debug
@@ -435,18 +428,45 @@ def info(debug):
 @cli_decorators.profile
 # @click.argument('folder', nargs=1, type=str, default="root", required=False)
 @click.option('--folder', type=str, default="root", show_default=True, required=False, help='Credentials folder')
-@click.option('--store', type=str, default="system", show_default=True, required=False, help='Name of credential store')
 @click.option('--domain', type=str, default="global", show_default=True, required=False, help='Message for enabling node')
-@click.option('--keys', type=str, default="all", show_default=True, required=False, help='Credential info keys to return [ie. key1,key2]')
-def list(debug, pretty, yaml, xml, toml, list, profile, folder, store, domain, keys):
+@click.option('--keys', type=str, default="all", show_default=True, required=False, help='Credential info keys to return [ie. displayName,id,etc]')
+def list(debug, pretty, yaml, xml, toml, list, profile, folder, domain, keys):
     set_debug_log_level(debug)
-    cli_credential.list(pretty, yaml, xml, toml, list, profile, folder, store, domain, keys)
+    cli_credential.list(pretty, yaml, xml, toml, list, profile, folder, domain, keys)
+
+@credential.command(short_help='\tCredential information')
+@cli_decorators.debug
+@cli_decorators.format_output
+@cli_decorators.profile
+@click.argument('credential', nargs=1, type=str, required=True)
+@click.option('--folder', type=str, default="root", show_default=True, required=False, help='Credentials folder')
+@click.option('--domain', type=str, default="global", show_default=True, required=False, help='Message for enabling node')
+def info(debug, pretty, yaml, xml, toml, profile, credential, folder, domain):
+    set_debug_log_level(debug)
+    cli_credential.info(pretty, yaml, xml, toml, profile, credential, folder, domain)
+
+
+
+
+
+
+
+
+
 
 @credential.command(short_help='\tCreate new credentials')
 @cli_decorators.debug
 def create(debug):
     set_debug_log_level(debug)
     click.echo(click.style('TODO :-/', fg='yellow',))
+
+
+
+
+
+
+
+
 
 @credential.command(short_help='\tRemove credentials')
 @cli_decorators.debug
