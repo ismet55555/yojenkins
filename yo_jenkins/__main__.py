@@ -412,8 +412,6 @@ def logs(debug, profile):
 @main.group(short_help='\tManage credentials',
 cls=HelpColorsGroup,
     help_options_custom_colors={
-        'template': 'black',
-        'create': 'black',
         'update': 'black',
         'delete': 'black',
         'move': 'black'
@@ -465,11 +463,25 @@ def template(debug):
     set_debug_log_level(debug)
     click.echo(click.style('TODO :-/', fg='yellow',))
 
+# @credential.command(short_help='\tCredential type template to create a credential')
+# @cli_decorators.debug
+# @click.argument('type', type=click.Choice(['user-pass', 'ssh-key', 'secret-text'], case_sensitive=False), default='user-pass', required=True)
+# def template(debug, type):
+#     set_debug_log_level(debug)
+#     cli_credential.template(type)
+#     # OPTION: ${} format
+#     # OPTION: {{}} format
+
 @credential.command(short_help='\tCreate new credentials')
 @cli_decorators.debug
-def create(debug):
+@cli_decorators.profile
+# @click.argument('name', nargs=1, type=str, required=True)
+@click.argument('config-file', nargs=1, type=click.Path(exists=True), required=True)
+@click.option('--folder', type=str, default="root", show_default=True, required=False, help='Credential folder')
+@click.option('--domain', type=str, default="global", show_default=True, required=False, help='Credential domain')
+def create(debug, profile, config_file, folder, domain):
     set_debug_log_level(debug)
-    click.echo(click.style('TODO :-/', fg='yellow',))
+    cli_credential.create(profile, config_file, folder, domain)
 
 @credential.command(short_help='\tRemove credentials')
 @cli_decorators.debug
@@ -588,7 +600,7 @@ def config(debug, pretty, yaml, xml, toml, json, profile, folder, filepath):
 @click.argument('name', nargs=1, type=str, required=True)
 @click.argument('folder', nargs=1, type=str, required=True)
 @click.option('--type', type=click.Choice(['folder', 'view', 'job'], case_sensitive=False), default='folder', show_default=True, required=False, help='Item type created')
-@click.option('--config-file', type=click.Path(file_okay=True, dir_okay=False), required=False, help='Path to local XML file defining item')
+@click.option('--config-file', type=click.Path(file_okay=True, dir_okay=False), required=False, help='Path to local file defining item')
 @click.option('--config-is-json', type=bool, default=False, required=False, is_flag=True, help='The specified file is in JSON format')
 def create(debug, profile, name, folder, type, config_file, config_is_json):
     set_debug_log_level(debug)

@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
 
+import json
 import logging
+import xml.etree.ElementTree as ET
+from json.decoder import JSONDecodeError
 from typing import Dict, Tuple
 
+from json2xml import json2xml
+from urllib3.util import parse_url
 from yo_jenkins.Utility import utility
 
 # Getting the logger reference
@@ -25,12 +30,19 @@ class Credential():
 
     @staticmethod
     def _get_folder_store(folder: str) -> Tuple[str, str]:
-        """Utility method to get credential folder name and domain"""
+        """Utility method to get credential folder name and domain
+        
+        Args:
+            folder: folder name or url
+
+        Returns:
+            Folder nae and store name
+        """
         if folder and utility.is_full_url(folder):
             folder = utility.url_to_name(folder)
             store = 'folder'
             logger.debug(f'Credential folder name or url passed. Using effective store: "{store}"')
-        if folder in ['root', '.', 'base']:
+        if folder in ['root', '.']:
             folder = '.'
             store = 'system'
             logger.debug(f'Using effective credential folder name: "" = "{folder}"')
@@ -42,12 +54,62 @@ class Credential():
 
     @staticmethod
     def _get_domain(domain: str) -> str:
-        """Utility method to get credential domain name"""
+        """Utility method to get credential domain name
+        
+        Args:
+            domain: Credential domain name
+
+        Returns:
+            Effective domain name
+        """
         domain_effective = domain
-        if domain == "global":
+        if domain in ["global"]:
             domain_effective = "_"
             logger.debug(f'Credential domain passed: "{domain}". Using effective domain: "{domain_effective}"')
         return domain_effective
+
+    @staticmethod
+    def _get_folder_store_domain_from_url(credential_url: str) -> Tuple[str, str, str]:
+        """Utility method to get folder name, store name and domain from a credential URL
+
+        Details:
+            Example credential_url formats:
+                - /job/my-folder/credentials/store/folder/domain/_/credential/<CRED-ID>/
+                - /credentials/store/system/domain/_/credential/<CRED-ID>
+                - /./credentials/store/folder/domain/_/credential/<CRED-ID>/
+
+        Args:
+            credential_url: Credential url
+
+        Returns:
+            Folder name, store name and domain
+        """
+        parsed_path = parse_url(credential_url).path.strip('/').split('/')
+        key_words = ['credentials', 'store', 'domain']
+        if any(x in parsed_path for x in key_words):
+            # Folder
+            credential_index = parsed_path.index('credentials')
+            if credential_index > 2:
+                logger.debug(f'Failed to parse the credential URL. "credentials" keyword in URL in wrong position')
+                return "", "", ""
+            elif credential_index == 2:
+                folder = "job/" + parsed_path[credential_index - 1]
+            else:
+                folder = "."
+            
+            # Store
+            store_index = parsed_path.index('store')
+            store = parsed_path[store_index + 1]
+
+            # Domain
+            domain_index = parsed_path.index('domain')
+            domain = parsed_path[domain_index + 1]
+        else:
+            logger.debug(f'The credential URL "{credential_url}" path does not contain any of the expected keywords: {key_words}')
+            return "", "", ""
+        logger.debug(f'Successfully parsed the credential URL. Folder: "{folder}", Store: "{store}", Domain: "{domain}"')
+                        
+        return folder, store, domain
 
     def list(self, domain: str, keys: str, folder: str = None) -> Tuple[list, list]:
         """List all credentials for the specified folder and domain
@@ -118,9 +180,10 @@ class Credential():
         Returns:
             Credential inforamation in dictionary format
         """
+        logger.debug(f"Getting credential info for: {credential} ...")
         is_endpoint = True
         if utility.is_full_url(credential):
-            logger.debug(f'Using direct credential URL passed ...')
+            logger.debug(f'Using direct credential URL ...')
             target = f'{credential.strip("/")}/api/json'
             is_endpoint = False
         else:
@@ -191,7 +254,6 @@ class Credential():
         folder, store = self._get_folder_store(folder)
         domain = self._get_domain(domain)
 
-        # `<SERVER>/credentials/store/<STORE>/domain/<DOMAIN>/credential/<CRED ID>/config.xml`
         credential_info = self.info(credential=credential, folder=folder, domain=domain)
         if not credential_info:
             logger.debug('Failed to get credential information. No folder name or folder url received')
@@ -201,6 +263,10 @@ class Credential():
         if not credential_id:
             logger.debug('Failed to find "id" key within credential information')
             return '', False
+
+        # If URL passed, parse out folder and domain
+        if utility.is_full_url(credential):
+            folder, store, domain = self._get_folder_store_domain_from_url(credential)
 
         target = f'{folder}/credentials/store/{store}/domain/{domain}/credential/{credential_id}/config.xml'
         logger.debug(f'Fetching XML configurations for credential: "{credential_id}" ...')
@@ -216,3 +282,64 @@ class Credential():
                 return "", False
 
         return return_content, True
+
+    def create(self, config_file:str, folder: str, domain: str) -> bool:
+        """Create a credential
+
+        Args:
+            config_file: Local path to file of the credential configuration
+            folder: folder name or url
+            store: store name
+            domain: domain name
+
+        Returns:
+            True if credential created, else False
+        """
+        logger.debug(f'Opening and reading file: {config_file} ...')
+        try:
+            config_file = open(config_file, 'rb')
+            credential_config = config_file.read()
+        except (OSError, IOError) as error:
+            logger.debug(f'Failed to open and read file: {config_file}  Exception: {error}')
+            return False
+
+        try:
+            cred_config_dict = json.loads(credential_config)
+            logger.debug('Configuration file passed is in JSON format')
+            logger.debug('Converting JSON file to XML format ...')
+
+            # Convert to XML, remove root XML tag, and converting to string
+            credential_config_xml = json2xml.Json2xml(cred_config_dict, pretty=False, wrapper="root", attr_type=False).to_xml()
+            credential_config_xml = list(ET.fromstring(credential_config_xml))[0]
+            credential_config_xml = ET.tostring(credential_config_xml, encoding='utf8', method='xml', xml_declaration=False)
+        except JSONDecodeError as error:
+            logger.debug('Configuration file passed is in XML format')
+            credential_config_xml = credential_config
+
+        folder, store = self._get_folder_store(folder)
+        domain = self._get_domain(domain)
+
+        # # TEMPLATE WORK
+        # test = utility.template_apply(string_template=CRED_USER_PASS, is_json=True,
+        #                             domain=domain,
+        #                             username='some-username',
+        #                             password='MYPASSWORD',
+        #                             description=description)
+        # print(test)
+
+        target = f'{folder}/credentials/store/{store}/domain/{domain}/createCredentials'
+        _, _, success = self.REST.request(target=target,
+                                                       request_type='post',
+                                                       json_content=False,
+                                                       is_endpoint=True,
+                                                       headers={'Content-Type': 'application/xml; charset=utf-8'},
+                                                       data=credential_config_xml)
+        logger.debug('Successfully created credential' if success else 'Failed to create credential')
+        return success
+
+
+
+
+
+
+

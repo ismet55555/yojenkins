@@ -46,13 +46,49 @@ yo-jenkins credential template \
     - Def need a little smoother way than this ...
 ```
 yo-jenkins credential create \
-    --store system \                        # <--- default: system
-    --domain global \                       # <--- default: global ("_")
+    --folder <folder> \                     # <--- default: root
+    --domain <domain> \                     # <--- default: global ("_")
     --type user-pass|ssh-key|secret-text    # <--- default: user-pass
     --description "Credential description"  # <--- default: ""
     --config-file config.json
     --config-as-json
 ```
+
+- From monitoring developer tools:
+    ```
+    POST - http://localhost:8080/credentials/store/system/domain/_/createCredentials
+    POST - http://localhost:8080/credentials/store/system/domain/_/createCredentials
+    ```
+
+
+- From Jenkins SDK:
+    ```python
+    CREATE_CREDENTIAL = '%(folder_url)sjob/%(short_name)s/credentials/store/folder/' \
+                    'domain/%(domain_name)s/createCredentials'
+
+    ...
+
+    def create_credential(self, folder_name, config_xml,
+                          domain_name='_'):
+        '''Create credentail in domain of folder
+        :param folder_name: Folder name, ``str``
+        :param config_xml: New XML configuration, ``str``
+        :param domain_name: Domain name, default is '_', ``str``
+        '''
+        folder_url, short_name = self._get_job_folder(folder_name)
+        name = self._get_tag_text('id', config_xml)
+        if self.credential_exists(name, folder_name, domain_name):
+            raise JenkinsException('credential[%s] already exists '
+                                   'in the domain[%s] of [%s]'
+                                   % (name, domain_name, folder_name))
+
+        self.jenkins_open(requests.Request(
+                        'POST',
+                        self._build_url(CREATE_CREDENTIAL, locals()),
+                        data=config_xml.encode('utf-8'),
+                        headers=DEFAULT_HEADERS
+        ))
+    ```
 
 - Example from docs
     ```bash
@@ -66,8 +102,7 @@ yo-jenkins credential create \
     EOF
 
     $ curl -X POST -H content-type:application/xml -d @credential.xml \
-        https://jenkins.example.com/job/example-folder/credentials/store/folder/\
-        domain/testing/createCredentials
+        https://jenkins.example.com/job/example-folder/credentials/store/folder/domain/testing/createCredentials
     ```
 
 - Web UI call data structure

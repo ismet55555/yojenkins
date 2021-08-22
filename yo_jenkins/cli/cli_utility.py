@@ -134,7 +134,7 @@ def standard_out(data: dict,
         logger.debug('Outputting XML format ...')
         if isinstance(data, dict) or isinstance(data, list):
             data = readfromstring(json.dumps(data))
-            data_xml = json2xml.Json2xml(data, pretty=opt_pretty).to_xml()
+            data_xml = json2xml.Json2xml(data, pretty=opt_pretty, wrapper=None, attr_type=False).to_xml()
             if opt_pretty:
                 print(data_xml)
             else:

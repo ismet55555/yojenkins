@@ -410,9 +410,8 @@ class Folder():
             try:
                 config_file = open(config, 'rb')
                 item_config = config_file.read()
-            except Exception as error:
-                logger.debug(f'Failed to open and read file. Exception: {error}')
-                return False
+            except (OSError, IOError) as error:
+                logger.debug(f'Failed to open and read file: {config_file}  Exception: {error}')
 
             if config_is_json:
                 logger.debug('Converting the specified JSON file to XML format ...')

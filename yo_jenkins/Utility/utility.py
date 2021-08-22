@@ -8,7 +8,8 @@ import site
 import sysconfig
 import webbrowser
 from pathlib import Path
-from typing import Dict, List, Tuple
+from string import Template
+from typing import Dict, List, Tuple, Union
 from urllib.parse import urljoin, urlparse
 
 import requests
@@ -815,3 +816,34 @@ def write_xml_to_file(xml_content: str,
         return False
 
     return True
+
+
+def template_apply(string_template: str, is_json: bool = False, **kwargs) -> Union[str, dict]:
+    """Apply/Fill variables into a string template.
+    Placeholder variables must be in the `${variable_name}` format.
+
+    Details:
+        - Example of a string template: 
+            `'{
+                "credentials": {
+                    "scope": "${domain}",
+                    "username": "${username}"
+                }'`
+
+    Args:
+        string_template: A string template with placeholders (ie. `${variable}`)
+        is_json: If true, the string template is a json string
+        kwargs: dictionary of variables to be applied
+
+    Returns:
+        String template with variables applied
+    """
+    template = Template(string_template)
+    template_filled = template.substitute(**kwargs)
+    if is_json:
+        try:
+            template_filled = json.loads(template_filled)
+        except json.JSONDecodeError:
+            logger.debug('Failed to parse filled string template as JSON')
+    logger.debug('Successfully applied variables to string template')
+    return template_filled
