@@ -214,7 +214,7 @@ def iter_data_empty_item_stripper(iter_data):
     return iter_data
 
 
-def is_credential_id(text: str) -> bool:
+def is_credential_id_format(text: str) -> bool:
     """Checking if the entire text is in Jenkins credential ID format
 
     Args:
@@ -223,9 +223,8 @@ def is_credential_id(text: str) -> bool:
     Returns:
         True if the text is in credential ID format, else False
     """
-    from re import match
     regex_pattern = r'^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$'
-    cred_match = match(regex_pattern, text)
+    cred_match = re.match(regex_pattern, text)
     if cred_match:
         logger.debug(f'Successfully identified credential ID format')
     else:

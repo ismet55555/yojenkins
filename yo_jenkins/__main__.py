@@ -413,7 +413,6 @@ def logs(debug, profile):
 cls=HelpColorsGroup,
     help_options_custom_colors={
         'update': 'black',
-        'delete': 'black',
         'move': 'black'
         })
 def credential():
@@ -457,20 +456,16 @@ def config(debug, pretty, yaml, xml, toml, json, profile, credential, folder, do
     set_debug_log_level(debug)
     cli_credential.config(pretty, yaml, xml, toml, json, profile, credential, folder, domain, filepath)
 
-@credential.command(short_help='\tOutput a configuration template')
+@credential.command(short_help='\tCredential type template to create a credential')
 @cli_decorators.debug
-def template(debug):
+@cli_decorators.format_output
+@click.option('-j', '--json', type=bool, default=False, required=False, is_flag=True, help='Output config in JSON format')
+@cli_decorators.profile
+@click.argument('type', type=click.Choice(['user-pass', 'ssh-key', 'secret-text'], case_sensitive=False), default='user-pass', required=True)
+@click.option('--filepath', type=click.Path(file_okay=True, dir_okay=True), required=False, help='File/Filepath to write template to')
+def get_template(debug, pretty, yaml, xml, toml, json, profile, type, filepath):
     set_debug_log_level(debug)
-    click.echo(click.style('TODO :-/', fg='yellow',))
-
-# @credential.command(short_help='\tCredential type template to create a credential')
-# @cli_decorators.debug
-# @click.argument('type', type=click.Choice(['user-pass', 'ssh-key', 'secret-text'], case_sensitive=False), default='user-pass', required=True)
-# def template(debug, type):
-#     set_debug_log_level(debug)
-#     cli_credential.template(type)
-#     # OPTION: ${} format
-#     # OPTION: {{}} format
+    cli_credential.get_template(pretty, yaml, xml, toml, json, profile, type, filepath)
 
 @credential.command(short_help='\tCreate new credentials')
 @cli_decorators.debug
@@ -485,9 +480,13 @@ def create(debug, profile, config_file, folder, domain):
 
 @credential.command(short_help='\tRemove credentials')
 @cli_decorators.debug
-def delete(debug):
+@cli_decorators.profile
+@click.argument('credential', nargs=1, type=str, required=True)
+@click.option('--folder', type=str, default="root", show_default=True, required=False, help='Credential folder')
+@click.option('--domain', type=str, default="global", show_default=True, required=False, help='Credential domain')
+def delete(debug, profile, credential, folder, domain):
     set_debug_log_level(debug)
-    click.echo(click.style('TODO :-/', fg='yellow',))
+    cli_credential.delete(profile, credential, folder, domain)
 
 @credential.command(short_help='\tReconfigure existing credentials')
 @cli_decorators.debug
@@ -500,9 +499,6 @@ def update(debug):
 def move(debug):
     set_debug_log_level(debug)
     click.echo(click.style('TODO :-/', fg='yellow',))
-
-
-# TODO: Rename reconfig to update!!
 
 
 ##############################################################################

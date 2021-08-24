@@ -92,7 +92,8 @@ def config(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_
 
 
 @log_to_history
-def template(profile: str, cred_type: str) -> None:
+def get_template(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_json: bool, profile: str,
+                 cred_type: str, filepath: str) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -104,18 +105,26 @@ def template(profile: str, cred_type: str) -> None:
         TODO
     """
     jy_obj = cu.config_yo_jenkins(profile)
-    data = jy_obj.Credential.template(cred_type=cred_type)
+    data, write_success = jy_obj.Credential.get_template(cred_type=cred_type,
+                                                         opt_json=opt_json,
+                                                         opt_yaml=opt_yaml,
+                                                         opt_toml=opt_toml,
+                                                         filepath=filepath)
     if not data:
         click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
-    click.echo(click.style('success', fg='bright_green', bold=True))
+
+    if not write_success:
+        click.echo(click.style('failed to write', fg='bright_red', bold=True))
+        sys.exit(1)
+
+    opt_xml = not any([opt_json, opt_yaml, opt_toml])
+    data = data if opt_xml else json.loads(json.dumps(xmltodict.parse(data)))
+    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
 @log_to_history
-def create(profile: str,
-            config_file:str,
-            folder: str,
-            domain: str) -> None:
+def create(profile: str, config_file: str, folder: str, domain: str) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -128,6 +137,26 @@ def create(profile: str,
     """
     jy_obj = cu.config_yo_jenkins(profile)
     data = jy_obj.Credential.create(config_file=config_file, folder=folder, domain=domain)
+    if not data:
+        click.echo(click.style('failed', fg='bright_red', bold=True))
+        sys.exit(1)
+    click.echo(click.style('success', fg='bright_green', bold=True))
+
+
+@log_to_history
+def delete(profile: str, credential: str, folder: str, domain: str) -> None:
+    """TODO Docstring
+
+    Details: TODO
+
+    Args:
+        TODO
+
+    Returns:
+        TODO
+    """
+    jy_obj = cu.config_yo_jenkins(profile)
+    data = jy_obj.Credential.delete(credential=credential, folder=folder, domain=domain)
     if not data:
         click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)

@@ -193,6 +193,15 @@ class REST:
                                                      auth=auth,
                                                      timeout=timeout,
                                                      allow_redirects=allow_redirect)
+            elif request_type.lower() == 'delete':
+                response = self.request_session.delete(request_url,
+                                                       params=params,
+                                                       data=data,
+                                                       json=json_data,
+                                                       headers=headers,
+                                                       auth=auth,
+                                                       timeout=timeout,
+                                                       allow_redirects=allow_redirect)
             else:
                 logger.debug(f'Request type "{request_type}" not recognized')
                 return {}, {}, False
