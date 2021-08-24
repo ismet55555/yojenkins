@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import logging
-from pprint import pprint
 from time import perf_counter
 from typing import Dict, Tuple
 
@@ -118,6 +117,7 @@ class REST:
                 new_session: bool = False,
                 params: dict = {},
                 data: dict = {},
+                json_data: dict = {},
                 headers: dict = {},
                 timeout: int = 10,
                 allow_redirect: bool = True) -> Tuple[Dict, Dict, bool]:
@@ -137,6 +137,7 @@ class REST:
             new_session    : If True, create a new connection sessions, else re-use previous/default session
             params         : Parameters passed with the request
             data           : Data passed with the request
+            json_data      : JSON data passed with the request
             headers        : Headers passed with the request
             timeout        : Number of seconds to wait for request
             allow_redirect : If True, allow request redirection to other URLs
@@ -169,6 +170,7 @@ class REST:
                 response = self.request_session.get(request_url,
                                                     params=params,
                                                     data=data,
+                                                    json=json_data,
                                                     headers=headers,
                                                     auth=auth,
                                                     timeout=timeout,
@@ -177,6 +179,7 @@ class REST:
                 response = self.request_session.post(request_url,
                                                      params=params,
                                                      data=data,
+                                                     json=json_data,
                                                      headers=headers,
                                                      auth=auth,
                                                      timeout=timeout,
@@ -185,10 +188,20 @@ class REST:
                 response = self.request_session.head(request_url,
                                                      params=params,
                                                      data=data,
+                                                     json=json_data,
                                                      headers=headers,
                                                      auth=auth,
                                                      timeout=timeout,
                                                      allow_redirects=allow_redirect)
+            elif request_type.lower() == 'delete':
+                response = self.request_session.delete(request_url,
+                                                       params=params,
+                                                       data=data,
+                                                       json=json_data,
+                                                       headers=headers,
+                                                       auth=auth,
+                                                       timeout=timeout,
+                                                       allow_redirects=allow_redirect)
             else:
                 logger.debug(f'Request type "{request_type}" not recognized')
                 return {}, {}, False
@@ -204,6 +217,8 @@ class REST:
         except (requests.exceptions.RequestException, Exception) as e:
             logger.debug(f'Failed to make request. Exception: {e}')
             return {}, {}, False
+
+        # print(html_clean(str(response.content)))
 
         # Logging any request redirects
         if response.history:
@@ -224,7 +239,7 @@ class REST:
         logger.debug(f'   - Redirects:        {"Allow" if allow_redirect else "Block"} {redirect_methods}')
         logger.debug(f'   - Elapsed time:     {perf_counter() - start_time:.3f} seconds')
         logger.debug(f'   - Response headers: {response_content_type} (Content Length Bytes: {response_content_len})')
-        logger.debug(f'   - Status code:      {response.status_code}')
+        logger.debug(f'   - Status code:      {response.status_code} ({response.reason})')
 
         # If a head request, only return headers
         if request_type.lower() == 'head':

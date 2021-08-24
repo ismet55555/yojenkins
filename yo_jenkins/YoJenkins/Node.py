@@ -18,7 +18,7 @@ logger = logging.getLogger()
 class Node():
     """TODO Node"""
 
-    def __init__(self, REST, Auth) -> None:
+    def __init__(self, REST) -> None:
         """Object constructor method, called at object creation
 
         Args:
@@ -28,9 +28,6 @@ class Node():
             None
         """
         self.REST = REST
-        self.Auth = Auth
-
-        self.server_base_url = self.Auth.jenkins_profile['jenkins_server_url']
 
     def info(self, node_name: str, depth: int = 0) -> Tuple[list, list]:
         """TODO Docstring
@@ -73,7 +70,7 @@ class Node():
                                                    is_endpoint=True,
                                                    json_content=True)
         if not success:
-            logger.debug('Failed to get any nodes ...')
+            logger.debug('Failed to get any nodes')
             return {}
 
         if "computer" not in nodes_info:
@@ -111,14 +108,11 @@ class Node():
 
         # Processing labels
         if kwargs['labels']:
-            labels = []
-            for label in kwargs['labels'].split(','):
-                label = label.strip()
-                if utility.has_special_char(label):
-                    return False
-                labels.append(label)
-            labels = " ".join(labels)
+            labels = utility.parse_and_check_input_string_list(kwargs['labels'], " ")
+            if not labels:
+                return False
         else:
+            # If not list passed, use the node name as label
             labels = kwargs['name']
 
         logger.debug('Creating and configuring a new permanent node/agent ...')
@@ -290,33 +284,9 @@ class Node():
                                                        is_endpoint=True)
         logger.debug('Successfully fetched XML configurations' if success else 'Failed to fetch XML configurations')
 
-        # TODO: Move the below block into utilities. This apears frequently whenever configs are fetched
-
         if filepath:
-            if any([opt_json, opt_yaml, opt_toml]):
-                logger.debug('Converting content to JSON ...')
-                data_ordered_dict = xmltodict.parse(return_content)
-                content_to_write = json.loads(json.dumps(data_ordered_dict))
-            else:
-                # XML Format
-                content_to_write = return_content
-
-            if opt_json:
-                content_to_write = json.dumps(data_ordered_dict, indent=4)
-            elif opt_yaml:
-                logger.debug('Converting content to YAML ...')
-                content_to_write = yaml.dump(content_to_write)
-            elif opt_toml:
-                logger.debug('Converting content to TOML ...')
-                content_to_write = toml.dumps(content_to_write)
-
-            logger.debug(f'Writing fetched configuration to "{filepath}" ...')
-            try:
-                with open(filepath, 'w+') as file:
-                    file.write(content_to_write)
-                logger.debug('Successfully wrote configurations to file')
-            except Exception as e:
-                logger.debug('Failed to write configurations to file. Exception: {e}')
+            write_success = utility.write_xml_to_file(return_content, filepath, opt_json, opt_yaml, opt_toml)
+            if not write_success:
                 return "", False
 
         return return_content, True

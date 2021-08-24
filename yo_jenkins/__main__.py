@@ -8,9 +8,9 @@ from click_help_colors import HelpColorsCommand, HelpColorsGroup
 
 from yo_jenkins import __version__
 from yo_jenkins.cli import logger_setup  # Keep this line, sets up logger
-from yo_jenkins.cli import (cli_auth, cli_build, cli_decorators, cli_folder,
-                            cli_job, cli_node, cli_server, cli_stage, cli_step,
-                            cli_tools)
+from yo_jenkins.cli import (cli_auth, cli_build, cli_credential,
+                            cli_decorators, cli_folder, cli_job, cli_node,
+                            cli_server, cli_stage, cli_step, cli_tools)
 from yo_jenkins.cli.cli_utility import set_debug_log_level
 
 logger = logging.getLogger()
@@ -82,7 +82,7 @@ def token(debug, profile):
     set_debug_log_level(debug)
     cli_auth.token(profile)
 
-@auth.command(short_help='\tShow the local credentials file')
+@auth.command(short_help='\tShow the local credentials profiles')
 @cli_decorators.debug
 @cli_decorators.format_output
 def show(debug, pretty, yaml, xml, toml):
@@ -256,6 +256,7 @@ def server_teardown(debug, remove_volume, remove_image):
     cls=HelpColorsGroup,
     help_options_custom_colors={
         'prepare': 'black',
+        'status': 'black',
         'create-ephemeral': 'black',
         'logs': 'black',
         })
@@ -272,6 +273,14 @@ def node():
 def info(debug, pretty, yaml, xml, toml, profile, name, depth):
     set_debug_log_level(debug)
     cli_node.info(pretty, yaml, xml, toml, profile, name, depth)
+
+@node.command(short_help='\tNode status')
+@cli_decorators.debug
+@cli_decorators.profile
+@click.argument('name', nargs=1, type=str, required=True)
+def status(debug, profile, name):
+    set_debug_log_level(debug)
+    click.echo(click.style('TODO :-/', fg='yellow',))
 
 @node.command(short_help='\tList all all nodes')
 @cli_decorators.debug
@@ -383,7 +392,7 @@ def config(debug, pretty, yaml, xml, toml, json, profile, name, filepath):
 @cli_decorators.profile
 @click.argument('name', nargs=1, type=str, required=True)
 @click.option('--config-file', type=click.Path(file_okay=True, dir_okay=True), required=True, help='Path to local config file defining node')
-@click.option('--config-is-json', type=bool, default=False, required=False, is_flag=True, help='The specified file is in JSON format')
+@click.option('--config-is-json', type=bool, default=False, show_default=True, required=False, is_flag=True, help='The specified file is in JSON format')
 def reconfig(debug, profile, name, config_file, config_is_json):
     set_debug_log_level(debug)
     cli_node.reconfig(profile, name, config_file, config_is_json)
@@ -398,51 +407,98 @@ def logs(debug, profile):
 
 
 ##############################################################################
-#                             CREDENTIALS
+#                             CREDENTIAL
 ##############################################################################
 @main.group(short_help='\tManage credentials',
 cls=HelpColorsGroup,
     help_options_custom_colors={
-        'list': 'black',
-        'create': 'black',
-        'config': 'black',
-        'info': 'black',
-        'delete': 'black'
+        'update': 'black',
+        'move': 'black'
         })
-def credentials():
+def credential():
     """CREDENTIALS MANAGEMENT"""
     pass
 
-@credentials.command(short_help='\tList credentials')
+@credential.command(short_help='\tList credentials')
 @cli_decorators.debug
-def list(debug):
+@cli_decorators.format_output
+@cli_decorators.list
+@cli_decorators.profile
+# @click.argument('folder', nargs=1, type=str, default="root", required=False)
+@click.option('--folder', type=str, default="root", show_default=True, required=False, help='Credentials folder')
+@click.option('--domain', type=str, default="global", show_default=True, required=False, help='Credentials domain')
+@click.option('--keys', type=str, default="all", show_default=True, required=False, help='Credential info keys to return [ie. displayName,id,etc]')
+def list(debug, pretty, yaml, xml, toml, list, profile, folder, domain, keys):
+    set_debug_log_level(debug)
+    cli_credential.list(pretty, yaml, xml, toml, list, profile, folder, domain, keys)
+
+@credential.command(short_help='\tCredential information')
+@cli_decorators.debug
+@cli_decorators.format_output
+@cli_decorators.profile
+@click.argument('credential', nargs=1, type=str, required=True)
+@click.option('--folder', type=str, default="root", show_default=True, required=False, help='Credential folder')
+@click.option('--domain', type=str, default="global", show_default=True, required=False, help='Credential domain')
+def info(debug, pretty, yaml, xml, toml, profile, credential, folder, domain):
+    set_debug_log_level(debug)
+    cli_credential.info(pretty, yaml, xml, toml, profile, credential, folder, domain)
+
+@credential.command(short_help='\tGet credential configuration')
+@cli_decorators.debug
+@cli_decorators.format_output
+@click.option('-j', '--json', type=bool, default=False, required=False, is_flag=True, help='Output config in JSON format')
+@cli_decorators.profile
+@click.argument('credential', nargs=1, type=str, required=True)
+@click.option('--folder', type=str, default="root", show_default=True, required=False, help='Credential folder')
+@click.option('--domain', type=str, default="global", show_default=True, required=False, help='Credential domain')
+@click.option('--filepath', type=click.Path(file_okay=True, dir_okay=True), required=False, help='File/Filepath to write configurations to')
+def config(debug, pretty, yaml, xml, toml, json, profile, credential, folder, domain, filepath):
+    set_debug_log_level(debug)
+    cli_credential.config(pretty, yaml, xml, toml, json, profile, credential, folder, domain, filepath)
+
+@credential.command(short_help='\tCredential type template to create a credential')
+@cli_decorators.debug
+@cli_decorators.format_output
+@click.option('-j', '--json', type=bool, default=False, required=False, is_flag=True, help='Output config in JSON format')
+@cli_decorators.profile
+@click.argument('type', type=click.Choice(['user-pass', 'ssh-key', 'secret-text'], case_sensitive=False), default='user-pass', required=True)
+@click.option('--filepath', type=click.Path(file_okay=True, dir_okay=True), required=False, help='File/Filepath to write template to')
+def get_template(debug, pretty, yaml, xml, toml, json, profile, type, filepath):
+    set_debug_log_level(debug)
+    cli_credential.get_template(pretty, yaml, xml, toml, json, profile, type, filepath)
+
+@credential.command(short_help='\tCreate new credentials')
+@cli_decorators.debug
+@cli_decorators.profile
+# @click.argument('name', nargs=1, type=str, required=True)
+@click.argument('config-file', nargs=1, type=click.Path(exists=True), required=True)
+@click.option('--folder', type=str, default="root", show_default=True, required=False, help='Credential folder')
+@click.option('--domain', type=str, default="global", show_default=True, required=False, help='Credential domain')
+def create(debug, profile, config_file, folder, domain):
+    set_debug_log_level(debug)
+    cli_credential.create(profile, config_file, folder, domain)
+
+@credential.command(short_help='\tRemove credentials')
+@cli_decorators.debug
+@cli_decorators.profile
+@click.argument('credential', nargs=1, type=str, required=True)
+@click.option('--folder', type=str, default="root", show_default=True, required=False, help='Credential folder')
+@click.option('--domain', type=str, default="global", show_default=True, required=False, help='Credential domain')
+def delete(debug, profile, credential, folder, domain):
+    set_debug_log_level(debug)
+    cli_credential.delete(profile, credential, folder, domain)
+
+@credential.command(short_help='\tReconfigure existing credentials')
+@cli_decorators.debug
+def update(debug):
     set_debug_log_level(debug)
     click.echo(click.style('TODO :-/', fg='yellow',))
 
-@credentials.command(short_help='\tCreate new credentials to use with Jenkins')
+@credential.command(short_help='\tMove a credential to another folder/domain')
 @cli_decorators.debug
-def create(debug):
+def move(debug):
     set_debug_log_level(debug)
     click.echo(click.style('TODO :-/', fg='yellow',))
-
-@credentials.command(short_help='\tConfigure existing credentials')
-@cli_decorators.debug
-def config(debug):
-    set_debug_log_level(debug)
-    click.echo(click.style('TODO :-/', fg='yellow',))
-
-@credentials.command(short_help='\tCredentials information')
-@cli_decorators.debug
-def info(debug):
-    set_debug_log_level(debug)
-    click.echo(click.style('TODO :-/', fg='yellow',))
-
-@credentials.command(short_help='\tRemove credentials')
-@cli_decorators.debug
-def delete(debug):
-    set_debug_log_level(debug)
-    click.echo(click.style('TODO :-/', fg='yellow',))
-
 
 
 ##############################################################################
@@ -523,7 +579,7 @@ def browser(debug, profile, folder):
     set_debug_log_level(debug)
     cli_folder.browser(profile, folder)
 
-@folder.command(short_help='\tFolder XML configuration')
+@folder.command(short_help='\tGet folder configuration')
 @cli_decorators.debug
 @cli_decorators.format_output
 @click.option('-j', '--json', type=bool, default=False, required=False, is_flag=True, help='Output config in JSON format')
@@ -540,7 +596,7 @@ def config(debug, pretty, yaml, xml, toml, json, profile, folder, filepath):
 @click.argument('name', nargs=1, type=str, required=True)
 @click.argument('folder', nargs=1, type=str, required=True)
 @click.option('--type', type=click.Choice(['folder', 'view', 'job'], case_sensitive=False), default='folder', show_default=True, required=False, help='Item type created')
-@click.option('--config-file', type=click.Path(file_okay=True, dir_okay=False), required=False, help='Path to local XML file defining item')
+@click.option('--config-file', type=click.Path(file_okay=True, dir_okay=False), required=False, help='Path to local file defining item')
 @click.option('--config-is-json', type=bool, default=False, required=False, is_flag=True, help='The specified file is in JSON format')
 def create(debug, profile, name, folder, type, config_file, config_is_json):
     set_debug_log_level(debug)
@@ -1069,7 +1125,7 @@ def rest_request(debug, profile, request_text, request_type, raw, clean_html):
 
     EXAMPLE:
 
-        yo-jenkins tools rest-request "me/api/json"    
+      - yo-jenkins tools rest-request "me/api/json"    
     """
     set_debug_log_level(debug)
     cli_tools.rest_request(profile, request_text, request_type, raw, clean_html)
@@ -1088,9 +1144,9 @@ def run_script(ctx, debug, profile, text, file, output):
     
     EXAMPLES:
     
-        yo-jenkins tools script --text "println('hello you')"
-
-        yo-jenkins tools script --file ./my_script.groovy
+    \b
+      - yo-jenkins tools script --text "println('hello you')"
+      - yo-jenkins tools script --file ./my_script.groovy
     """
     set_debug_log_level(debug)
     if text or file:

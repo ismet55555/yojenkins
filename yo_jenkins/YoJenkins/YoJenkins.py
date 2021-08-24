@@ -3,6 +3,7 @@
 import logging
 
 from yo_jenkins.YoJenkins.Build import Build
+from yo_jenkins.YoJenkins.Credential import Credential
 from yo_jenkins.YoJenkins.Folder import Folder
 from yo_jenkins.YoJenkins.Job import Job
 from yo_jenkins.YoJenkins.Node import Node
@@ -34,7 +35,8 @@ class YoJenkins:
 
         self.JenkinsSDK = self.Auth.JenkinsSDK
         self.Server = Server(self.REST, self.Auth)
-        self.Node = Node(self.REST, self.Auth)
+        self.Node = Node(self.REST)
+        self.Credential = Credential(self.REST)
         self.Folder = Folder(self.REST, self.JenkinsSDK)
 
         self.Build = Build(self.REST, self.Auth)

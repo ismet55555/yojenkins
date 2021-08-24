@@ -134,7 +134,7 @@ def standard_out(data: dict,
         logger.debug('Outputting XML format ...')
         if isinstance(data, dict) or isinstance(data, list):
             data = readfromstring(json.dumps(data))
-            data_xml = json2xml.Json2xml(data, pretty=opt_pretty).to_xml()
+            data_xml = json2xml.Json2xml(data, pretty=opt_pretty, wrapper=None, attr_type=False).to_xml()
             if opt_pretty:
                 print(data_xml)
             else:
@@ -171,6 +171,11 @@ def is_full_url(url: str) -> bool:
     Returns:
         TODO
     """
+
+    # TODO: Remove this function from this file
+    #       Do url check within the class, not within the cli to not keep repeating it
+    #       In classes use yo_jenkins.Utility.utility.is_full_url()
+
     parsed_url = parse_url(url)
     if all([parsed_url.scheme, parsed_url.netloc, parsed_url.path]):
         is_valid_url = True

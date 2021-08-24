@@ -8,12 +8,15 @@ import site
 import sysconfig
 import webbrowser
 from pathlib import Path
-from typing import Dict, List, Tuple
+from string import Template
+from typing import Dict, List, Tuple, Union
 from urllib.parse import urljoin, urlparse
 
 import requests
 import toml
+import xmltodict
 import yaml
+from urllib3.util import parse_url
 from yo_jenkins import __version__
 from yo_jenkins.YoJenkins.JenkinsItemClasses import JenkinsItemClasses
 
@@ -209,6 +212,49 @@ def iter_data_empty_item_stripper(iter_data):
     if isinstance(iter_data, list):
         return [v for v in map(iter_data_empty_item_stripper, iter_data) if v]
     return iter_data
+
+
+def is_credential_id_format(text: str) -> bool:
+    """Checking if the entire text is in Jenkins credential ID format
+
+    Args:
+        text: The text to check
+
+    Returns:
+        True if the text is in credential ID format, else False
+    """
+    regex_pattern = r'^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$'
+    cred_match = re.match(regex_pattern, text)
+    if cred_match:
+        logger.debug(f'Successfully identified credential ID format')
+    else:
+        logger.debug(f'Failed to identify credential ID format')
+    return cred_match
+
+
+def is_full_url(url: str) -> bool:
+    """TODO Docstring
+
+    Args:
+        TODO
+
+    Returns:
+        TODO
+    """
+
+    # TODO: Replace this same function in cli_utility.py usages with this one within classes
+
+    parsed_url = parse_url(url)
+    if all([parsed_url.scheme, parsed_url.netloc, parsed_url.path]):
+        is_valid_url = True
+    else:
+        is_valid_url = False
+    logger.debug(f'Is valid URL format: {is_valid_url} - {url}')
+    logger.debug(f'    - scheme:  {parsed_url.scheme} - {"OK" if parsed_url.scheme else "MISSING"}')
+    logger.debug(f'    - netloc:  {parsed_url.netloc} - {"OK" if parsed_url.netloc else "MISSING"}')
+    logger.debug(f'    - path:    {parsed_url.path} - {"OK" if parsed_url.path else "MISSING"}')
+
+    return is_valid_url
 
 
 def url_to_name(url: str) -> str:
@@ -696,3 +742,107 @@ def item_exists_in_folder(item_name: str, folder_url: str, item_type: str, REST:
 def am_i_inside_docker():
     path = '/proc/self/cgroup'
     return (os.path.exists('/.dockerenv') or os.path.isfile(path) and any('docker' in line for line in open(path)))
+
+
+def parse_and_check_input_string_list(string_list: str, join_back_char: str) -> list:
+    """Parsing a string list into a list of strings
+
+    Details:
+        - `parse_string_list('a,b,c')` => ['a', 'b', 'c']
+        - `parse_string_list('a,b,c', join_back_char=';')` => ['a;b;c']
+
+    Args:
+        string_list : String list to be parsed
+        join_back_char : Character to join the list items
+
+    Returns:
+        String with items seperated by commas
+    """
+    parsed_items = []
+    for label in string_list.split(','):
+        label = label.strip()
+        if has_special_char(label):
+            return []
+        parsed_items.append(label)
+
+    if join_back_char:
+        parsed_items = join_back_char.join(parsed_items)
+
+    logger.debug(f'Parsed and checked string list: "{string_list}" => "{parsed_items}"')
+    return parsed_items
+
+
+def write_xml_to_file(xml_content: str,
+                      filepath: str,
+                      opt_json: bool = False,
+                      opt_yaml: bool = False,
+                      opt_toml: bool = False) -> bool:
+    """Writing XML content file in specified format
+
+    Args:
+        xml_content : XML content to be written
+        filepath : Filepath to write the content to
+        opt_json : Write the content as JSON
+        opt_yaml : Write the content as YAML
+        opt_toml : Write the content as TOML
+
+    Returns:
+        True if successful
+    """
+    if any([opt_json, opt_yaml, opt_toml]):
+        logger.debug('Converting content to JSON ...')
+        data_ordered_dict = xmltodict.parse(xml_content)
+        content_to_write = json.loads(json.dumps(data_ordered_dict))
+    else:
+        content_to_write = xml_content  # Keep XML format
+
+    if opt_json:
+        content_to_write = json.dumps(data_ordered_dict, indent=4)
+    elif opt_yaml:
+        logger.debug('Converting content to YAML ...')
+        content_to_write = yaml.dump(content_to_write)
+    elif opt_toml:
+        logger.debug('Converting content to TOML ...')
+        content_to_write = toml.dumps(content_to_write)
+
+    logger.debug(f'Writing fetched configuration to "{filepath}" ...')
+    try:
+        with open(filepath, 'w+') as file:
+            file.write(content_to_write)
+        logger.debug('Successfully wrote configurations to file')
+    except Exception as error:
+        logger.debug('Failed to write configurations to file. Exception: {error}')
+        return False
+
+    return True
+
+
+def template_apply(string_template: str, is_json: bool = False, **kwargs) -> Union[str, dict]:
+    """Apply/Fill variables into a string template.
+    Placeholder variables must be in the `${variable_name}` format.
+
+    Details:
+        - Example of a string template: 
+            `'{
+                "credentials": {
+                    "scope": "${domain}",
+                    "username": "${username}"
+                }'`
+
+    Args:
+        string_template: A string template with placeholders (ie. `${variable}`)
+        is_json: If true, the string template is a json string
+        kwargs: dictionary of variables to be applied
+
+    Returns:
+        String template with variables applied
+    """
+    template = Template(string_template)
+    template_filled = template.substitute(**kwargs)
+    if is_json:
+        try:
+            template_filled = json.loads(template_filled)
+        except json.JSONDecodeError:
+            logger.debug('Failed to parse filled string template as JSON')
+    logger.debug('Successfully applied variables to string template')
+    return template_filled

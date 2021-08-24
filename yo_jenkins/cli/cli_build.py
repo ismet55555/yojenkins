@@ -187,7 +187,7 @@ def delete(profile: str, job: str, build_number: int, build_url: str, latest: bo
         click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
 
-    click.echo(click.style('{data}', fg='bright_green', bold=True))
+    click.echo(click.style(f'{data}', fg='bright_green', bold=True))
 
 
 @log_to_history
