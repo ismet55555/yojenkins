@@ -17,6 +17,7 @@ import yaml
 from json2xml import json2xml
 from json2xml.utils import readfromstring
 from urllib3.util import parse_url
+
 from yo_jenkins import __version__
 
 from yo_jenkins.YoJenkins import REST, Auth, YoJenkins  # isort:skip

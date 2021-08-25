@@ -6,9 +6,8 @@ import re
 from time import perf_counter
 from typing import Dict, Tuple
 
-import toml
 import xmltodict
-import yaml
+
 from yo_jenkins.Utility import utility
 from yo_jenkins.YoJenkins.JenkinsItemClasses import JenkinsItemClasses
 from yo_jenkins.YoJenkins.JenkinsItemConfig import JenkinsItemConfig

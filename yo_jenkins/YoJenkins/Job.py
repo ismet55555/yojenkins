@@ -9,9 +9,8 @@ from typing import Dict, Tuple
 from urllib.parse import urlencode
 
 import jenkins
-import toml
 import xmltodict
-import yaml
+
 from yo_jenkins.Monitor import JobMonitor
 from yo_jenkins.Utility import utility
 from yo_jenkins.YoJenkins.JenkinsItemClasses import JenkinsItemClasses

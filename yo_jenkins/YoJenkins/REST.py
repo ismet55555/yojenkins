@@ -5,8 +5,8 @@ from time import perf_counter
 from typing import Dict, Tuple
 
 import requests
-from requests_futures.sessions import FuturesSession
 from requests.auth import HTTPBasicAuth
+from requests_futures.sessions import FuturesSession
 
 # Getting the logger reference
 logger = logging.getLogger()

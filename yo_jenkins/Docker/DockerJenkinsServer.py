@@ -2,13 +2,13 @@
 
 import logging
 import os
-# from pprint import pprint
-from time import perf_counter
 from datetime import datetime
-from typing import Tuple
 from grp import getgrnam
+from time import perf_counter
+from typing import Tuple
 
 import docker
+
 from yo_jenkins.Utility.utility import get_resource_path
 
 # Getting the logger reference
