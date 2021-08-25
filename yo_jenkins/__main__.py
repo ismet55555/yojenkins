@@ -8,7 +8,7 @@ from click_help_colors import HelpColorsCommand, HelpColorsGroup
 
 from yo_jenkins import __version__
 from yo_jenkins.cli import logger_setup  # Keep this line, sets up logger
-from yo_jenkins.cli import (cli_auth, cli_build, cli_credential,
+from yo_jenkins.cli import (cli_account, cli_auth, cli_build, cli_credential,
                             cli_decorators, cli_folder, cli_job, cli_node,
                             cli_server, cli_stage, cli_step, cli_tools)
 from yo_jenkins.cli.cli_utility import set_debug_log_level
@@ -403,6 +403,53 @@ def reconfig(debug, profile, name, config_file, config_is_json):
 def logs(debug, profile):
     set_debug_log_level(debug)
     click.echo(click.style('TODO :-/', fg='yellow',))
+
+
+
+
+
+
+
+
+
+##############################################################################
+#                             ACCOUNT
+##############################################################################
+@main.group(short_help='\tManage user accounts',
+cls=HelpColorsGroup,
+    help_options_custom_colors={
+        'update': 'black',
+        'move': 'black'
+        })
+def account():
+    """ACCOUNT MANAGEMENT"""
+    pass
+
+@account.command(short_help='\tList all users on this server')
+@cli_decorators.debug
+@cli_decorators.format_output
+@cli_decorators.list
+@cli_decorators.profile
+def list(debug, pretty, yaml, xml, toml, list, profile):
+    set_debug_log_level(debug)
+    cli_account.list(pretty, yaml, xml, toml, list, profile)
+
+@account.command(short_help='\tAccount ID of user')
+@cli_decorators.debug
+@cli_decorators.format_output
+@cli_decorators.profile
+@click.argument('account_id', nargs=1, type=str, required=True)
+def info(debug, pretty, yaml, xml, toml, profile, account_id):
+    set_debug_log_level(debug)
+    cli_account.info(pretty, yaml, xml, toml, profile, account_id)
+
+
+
+
+
+
+
+
 
 
 
