@@ -208,10 +208,16 @@ def iter_data_empty_item_stripper(iter_data):
     Returns:
         Iterable item without any blank/empty items
     """
+    empties = ((), {}, set(), None)
+
     if isinstance(iter_data, dict):
-        return {k: v for k, v in ((k, iter_data_empty_item_stripper(v)) for k, v in iter_data.items()) if v}
+        return {
+            key: value
+            for key, value in ((key, iter_data_empty_item_stripper(value)) for key, value in iter_data.items())
+            if value not in empties
+        }
     if isinstance(iter_data, list):
-        return [v for v in map(iter_data_empty_item_stripper, iter_data) if v]
+        return [value for value in map(iter_data_empty_item_stripper, iter_data) if value not in empties]
     return iter_data
 
 
@@ -838,6 +844,13 @@ def template_apply(string_template: str, is_json: bool = False, **kwargs) -> Uni
     Returns:
         String template with variables applied
     """
+    logger.debug('Applying variables to string template ...')
+    logger.debug(f'Applied variables: {", ".join(list(kwargs.keys()))}')
+    # Replace None with empty string
+    for key, value in kwargs.items():
+        if value is None:
+            kwargs[key] = ''
+
     template = Template(string_template)
     template_filled = template.substitute(**kwargs)
     if is_json:
@@ -845,5 +858,6 @@ def template_apply(string_template: str, is_json: bool = False, **kwargs) -> Uni
             template_filled = json.loads(template_filled)
         except json.JSONDecodeError:
             logger.debug('Failed to parse filled string template as JSON')
+            return ''
     logger.debug('Successfully applied variables to string template')
     return template_filled

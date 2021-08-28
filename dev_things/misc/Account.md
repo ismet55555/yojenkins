@@ -1,8 +1,19 @@
 # Account
 
 - Jenkins API Docs: 
-    - HudsonPrivateSecurityRealm: https://javadoc.jenkins.io/hudson/security/HudsonPrivateSecurityRealm.html#createAccountByAdmin-org.kohsuke.stapler.StaplerRequest-org.kohsuke.stapler.StaplerResponse-java.lang.String-java.lang.String-
+    - Jenkins instance: https://javadoc.jenkins.io/jenkins/model/Jenkins.html
+    - Authorization Strategy: https://javadoc.jenkins-ci.org/hudson/security/AuthorizationStrategy.html
+        - GlobalMatrixAuthorizationStrategy: https://javadoc.jenkins.io/plugin/matrix-auth/hudson/security/GlobalMatrixAuthorizationStrategy.html
+    - HudsonPrivateSecurityRealm: https://javadoc.jenkins.io/hudson/security/HudsonPrivateSecurityRealm.html
     - User: https://javadoc.jenkins.io/hudson/model/class-use/User.html
+    - UserProperty: https://javadoc.jenkins.io/hudson/model/UserProperty.html
+    - Permission: https://javadoc.jenkins.io/hudson/security/Permission.html?is-external=true
+    - Run List: https://javadoc.jenkins.io/hudson/util/RunList.html
+    - Matrix-Based Security: https://wiki.jenkins.io/plugins/servlet/mobile?contentId=67569939#content/view/67569939
+
+- Cloudbees Jenkins Scripts
+    - https://github.com/cloudbees/jenkins-scripts
+
 
 - Might need to use jenkins groovy script to deal with users
     - See `cli/cli_tools` -> `run_script()`
@@ -71,11 +82,14 @@ TODO
         - doCreateAccount - Creates an user account. Used for self-registration.
     - Federation identity - **TODO**
         - `doCreateAccountWithFederatedIdentity - Creates an account and associates that with the given identity. Used in conjunction with commenceSignup(hudson.security.FederatedLoginService.FederatedIdentity)
+- https://github.com/nsayed123/jenkins_setup/blob/aa1db4c7c66ca7599f57c453dd44c2717ac04de8/roles/jenkins/templates/create_user.groovy
 
 
 ```
 yo-jenkins user create \
-    TODO
+    --admin \
+    --password XXXX \
+    --username XXXX
 ```
 
 - From monitoring developer tools:
@@ -101,4 +115,25 @@ yo-jenkins user create \
                     "password2": '123456',
                     "fullname" : userName,
                     "email" : userName + '@jenkins.com'}
+    ```
+
+
+- Groovy Script
+    - ```groovy
+        import jenkins.model.*
+        import hudson.security.*
+
+        def instance = Jenkins.getInstance()
+
+        def hudsonRealm = new HudsonPrivateSecurityRealm(false)
+        hudsonRealm.createAccount("${username}","${password}")
+        instance.setSecurityRealm(hudsonRealm)
+
+        def userIsAdmin = ${admin}
+
+        def strategy = new GlobalMatrixAuthorizationStrategy()
+        strategy.add(Jenkins.ADMINISTER, "${username}")
+        instance.setAuthorizationStrategy(strategy)
+
+        instance.save()
     ```

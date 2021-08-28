@@ -31,7 +31,7 @@ class Account():
         self.REST = REST
         self.script_location = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'account_scripts')
 
-    def _run_groovy_script(self, script_filename: str) -> Tuple[dict, bool]:
+    def _run_groovy_script(self, script_filename: str, json_return: bool, **kwargs) -> Tuple[dict, bool]:
         """Run a groovy script and return the response as JSON
 
         Details:
@@ -39,19 +39,28 @@ class Account():
 
         Args:
             script_filename: Name of the groovy script to run
+            json_return: Return the response as JSON
+            kwargs (dict): Any variables to be inserted into the script text
 
         Returns:
             Response from the script
             Success flag
         """
-        # Getting the path to the groovy script
+        # Getting the path to the groovy script, load as text
         script_filepath = os.path.join(self.script_location, script_filename)
+        logger.debug(f'Loading groovy script: {script_filepath}')
         try:
             with open(script_filepath, 'r') as open_file:
                 script = open_file.read()
         except (FileNotFoundError, IOError) as error:
             logger.debug(f'Failed to find or read specified script file ({script_filepath}). Exception: {error}')
             return {}, False
+
+        # Apply passed kwargs to the string template
+        if kwargs:
+            script = utility.template_apply(string_template=script, is_json=False, **kwargs)
+            if not script:
+                return {}, False
 
         # Send the request to the server
         logger.debug(f'Running the following groovy script on server: {script_filepath} ...')
@@ -63,6 +72,8 @@ class Account():
             logger.debug('Failed to get any account')
             return {}, False
 
+        # print(script_result)
+
         # Check for script exception
         exception_keywords = ['Exception', 'java:']
         if any(exception_keyword in script_result for exception_keyword in exception_keywords):
@@ -70,11 +81,12 @@ class Account():
             return {}, False
 
         # Parse script result as JSON
-        try:
-            script_result = json.loads(script_result)
-        except JSONDecodeError as error:
-            logger.debug(f'Failed to parse response to JSON format')
-            return {}, False
+        if json_return:
+            try:
+                script_result = json.loads(script_result)
+            except JSONDecodeError as error:
+                logger.debug(f'Failed to parse response to JSON format')
+                return {}, False
 
         return script_result, True
 
@@ -88,7 +100,7 @@ class Account():
             List of credentials in dictionary format and a list of credential names
         """
         # Run the groovy script
-        account_list, success = self._run_groovy_script('list_all.groovy')
+        account_list, success = self._run_groovy_script(script_filename='list_all.groovy', json_return=True)
         if not success:
             return [], []
 
@@ -110,7 +122,7 @@ class Account():
             Dictionary of account information
         """
         # Run the groovy script
-        account_list, success = self._run_groovy_script(f'list_all.groovy')
+        account_list, success = self._run_groovy_script(script_filename='list_all.groovy', json_return=True)
         if not success:
             return {}
 
@@ -121,3 +133,36 @@ class Account():
 
         logger.debug(f'Failed to find account: {account_id}')
         return {}
+
+    def create(self, username: str, password: str, is_admin: str, email: str, description: str) -> bool:
+        """Create a new user account
+
+        Args:
+            username: Username
+            password: Password
+            is_admin: Is admin
+            email: Email
+            description: Description
+
+        Returns:
+            True if the account was created, False otherwise
+        """
+        # Must use groovy type boolean and null
+        is_admin = 'true' if is_admin else 'false'
+        email = '' if not email else email
+        description = '' if not description else description
+
+        # Create kwargs
+        kwargs = {
+            'username': username,
+            'password': password,
+            'is_admin': is_admin,
+            'email': email,
+            'description': description
+        }
+
+        # Run the groovy script
+        _, success = self._run_groovy_script(script_filename='user_create.groovy', json_return=False, **kwargs)
+        if not success:
+            return False
+        return True

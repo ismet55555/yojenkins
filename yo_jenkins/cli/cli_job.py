@@ -109,7 +109,6 @@ def build_next(profile: str, job: str) -> None:
     if not data:
         click.echo(click.style('not found', fg='bright_red', bold=True))
         sys.exit(1)
-
     click.echo(click.style(f'{data}', fg='bright_green', bold=True))
 
 
@@ -132,7 +131,6 @@ def build_last(profile: str, job: str) -> None:
     if not data:
         click.echo(click.style('not found', fg='bright_red', bold=True))
         sys.exit(1)
-
     click.echo(click.style(f'{data}', fg='bright_green', bold=True))
 
 
@@ -155,7 +153,6 @@ def build_set(profile: str, job: str, build_number: int) -> None:
     if not data:
         click.echo(click.style('failed"', fg='bright_red', bold=True))
         sys.exit(1)
-
     click.echo(click.style(f'{build_number}', fg='bright_green', bold=True))
 
 
@@ -178,7 +175,6 @@ def build_exist(profile: str, job: str, build_number: int) -> None:
     if not data:
         click.echo(click.style('not found', fg='bright_red', bold=True))
         sys.exit(1)
-
     click.echo(click.style('true', fg='bright_green', bold=True))
 
 
@@ -205,7 +201,6 @@ def build(profile: str, job: str, parameters: tuple) -> None:
     if not data:
         click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
-
     click.echo(click.style(f'success. queue number: {data}', fg='bright_green', bold=True))
 
 

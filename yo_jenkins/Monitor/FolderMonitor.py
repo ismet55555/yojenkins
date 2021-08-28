@@ -15,7 +15,6 @@ from yo_jenkins.Monitor.Monitor import Monitor
 
 # from yo_jenkins.YoJenkins.Status import BuildStatus, Color, Sound, StageStatus, Status
 
-
 # from . import monitor_utility as mu
 
 # Getting the logger reference

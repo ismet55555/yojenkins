@@ -53,3 +53,28 @@ def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profil
         click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
+
+
+@log_to_history
+def create(profile: str, username: str, password: str, is_admin: bool, email: str, description: str) -> None:
+    """TODO Docstring
+
+    Details: TODO
+
+    Args:
+        TODO
+
+    Returns:
+        TODO
+    """
+    jy_obj = cu.config_yo_jenkins(profile)
+    data = jy_obj.Account.create(username=username,
+                                 password=password,
+                                 is_admin=is_admin,
+                                 email=email,
+                                 description=description)
+
+    if not data:
+        click.echo(click.style('failed', fg='bright_red', bold=True))
+        sys.exit(1)
+    click.echo(click.style('success', fg='bright_green', bold=True))

@@ -418,8 +418,9 @@ def logs(debug, profile):
 @main.group(short_help='\tManage user accounts',
 cls=HelpColorsGroup,
     help_options_custom_colors={
-        'update': 'black',
-        'move': 'black'
+        'delete': 'black',
+        'password-reset': 'black',
+        'permission': 'black',
         })
 def account():
     """ACCOUNT MANAGEMENT"""
@@ -448,7 +449,44 @@ def info(debug, pretty, yaml, xml, toml, profile, account_id):
 
 
 
+@account.command(short_help='\tCreate a user account')
+@cli_decorators.debug
+@cli_decorators.profile
+@click.argument('username', nargs=1, type=str, required=True)
+@click.argument('password', nargs=1, type=str, required=True)
+@click.option('--is-admin', type=bool, default=False, required=False, is_flag=True, help='User has administrator control')
+@click.option('--email', type=str, required=False, help='User email address')
+@click.option('--description', type=str, required=False, help='User description')
+def create(debug, profile, username, password, is_admin, email, description):
+    set_debug_log_level(debug)
+    cli_account.create(profile, username, password, is_admin, email, description)
 
+
+
+
+
+@account.command(short_help='\tDelete a user account')
+@cli_decorators.debug
+@cli_decorators.profile
+def delete(debug, profile):
+    set_debug_log_level(debug)
+    click.echo(click.style('TODO :-/', fg='yellow',))
+
+
+@account.command(short_help='\tReset a user password')
+@cli_decorators.debug
+@cli_decorators.profile
+def password_reset(debug, profile):
+    set_debug_log_level(debug)
+    click.echo(click.style('TODO :-/', fg='yellow',))
+
+
+@account.command(short_help='\tAdd or remove user permission')
+@cli_decorators.debug
+@cli_decorators.profile
+def permission(debug, profile):
+    set_debug_log_level(debug)
+    click.echo(click.style('TODO :-/', fg='yellow',))
 
 
 
