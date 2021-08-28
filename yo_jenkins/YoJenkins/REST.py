@@ -206,18 +206,19 @@ class REST:
                 logger.debug(f'Request type "{request_type}" not recognized')
                 return {}, {}, False
         except (requests.exceptions.ConnectionError, requests.exceptions.InvalidSchema,
-                requests.exceptions.RequestException) as e:
-            logger.debug(f'Failed to make request. Exception: {e}')
+                requests.exceptions.RequestException) as error:
+            logger.debug(f'Failed to make request. Exception: {error}')
             return {}, {}, False
 
         # Wait on the response to complete and get result
         try:
             if hasattr(response, 'result'):
                 response = response.result()
-        except (requests.exceptions.RequestException, Exception) as e:
-            logger.debug(f'Failed to make request. Exception: {e}')
+        except (requests.exceptions.RequestException, Exception) as error:
+            logger.debug(f'Failed to make request. Exception: {error}')
             return {}, {}, False
 
+        # For Debug Purposes
         # print(html_clean(str(response.content)))
 
         # Logging any request redirects
@@ -240,6 +241,10 @@ class REST:
         logger.debug(f'   - Elapsed time:     {perf_counter() - start_time:.3f} seconds')
         logger.debug(f'   - Response headers: {response_content_type} (Content Length Bytes: {response_content_len})')
         logger.debug(f'   - Status code:      {response.status_code} ({response.reason})')
+
+        # Check for permission denied
+        if response.status_code in [401, 403, 405]:
+            logger.debug('PERMISSION DENIED - Request denied due to insufficient privileges')
 
         # If a head request, only return headers
         if request_type.lower() == 'head':

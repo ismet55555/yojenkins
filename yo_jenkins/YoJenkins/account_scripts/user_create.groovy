@@ -4,7 +4,7 @@
 //   - https://javadoc.jenkins.io/jenkins/model/Jenkins.html
 //   - https://javadoc.jenkins.io/hudson/model/class-use/User.html
 
-import jenkins.model.*
+import hudson.model.User
 import hudson.security.*
 import hudson.tasks.Mailer
 

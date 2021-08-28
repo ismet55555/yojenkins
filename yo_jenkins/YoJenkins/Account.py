@@ -99,7 +99,6 @@ class Account():
         Returns:
             List of credentials in dictionary format and a list of credential names
         """
-        # Run the groovy script
         account_list, success = self._run_groovy_script(script_filename='list_all.groovy', json_return=True)
         if not success:
             return [], []
@@ -121,7 +120,6 @@ class Account():
         Returns:
             Dictionary of account information
         """
-        # Run the groovy script
         account_list, success = self._run_groovy_script(script_filename='list_all.groovy', json_return=True)
         if not success:
             return {}
@@ -161,8 +159,26 @@ class Account():
             'description': description
         }
 
-        # Run the groovy script
         _, success = self._run_groovy_script(script_filename='user_create.groovy', json_return=False, **kwargs)
+        if not success:
+            return False
+        return True
+
+    def delete(self, username: str) -> bool:
+        """Delete a user account
+
+        Args:
+            username: Username of account to be deleted
+
+        Returns:
+            True if the account was deleted, False otherwise
+        """
+        # Create kwargs
+        kwargs = {
+            'username': username
+        }
+
+        _, success = self._run_groovy_script(script_filename='user_delete.groovy', json_return=False, **kwargs)
         if not success:
             return False
         return True

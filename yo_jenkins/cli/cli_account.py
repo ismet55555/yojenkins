@@ -26,7 +26,6 @@ def list(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_li
     """
     jy_obj = cu.config_yo_jenkins(profile)
     data, data_list = jy_obj.Account.list()
-
     if not data:
         click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
@@ -48,7 +47,6 @@ def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profil
     """
     jy_obj = cu.config_yo_jenkins(profile)
     data = jy_obj.Account.info(account_id=account_id)
-
     if not data:
         click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
@@ -73,7 +71,26 @@ def create(profile: str, username: str, password: str, is_admin: bool, email: st
                                  is_admin=is_admin,
                                  email=email,
                                  description=description)
+    if not data:
+        click.echo(click.style('failed', fg='bright_red', bold=True))
+        sys.exit(1)
+    click.echo(click.style('success', fg='bright_green', bold=True))
 
+
+@log_to_history
+def delete(profile: str, username: str) -> None:
+    """TODO Docstring
+
+    Details: TODO
+
+    Args:
+        TODO
+
+    Returns:
+        TODO
+    """
+    jy_obj = cu.config_yo_jenkins(profile)
+    data = jy_obj.Account.delete(username=username)
     if not data:
         click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)

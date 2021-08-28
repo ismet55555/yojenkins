@@ -418,7 +418,6 @@ def logs(debug, profile):
 @main.group(short_help='\tManage user accounts',
 cls=HelpColorsGroup,
     help_options_custom_colors={
-        'delete': 'black',
         'password-reset': 'black',
         'permission': 'black',
         })
@@ -444,11 +443,6 @@ def info(debug, pretty, yaml, xml, toml, profile, account_id):
     set_debug_log_level(debug)
     cli_account.info(pretty, yaml, xml, toml, profile, account_id)
 
-
-
-
-
-
 @account.command(short_help='\tCreate a user account')
 @cli_decorators.debug
 @cli_decorators.profile
@@ -461,16 +455,16 @@ def create(debug, profile, username, password, is_admin, email, description):
     set_debug_log_level(debug)
     cli_account.create(profile, username, password, is_admin, email, description)
 
-
-
-
-
 @account.command(short_help='\tDelete a user account')
 @cli_decorators.debug
 @cli_decorators.profile
-def delete(debug, profile):
+@click.argument('username', nargs=1, type=str, required=True)
+def delete(debug, profile, username):
     set_debug_log_level(debug)
-    click.echo(click.style('TODO :-/', fg='yellow',))
+    cli_account.delete(profile, username)
+
+
+
 
 
 @account.command(short_help='\tReset a user password')
@@ -479,6 +473,10 @@ def delete(debug, profile):
 def password_reset(debug, profile):
     set_debug_log_level(debug)
     click.echo(click.style('TODO :-/', fg='yellow',))
+
+
+
+
 
 
 @account.command(short_help='\tAdd or remove user permission')
