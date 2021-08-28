@@ -1,10 +1,17 @@
 #!groovy
 
+// Reference:
+//   - https://javadoc.jenkins.io/jenkins/model/Jenkins.html
+//   - https://javadoc.jenkins.io/hudson/model/class-use/User.html
+//   - https://javadoc.jenkins.io/hudson/security/Permission.html
+//   - https://javadoc.jenkins.io/jenkins/security/LastGrantedAuthoritiesProperty.html
+
 import hudson.model.User
 import groovy.json.JsonOutput
 import hudson.security.Permission
 import jenkins.security.LastGrantedAuthoritiesProperty
 import java.util.Date
+
 
 // Get all autherization strategy from Jenkins instance
 authStrategy = Jenkins.instance.getAuthorizationStrategy()
@@ -34,7 +41,7 @@ User.getAll().each { user ->
             "canDelete": authStrategy.hasPermission(userId, Permission.DELETE),
             "canConfigure": authStrategy.hasPermission(userId, Permission.CONFIGURE),
             "authorities": user.authorities,
-            "lastGrantedAuthChanged" : prop ? (new Date(prop.timestamp).toString()) : "never",
+            "lastGrantedAuthoritiesChanged" : prop ? (new Date(prop.timestamp).toString()) : "never",
         ]
         userInfoList.add(userInfo)
     }
