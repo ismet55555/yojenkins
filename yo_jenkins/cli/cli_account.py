@@ -118,7 +118,8 @@ def permission(profile: str, user_id: str, action: str, permission_id: str) -> N
 
 
 @log_to_history
-def permission_list(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_list: bool, profile: str) -> None:
+def permission_list(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_list: bool,
+                    profile: str) -> None:
     """TODO Docstring
 
     Details: TODO

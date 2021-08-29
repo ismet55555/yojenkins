@@ -72,7 +72,7 @@ class Account():
             logger.debug('Failed server REST request for groovy script execution')
             return {}, False
 
-        print(script_result)
+        # print(script_result)
 
         # Check for yo-jenkins groovy script error flag
         if "yo-jenkins groovy script failed" in script_result:
@@ -171,6 +171,23 @@ class Account():
             return False
         return True
 
+    def delete(self, user_id: str) -> bool:
+        """Delete a user account
+
+        Args:
+            user_id: Username of account to be deleted
+
+        Returns:
+            True if the account was deleted, False otherwise
+        """
+        # Create kwargs
+        kwargs = {'user_id': user_id}
+
+        _, success = self._run_groovy_script(script_filename='user_delete.groovy', json_return=False, **kwargs)
+        if not success:
+            return False
+        return True
+
     def permission(self, user_id: str, action: str, permission_id: str) -> bool:
         """Add or remove user account permissions
 
@@ -191,22 +208,16 @@ class Account():
 
         if action == 'add':
             logger.debug(f'Adding the following permissions to user "{user_id}": {permission_list}')
-            kwargs = {
-                'user_id': user_id,
-                'permission_groovy_list': permission_groovy_list
-            }
-            script_filename='user_permission_add.groovy'
+            kwargs = {'user_id': user_id, 'permission_groovy_list': permission_groovy_list}
+            script_filename = 'user_permission_add.groovy'
         elif action == 'remove':
             logger.debug(f'Removing the following permissions from user "{user_id}": {permission_list}')
-            kwargs = {
-                'user_id': user_id,
-                'permission_groovy_list': permission_groovy_list
-            }
-            script_filename='user_permission_remove.groovy'
+            kwargs = {'user_id': user_id, 'permission_groovy_list': permission_groovy_list}
+            script_filename = 'user_permission_remove.groovy'
         else:
             logger.debug(f'Invalid permission action specified: {action}')
             return False
-        
+
         _, success = self._run_groovy_script(script_filename=script_filename, json_return=False, **kwargs)
         if not success:
             return False
@@ -221,7 +232,8 @@ class Account():
         Returns:
             Dictionary of availabe permissions and descriptions
         """
-        permission_list, success = self._run_groovy_script(script_filename='user_permission_list.groovy', json_return=True)
+        permission_list, success = self._run_groovy_script(script_filename='user_permission_list.groovy',
+                                                           json_return=True)
         if not success:
             return {}
 

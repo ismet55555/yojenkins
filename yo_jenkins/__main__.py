@@ -466,6 +466,11 @@ def delete(debug, profile, user_id):
 
 
 
+
+
+
+
+
 @account.command(short_help='\tAdd or remove user permission')
 @cli_decorators.debug
 @cli_decorators.profile
@@ -475,6 +480,11 @@ def delete(debug, profile, user_id):
 def permission(debug, profile, user_id, action, permission_id):
     set_debug_log_level(debug)
     cli_account.permission(profile, user_id, action, permission_id)
+
+
+
+
+
 
 
 
