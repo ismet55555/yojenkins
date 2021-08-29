@@ -19,8 +19,8 @@ List<String> userPermissionList
 
 try {
     userPermissionList = ${permission_groovy_list}
-} catch (error) {
-    print "['yo-jenkins groovy script failed', '${error}']"
+} catch (groovy_error) {
+    print "['yo-jenkins groovy script failed', '${groovy_error.message}', 'failed to find/match permission ID(s)']"
     return
 }
 
@@ -32,8 +32,8 @@ userPermissionList.each { permission ->
     try {
         authStrategy.add(permission, userId)
         instance.setAuthorizationStrategy(authStrategy)
-    } catch (error) {
-        print "['yo-jenkins groovy script failed', '${error}']"
+    } catch (groovy_error) {
+        print "['yo-jenkins groovy script failed', '${groovy_error.message}', 'failed to add permission ${permission}']"
         return
     }
 }

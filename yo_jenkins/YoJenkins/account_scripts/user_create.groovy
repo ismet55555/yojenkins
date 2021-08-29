@@ -25,8 +25,8 @@ try {
     HudsonPrivateSecurityRealm hudsonRealm = new HudsonPrivateSecurityRealm(false)
     hudsonRealm.createAccount(userId, userPassword)
     instance.setSecurityRealm(hudsonRealm)
-} catch (error) {
-    print "['yo-jenkins groovy script failed', '${error}']"
+} catch (groovy_error) {
+    print "['yo-jenkins groovy script failed', '${groovy_error.message}', 'failed to create new user ${userId}']"
 }
 
 // Convert the user to an admin, if specified
@@ -35,8 +35,8 @@ if (isAdmin) {
         GlobalMatrixAuthorizationStrategy authStrategy = Jenkins.instance.getAuthorizationStrategy()
         authStrategy.add(Jenkins.ADMINISTER, userId)
         instance.setAuthorizationStrategy(authStrategy)
-    } catch (error) {
-        print "['yo-jenkins groovy script failed', '${error}']"
+    } catch (groovy_error) {
+        print "['yo-jenkins groovy script failed', '${groovy_error.message}', 'failed to give user ${userId} admin permissions']"
     }
 }
 

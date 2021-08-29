@@ -28,9 +28,9 @@ userPermissionIdList.each { permissionId ->
         println permission
         authStrategy.add(permission, userId)
         instance.setAuthorizationStrategy(authStrategy)
-    } catch (error) {
+    } catch (groovy_error) {
         println "--- ERROR ---"
-        println error
+        println groovy_error
         // Convert the last term in permission name to all upper case and retrying
         List<String>  permissionSplit = permissionId.toString().tokenize(".")
         permissionSplit[-1] = permissionSplit.last().toUpperCase()
@@ -43,13 +43,13 @@ userPermissionIdList.each { permissionId ->
             authStrategy.add(permission, userId)
             instance.setAuthorizationStrategy(authStrategy)
 
-        } catch (error2) {
-            print "['yo-jenkins groovy script failed', '${error2}']"
+        } catch (groovy_error2) {
+            print "['yo-jenkins groovy script failed', '${groovy_error2.message}']"
             return
         }
-    } catch (error) {
-        println error.getClass()
-        print "['yo-jenkins groovy script failed', '${error}']"
+    } catch (groovy_error) {
+        println groovy_error.getClass()
+        print "['yo-jenkins groovy script failed', '${groovy_error.message}']"
     }
 }
 

@@ -6,13 +6,16 @@
 
 import hudson.model.User
 
-
 // NOTE: Paceholders are replaced at runtime depending on user specification
-def userId = "${user_id}"
+String userId = "${user_id}"
 
-def instance = Jenkins.get()
-
-def user = instance.getSecurityRealm().getUser(userId)
-user.delete()
+Hudson instance = Jenkins.get()
+User user = instance.getSecurityRealm().getUser(userId)
+try {
+    user.delete()
+} catch (groovy_error) {
+    print "['yo-jenkins groovy script failed', '${groovy_error.message}', 'failed to find user']"
+    return
+}
 
 instance.save()

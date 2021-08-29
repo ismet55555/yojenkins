@@ -83,6 +83,9 @@ class REST:
     def is_reachable(self, server_url: str = '', timeout: int = 5) -> bool:
         """Check if the server is reachable
 
+        Details:
+            `/login` endpoint used to verify
+
         Args:
             server_url: URL of server to check
 
@@ -90,7 +93,7 @@ class REST:
             True if reachable, else False
         """
         if not server_url:
-            server_url = self.server_url.strip('/') + '/'
+            server_url = self.server_url.strip('/') + '/login'
 
         logger.debug(f'Checking if server is reachable: "{server_url}" ...')
 

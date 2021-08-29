@@ -32,23 +32,24 @@ class Account():
         self.script_location = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'account_scripts')
 
     def _run_groovy_script(self, script_filename: str, json_return: bool, **kwargs) -> Tuple[dict, bool]:
-        """Run a groovy script and return the response as JSON
+        """Run a Groovy script and return the response as JSON
 
         Details:
-            The groovy script must return a result in JSON format
+            A failed Groovy script execution will return a list/array in the following format:
+            `['yo-jenkins groovy script failed', '<GROOVY EXCEPTION>', '<CUSTOM ERROR MESSAGE>']`
 
         Args:
-            script_filename: Name of the groovy script to run
-            json_return: Return the response as JSON
+            script_filename: Name of the Groovy script to run
+            json_return: Anticipate and format script return as JSON
             kwargs (dict): Any variables to be inserted into the script text
 
         Returns:
             Response from the script
             Success flag
         """
-        # Getting the path to the groovy script, load as text
+        # Getting the path to the Groovy script, load as text
         script_filepath = os.path.join(self.script_location, script_filename)
-        logger.debug(f'Loading groovy script: {script_filepath}')
+        logger.debug(f'Loading Groovy script: {script_filepath}')
         try:
             with open(script_filepath, 'r') as open_file:
                 script = open_file.read()
@@ -63,22 +64,23 @@ class Account():
                 return {}, False
 
         # Send the request to the server
-        logger.debug(f'Running the following groovy script on server: {script_filepath} ...')
+        logger.debug(f'Running the following Groovy script on server: {script_filepath} ...')
         script_result, _, success = self.REST.request(target='scriptText',
                                                       request_type='post',
                                                       data={'script': script},
                                                       json_content=False)
         if not success:
-            logger.debug('Failed server REST request for groovy script execution')
+            logger.debug('Failed server REST request for Groovy script execution')
             return {}, False
 
         # print(script_result)
 
-        # Check for yo-jenkins groovy script error flag
+        # Check for yo-jenkins Groovy script error flag
         if "yo-jenkins groovy script failed" in script_result:
-            error = eval(script_result.strip(os.linesep))[1]
-            logger.debug(f'Failed to execute groovy script')
-            logger.debug(f'   - Groovy Exception: {error}')
+            groovy_return = eval(script_result.strip(os.linesep))
+            logger.debug(f'Failed to execute Groovy script')
+            logger.debug(f'Groovy Exception: {groovy_return[1]}')
+            logger.debug(groovy_return[2])
             return {}, False
 
         # Check for script exception
@@ -152,7 +154,7 @@ class Account():
         Returns:
             True if the account was created, False otherwise
         """
-        # Must use groovy type boolean and null
+        # Must use Groovy type boolean and null
         is_admin = 'true' if is_admin else 'false'
         email = '' if not email else email
         description = '' if not description else description
