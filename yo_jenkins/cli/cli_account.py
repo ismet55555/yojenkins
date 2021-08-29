@@ -34,7 +34,7 @@ def list(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_li
 
 
 @log_to_history
-def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, account_id: str) -> None:
+def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, user_id: str) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -46,7 +46,7 @@ def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profil
         TODO
     """
     jy_obj = cu.config_yo_jenkins(profile)
-    data = jy_obj.Account.info(account_id=account_id)
+    data = jy_obj.Account.info(user_id=user_id)
     if not data:
         click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
@@ -54,7 +54,7 @@ def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profil
 
 
 @log_to_history
-def create(profile: str, username: str, password: str, is_admin: bool, email: str, description: str) -> None:
+def create(profile: str, user_id: str, password: str, is_admin: bool, email: str, description: str) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -66,7 +66,7 @@ def create(profile: str, username: str, password: str, is_admin: bool, email: st
         TODO
     """
     jy_obj = cu.config_yo_jenkins(profile)
-    data = jy_obj.Account.create(username=username,
+    data = jy_obj.Account.create(user_id=user_id,
                                  password=password,
                                  is_admin=is_admin,
                                  email=email,
@@ -78,7 +78,7 @@ def create(profile: str, username: str, password: str, is_admin: bool, email: st
 
 
 @log_to_history
-def delete(profile: str, username: str) -> None:
+def delete(profile: str, user_id: str) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -90,8 +90,49 @@ def delete(profile: str, username: str) -> None:
         TODO
     """
     jy_obj = cu.config_yo_jenkins(profile)
-    data = jy_obj.Account.delete(username=username)
+    data = jy_obj.Account.delete(user_id=user_id)
     if not data:
         click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
     click.echo(click.style('success', fg='bright_green', bold=True))
+
+
+@log_to_history
+def permission(profile: str, user_id: str, action: str, permission_id: str) -> None:
+    """TODO Docstring
+
+    Details: TODO
+
+    Args:
+        TODO
+
+    Returns:
+        TODO
+    """
+    jy_obj = cu.config_yo_jenkins(profile)
+    data = jy_obj.Account.permission(user_id=user_id, action=action, permission_id=permission_id)
+    if not data:
+        click.echo(click.style('failed', fg='bright_red', bold=True))
+        sys.exit(1)
+    click.echo(click.style('success', fg='bright_green', bold=True))
+
+
+@log_to_history
+def permission_list(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_list: bool, profile: str) -> None:
+    """TODO Docstring
+
+    Details: TODO
+
+    Args:
+        TODO
+
+    Returns:
+        TODO
+    """
+    jy_obj = cu.config_yo_jenkins(profile)
+    data, data_list = jy_obj.Account.permission_list()
+    if not data:
+        click.echo(click.style('failed', fg='bright_red', bold=True))
+        sys.exit(1)
+    data = data_list if opt_list else data
+    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)

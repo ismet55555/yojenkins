@@ -8,11 +8,11 @@ import hudson.model.User
 
 
 // NOTE: Paceholders are replaced at runtime depending on user specification
-def USERNAME = "${username}"
+def userId = "${user_id}"
 
-def instance = Jenkins.getInstance()
+def instance = Jenkins.get()
 
-def user = instance.getSecurityRealm().getUser(USERNAME)
+def user = instance.getSecurityRealm().getUser(userId)
 user.delete()
 
 instance.save()

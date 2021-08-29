@@ -751,7 +751,7 @@ def am_i_inside_docker():
     return (os.path.exists('/.dockerenv') or os.path.isfile(path) and any('docker' in line for line in open(path)))
 
 
-def parse_and_check_input_string_list(string_list: str, join_back_char: str) -> list:
+def parse_and_check_input_string_list(string_list: str, join_back_char: str = '', split_char: str = ',') -> list:
     """Parsing a string list into a list of strings
 
     Details:
@@ -760,13 +760,14 @@ def parse_and_check_input_string_list(string_list: str, join_back_char: str) -> 
 
     Args:
         string_list : String list to be parsed
+        split_char : Character to split the string list on
         join_back_char : Character to join the list items
 
     Returns:
         String with items seperated by commas
     """
     parsed_items = []
-    for label in string_list.split(','):
+    for label in string_list.split(split_char):
         label = label.strip()
         if has_special_char(label):
             return []
@@ -852,7 +853,11 @@ def template_apply(string_template: str, is_json: bool = False, **kwargs) -> Uni
             kwargs[key] = ''
 
     template = Template(string_template)
-    template_filled = template.substitute(**kwargs)
+    try:
+        template_filled = template.safe_substitute(**kwargs)
+    except Exception as error:
+        logger.debug(f'Failed to apply variables to string template. Exception: {error}')
+        return ''
     if is_json:
         try:
             template_filled = json.loads(template_filled)

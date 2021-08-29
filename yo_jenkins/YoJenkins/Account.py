@@ -69,10 +69,17 @@ class Account():
                                                       data={'script': script},
                                                       json_content=False)
         if not success:
-            logger.debug('Failed to get any account')
+            logger.debug('Failed server REST request for groovy script execution')
             return {}, False
 
-        # print(script_result)
+        print(script_result)
+
+        # Check for yo-jenkins groovy script error flag
+        if "yo-jenkins groovy script failed" in script_result:
+            error = eval(script_result.strip(os.linesep))[1]
+            logger.debug(f'Failed to execute groovy script')
+            logger.debug(f'   - Groovy Exception: {error}')
+            return {}, False
 
         # Check for script exception
         exception_keywords = ['Exception', 'java:']
@@ -99,44 +106,44 @@ class Account():
         Returns:
             List of credentials in dictionary format and a list of credential names
         """
-        account_list, success = self._run_groovy_script(script_filename='list_all.groovy', json_return=True)
+        account_list, success = self._run_groovy_script(script_filename='user_list.groovy', json_return=True)
         if not success:
             return [], []
 
-        # Get a list of only account names
+        # Get a list of only account ids
         account_list_id = [account["id"] for account in account_list if "id" in account]
 
-        logger.debug(f'Number of accounts found: {len(account_list)}')
-        logger.debug(f'Found the following account names: {account_list_id}')
+        logger.debug(f'Number of user accounts found: {len(account_list)}')
+        logger.debug(f'Found the following user account ids: {account_list_id}')
 
         return account_list, account_list_id
 
-    def info(self, account_id: str) -> dict:
+    def info(self, user_id: str) -> dict:
         """Get information about an account
 
         Args:
-            account_id: Account ID
+            user_id: User account ID
 
         Returns:
             Dictionary of account information
         """
-        account_list, success = self._run_groovy_script(script_filename='list_all.groovy', json_return=True)
+        user_list, success = self._run_groovy_script(script_filename='user_list.groovy', json_return=True)
         if not success:
             return {}
 
-        for account in account_list:
-            if account['id'] == account_id:
-                logger.debug(f'Successfully found account: {account_id}')
-                return account
+        for user in user_list:
+            if user['id'] == user_id:
+                logger.debug(f'Successfully found account: {user_id}')
+                return user
 
-        logger.debug(f'Failed to find account: {account_id}')
+        logger.debug(f'Failed to find account: {user_id}')
         return {}
 
-    def create(self, username: str, password: str, is_admin: str, email: str, description: str) -> bool:
+    def create(self, user_id: str, password: str, is_admin: str, email: str, description: str) -> bool:
         """Create a new user account
 
         Args:
-            username: Username
+            user_id: Username
             password: Password
             is_admin: Is admin
             email: Email
@@ -152,7 +159,7 @@ class Account():
 
         # Create kwargs
         kwargs = {
-            'username': username,
+            'user_id': user_id,
             'password': password,
             'is_admin': is_admin,
             'email': email,
@@ -164,21 +171,66 @@ class Account():
             return False
         return True
 
-    def delete(self, username: str) -> bool:
-        """Delete a user account
+    def permission(self, user_id: str, action: str, permission_id: str) -> bool:
+        """Add or remove user account permissions
+
+        Details:
+            The permission name can be a comma separated list of permission names
 
         Args:
-            username: Username of account to be deleted
+            user_id: Username of account to be deleted
+            action: Action to perform, either 'add' or 'remove'
+            permission_id: Permission name to add or remove (can be a comma separated list)
 
         Returns:
-            True if the account was deleted, False otherwise
+            True if the permissions were added, False otherwise
         """
-        # Create kwargs
-        kwargs = {
-            'username': username
-        }
+        # Parse comma seperated string
+        permission_list = utility.parse_and_check_input_string_list(permission_id, join_back_char=', ')
+        permission_groovy_list = "[" + permission_list + "]"
 
-        _, success = self._run_groovy_script(script_filename='user_delete.groovy', json_return=False, **kwargs)
+        if action == 'add':
+            logger.debug(f'Adding the following permissions to user "{user_id}": {permission_list}')
+            kwargs = {
+                'user_id': user_id,
+                'permission_groovy_list': permission_groovy_list
+            }
+            script_filename='user_permission_add.groovy'
+        elif action == 'remove':
+            logger.debug(f'Removing the following permissions from user "{user_id}": {permission_list}')
+            kwargs = {
+                'user_id': user_id,
+                'permission_groovy_list': permission_groovy_list
+            }
+            script_filename='user_permission_remove.groovy'
+        else:
+            logger.debug(f'Invalid permission action specified: {action}')
+            return False
+        
+        _, success = self._run_groovy_script(script_filename=script_filename, json_return=False, **kwargs)
         if not success:
             return False
         return True
+
+    def permission_list(self) -> Tuple[list, list]:
+        """Get all the available permissions and descriptions
+
+        Args:
+            None
+
+        Returns:
+            Dictionary of availabe permissions and descriptions
+        """
+        permission_list, success = self._run_groovy_script(script_filename='user_permission_list.groovy', json_return=True)
+        if not success:
+            return {}
+
+        print(permission_list)
+
+        # Get a list of only permission ids
+        permission_list_id = [permission["id"] for permission in permission_list if "id" in permission]
+
+        logger.debug(f'Number of permission found: {len(permission_list)}')
+        logger.debug(f'Found the following permission ids: {permission_list_id}')
+
+        return permission_list, permission_list_id

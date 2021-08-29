@@ -3,40 +3,50 @@
 // Reference:
 //   - https://javadoc.jenkins.io/jenkins/model/Jenkins.html
 //   - https://javadoc.jenkins.io/hudson/model/class-use/User.html
+//   - https://javadoc.jenkins-ci.org/hudson/security/AuthorizationStrategy.html
 
 import hudson.model.User
-import hudson.security.*
+import hudson.security.HudsonPrivateSecurityRealm
+import hudson.security.GlobalMatrixAuthorizationStrategy
 import hudson.tasks.Mailer
 
+// Get the variables added via templating
+//      NOTE: Paceholders are replaced at runtime depending on user specification
+String userId = "${user_id}"
+String userPassword = "${password}"
+Boolean isAdmin = ${is_admin}  // true or false
+String userEmail = "${email}"
+String userDescription = "${description}"
 
-// NOTE: Paceholders are replaced at runtime depending on user specification
-def USERNAME = "${username}"
-def PASSWORD = "${password}"
-def IS_ADMIN = ${is_admin}  // true or false
-def EMAIL = "${email}"
-def DESCRIPTION = "${description}"
-
-def instance = Jenkins.getInstance()
+Hudson instance = Jenkins.get()
 
 // Create the user
-def hudsonRealm = new HudsonPrivateSecurityRealm(false)
-hudsonRealm.createAccount(USERNAME, PASSWORD)
-instance.setSecurityRealm(hudsonRealm)
+try {
+    HudsonPrivateSecurityRealm hudsonRealm = new HudsonPrivateSecurityRealm(false)
+    hudsonRealm.createAccount(userId, userPassword)
+    instance.setSecurityRealm(hudsonRealm)
+} catch (error) {
+    print "['yo-jenkins groovy script failed', '${error}']"
+}
 
 // Convert the user to an admin, if specified
-if (IS_ADMIN) { 
-    def authStrategy = Jenkins.instance.getAuthorizationStrategy()
-    authStrategy.add(Jenkins.ADMINISTER, USERNAME)
-    instance.setAuthorizationStrategy(authStrategy)
+if (isAdmin) {
+    try {
+        GlobalMatrixAuthorizationStrategy authStrategy = Jenkins.instance.getAuthorizationStrategy()
+        authStrategy.add(Jenkins.ADMINISTER, userId)
+        instance.setAuthorizationStrategy(authStrategy)
+    } catch (error) {
+        print "['yo-jenkins groovy script failed', '${error}']"
+    }
 }
 
 // Adding addition account information
-def user = instance.getSecurityRealm().getUser(USERNAME)
-if (EMAIL) {
-    user.addProperty(new Mailer.UserProperty(EMAIL))
+def user = instance.getSecurityRealm().getUser(userId)
+if (userEmail) {
+    user.addProperty(new Mailer.UserProperty(userEmail))
 }
-if (DESCRIPTION) {
-    user.setDescription(DESCRIPTION)
+if (userDescription) {
+    user.setDescription(userDescription)
 }
 
 instance.save()

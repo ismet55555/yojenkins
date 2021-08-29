@@ -418,14 +418,14 @@ def logs(debug, profile):
 @main.group(short_help='\tManage user accounts',
 cls=HelpColorsGroup,
     help_options_custom_colors={
-        'password-reset': 'black',
         'permission': 'black',
+        'password-reset': 'black',
         })
 def account():
     """ACCOUNT MANAGEMENT"""
     pass
 
-@account.command(short_help='\tList all users on this server')
+@account.command(short_help='\tList all users')
 @cli_decorators.debug
 @cli_decorators.format_output
 @cli_decorators.list
@@ -434,35 +434,59 @@ def list(debug, pretty, yaml, xml, toml, list, profile):
     set_debug_log_level(debug)
     cli_account.list(pretty, yaml, xml, toml, list, profile)
 
-@account.command(short_help='\tAccount ID of user')
+@account.command(short_help='\tGet user information')
 @cli_decorators.debug
 @cli_decorators.format_output
 @cli_decorators.profile
-@click.argument('account_id', nargs=1, type=str, required=True)
-def info(debug, pretty, yaml, xml, toml, profile, account_id):
+@click.argument('user-id', nargs=1, type=str, required=True)
+def info(debug, pretty, yaml, xml, toml, profile, user_id):
     set_debug_log_level(debug)
-    cli_account.info(pretty, yaml, xml, toml, profile, account_id)
+    cli_account.info(pretty, yaml, xml, toml, profile, user_id)
 
 @account.command(short_help='\tCreate a user account')
 @cli_decorators.debug
 @cli_decorators.profile
-@click.argument('username', nargs=1, type=str, required=True)
+@click.argument('user-id', nargs=1, type=str, required=True)
 @click.argument('password', nargs=1, type=str, required=True)
 @click.option('--is-admin', type=bool, default=False, required=False, is_flag=True, help='User has administrator control')
 @click.option('--email', type=str, required=False, help='User email address')
 @click.option('--description', type=str, required=False, help='User description')
-def create(debug, profile, username, password, is_admin, email, description):
+def create(debug, profile, user_id, password, is_admin, email, description):
     set_debug_log_level(debug)
-    cli_account.create(profile, username, password, is_admin, email, description)
+    cli_account.create(profile, user_id, password, is_admin, email, description)
 
 @account.command(short_help='\tDelete a user account')
 @cli_decorators.debug
 @cli_decorators.profile
-@click.argument('username', nargs=1, type=str, required=True)
-def delete(debug, profile, username):
+@click.argument('user-id', nargs=1, type=str, required=True)
+def delete(debug, profile, user_id):
     set_debug_log_level(debug)
-    cli_account.delete(profile, username)
+    cli_account.delete(profile, user_id)
 
+
+
+
+@account.command(short_help='\tAdd or remove user permission')
+@cli_decorators.debug
+@cli_decorators.profile
+@click.argument('user_id', nargs=1, type=str, required=True)
+@click.option('--action', type=click.Choice(['add', 'remove'], case_sensitive=False), required=True, help='Add or remove permission action')
+@click.option('--permission-id', type=str, required=True, help='ID(s) of permission (comma separated)')
+def permission(debug, profile, user_id, action, permission_id):
+    set_debug_log_level(debug)
+    cli_account.permission(profile, user_id, action, permission_id)
+
+
+
+
+@account.command(short_help='\tList all available permissions')
+@cli_decorators.debug
+@cli_decorators.format_output
+@cli_decorators.list
+@cli_decorators.profile
+def permission_list(debug, pretty, yaml, xml, toml, list, profile):
+    set_debug_log_level(debug)
+    cli_account.permission_list(pretty, yaml, xml, toml, list, profile)
 
 
 
@@ -479,12 +503,7 @@ def password_reset(debug, profile):
 
 
 
-@account.command(short_help='\tAdd or remove user permission')
-@cli_decorators.debug
-@cli_decorators.profile
-def permission(debug, profile):
-    set_debug_log_level(debug)
-    click.echo(click.style('TODO :-/', fg='yellow',))
+
 
 
 

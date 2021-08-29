@@ -7,7 +7,7 @@
     - HudsonPrivateSecurityRealm: https://javadoc.jenkins.io/hudson/security/HudsonPrivateSecurityRealm.html
     - User: https://javadoc.jenkins.io/hudson/model/class-use/User.html
     - UserProperty: https://javadoc.jenkins.io/hudson/model/UserProperty.html
-    - Permission: https://javadoc.jenkins.io/hudson/security/Permission.html?is-external=true
+    - Permission: https://javadoc.jenkins.io/hudson/security/Permission.html
     - Run List: https://javadoc.jenkins.io/hudson/util/RunList.html
     - Matrix-Based Security: https://wiki.jenkins.io/plugins/servlet/mobile?contentId=67569939#content/view/67569939
 
