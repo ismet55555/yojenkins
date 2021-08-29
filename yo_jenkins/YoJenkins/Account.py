@@ -210,17 +210,25 @@ class Account():
 
         if action == 'add':
             logger.debug(f'Adding the following permissions to user "{user_id}": {permission_list}')
-            kwargs = {'user_id': user_id, 'permission_groovy_list': permission_groovy_list}
-            script_filename = 'user_permission_add.groovy'
+            kwargs = {
+                'user_id': user_id,
+                'permission_groovy_list': permission_groovy_list,
+                'permission_enabled': 'true'
+            }
         elif action == 'remove':
             logger.debug(f'Removing the following permissions from user "{user_id}": {permission_list}')
-            kwargs = {'user_id': user_id, 'permission_groovy_list': permission_groovy_list}
-            script_filename = 'user_permission_remove.groovy'
+            kwargs = {
+                'user_id': user_id,
+                'permission_groovy_list': permission_groovy_list,
+                'permission_enabled': 'false'
+            }
         else:
             logger.debug(f'Invalid permission action specified: {action}')
             return False
 
-        _, success = self._run_groovy_script(script_filename=script_filename, json_return=False, **kwargs)
+        _, success = self._run_groovy_script(script_filename='user_permission_add_remove.groovy',
+                                             json_return=False,
+                                             **kwargs)
         if not success:
             return False
         return True
@@ -238,8 +246,6 @@ class Account():
                                                            json_return=True)
         if not success:
             return {}
-
-        print(permission_list)
 
         # Get a list of only permission ids
         permission_list_id = [permission["id"] for permission in permission_list if "id" in permission]

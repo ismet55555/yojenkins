@@ -418,7 +418,6 @@ def logs(debug, profile):
 @main.group(short_help='\tManage user accounts',
 cls=HelpColorsGroup,
     help_options_custom_colors={
-        'permission': 'black',
         'password-reset': 'black',
         })
 def account():
@@ -463,14 +462,6 @@ def delete(debug, profile, user_id):
     set_debug_log_level(debug)
     cli_account.delete(profile, user_id)
 
-
-
-
-
-
-
-
-
 @account.command(short_help='\tAdd or remove user permission')
 @cli_decorators.debug
 @cli_decorators.profile
@@ -481,14 +472,6 @@ def permission(debug, profile, user_id, action, permission_id):
     set_debug_log_level(debug)
     cli_account.permission(profile, user_id, action, permission_id)
 
-
-
-
-
-
-
-
-
 @account.command(short_help='\tList all available permissions')
 @cli_decorators.debug
 @cli_decorators.format_output
@@ -497,6 +480,12 @@ def permission(debug, profile, user_id, action, permission_id):
 def permission_list(debug, pretty, yaml, xml, toml, list, profile):
     set_debug_log_level(debug)
     cli_account.permission_list(pretty, yaml, xml, toml, list, profile)
+
+
+
+
+
+
 
 
 

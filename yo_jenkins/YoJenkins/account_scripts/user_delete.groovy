@@ -13,8 +13,8 @@ Hudson instance = Jenkins.get()
 User user = instance.getSecurityRealm().getUser(userId)
 try {
     user.delete()
-} catch (groovy_error) {
-    print "['yo-jenkins groovy script failed', '${groovy_error.message}', 'failed to find user']"
+} catch (groovyError) {
+    print "['yo-jenkins groovy script failed', '${groovyError.message}', 'failed to find user']"
     return
 }
 

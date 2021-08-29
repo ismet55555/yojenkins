@@ -16,11 +16,12 @@ import hudson.security.GlobalMatrixAuthorizationStrategy
 //      NOTE: Paceholders are replaced at runtime depending on user specification
 String userId = "${user_id}"
 List<String> userPermissionList
+Boolean permissionEnabled = ${permission_enabled}  // true of false
 
 try {
     userPermissionList = ${permission_groovy_list}
-} catch (groovy_error) {
-    print "['yo-jenkins groovy script failed', '${groovy_error.message}', 'failed to find/match permission ID(s)']"
+} catch (groovyError) {
+    print "['yo-jenkins groovy script failed', '${groovyError.message}', 'failed to find/match permission ID(s)']"
     return
 }
 
@@ -30,10 +31,11 @@ GlobalMatrixAuthorizationStrategy authStrategy = Jenkins.instance.getAuthorizati
 // Adding each permission
 userPermissionList.each { permission ->
     try {
+        permission.enabled = permissionEnabled
         authStrategy.add(permission, userId)
         instance.setAuthorizationStrategy(authStrategy)
-    } catch (groovy_error) {
-        print "['yo-jenkins groovy script failed', '${groovy_error.message}', 'failed to add permission ${permission}']"
+    } catch (groovyError) {
+        print "['yo-jenkins groovy script failed', '${groovyError.message}', 'failed to add permission ${permission}']"
         return
     }
 }
