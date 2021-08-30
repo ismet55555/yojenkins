@@ -7,11 +7,12 @@ import sys
 from pathlib import Path
 
 import click
-
 from yo_jenkins.cli import cli_utility as cu
-from yo_jenkins.cli.cli_utility import (CONFIG_DIR_NAME, HISTORY_FILE_NAME, log_to_history)
-from yo_jenkins.Tools import Package
-from yo_jenkins.Utility.utility import (browser_open, html_clean, load_contents_from_local_file)
+from yo_jenkins.cli.cli_utility import (CONFIG_DIR_NAME, HISTORY_FILE_NAME,
+                                        log_to_history)
+from yo_jenkins.Tools import Package, SharedLibrary
+from yo_jenkins.Utility.utility import (browser_open, html_clean,
+                                        load_contents_from_local_file)
 
 # Getting the logger reference
 logger = logging.getLogger()
@@ -249,3 +250,28 @@ def run_script(profile: str, script_text: str, script_filepath: str, output_file
             return "", False
 
     click.echo(content)
+
+
+@log_to_history
+def shared_lib_setup(profile: str, lib_name: str, repo_owner: str, repo_name: str, repo_url: str, repo_branch: str, implicit: bool, credential_id: str) -> bool:
+    """Sets up a shared library on the Jenkins Server
+
+    Args:
+        profile: The name of the credentials profile
+        lib_name: The name of the shared library
+        repo_owner: The owner of the git repo
+        repo_name: The name of the git repo
+        repo_url: The full url of the git repo (https://<path-to-the-shared-library-repository>)
+        repo_branch: The branch of the git repo (ie. master)
+        implicit: Whether to use the implicit shared library setup
+        credential_id: The Jenkins credential ID to use for the shared library
+
+    Returns:
+        True if the setup was successful, else False
+    """
+    jy_obj = cu.config_yo_jenkins(profile)
+    data = SharedLibrary().setup(jy_obj.REST, lib_name, repo_owner, repo_name, repo_url, repo_branch, implicit, credential_id)
+    if not data:
+        click.echo(click.style('failed', fg='bright_red', bold=True))
+        sys.exit(1)
+    click.echo(click.style('success', fg='bright_green', bold=True))

@@ -92,18 +92,12 @@ class Account():
         Returns:
             True if the account was created, False otherwise
         """
-        # Must use Groovy type boolean and null
-        is_admin = 'true' if is_admin else 'false'
-        email = '' if not email else email
-        description = '' if not description else description
-
-        # Create kwargs
         kwargs = {
             'user_id': user_id,
             'password': password,
-            'is_admin': is_admin,
-            'email': email,
-            'description': description
+            'is_admin': 'true' if is_admin else 'false',
+            'email': '' if not email else email,
+            'description': '' if not description else description
         }
         script_filepath = os.path.join(self.groovy_script_directory, 'user_create.groovy')
         _, success = utility.run_groovy_script(script_filepath=script_filepath,

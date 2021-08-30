@@ -915,7 +915,7 @@ def run_groovy_script(script_filepath: str, json_return: bool, REST: object,
         logger.debug('Failed server REST request for Groovy script execution')
         return {}, False
 
-    # print(script_result)
+    print(script_result)
 
     # Check for yo-jenkins Groovy script error flag
     if "yo-jenkins groovy script failed" in script_result:
