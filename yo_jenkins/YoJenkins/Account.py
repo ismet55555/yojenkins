@@ -29,7 +29,7 @@ class Account():
             None
         """
         self.REST = REST
-        self.script_location = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'account_scripts')
+        self.script_location = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'groovy_scripts')
 
     def _run_groovy_script(self, script_filename: str, json_return: bool, **kwargs) -> Tuple[dict, bool]:
         """Run a Groovy script and return the response as JSON
