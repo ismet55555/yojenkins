@@ -29,75 +29,7 @@ class Account():
             None
         """
         self.REST = REST
-        self.script_location = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'groovy_scripts')
-
-    def _run_groovy_script(self, script_filename: str, json_return: bool, **kwargs) -> Tuple[dict, bool]:
-        """Run a Groovy script and return the response as JSON
-
-        Details:
-            A failed Groovy script execution will return a list/array in the following format:
-            `['yo-jenkins groovy script failed', '<GROOVY EXCEPTION>', '<CUSTOM ERROR MESSAGE>']`
-
-        Args:
-            script_filename: Name of the Groovy script to run
-            json_return: Anticipate and format script return as JSON
-            kwargs (dict): Any variables to be inserted into the script text
-
-        Returns:
-            Response from the script
-            Success flag
-        """
-        # Getting the path to the Groovy script, load as text
-        script_filepath = os.path.join(self.script_location, script_filename)
-        logger.debug(f'Loading Groovy script: {script_filepath}')
-        try:
-            with open(script_filepath, 'r') as open_file:
-                script = open_file.read()
-        except (FileNotFoundError, IOError) as error:
-            logger.debug(f'Failed to find or read specified script file ({script_filepath}). Exception: {error}')
-            return {}, False
-
-        # Apply passed kwargs to the string template
-        if kwargs:
-            script = utility.template_apply(string_template=script, is_json=False, **kwargs)
-            if not script:
-                return {}, False
-
-        # Send the request to the server
-        logger.debug(f'Running the following Groovy script on server: {script_filepath} ...')
-        script_result, _, success = self.REST.request(target='scriptText',
-                                                      request_type='post',
-                                                      data={'script': script},
-                                                      json_content=False)
-        if not success:
-            logger.debug('Failed server REST request for Groovy script execution')
-            return {}, False
-
-        # print(script_result)
-
-        # Check for yo-jenkins Groovy script error flag
-        if "yo-jenkins groovy script failed" in script_result:
-            groovy_return = eval(script_result.strip(os.linesep))
-            logger.debug(f'Failed to execute Groovy script')
-            logger.debug(f'Groovy Exception: {groovy_return[1]}')
-            logger.debug(groovy_return[2])
-            return {}, False
-
-        # Check for script exception
-        exception_keywords = ['Exception', 'java:']
-        if any(exception_keyword in script_result for exception_keyword in exception_keywords):
-            logger.debug(f'Error keyword matched in script response: {exception_keywords}')
-            return {}, False
-
-        # Parse script result as JSON
-        if json_return:
-            try:
-                script_result = json.loads(script_result)
-            except JSONDecodeError as error:
-                logger.debug(f'Failed to parse response to JSON format')
-                return {}, False
-
-        return script_result, True
+        self.groovy_script_directory = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'groovy_scripts')
 
     def list(self) -> Tuple[list, list]:
         """List all accounts for the server
@@ -108,7 +40,10 @@ class Account():
         Returns:
             List of credentials in dictionary format and a list of credential names
         """
-        account_list, success = self._run_groovy_script(script_filename='user_list.groovy', json_return=True)
+        script_filepath = os.path.join(self.groovy_script_directory, 'user_list.groovy')
+        account_list, success = utility.run_groovy_script(script_filepath=script_filepath,
+                                                          json_return=True,
+                                                          REST=self.REST)
         if not success:
             return [], []
 
@@ -129,7 +64,10 @@ class Account():
         Returns:
             Dictionary of account information
         """
-        user_list, success = self._run_groovy_script(script_filename='user_list.groovy', json_return=True)
+        script_filepath = os.path.join(self.groovy_script_directory, 'user_list.groovy')
+        user_list, success = utility.run_groovy_script(script_filepath=script_filepath,
+                                                       json_return=True,
+                                                       REST=self.REST)
         if not success:
             return {}
 
@@ -167,8 +105,11 @@ class Account():
             'email': email,
             'description': description
         }
-
-        _, success = self._run_groovy_script(script_filename='user_create.groovy', json_return=False, **kwargs)
+        script_filepath = os.path.join(self.groovy_script_directory, 'user_create.groovy')
+        _, success = utility.run_groovy_script(script_filepath=script_filepath,
+                                               json_return=False,
+                                               REST=self.REST,
+                                               **kwargs)
         if not success:
             return False
         return True
@@ -182,10 +123,12 @@ class Account():
         Returns:
             True if the account was deleted, False otherwise
         """
-        # Create kwargs
         kwargs = {'user_id': user_id}
-
-        _, success = self._run_groovy_script(script_filename='user_delete.groovy', json_return=False, **kwargs)
+        script_filepath = os.path.join(self.groovy_script_directory, 'user_delete.groovy')
+        _, success = utility.run_groovy_script(script_filepath=script_filepath,
+                                               json_return=False,
+                                               REST=self.REST,
+                                               **kwargs)
         if not success:
             return False
         return True
@@ -226,9 +169,11 @@ class Account():
             logger.debug(f'Invalid permission action specified: {action}')
             return False
 
-        _, success = self._run_groovy_script(script_filename='user_permission_add_remove.groovy',
-                                             json_return=False,
-                                             **kwargs)
+        script_filepath = os.path.join(self.groovy_script_directory, 'user_permission_add_remove.groovy')
+        _, success = utility.run_groovy_script(script_filepath=script_filepath,
+                                               json_return=False,
+                                               REST=self.REST,
+                                               **kwargs)
         if not success:
             return False
         return True
@@ -242,8 +187,10 @@ class Account():
         Returns:
             Dictionary of availabe permissions and descriptions
         """
-        permission_list, success = self._run_groovy_script(script_filename='user_permission_list.groovy',
-                                                           json_return=True)
+        script_filepath = os.path.join(self.groovy_script_directory, 'user_permission_list.groovy')
+        permission_list, success = utility.run_groovy_script(script_filepath=script_filepath,
+                                                             json_return=True,
+                                                             REST=self.REST)
         if not success:
             return {}
 
