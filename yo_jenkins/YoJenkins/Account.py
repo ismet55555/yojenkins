@@ -1,16 +1,10 @@
 #!/usr/bin/env python3
 
-import json
 import logging
 import os
-from json.decoder import JSONDecodeError
-from typing import Dict, Tuple
-
-from json2xml import json2xml
-from urllib3.util import parse_url
+from typing import Tuple
 
 from yo_jenkins.Utility import utility
-from yo_jenkins.YoJenkins.JenkinsItemTemplate import JenkinsItemTemplate
 
 # Getting the logger reference
 logger = logging.getLogger()
@@ -186,7 +180,7 @@ class Account():
                                                              json_return=True,
                                                              REST=self.REST)
         if not success:
-            return {}
+            return [], []
 
         # Get a list of only permission ids
         permission_list_id = [permission["id"] for permission in permission_list if "id" in permission]
