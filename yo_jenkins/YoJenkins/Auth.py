@@ -187,7 +187,10 @@ class Auth:
 
         # Check if the profile exists
         if profile_name not in profiles:
-            click.echo(click.style(f'Profile "{profile_name}" does not exist in the credentials file', fg='bright_red', bold=True))
+            click.echo(
+                click.style(f'Profile "{profile_name}" does not exist in the credentials file',
+                            fg='bright_red',
+                            bold=True))
             return
 
         profile_info = profiles[profile_name]
