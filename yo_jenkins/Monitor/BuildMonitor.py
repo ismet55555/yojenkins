@@ -6,12 +6,11 @@ import os
 import sys
 import threading
 # from pprint import pprint
-from time import sleep, time, perf_counter
-
-from yo_jenkins.YoJenkins.Status import StageStatus, Status
-from yo_jenkins.Utility.utility import get_resource_path
+from time import perf_counter, sleep, time
 
 from yo_jenkins.Monitor.Monitor import Monitor
+from yo_jenkins.Utility.utility import get_resource_path
+from yo_jenkins.YoJenkins.Status import StageStatus, Status
 
 from . import monitor_utility as mu
 

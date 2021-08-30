@@ -7,6 +7,7 @@ import sys
 from pathlib import Path
 
 import click
+
 from yo_jenkins.cli import cli_utility as cu
 from yo_jenkins.cli.cli_utility import (CONFIG_DIR_NAME, HISTORY_FILE_NAME, log_to_history)
 from yo_jenkins.Tools import Package
@@ -227,13 +228,12 @@ def run_script(profile: str, script_text: str, script_filepath: str, output_file
             sys.exit(1)
 
     # Send the request to the server
-    content, header, success = jy_obj.REST.request(target='scriptText',
-                                                   request_type='post',
-                                                   data={'script': script},
-                                                   json_content=False)
+    content, _, success = jy_obj.REST.request(target='scriptText',
+                                              request_type='post',
+                                              data={'script': script},
+                                              json_content=False)
 
     if not success:
-        logger.debug(f'Return headers: {header}')
         click.echo(click.style('Failed to make script run request', fg='bright_red', bold=True))
         sys.exit(1)
 

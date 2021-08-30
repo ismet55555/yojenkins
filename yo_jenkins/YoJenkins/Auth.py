@@ -6,12 +6,12 @@ import re
 from datetime import datetime
 from getpass import getpass
 from pathlib import Path
-from pprint import pprint
 from typing import Dict, Tuple
 
 import click
 import toml
 from jenkins import Jenkins as JenkinsSDK
+
 from yo_jenkins.Utility import utility
 from yo_jenkins.YoJenkins.REST import REST
 

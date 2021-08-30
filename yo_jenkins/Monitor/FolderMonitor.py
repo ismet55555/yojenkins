@@ -2,6 +2,10 @@
 
 # import curses
 import logging
+
+# from Monitor.Monitor import Monitor
+from yo_jenkins.Monitor.Monitor import Monitor
+
 # import os
 # import sys
 # import textwrap
@@ -10,9 +14,6 @@ import logging
 # from time import sleep, time
 
 # from yo_jenkins.YoJenkins.Status import BuildStatus, Color, Sound, StageStatus, Status
-
-# from Monitor.Monitor import Monitor
-from yo_jenkins.Monitor.Monitor import Monitor
 
 # from . import monitor_utility as mu
 

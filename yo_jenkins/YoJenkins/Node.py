@@ -5,9 +5,8 @@ import logging
 import os
 from typing import Tuple
 
-import toml
 import xmltodict
-import yaml
+
 from yo_jenkins.Utility import utility
 from yo_jenkins.YoJenkins.JenkinsItemClasses import JenkinsItemClasses
 

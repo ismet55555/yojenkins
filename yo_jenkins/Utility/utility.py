@@ -17,6 +17,7 @@ import toml
 import xmltodict
 import yaml
 from urllib3.util import parse_url
+
 from yo_jenkins import __version__
 from yo_jenkins.YoJenkins.JenkinsItemClasses import JenkinsItemClasses
 
@@ -32,6 +33,8 @@ def load_contents_from_local_file(file_type: str, local_file_path: str) -> Dict:
     Returns: 
         file_contents (dict) : The contents of file
     """
+    # TODO: Add default option to load file as plain text
+
     file_type = file_type.lower()
 
     # Check if file exists
@@ -207,10 +210,16 @@ def iter_data_empty_item_stripper(iter_data):
     Returns:
         Iterable item without any blank/empty items
     """
+    empties = ((), {}, set(), None)
+
     if isinstance(iter_data, dict):
-        return {k: v for k, v in ((k, iter_data_empty_item_stripper(v)) for k, v in iter_data.items()) if v}
+        return {
+            key: value
+            for key, value in ((key, iter_data_empty_item_stripper(value)) for key, value in iter_data.items())
+            if value not in empties
+        }
     if isinstance(iter_data, list):
-        return [v for v in map(iter_data_empty_item_stripper, iter_data) if v]
+        return [value for value in map(iter_data_empty_item_stripper, iter_data) if value not in empties]
     return iter_data
 
 
@@ -714,14 +723,16 @@ def get_project_dir(project_dir: str = 'yo_jenkins', sample_path: str = 'resourc
     return resource_dir_path
 
 
-def item_exists_in_folder(item_name: str, folder_url: str, item_type: str, REST: object):
-    """Checking if the item exists within the specified folder
+def item_exists_in_folder(item_name: str, folder_url: str, item_type: str, REST: object) -> bool:
+    """Checking if the item exists within the specified folder on server
 
     Args:
-        TODO
+        item_name : Name of the item to check
+        folder_url : URL of the folder to check
+        item_type : Type of the item to check
 
     Returns:
-        TODO
+        True if the item exists, False if not
     """
     item_type_info = getattr(JenkinsItemClasses, item_type)
     prefix = item_type_info.value['prefix']
@@ -744,7 +755,7 @@ def am_i_inside_docker():
     return (os.path.exists('/.dockerenv') or os.path.isfile(path) and any('docker' in line for line in open(path)))
 
 
-def parse_and_check_input_string_list(string_list: str, join_back_char: str) -> list:
+def parse_and_check_input_string_list(string_list: str, join_back_char: str = '', split_char: str = ',') -> list:
     """Parsing a string list into a list of strings
 
     Details:
@@ -753,13 +764,14 @@ def parse_and_check_input_string_list(string_list: str, join_back_char: str) -> 
 
     Args:
         string_list : String list to be parsed
+        split_char : Character to split the string list on
         join_back_char : Character to join the list items
 
     Returns:
         String with items seperated by commas
     """
     parsed_items = []
-    for label in string_list.split(','):
+    for label in string_list.split(split_char):
         label = label.strip()
         if has_special_char(label):
             return []
@@ -837,12 +849,94 @@ def template_apply(string_template: str, is_json: bool = False, **kwargs) -> Uni
     Returns:
         String template with variables applied
     """
+    logger.debug('Applying variables to string template ...')
+    logger.debug(f'Applied variables: {", ".join(list(kwargs.keys()))}')
+    # Replace None with empty string
+    for key, value in kwargs.items():
+        if value is None:
+            kwargs[key] = ''
+
     template = Template(string_template)
-    template_filled = template.substitute(**kwargs)
+    try:
+        template_filled = template.safe_substitute(**kwargs)
+    except Exception as error:
+        logger.debug(f'Failed to apply variables to string template. Exception: {error}')
+        return ''
     if is_json:
         try:
             template_filled = json.loads(template_filled)
         except json.JSONDecodeError:
             logger.debug('Failed to parse filled string template as JSON')
+            return ''
     logger.debug('Successfully applied variables to string template')
     return template_filled
+
+
+def run_groovy_script(script_filepath: str, json_return: bool, REST: object,
+                      **kwargs) -> Tuple[Union[dict, str], bool]:
+    """Run a Groovy script on the server and return the response
+
+    Details:
+        A failed Groovy script execution will return a list/array in the following format:
+        `['yo-jenkins groovy script failed', '<GROOVY EXCEPTION>', '<CUSTOM ERROR MESSAGE>']`
+
+    Args:
+        script_directory: Directory where the script is located
+        script_filepath: The path to the Groovy script to run
+        json_return: Anticipate and format script return as JSON
+        REST: REST object
+        kwargs (dict): Any variables to be inserted into the script text
+
+    Returns:
+        Response from the script
+        Success flag
+    """
+    logger.debug(f'Loading Groovy script: {script_filepath}')
+    try:
+        with open(script_filepath, 'r') as open_file:
+            script = open_file.read()
+    except (FileNotFoundError, IOError) as error:
+        logger.debug(f'Failed to find or read specified script file ({script_filepath}). Exception: {error}')
+        return {}, False
+
+    # Apply passed kwargs to the string template
+    if kwargs:
+        script = template_apply(string_template=script, is_json=False, **kwargs)
+        if not script:
+            return {}, False
+
+    # Send the request to the server
+    logger.debug(f'Running the following Groovy script on server: {script_filepath} ...')
+    script_result, _, success = REST.request(target='scriptText',
+                                             request_type='post',
+                                             data={'script': script},
+                                             json_content=False)
+    if not success:
+        logger.debug('Failed server REST request for Groovy script execution')
+        return {}, False
+
+    # print(script_result)
+
+    # Check for yo-jenkins Groovy script error flag
+    if "yo-jenkins groovy script failed" in script_result:
+        groovy_return = eval(script_result.strip(os.linesep))
+        logger.debug(f'Failed to execute Groovy script')
+        logger.debug(f'Groovy Exception: {groovy_return[1]}')
+        logger.debug(groovy_return[2])
+        return {}, False
+
+    # Check for script exception
+    exception_keywords = ['Exception', 'java:']
+    if any(exception_keyword in script_result for exception_keyword in exception_keywords):
+        logger.debug(f'Error keyword matched in script response: {exception_keywords}')
+        return {}, False
+
+    # Parse script result as JSON
+    if json_return:
+        try:
+            script_result = json.loads(script_result)
+        except JSONDecodeError as error:
+            logger.debug(f'Failed to parse response to JSON format')
+            return {}, False
+
+    return script_result, True

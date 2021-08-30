@@ -4,11 +4,11 @@ import logging
 import os
 from datetime import datetime, timedelta
 from itertools import islice
-from pprint import pprint
 from time import sleep
 from typing import Dict, List, Tuple
 
 import requests
+
 from yo_jenkins.Monitor import BuildMonitor
 from yo_jenkins.Utility import utility
 from yo_jenkins.YoJenkins.JenkinsItemClasses import JenkinsItemClasses

@@ -2,6 +2,7 @@
 
 import logging
 
+from yo_jenkins.YoJenkins.Account import Account
 from yo_jenkins.YoJenkins.Build import Build
 from yo_jenkins.YoJenkins.Credential import Credential
 from yo_jenkins.YoJenkins.Folder import Folder
@@ -32,15 +33,14 @@ class YoJenkins:
         """
         self.Auth = Auth_obj
         self.REST = self.Auth.get_REST()
-
         self.JenkinsSDK = self.Auth.JenkinsSDK
+
         self.Server = Server(self.REST, self.Auth)
         self.Node = Node(self.REST)
+        self.Account = Account(self.REST)
         self.Credential = Credential(self.REST)
         self.Folder = Folder(self.REST, self.JenkinsSDK)
-
         self.Build = Build(self.REST, self.Auth)
         self.Job = Job(self.REST, self.Folder, self.JenkinsSDK, self.Auth, self.Build)
-
         self.Step = Step(self.REST)
         self.Stage = Stage(self.REST, self.Build, self.Step)

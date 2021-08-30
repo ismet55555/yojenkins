@@ -4,6 +4,7 @@ import logging
 import sys
 
 import click
+
 from yo_jenkins.cli import cli_utility as cu
 from yo_jenkins.cli.cli_utility import log_to_history
 from yo_jenkins.YoJenkins.Status import Status

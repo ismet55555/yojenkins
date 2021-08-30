@@ -21,6 +21,7 @@ pam-auth:latest
 pipeline-github-lib:latest
 pipeline-stage-view:latest
 promoted-builds:latest
+role-strategy
 ssh-slaves:latest
 timestamper:latest
 workflow-aggregator:latest

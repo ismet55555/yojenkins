@@ -160,6 +160,8 @@ In order to check/install a plugin, go to *Manage Jenkins > Manage Plugins > Ins
 - [Folders](https://plugins.jenkins.io/cloudbees-folder/) (cloudbees-folder)
 - [Next Build Number](https://plugins.jenkins.io/next-build-number/) (next-build-number)
 - [Promoted Builds](https://plugins.jenkins.io/promoted-builds/) (promoted-builds)
+- [Role-based Authorization Strategy](https://plugins.jenkins.io/role-strategy/) (role-strategy)
+
 
 # Local Jenkins Server Setup Using Docker
 
