@@ -1,5 +1,7 @@
 # Notes
 
+- Shared library example: https://github.com/DigiaFactory/automated-jenkins-pipeline/blob/master/jenkins/init.groovy.d/40-shared-libraries.groovy
+
 - Look into junit XML format for testing results
 
 - Use existing jenkins-python module as much as possible!

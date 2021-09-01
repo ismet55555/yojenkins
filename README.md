@@ -32,8 +32,9 @@ This tool is able to be integrated into a script as middleware in order to autom
 
 With `yo-jenkins` you can:
 
-- **Manage autentication**: *Autentication structure similar to AWS CLI*
+- **Manage authentication**: *Authentication structure similar to AWS CLI*
 - **Manage the server**: *Create, shutdown, view queue, and more*
+- **Manage user accounts**: *Create, delete, add/remove permission, and more*
 - **Manage nodes/agents:** *Create, delete, shut down server, and more*
 - **Manage credentials**: *Create, update, delete, list, and more*
 - **Manage folders:** *Create items, delete items, disable, enable, and more*
@@ -139,6 +140,7 @@ Options:
   --help         Show this message and exit.
 
 Commands:
+  account     Manage user accounts
   auth        Manage authentication and profiles
   build       Manage builds
   credential  Manage credentials

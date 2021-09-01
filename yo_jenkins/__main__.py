@@ -1235,14 +1235,40 @@ def run_script(ctx, debug, profile, text, file, output):
 @tools.command(short_help='\tSet up a Jenkins shared library')
 @cli_decorators.debug
 @cli_decorators.profile
-@click.option('--lib-name', type=str, required=True, help='Name you pick for this library, to be used in the @Library annotation')
-@click.option('--repo-owner', type=str, required=False, help='Owner of your git repository')
-@click.option('--repo-name', type=str, required=False, help='Name of the git repository')
-@click.option('--repo-url', type=str, required=True, help='URL of this remote repository. Same syntax as git clone command')
-@click.option('--repo-branch', type=str, required=False, default='main', show_default=True, help='ID of your git credentials in Jenkins credentials database')
-@click.option('--implicit', type=bool, required=False, default=True, show_default=True, is_flag=True, help='Automatically to allow pipeline to immediately use libraries without @Library')
-@click.option('--credential-id', type=str, required=True, help='ID of your git credentials in Jenkins credentials database')
+@click.option('--lib-name', type=str, required=True, help='Name of library, to be used in the @Library annotation')
+@click.option('--repo-owner', type=str, required=False, help='Owner/Organization of git repository')
+@click.option('--repo-name', type=str, required=False, help='Name of git repository')
+@click.option('--repo-url', type=str, required=False, help='URL of git repository. Same syntax as git clone command')
+@click.option('--repo-branch', type=str, required=False, default='main', show_default=True, help='Branch of the git repository')
+@click.option('--implicit', type=bool, required=False, default=False, show_default=True, is_flag=True, help='Automatically allow pipelines to use libraries without @Library')
+@click.option('--credential-id', type=str, required=False, help='ID of your git credentials in Jenkins credentials database')
 def shared_lib_setup(debug, profile, lib_name, repo_owner, repo_name, repo_url, repo_branch, implicit, credential_id):
+    """This sets up the Jenkins Shared Library, referencing a GitHub git repository.
+    
+    WARNING:
+
+        Sharable libraries available to any Pipeline jobs running on this system.
+        These libraries will be fully trusted, meaning theyrun without “sandbox” restrictions and may use @Grab.
+
+    USAGE NOTES:
+
+    \b
+        - As of now, only GitHub repositories are supported
+        - Use with --repo-owner and --repo-name [OR] --repo-url
+        - Using the same --lib-name will overwrite currently defined library
+
+    EXAMPLE:
+
+    \b
+        yojenkins tools shared-lib-setup \\
+            --lib-name SHARED-LIB-NAME \\
+            --repo-url https://github.com/ORG/REPO-NAME.git \\
+            --repo-branch main \\
+            --implicit \\
+            --credential-id my-jenkins-cred-id
+
+    
+    """
     set_debug_log_level(debug)
     cli_tools.shared_lib_setup(profile, lib_name, repo_owner, repo_name, repo_url, repo_branch, implicit, credential_id)
 
