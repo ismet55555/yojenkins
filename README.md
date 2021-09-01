@@ -28,26 +28,27 @@
 
 This tool is able to be integrated into a script as middleware in order to automate Jenkins related tasks and enable Jenkins configuration as code.
 
-> **`yo-jenkins` will liberate you and your browser from the Jenkins Web UI**
+> `yo-jenkins` will liberate you and your browser from the Jenkins Web UI
 
-With `yo-jenkins` you can:
+With `yo-jenkins` you can manage:
 
-- **Manage authentication**: *Authentication structure similar to AWS CLI*
-- **Manage the server**: *Create, shutdown, view queue, and more*
-- **Manage user accounts**: *Create, delete, add/remove permission, and more*
-- **Manage nodes/agents:** *Create, delete, shut down server, and more*
-- **Manage credentials**: *Create, update, delete, list, and more*
-- **Manage folders:** *Create items, delete items, disable, enable, and more*
-- **Mange jobs:** *Create, delete, trigger, monitor, search, and more*
-- **Manage builds:** *Monitor, abort, tail logs, follow logs, and more*
-- **Manage stages:** *Get info, get logs, view steps, view status*
-- **Manage steps:** *Get info*
-- **Other functions:** *Run groovy scripts remotely, run custom REST calls, view command usage history, and more*
+- **Authentication**: *Authentication structure similar to AWS CLI*
+- **Server**: *Create, shutdown, view queue, and more*
+- **User accounts**: *Create, delete, add/remove permission, and more*
+- **Nodes/agents:** *Create, delete, shut down server, and more*
+- **Credentials**: *Create, update, delete, list, and more*
+- **Folders:** *Create items, delete items, disable, enable, and more*
+- **Jobs:** *Create, delete, trigger, monitor, search, and more*
+- **Builds:** *Monitor, abort, tail logs, follow logs, and more*
+- **Stages:** *Get info, get logs, view steps, view status*
+- **Steps:** *Get info*
+- **Other tools and functions:** *Run groovy scripts remotely, run custom REST calls, setup a shared library, view command usage history, and more*
 
 
 
 
 **NOTE:** *This project is in **pre-alpha** release phase. Please report any issues, odd behavior, or suggestions. Read more about the [release cycle](https://en.wikipedia.org/wiki/Software_release_life_cycle).*
+See [Bug Reports](#bug-reports) and [Feature Requests](#feature-requests)
 
 <!-- &nbsp; -->
 
@@ -159,10 +160,11 @@ If you are using `yo-jenkins` on a pre-existing Jenkins server, make sure that t
 
 In order to check/install a plugin, go to *Manage Jenkins > Manage Plugins > Installed OR Available*
 
-- [Folders](https://plugins.jenkins.io/cloudbees-folder/) (cloudbees-folder)
-- [Next Build Number](https://plugins.jenkins.io/next-build-number/) (next-build-number)
-- [Promoted Builds](https://plugins.jenkins.io/promoted-builds/) (promoted-builds)
-- [Role-based Authorization Strategy](https://plugins.jenkins.io/role-strategy/) (role-strategy)
+1. [Folders](https://plugins.jenkins.io/cloudbees-folder/) (cloudbees-folder)
+2. [Next Build Number](https://plugins.jenkins.io/next-build-number/) (next-build-number)
+3. [Promoted Builds](https://plugins.jenkins.io/promoted-builds/) (promoted-builds)
+4. [Role-based Authorization Strategy](https://plugins.jenkins.io/role-strategy/) (role-strategy)
+5. [GitHub Branch Source Plugin](https://plugins.jenkins.io/github-branch-source/) (github-branch-source)
 
 
 # Local Jenkins Server Setup Using Docker
@@ -209,9 +211,9 @@ Note, your suggestion may be part of the Project plan, so be sure to check the [
 
 This project is an on-going effort, slowly adding various features and improvements. If you would like to contribute, please fork the project, make your changes, and submit a pull request.
 
-> **Any help, ideas, or testing is much appreciated.**
+> **Any help, ideas, or user testing is much appreciated!**
 
-There is definitely work to be done. If you don't have a genius great idea for the next big change, or if you spot an issue you are able to fix, please checkout the [TODO](https://github.com/ismet55555/yo-jenkins/projects/1) and [FIXME](https://github.com/ismet55555/yo-jenkins/projects/2) or add your own ideas. For guides and information on how to get started and help out, check out the `dev_things` directory.
+There is definitely work to be done. If you don't happen to have a great genius idea for the next big change, or if you spot an issue you are able to fix, please checkout the [TODO](https://github.com/ismet55555/yo-jenkins/projects/1) and [FIXME](https://github.com/ismet55555/yo-jenkins/projects/2) or add your own ideas. For guides and information on how to get started and help out, check out the `dev_things` directory.
 
 ## Contributors
 
