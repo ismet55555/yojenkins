@@ -406,12 +406,6 @@ def logs(debug, profile):
 
 
 
-
-
-
-
-
-
 ##############################################################################
 #                             ACCOUNT
 ##############################################################################
@@ -481,29 +475,12 @@ def permission_list(debug, pretty, yaml, xml, toml, list, profile):
     set_debug_log_level(debug)
     cli_account.permission_list(pretty, yaml, xml, toml, list, profile)
 
-
-
-
-
-
-
-
-
-
 @account.command(short_help='\tReset a user password')
 @cli_decorators.debug
 @cli_decorators.profile
 def password_reset(debug, profile):
     set_debug_log_level(debug)
     click.echo(click.style('TODO :-/', fg='yellow',))
-
-
-
-
-
-
-
-
 
 
 
@@ -1254,6 +1231,75 @@ def run_script(ctx, debug, profile, text, file, output):
         cli_tools.run_script(profile, text, file, output)
     else:
         click.echo(ctx.get_help())
+
+@tools.command(short_help='\tSet up a Jenkins shared library')
+@cli_decorators.debug
+@cli_decorators.profile
+@click.option('--lib-name', type=str, required=True, help='Name of library, to be used in the @Library annotation')
+@click.option('--repo-owner', type=str, required=False, help='Owner/Organization of git repository')
+@click.option('--repo-name', type=str, required=False, help='Name of git repository')
+@click.option('--repo-url', type=str, required=False, help='URL of git repository. Same syntax as git clone command')
+@click.option('--repo-branch', type=str, required=False, default='main', show_default=True, help='Branch of the git repository')
+@click.option('--implicit', type=bool, required=False, default=False, show_default=True, is_flag=True, help='Automatically allow pipelines to use libraries without @Library')
+@click.option('--credential-id', type=str, required=False, help='ID of your git credentials in Jenkins credentials database')
+def shared_lib_setup(debug, profile, lib_name, repo_owner, repo_name, repo_url, repo_branch, implicit, credential_id):
+    """This sets up the Jenkins Shared Library, referencing a GitHub git repository.
+    
+    WARNING:
+
+        Sharable libraries available to any Pipeline jobs running on this system.
+        These libraries will be fully trusted, meaning theyrun without “sandbox” restrictions and may use @Grab.
+
+    USAGE NOTES:
+
+    \b
+        - As of now, only GitHub repositories are supported
+        - Use with --repo-owner and --repo-name [OR] --repo-url
+        - Using the same --lib-name will overwrite currently defined library
+
+    EXAMPLE:
+
+    \b
+        yojenkins tools shared-lib-setup \\
+            --lib-name SHARED-LIB-NAME \\
+            --repo-url https://github.com/ORG/REPO-NAME.git \\
+            --repo-branch main \\
+            --implicit \\
+            --credential-id my-jenkins-cred-id
+
+    
+    """
+    set_debug_log_level(debug)
+    cli_tools.shared_lib_setup(profile, lib_name, repo_owner, repo_name, repo_url, repo_branch, implicit, credential_id)
+
+
+# yojenkins tools shared-lib-setup \
+#     --lib-name test_lib \
+#     --repo-owner ismet55555 \
+#     --repo-name my-test-repo \
+#     --repo-url http://blah.com \
+#     --repo-branch master \
+#     --implicit \
+#     --credential-id my-shared-lib-id
+
+
+#  * @param: globalLibraryName - The name of your global shared library
+#  * @param: repoOwner - The owner of your git repository
+#  * @param: repository - The name of the repository where your library is stored
+#  * @param: repositoryUrl - The URL of the repository where your library is stored
+#  * @param: implicit - Load implicitly (or not) to allow pipeline to immediately use classes and/or variables from the libraries (BOOL)
+#  * @param: credentialsId - The ID of your git credentials in Jenkins credentials database
+#  * @param: defaultVersion - The default branch for your library in git
+
+# def globalLibraryName = "my-global-library"
+# def repoOwner = "repository-owner"
+# def repository = "global-shared-library"
+# def repositoryUrl = "https://<path-to-the-shared-library-repository>"
+# def implicit = false
+# def credentialsId = "my-git-credentials-id"
+# def defaultVersion = "master"
+
+
 
 
 ##############################################################################
