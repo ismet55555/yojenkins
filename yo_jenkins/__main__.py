@@ -1205,10 +1205,6 @@ def rest_request(debug, profile, request_text, request_type, raw, clean_html):
 
       - yo-jenkins tools rest-request "me/api/json"    
     """
-    set_debug_log_level(debug)
-    cli_tools.rest_request(profile, request_text, request_type, raw, clean_html)
-
-
 @tools.command(short_help='\tRun Groovy script on server, return result')
 @cli_decorators.debug
 @cli_decorators.profile
@@ -1216,21 +1212,71 @@ def rest_request(debug, profile, request_text, request_type, raw, clean_html):
 @click.option('--file', type=click.Path(file_okay=True, dir_okay=False), required=False, is_flag=False, help='File containing command(s) to run')
 @click.option('--output', type=click.Path(file_okay=True, dir_okay=False), required=False, is_flag=False, help='Save the result to this file')
 @click.pass_context
-def run_script(ctx, debug, profile, text, file, output):
-    """Use this command to execute a Groovy script, as text or in a file,
+def groovy_script(ctx, debug, profile, text, file, output):
+    """Use this command to execute a Groovy script, as plain text or in a file,
     on the Jenkins server and return the output
-    
+
+    USAGE NOTES:
+
+    \b
+      - User must have "RunScripts" permission on the server
+
     EXAMPLES:
     
     \b
-      - yo-jenkins tools script --text "println('hello you')"
-      - yo-jenkins tools script --file ./my_script.groovy
+      - yo-jenkins tools groovy-script --text "println('hello you')"
+      - yo-jenkins tools groovy-script --file ./my_script.groovy
     """
     set_debug_log_level(debug)
     if text or file:
-        cli_tools.run_script(profile, text, file, output)
+        cli_tools.groovy_script(profile, text, file, output)
     else:
         click.echo(ctx.get_help())
+
+
+
+
+
+
+
+@tools.command(short_help='\tRun shell command/script on server machine, return result')
+@cli_decorators.debug
+@cli_decorators.profile
+@click.option('--text', type=str, required=False, help='Command(s) to run entered as text')
+@click.option('--file', type=click.Path(file_okay=True, dir_okay=False), required=False, is_flag=False, help='File containing command(s) to run')
+@click.option('--output', type=click.Path(file_okay=True, dir_okay=False), required=False, is_flag=False, help='Save the result to this file')
+@click.option('--shell', type=click.Choice(['bash', 'sh', 'cmd'], case_sensitive=False), default='bash', show_default=True, required=False, help='Shell type to use')
+@click.pass_context
+def shell_script(ctx, debug, profile, text, file, output, shell):
+    """Use this command to execute a shell script or command, as plain text or in a file,
+    on the Jenkins server machine and return the output
+
+    USAGE NOTES:
+
+    \b
+      - User must have "RunScripts" permission on the server
+      - Script is executed in root directory of the server
+
+    EXAMPLES:
+    
+    \b
+      - yo-jenkins tools shell-script --text "println('hello you')"
+      - yo-jenkins tools shell-script --file ./my_script.groovy
+      - yo-jenkins tools shell-script --file ./my_script.groovy --shell cmd
+    """
+    set_debug_log_level(debug)
+    if text or file:
+        cli_tools.shell_script(profile, text, file, output, shell)
+    else:
+        click.echo(ctx.get_help())
+
+
+
+
+
+
+
+
 
 @tools.command(short_help='\tSet up a Jenkins shared library')
 @cli_decorators.debug
@@ -1253,9 +1299,9 @@ def shared_lib_setup(debug, profile, lib_name, repo_owner, repo_name, repo_url, 
     USAGE NOTES:
 
     \b
-        - As of now, only GitHub repositories are supported
-        - Use with --repo-owner and --repo-name [OR] --repo-url
-        - Using the same --lib-name will overwrite currently defined library
+      - As of now, only GitHub repositories are supported
+      - Use with --repo-owner and --repo-name [OR] --repo-url
+      - Using the same --lib-name will overwrite currently defined library
 
     EXAMPLE:
 
@@ -1272,32 +1318,6 @@ def shared_lib_setup(debug, profile, lib_name, repo_owner, repo_name, repo_url, 
     set_debug_log_level(debug)
     cli_tools.shared_lib_setup(profile, lib_name, repo_owner, repo_name, repo_url, repo_branch, implicit, credential_id)
 
-
-# yojenkins tools shared-lib-setup \
-#     --lib-name test_lib \
-#     --repo-owner ismet55555 \
-#     --repo-name my-test-repo \
-#     --repo-url http://blah.com \
-#     --repo-branch master \
-#     --implicit \
-#     --credential-id my-shared-lib-id
-
-
-#  * @param: globalLibraryName - The name of your global shared library
-#  * @param: repoOwner - The owner of your git repository
-#  * @param: repository - The name of the repository where your library is stored
-#  * @param: repositoryUrl - The URL of the repository where your library is stored
-#  * @param: implicit - Load implicitly (or not) to allow pipeline to immediately use classes and/or variables from the libraries (BOOL)
-#  * @param: credentialsId - The ID of your git credentials in Jenkins credentials database
-#  * @param: defaultVersion - The default branch for your library in git
-
-# def globalLibraryName = "my-global-library"
-# def repoOwner = "repository-owner"
-# def repository = "global-shared-library"
-# def repositoryUrl = "https://<path-to-the-shared-library-repository>"
-# def implicit = false
-# def credentialsId = "my-git-credentials-id"
-# def defaultVersion = "master"
 
 
 

@@ -10,7 +10,7 @@ import click
 from yo_jenkins.cli import cli_utility as cu
 from yo_jenkins.cli.cli_utility import (CONFIG_DIR_NAME, HISTORY_FILE_NAME, log_to_history)
 from yo_jenkins.Tools import Package, SharedLibrary
-from yo_jenkins.Utility.utility import (browser_open, html_clean, load_contents_from_local_file)
+from yo_jenkins.Utility.utility import (browser_open, html_clean, load_contents_from_local_file, template_apply)
 
 # Getting the logger reference
 logger = logging.getLogger()
@@ -197,7 +197,7 @@ def rest_request(profile: str, request_text: str, request_type: str, raw: bool, 
 
 
 @log_to_history
-def run_script(profile: str, script_text: str, script_filepath: str, output_filepath: str) -> None:
+def groovy_script(profile: str, script_text: str, script_filepath: str, output_filepath: str) -> None:
     """TODO
 
     Details: TODO: 
@@ -233,7 +233,107 @@ def run_script(profile: str, script_text: str, script_filepath: str, output_file
                                               json_content=False)
 
     if not success:
-        click.echo(click.style('Failed to make script run request', fg='bright_red', bold=True))
+        click.echo(click.style('Failed to make server request', fg='bright_red', bold=True))
+        sys.exit(1)
+
+    # Save script result to file
+    if output_filepath:
+        logger.debug(f'Saving script result into file: {output_filepath} ...')
+        try:
+            with open(output_filepath, 'w+') as file:
+                file.write(content)
+            logger.debug('Successfully wrote script result to file')
+        except Exception as error:
+            logger.debug(f'Failed to write script result to file. Exception: {error}')
+            return "", False
+
+    click.echo(content)
+
+
+@log_to_history
+def shell_script(profile: str, script_text: str, script_filepath: str, output_filepath: str, shell: str) -> None:
+    """TODO
+
+    Details: TODO: 
+
+    Args:
+        TODO 
+
+    Returns:
+        None
+    """
+    jy_obj = cu.config_yo_jenkins(profile)
+
+    # Prepare the commands/script
+    if script_text:
+        script_text = script_text.strip().replace('  ', ' ')
+        script = script_text
+    elif script_filepath:
+        logger.debug(f'Loading specified script form file: {script_filepath} ...')
+        try:
+            with open(os.path.join(script_filepath), 'r') as open_file:
+                script = open_file.read()
+            script_size = os.path.getsize(script_filepath)
+            logger.debug(f'Successfully loaded script file ({script_size} Bytes)')
+        except FileNotFoundError as error:
+            click.echo(
+                click.style(f'Failed to find specified script file ({script_filepath})', fg='bright_red', bold=True))
+            sys.exit(1)
+
+    # Shell type to use
+    if shell == 'bash':
+        shell_type = 'bash'
+        terminate_after = '-c'
+    elif shell == 'sh':
+        shell_type = 'sh'
+        terminate_after = '-c'
+    elif shell == 'cmd':
+        shell_type = 'cmd.exe'
+        terminate_after = '/c'
+
+
+
+    # FIXME: Groovy \n works, however in python it does not....
+    # Groovy Script that works:
+    # String script = '''ls -la\npwd\ncd home\nls -la\n'''.toString()
+    # def shell_type = "bash"
+    # def terminate_shell = "-c"
+
+    # ProcessBuilder yo = new ProcessBuilder("${shell_type}","${terminate_shell}", "${script}")
+    # println yo.redirectErrorStream(true).start().text
+
+
+    from pprint import pprint
+    pprint(script, width=90)
+
+    print('---------')
+
+
+    # Apply variables into string template
+    kwargs = {
+        'shell_type': shell_type,
+        'terminate_after': terminate_after,
+        'script': script
+    }
+
+
+    string_template = '''String script2 = "${script}".toString();
+    ProcessBuilder process = new ProcessBuilder("${shell_type}", "${terminate_after}", "${script2}");
+    println process.redirectErrorStream(true).start().text'''
+
+    script = template_apply(string_template, **kwargs)
+    pprint(script)
+
+    print('\n\n-----------\n\n')
+
+    # Send the request to the server
+    content, _, success = jy_obj.REST.request(target='scriptText',
+                                              request_type='post',
+                                              data={'script': script},
+                                              json_content=False)
+
+    if not success:
+        click.echo(click.style('Failed to make server request', fg='bright_red', bold=True))
         sys.exit(1)
 
     # Save script result to file

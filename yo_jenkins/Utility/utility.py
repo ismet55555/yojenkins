@@ -829,7 +829,7 @@ def write_xml_to_file(xml_content: str,
     return True
 
 
-def template_apply(string_template: str, is_json: bool = False, **kwargs) -> Union[str, dict]:
+def template_apply(string_template: str, is_json: bool = False, **kwargs: dict) -> Union[str, dict]:
     """Apply/Fill variables into a string template.
     Placeholder variables must be in the `${variable_name}` format.
 
@@ -873,7 +873,7 @@ def template_apply(string_template: str, is_json: bool = False, **kwargs) -> Uni
 
 
 def run_groovy_script(script_filepath: str, json_return: bool, REST: object,
-                      **kwargs) -> Tuple[Union[dict, str], bool]:
+                      **kwargs: dict) -> Tuple[Union[dict, str], bool]:
     """Run a Groovy script on the server and return the response
 
     Details:
