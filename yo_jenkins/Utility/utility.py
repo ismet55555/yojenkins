@@ -555,8 +555,8 @@ def html_clean(html: str) -> str:
     return cleaned_text
 
 
-def browser_open(url: str, new: int = 2, autoraise: bool = True) -> str:
-    """Clean up HTML format to text without HTML tags
+def browser_open(url: str, new: int = 2, autoraise: bool = True) -> bool:
+    """Open the file/web URL in a web browser
 
     Args:
         url       : Weblink URL
