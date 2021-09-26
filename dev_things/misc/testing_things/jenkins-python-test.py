@@ -18,7 +18,7 @@ logger.info('START')
 
 # Connecting to Jenkins (Exception handling: jenkins.JenkinsException)
 J = jenkins.Jenkins(url='https://localhost:8080/',
-                    username='ezg822',
+                    username='yoyo',
                     password='11e575255371c28c3f0b5482257e65a58f',
                     timeout=5)
 

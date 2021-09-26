@@ -24,9 +24,9 @@
                          'causes': [{'_class': 'hudson.model.Cause$UserIdCause',
                                      'shortDescription': 'Started by user '
                                                          'Handzic, Ismet '
-                                                         '(CONT)',
-                                     'userId': 'ezg822',
-                                     'userName': 'Handzic, Ismet (CONT)'},
+                                                         '',
+                                     'userId': 'yoyo6969',
+                                     'userName': 'Handzic, Ismet '},
                                     {'_class': 'com.sonyericsson.rebuild.RebuildCause',
                                      'shortDescription': 'Rebuilds build #17',
                                      'upstreamBuild': 17,

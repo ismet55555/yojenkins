@@ -451,8 +451,8 @@
                         "doggyfile"
                     ],
                     "author": {
-                        "absoluteUrl": "https://localhost:8080/user/ezg822",
-                        "fullName": "Handzic, Ismet (CONT)"
+                        "absoluteUrl": "https://localhost:8080/user/yoyo6969",
+                        "fullName": "Handzic, Ismet "
                     },
                     "authorEmail": "ismet.handzic@gmail.com",
                     "comment": "changed cucumber report location\n",
@@ -474,8 +474,8 @@
     ],
     "culprits": [
         {
-            "absoluteUrl": "https://localhost:8080/user/ezg822",
-            "fullName": "Handzic, Ismet (CONT)"
+            "absoluteUrl": "https://localhost:8080/user/yoyo6969",
+            "fullName": "Handzic, Ismet "
         }
     ],
     "description": null,

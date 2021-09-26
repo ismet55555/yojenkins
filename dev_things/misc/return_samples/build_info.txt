@@ -6,9 +6,9 @@
             "causes": [
                 {
                     "_class": "hudson.model.Cause$UserIdCause",
-                    "shortDescription": "Started by user Handzic, Ismet (CONT)",
-                    "userId": "ezg822",
-                    "userName": "Handzic, Ismet (CONT)"
+                    "shortDescription": "Started by user Handzic, Ismet ",
+                    "userId": "yoyo6969",
+                    "userName": "Handzic, Ismet "
                 }
             ]
         },
