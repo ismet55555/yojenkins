@@ -23,7 +23,7 @@ logger = logging.getLogger()
 
 class FolderMonitor(Monitor):
     """This class defines the BuildMonitor class and its function.
-    
+
     The FolderMonitor class enables active folder monitoring
     """
 

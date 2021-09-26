@@ -34,7 +34,7 @@ class Credential():
     @staticmethod
     def _get_folder_store(folder: str) -> Tuple[str, str]:
         """Utility method to get credential folder name and domain
-        
+
         Args:
             folder: folder name or url
 
@@ -58,7 +58,7 @@ class Credential():
     @staticmethod
     def _get_domain(domain: str) -> str:
         """Utility method to get credential domain name
-        
+
         Args:
             domain: Credential domain name
 

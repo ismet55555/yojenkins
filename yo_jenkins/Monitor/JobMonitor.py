@@ -20,7 +20,7 @@ logger = logging.getLogger()
 
 class JobMonitor(Monitor):
     """This class defines the BuildMonitor class and its function.
-    
+
     The JobMonitor class enables active job monitoring
     """
 
@@ -70,7 +70,7 @@ class JobMonitor(Monitor):
             scr       : Handle for curses terminal screen handle
             job_url : Direct URL to build
             sound     : Enable sound effects
-        Returns: 
+        Returns:
             True if no error, else False
         """
         # Starting data collection threads
@@ -350,7 +350,7 @@ class JobMonitor(Monitor):
 
         Args:
             view_option: TODO
-        Returns: 
+        Returns:
             menu option (str)  : Selection menu option user selected (ie. quit)
             successfull (bool) : True if no error, else False
         """

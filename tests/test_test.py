@@ -2,6 +2,7 @@
 
 import logging
 
+
 def test_success() -> None:
     """This is just a dummy test"""
     logging.info("This is just a dummy test that SUCCEEDS")

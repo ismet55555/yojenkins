@@ -80,10 +80,10 @@
   - subfolders
   - views
 
-- Folder 
+- Folder
     - View - delete
 
-- __main__.py 
+- __main__.py
   - sort in alphabetical order
   - Split into separate files and just import the files (will this work with click?)
 

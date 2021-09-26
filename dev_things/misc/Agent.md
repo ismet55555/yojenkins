@@ -28,7 +28,7 @@
 yo-jenkins node prepare <HOST ADDRESS>
     --ssh-port <PORT NUMBER>
     --ssh-user <USERNAME>
-    --ssh-public-key-file <KEY FILE PATH> 
+    --ssh-public-key-file <KEY FILE PATH>
     --ssh-public-key-text <KEY TEXT>
     --system-type <ubuntu, amazonlinux, macos, windows>
     --custom-script <PATH TO SCRIPT>
@@ -71,7 +71,7 @@ yo-jenkins node setup-ephemeral [NAME] [HOST] <--- can be "local"
        - Install and configure docker
        - `export JENKINS_AGENT_SSH_PUBKEY="<PUBLIC KEY>"`
        - `docker run --rm --name jenkins-ssh-agent jenkins/ssh-agent $JENKINS_AGENT_SSH_PUBKEY`
-- 
+-
      - Container on remote host **(FAILED SSH AUTHENTICATION)**
        - Install and configure docker
        - Ensure SSHD is running inside the container
@@ -86,7 +86,7 @@ yo-jenkins node setup-ephemeral [NAME] [HOST] <--- can be "local"
          - AWSLinux: `yum -y install openssh-server && systemctl enable sshd && systemctl start sshd`
       - Install Java as `root` user
           - AWS EC2: `amazon-linux-extras install -y java-openjdk11 && which java`
-      - Add `jenkins` user 
+      - Add `jenkins` user
         - `adduser jenkins --shell /bin/bash && awk -F: '{ print $1}' /etc/passwd`
       - Log in as `jenkins` user
         - `su jenkins`
@@ -146,7 +146,7 @@ yo-jenkins node setup-ephemeral [NAME] [HOST] <--- can be "local"
 
 ## Challenges
 
-- Passing group ID to docker container 
+- Passing group ID to docker container
   - This is a docker-in-docker problem
   - Currently using Python Docker SDK at container run (group_add=[docker_gid])
     - How does this work on Windows and setting up a remote windows host?
@@ -167,7 +167,7 @@ yo-jenkins node setup-ephemeral [NAME] [HOST] <--- can be "local"
 
 - Programmatically, Use same class as the server?
   - Start a new class then see later if we can combine to a base class somehow
-  
+
 - Configuration as code
   - Either prepackaged image or custom Dockerfile
   - If remote, this needs to be available on Dockerhub
@@ -184,8 +184,8 @@ yo-jenkins node setup-ephemeral [NAME] [HOST] <--- can be "local"
         --ssh-private-key path_to_key
 
 - COnfigure Cloud - Docker
-  - Connect with JNLP 
-  - Attach Docker container 
+  - Connect with JNLP
+  - Attach Docker container
     - https://www.bogotobogo.com/DevOps/Docker/Docker-Jenkins-Master-Slave-Agent-ssh.php
     - Image Used: jenkins/inbound-agent
 
@@ -230,7 +230,7 @@ yo-jenkins node setup-ephemeral [NAME] [HOST] <--- can be "local"
 
 - How to
   - https://medium.com/xebia-engineering/using-docker-containers-as-jenkins-build-slaves-a0bb1c9190d
-  - https://devopscube.com/docker-containers-as-build-slaves-jenkins/ 
+  - https://devopscube.com/docker-containers-as-build-slaves-jenkins/
   - https://youtu.be/3GAzfOk7XO8
 
 - SSH Verfication Startegy

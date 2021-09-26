@@ -1,6 +1,6 @@
 # Account
 
-- Jenkins API Docs: 
+- Jenkins API Docs:
     - Jenkins instance: https://javadoc.jenkins.io/jenkins/model/Jenkins.html
     - Authorization Strategy: https://javadoc.jenkins-ci.org/hudson/security/AuthorizationStrategy.html
         - GlobalMatrixAuthorizationStrategy: https://javadoc.jenkins.io/plugin/matrix-auth/hudson/security/GlobalMatrixAuthorizationStrategy.html
@@ -49,7 +49,7 @@
 
 - http://localhost:8080/asynchPeople/api/xml?depth=1
 
-- Using Groovy 
+- Using Groovy
 - https://javadoc.jenkins.io/hudson/model/User.html
 - https://javadoc.jenkins.io/hudson/model/Run.html
 - Also FreeStyleBuild

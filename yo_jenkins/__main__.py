@@ -8,9 +8,20 @@ from click_help_colors import HelpColorsCommand, HelpColorsGroup
 
 from yo_jenkins import __version__
 from yo_jenkins.cli import logger_setup  # Keep this line, sets up logger
-from yo_jenkins.cli import (cli_account, cli_auth, cli_build, cli_credential,
-                            cli_decorators, cli_folder, cli_job, cli_node,
-                            cli_server, cli_stage, cli_step, cli_tools)
+from yo_jenkins.cli import (
+    cli_account,
+    cli_auth,
+    cli_build,
+    cli_credential,
+    cli_decorators,
+    cli_folder,
+    cli_job,
+    cli_node,
+    cli_server,
+    cli_stage,
+    cli_step,
+    cli_tools,
+)
 from yo_jenkins.cli.cli_utility import set_debug_log_level
 
 logger = logging.getLogger()
@@ -27,7 +38,7 @@ MAIN_HELP_TEXT = f"""
     \t\t\t \033[93m YO-JENKINS (Version: {__version__}) \033[0m
 
     yo-jenkins is a tool that is focused on interfacing with
-    Jenkins server from the comfort of the beloved command line. 
+    Jenkins server from the comfort of the beloved command line.
     This tool can also be used as a middleware utility, generating and
     passing Jenkins information or automating tasks.
 
@@ -49,7 +60,7 @@ MAIN_HELP_TEXT = f"""
     __version__, "-v", "--version", message="%(version)s".format(version="version"),
     help="Show the version"
 )
-def main():  
+def main():
     pass
 
 
@@ -225,7 +236,7 @@ def shutdown(debug, profile, force):
 @click.option('--password', default='', type=str, required=False, help='Set password for admin account [default: password]')
 def server_deploy(debug, config_file, plugins_file, protocol_schema, host, port, image_base, image_rebuild, new_volume, new_volume_name, bind_mount_dir, container_name, registry, admin_user, password):
     """ATTENTION: The resulting Jenkins server is for development and testing purposes only. Enjoy responsibly.
-    
+
     NOTE: Docker must be installed for this command to function
 
     BTW: All options have default values and command can be run without any specified options
@@ -1203,7 +1214,7 @@ def rest_request(debug, profile, request_text, request_type, raw, clean_html):
 
     EXAMPLE:
 
-      - yo-jenkins tools rest-request "me/api/json"    
+      - yo-jenkins tools rest-request "me/api/json"
     """
     set_debug_log_level(debug)
     cli_tools.rest_request(profile, request_text, request_type, raw, clean_html)
@@ -1219,9 +1230,9 @@ def rest_request(debug, profile, request_text, request_type, raw, clean_html):
 def run_script(ctx, debug, profile, text, file, output):
     """Use this command to execute a Groovy script, as text or in a file,
     on the Jenkins server and return the output
-    
+
     EXAMPLES:
-    
+
     \b
       - yo-jenkins tools script --text "println('hello you')"
       - yo-jenkins tools script --file ./my_script.groovy
@@ -1244,7 +1255,7 @@ def run_script(ctx, debug, profile, text, file, output):
 @click.option('--credential-id', type=str, required=False, help='ID of your git credentials in Jenkins credentials database')
 def shared_lib_setup(debug, profile, lib_name, repo_owner, repo_name, repo_url, repo_branch, implicit, credential_id):
     """This sets up the Jenkins Shared Library, referencing a GitHub git repository.
-    
+
     WARNING:
 
         Sharable libraries available to any Pipeline jobs running on this system.
@@ -1267,7 +1278,7 @@ def shared_lib_setup(debug, profile, lib_name, repo_owner, repo_name, repo_url, 
             --implicit \\
             --credential-id my-jenkins-cred-id
 
-    
+
     """
     set_debug_log_level(debug)
     cli_tools.shared_lib_setup(profile, lib_name, repo_owner, repo_name, repo_url, repo_branch, implicit, credential_id)

@@ -6,7 +6,7 @@ from enum import Enum
 class Status(Enum):
     """Enum of Jenkins statuses
 
-    Usage Examples: 
+    Usage Examples:
         - `BuildStatus.running.value`
         - `if some_text in Status.running.value:`
     """

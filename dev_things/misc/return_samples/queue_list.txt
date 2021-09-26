@@ -18,7 +18,7 @@
             'url': 'queue/item/244405/',
             'why': 'Build #96 is already in progress (ETA: N/A)'},
 
-        
+
            {'_class': 'hudson.model.Queue$BuildableItem',
             'actions': [{'_class': 'hudson.model.CauseAction',
                          'causes': [{'_class': 'hudson.model.Cause$UserIdCause',
@@ -64,7 +64,7 @@
                    'matching label expression'},
 
 
-                   
+
            {'_class': 'hudson.model.Queue$BuildableItem',
             'actions': [{'_class': 'hudson.model.CauseAction',
                          'causes': [{'_class': 'hudson.triggers.TimerTrigger$TimerTriggerCause',

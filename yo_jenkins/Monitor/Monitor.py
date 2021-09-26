@@ -150,7 +150,7 @@ class Monitor:
 
         Args:
             scr (obj): Handle for curses terminal screen handle
-        Returns: 
+        Returns:
             None
         """
         for status_item in Status:

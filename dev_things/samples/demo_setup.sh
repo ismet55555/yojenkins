@@ -9,4 +9,3 @@ yo-jenkins job create "Monitor" "Dev Jobs" --config "./dev_things/samples/job_co
 
 yo-jenkins job build "Dev Jobs/Test"
 yo-jenkins job build "Dev Jobs/Build"
-

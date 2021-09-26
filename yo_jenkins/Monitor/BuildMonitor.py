@@ -73,7 +73,7 @@ class BuildMonitor(Monitor):
             scr       : Handle for curses terminal screen handle
             build_url : Direct URL to build
             sound     : Enable sound effects
-        Returns: 
+        Returns:
             True if no error, else False
         """
         # Starting data collection threads
@@ -447,7 +447,7 @@ class BuildMonitor(Monitor):
 
         Args:
             view_option: TODO
-        Returns: 
+        Returns:
             menu option (str)  : Selection menu option user selected (ie. quit)
             successfull (bool) : True if no error, else False
         """

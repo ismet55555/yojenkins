@@ -28,7 +28,7 @@ Status:     RUNNING
 10.  Build App           00:02:458        SUCCESS
 11.  Analyze Code        00:01:435        SUCCESS
 12.  Deploy App          00:01:327        SUCCESS
-13.  Test App            00:00:128        RUNNING 
+13.  Test App            00:00:128        RUNNING
 
 
 
