@@ -8,14 +8,15 @@ verify_ssl = true
 
 [dev-packages]
 bump2version = "*"
+pre-commit = "*"
 pylint = "*"
+pytest = "*"
+pytest-cov = "*"
+pytest-mock = "*"
 setuptools = "*"
 twine = "*"
 wheel = "*"
 yapf = "*"
-pytest = "*"
-pytest-cov = "*"
-pytest-mock = "*"
 yo-jenkins = {editable = true, path = "."}
 
 [packages]
