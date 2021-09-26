@@ -1,5 +1,7 @@
 # Notes
 
+- CLI Guidelines: https://clig.dev/
+
 - Shared library example: https://github.com/DigiaFactory/automated-jenkins-pipeline/blob/master/jenkins/init.groovy.d/40-shared-libraries.groovy
 
 - Look into junit XML format for testing results

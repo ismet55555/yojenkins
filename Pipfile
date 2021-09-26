@@ -24,13 +24,14 @@ click = "*"
 click-help-colors = "*"
 coloredlogs = "*"
 docker = "*"
-json2xml = "*"
+json2xml = "3.7.0"
 python-jenkins = "*"
 pyyaml = "*"
 requests_futures = "*"
 simpleaudio = {version = "*", platform_system = "!= 'Windows'"}
 toml = "*"
 windows-curses = {version = "2.2.0", platform_system = "== 'Windows'"}
+xmltodict = "*"
 
 [pipenv]
 allow_prereleases = true
