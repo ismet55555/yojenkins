@@ -920,7 +920,7 @@ def run_groovy_script(script_filepath: str, json_return: bool, REST: object,
     # Check for yo-jenkins Groovy script error flag
     if "yo-jenkins groovy script failed" in script_result:
         groovy_return = eval(script_result.strip(os.linesep))
-        logger.debug(f'Failed to execute Groovy script')
+        logger.debug('Failed to execute Groovy script')
         logger.debug(f'Groovy Exception: {groovy_return[1]}')
         logger.debug(groovy_return[2])
         return {}, False
@@ -935,8 +935,8 @@ def run_groovy_script(script_filepath: str, json_return: bool, REST: object,
     if json_return:
         try:
             script_result = json.loads(script_result)
-        except JSONDecodeError as error:
-            logger.debug(f'Failed to parse response to JSON format')
+        except json.JSONDecodeError as error:
+            logger.debug('Failed to parse response to JSON format')
             return {}, False
 
     return script_result, True

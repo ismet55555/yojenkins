@@ -241,7 +241,7 @@ class JobMonitor(Monitor):
                     "reachable"]
                 line = f'Server Status: Reachable: {reach_status}, Authenticated: {auth_status}'
             else:
-                line = f'Server Status: NO DATA'
+                line = 'Server Status: NO DATA'
             mu.draw_text(scr, line, y_row, center_x=True, color=self.color['grey-dark'])
 
             ########################################################################################
@@ -486,7 +486,7 @@ class JobMonitor(Monitor):
                     except Exception as e:
                         logger.debug(f'Failure occurred when ending build data threads. Exception: {e}')
                 else:
-                    logger.debug(f'No job info data. Waiting ...')
+                    logger.debug('No job info data. Waiting ...')
 
             # Wait some time before checking again
             start_time = time()
@@ -506,7 +506,7 @@ class JobMonitor(Monitor):
         Returns:
             TODO
         """
-        logger.debug(f'Starting thread for job builds info ...')
+        logger.debug('Starting thread for job builds info ...')
         try:
             threading.Thread(target=self.__thread_builds_data, args=(monitor_interval, ), daemon=False).start()
         except Exception as e:

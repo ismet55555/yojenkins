@@ -117,7 +117,7 @@ class Node():
         logger.debug('Creating and configuring a new permanent node/agent ...')
         logger.debug(f'    - Name:       {kwargs["name"]}')
         logger.debug(f'    - Host:       {kwargs["host"]}')
-        logger.debug(f'    - Connection: SSH')
+        logger.debug('    - Connection: SSH')
 
         # SSH Connection verification strategy
         if kwargs['ssh_verify'] == 'known':
@@ -319,7 +319,7 @@ class Node():
             return False
 
         if config_is_json:
-            logger.debug(f'Converting the specified JSON file to XML format ...')
+            logger.debug('Converting the specified JSON file to XML format ...')
             try:
                 node_config = xmltodict.unparse(json.loads(node_config))
             except Exception as e:

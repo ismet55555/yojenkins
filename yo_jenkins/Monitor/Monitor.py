@@ -36,6 +36,11 @@ class Monitor:
         Returns:
             None
         """
+        self.REST = None
+        self.Auth = None
+        self.Job = None
+        self.Build = None
+
         self.color = {}
         self.decor = {}
 

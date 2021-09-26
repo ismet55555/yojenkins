@@ -145,7 +145,9 @@ disable=print-statement,
         exception-escape,
         comprehension-escape,
         logging-fstring-interpolation,
-        missing-module-docstring
+        missing-module-docstring,
+        no-value-for-parameter
+
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
