@@ -94,7 +94,7 @@ class Auth:
                        token_name: str = '',
                        server_base_url: str = '',
                        username: str = '',
-                       password: str = '') -> str:
+                       password: str = '') -> str:  # nosec
         """Generate a Jenkins server API token with the specified server/username
 
         Args:

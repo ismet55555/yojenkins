@@ -36,6 +36,11 @@ class Monitor:
         Returns:
             None
         """
+        self.REST = None
+        self.Auth = None
+        self.Job = None
+        self.Build = None
+
         self.color = {}
         self.decor = {}
 
@@ -150,7 +155,7 @@ class Monitor:
 
         Args:
             scr (obj): Handle for curses terminal screen handle
-        Returns: 
+        Returns:
             None
         """
         for status_item in Status:

@@ -28,7 +28,7 @@ ARG JENKINS_ADMIN_PASSWORD='password'
 
 
 # Image labels
-LABEL name="Jenkins Server" 
+LABEL name="Jenkins Server"
 LABEL contact="ismet.handzic@gmail.com"
 LABEL description="Jenkins server for development and testing"
 

@@ -1,3 +1,27 @@
 [build-system]
 requires = ["setuptools >= 43.0", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[tool.pytest.ini_options]
+addopts = "-p no:warnings"
+console_output_style = "classic"
+log_level = "INFO"
+log_format = '[%(filename)-22s:%(lineno)4s] %(message)s'
+log_cli = "true"
+log_file = "yo-jenkins_test_log.log"
+log_file_format = '[%(filename)-22s:%(lineno)4s] %(message)s'
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+
+[tool.isort]
+skip_gitignore = true
+multi_line_output = 3
+line_length = 100
+include_trailing_comma = true
+supported_extensions = [".py"]
+extend_skip = ["env", "venv", ".vscode", ".pytest_cache", "docs", "dev_things"]
+
+[tool.bandit]
+# tests = ["B105", "B107"]  # List of included tests
+skips = ["B101", "B105", "B107"]  # List skipped tests
+exclude = ['*_test.py', 'test_*.py', './tests', './dev_things']

@@ -30,7 +30,7 @@ def load_contents_from_local_file(file_type: str, local_file_path: str) -> Dict:
     Parameters:
         file_type (str)       : Type of file to be loaded ie. 'yaml', 'toml', 'json'
         local_file_path (str) : Path to a local TOML file to be loaded
-    Returns: 
+    Returns:
         file_contents (dict) : The contents of file
     """
     # TODO: Add default option to load file as plain text
@@ -70,7 +70,7 @@ def load_contents_from_remote_file_url(file_type: str, remote_file_url: str, all
         file_type (str)       : Type of file to be loaded ie. 'yaml', 'toml', 'json'
         remote_file_url (url)  : Remote URL location of file to be loaded
         allow_redirects (bool) : If True allow redirects to another URL (default True)
-    Returns: 
+    Returns:
         file_contents (Dict) : The contents of the file
     """
     file_type = file_type.lower()
@@ -300,7 +300,7 @@ def format_name(name: str) -> str:
 
     Details: The formatting includes it:
         - /Non-PAR/job/Non-Prod-Jobs/job/Something/job/job --> /Non-PAR/Non-Prod-Jobs/Something/job
-        - remove `job/`, `view/`, `change-requests/` 
+        - remove `job/`, `view/`, `change-requests/`
         - remove leading or trailing `/`
 
     Args:
@@ -500,14 +500,14 @@ def item_subitem_list(item_info: Dict,
 def to_seconds(time_quantity: int, time_unit_text: str) -> int:
     """
     Get the number of seconds form the time quantity and time unit type.
-    Examples: 
+    Examples:
         - 45 min -> 2700 seconds
         - 2 days -> 432000 seconds
 
     Parameters:
         time_quantity (int)  : Number of time units
         time_unit_text (str) : Type of time units (ie. seconds, minutes, hours, etc)
-    Returns: 
+    Returns:
         seconds (int) : Number of seconds
     """
     if not time_quantity:
@@ -678,7 +678,7 @@ def get_resource_path(relative_path: str) -> str:
 
 def get_project_dir(project_dir: str = 'yo_jenkins', sample_path: str = 'resources') -> str:
     """Getting the path to the directory containing project resources
-    
+
     Details:
         Effectively this function is looking through all possible package locations
     and checking if it contains a directory with the project name
@@ -834,7 +834,7 @@ def template_apply(string_template: str, is_json: bool = False, **kwargs) -> Uni
     Placeholder variables must be in the `${variable_name}` format.
 
     Details:
-        - Example of a string template: 
+        - Example of a string template:
             `'{
                 "credentials": {
                     "scope": "${domain}",
@@ -920,7 +920,7 @@ def run_groovy_script(script_filepath: str, json_return: bool, REST: object,
     # Check for yo-jenkins Groovy script error flag
     if "yo-jenkins groovy script failed" in script_result:
         groovy_return = eval(script_result.strip(os.linesep))
-        logger.debug(f'Failed to execute Groovy script')
+        logger.debug('Failed to execute Groovy script')
         logger.debug(f'Groovy Exception: {groovy_return[1]}')
         logger.debug(groovy_return[2])
         return {}, False
@@ -935,8 +935,8 @@ def run_groovy_script(script_filepath: str, json_return: bool, REST: object,
     if json_return:
         try:
             script_result = json.loads(script_result)
-        except JSONDecodeError as error:
-            logger.debug(f'Failed to parse response to JSON format')
+        except json.JSONDecodeError as error:
+            logger.debug('Failed to parse response to JSON format')
             return {}, False
 
     return script_result, True

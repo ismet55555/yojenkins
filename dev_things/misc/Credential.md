@@ -159,7 +159,7 @@ yo-jenkins credential create \
                     "$class": "org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl"
                 }
             }
-        ``` 
+        ```
 
 
 ## Domain information

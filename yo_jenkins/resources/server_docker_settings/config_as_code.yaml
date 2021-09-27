@@ -1,3 +1,7 @@
+# -*- mode: yaml -*-
+# vim: set filetype=yaml
+---
+
 ##############################################################################
 # Configuration as Code Jenkins Settings
 #
@@ -11,7 +15,7 @@
 #
 # NOTES:
 #   - Fine-grained user auth strategy: https://plugins.jenkins.io/matrix-auth/
-#   - More Jenkins user auth strategies: 
+#   - More Jenkins user auth strategies:
 #       -https://www.jenkins.io/doc/developer/extensions/jenkins-core/#authorizationstrategy
 #
 # TODO: Include webhook relay and/or generic webhook plugin

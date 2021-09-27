@@ -2,8 +2,12 @@
 
 import logging
 import os
+import platform
 from datetime import datetime
-from grp import getgrnam
+
+if platform.system() != "Windows":
+    from grp import getgrnam
+
 from time import perf_counter
 from typing import Tuple
 
@@ -316,7 +320,11 @@ class DockerJenkinsServer():
             TODO
         """
         # Getting docker group id (Unix only)
-        docker_gid = getgrnam('docker').gr_gid
+        if platform.system() != "Windows":
+            docker_gid = [getgrnam('docker').gr_gid]
+        else:
+            docker_gid = None
+
         logger.debug(f'Local docker service group id found: {docker_gid}')
 
         logger.debug(f'Creating and running container: {self.container_name} ...')
@@ -330,7 +338,7 @@ class DockerJenkinsServer():
                                               remove=self.container_remove,
                                               auto_remove=self.container_remove,
                                               detach=True,
-                                              group_add=[docker_gid])
+                                              group_add=docker_gid)
         except Exception as e:
             logger.debug(f'Failed to run container: {self.container_name} Exception: {e}')
             return '', ''

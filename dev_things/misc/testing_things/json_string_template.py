@@ -19,8 +19,6 @@ description = 'This is a test'
 #         }
 # pprint(json.dumps(CRED_USER_PASS))
 
-
-
 CRED_USER_PASS = '''{
     "credentials": {
         "scope": "${domain}",
@@ -32,10 +30,10 @@ CRED_USER_PASS = '''{
     }
 }'''
 t = Template(CRED_USER_PASS)
-out = t.substitute(domain = 'http://localhost:8000/',
-            username = 'admin',
-            password = 'password',
-            description = 'This is a test')
+out = t.substitute(domain='http://localhost:8000/',
+                   username='admin',
+                   password='password',
+                   description='This is a test')
 out_json = json.loads(out)
 pprint(out_json)
 

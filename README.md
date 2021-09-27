@@ -24,7 +24,7 @@
 </p>
 
 
-`yo-jenkins` is a cross-platform command line interface (CLI) tool to monitor, manage, and have fun with a Jenkins server. It makes it possible to interact with Jenkins server without using the browser based Jenkins UI. 
+`yo-jenkins` is a cross-platform command line interface (CLI) tool to monitor, manage, and have fun with a Jenkins server. It makes it possible to interact with Jenkins server without using the browser based Jenkins UI.
 
 This tool is able to be integrated into a script as middleware in order to automate Jenkins related tasks and enable Jenkins configuration as code.
 
@@ -122,7 +122,7 @@ See [Bug Reports](#bug-reports) and [Feature Requests](#feature-requests)
 Each top level command has sub-commands. For example, `yo-jenkins server` has sub-commands `server-deploy` and `server-start`. To see the sub-commands of a command, or to see the options of a command, use the `--help` option.
 
 ```txt
-                        YO-JENKINS (Version: 0.0.0) 
+                        YO-JENKINS (Version: 0.0.0)
 
   yo-jenkins is a tool that is focused on interfacing with Jenkins server from
   the comfort of the beloved command line.  This tool can also be used as a
@@ -169,7 +169,7 @@ In order to check/install a plugin, go to *Manage Jenkins > Manage Plugins > Ins
 
 # Local Jenkins Server Setup Using Docker
 
-`yo-jenkins` offers an easy way to quickly set up a local Jenkins server within a Docker container. This server is setup and ready to go to tinker with `yo-jenkins`. 
+`yo-jenkins` offers an easy way to quickly set up a local Jenkins server within a Docker container. This server is setup and ready to go to tinker with `yo-jenkins`.
 
 > **NOTE:** You must have Docker installed and running. See [Docker installation guide](dev_things/docker.md).
 

@@ -19,7 +19,7 @@ secondsTotal=15
 endTimeSeconds=$(( $(date +%s) + secondsTotal ))
 
 while [ $(date +%s) -lt $endTimeSeconds ];
-do 
+do
     currentTimeSeconds=$(date +%s)
     currentTimeFormatted=$(date +&quot;%T&quot;)
     endTimeFormatted=$(date -d@$endTimeSeconds -u +%T)

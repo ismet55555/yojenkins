@@ -7,10 +7,11 @@ import sys
 from pathlib import Path
 
 import click
+
 from yo_jenkins.cli import cli_utility as cu
-from yo_jenkins.cli.cli_utility import (CONFIG_DIR_NAME, HISTORY_FILE_NAME, log_to_history)
+from yo_jenkins.cli.cli_utility import CONFIG_DIR_NAME, HISTORY_FILE_NAME, log_to_history
 from yo_jenkins.Tools import Package, SharedLibrary
-from yo_jenkins.Utility.utility import (browser_open, html_clean, load_contents_from_local_file)
+from yo_jenkins.Utility.utility import browser_open, html_clean, load_contents_from_local_file
 
 # Getting the logger reference
 logger = logging.getLogger()
@@ -159,7 +160,7 @@ def rest_request(profile: str, request_text: str, request_type: str, raw: bool, 
         request_text (str): The text of the request to send
         request_type (str): The type of request to send
         raw (bool): Whether to return the raw response or formatted JSON
-        clean_html (bool): Whether to clean the HTML tags from the response 
+        clean_html (bool): Whether to clean the HTML tags from the response
 
     Returns:
         None
@@ -200,10 +201,10 @@ def rest_request(profile: str, request_text: str, request_type: str, raw: bool, 
 def run_script(profile: str, script_text: str, script_filepath: str, output_filepath: str) -> None:
     """TODO
 
-    Details: TODO: 
+    Details: TODO:
 
     Args:
-        TODO 
+        TODO
 
     Returns:
         None

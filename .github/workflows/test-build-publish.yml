@@ -1,6 +1,6 @@
 name: Testing, Building, and Publishing
 
-on: 
+on:
   push:
     branches:
       - main

@@ -99,7 +99,7 @@ Also, note that as of now there are no sufficient tests setup (ie. pytest, unite
     - `--dev` - Install the package for the dev environment only
 
 2. Check `Pipfile` if the package was added
-   
+
 3. Lock `Pipfile.lock`
     - `pipenv lock`
     - `--clear` - Clears caches (pipenv, pip, and pip-tools)

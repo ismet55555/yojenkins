@@ -10,7 +10,7 @@ DOCKER_SETUP=${5:-true}
 
 # Checking if the user is root
 if [[ $EUID -ne 0 ]]; then
-   echo "This script must be run as root. Did you forget 'sudo'?" 
+   echo "This script must be run as root. Did you forget 'sudo'?"
    exit 1
 fi
 
@@ -63,7 +63,7 @@ NEW_USER_PUB_KEY_LOCATION="/home/jenkins/.ssh/authorized_keys"
 if test -f "$SSH_PUBLIC_KEY"; then
     echo "Copying contents of '$SSH_PUBLIC_KEY' into new location '$NEW_USER_PUB_KEY_LOCATION' ..."
     cat $SSH_PUBLIC_KEY >> $NEW_USER_PUB_KEY_LOCATION
-else 
+else
     echo "Adding new SSH public key into '$NEW_USER_PUB_KEY_LOCATION' ..."
     echo "Public SSH key passed: $SSH_PUBLIC_KEY"
     echo $SSH_PUBLIC_KEY >> $NEW_USER_PUB_KEY_LOCATION
@@ -86,4 +86,3 @@ fi
 
 echo
 echo "Done!"
-

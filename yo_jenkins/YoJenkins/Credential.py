@@ -34,7 +34,7 @@ class Credential():
     @staticmethod
     def _get_folder_store(folder: str) -> Tuple[str, str]:
         """Utility method to get credential folder name and domain
-        
+
         Args:
             folder: folder name or url
 
@@ -58,7 +58,7 @@ class Credential():
     @staticmethod
     def _get_domain(domain: str) -> str:
         """Utility method to get credential domain name
-        
+
         Args:
             domain: Credential domain name
 
@@ -93,7 +93,7 @@ class Credential():
             # Folder
             credential_index = parsed_path.index('credentials')
             if credential_index > 2:
-                logger.debug(f'Failed to parse the credential URL. "credentials" keyword in URL in wrong position')
+                logger.debug('Failed to parse the credential URL. "credentials" keyword in URL in wrong position')
                 return "", "", ""
             elif credential_index == 2:
                 folder = "job/" + parsed_path[credential_index - 1]
@@ -191,7 +191,7 @@ class Credential():
 
         # Check if credential is a url or name/ID
         if utility.is_full_url(credential):
-            logger.debug(f'Using direct credential URL ...')
+            logger.debug('Using direct credential URL ...')
             target = f'{credential.strip("/")}/api/json'
             is_endpoint = False
 
@@ -338,6 +338,7 @@ class Credential():
         """
         logger.debug(f'Opening and reading file: {config_file} ...')
         try:
+            # FIXME: Use context manager to open file (with)
             config_file = open(config_file, 'rb')
             credential_config = config_file.read()
         except (OSError, IOError) as error:
