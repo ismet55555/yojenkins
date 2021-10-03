@@ -12,9 +12,9 @@ import click
 import toml
 from jenkins import Jenkins as JenkinsSDK
 
-from yo_jenkins.Utility import utility
-from yo_jenkins.Utility.utility import TextStyle
-from yo_jenkins.YoJenkins.rest import REST
+from yo_jenkins.utility import utility
+from yo_jenkins.utility.utility import TextStyle
+from yo_jenkins.yojenkins.rest import REST
 
 # Getting the logger reference
 logger = logging.getLogger()

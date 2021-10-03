@@ -2,15 +2,15 @@
 
 import logging
 
-from yo_jenkins.YoJenkins.account import Account
-from yo_jenkins.YoJenkins.build import Build
-from yo_jenkins.YoJenkins.credential import Credential
-from yo_jenkins.YoJenkins.folder import Folder
-from yo_jenkins.YoJenkins.job import Job
-from yo_jenkins.YoJenkins.node import Node
-from yo_jenkins.YoJenkins.server import Server
-from yo_jenkins.YoJenkins.stage import Stage
-from yo_jenkins.YoJenkins.step import Step
+from yo_jenkins.yojenkins.account import Account
+from yo_jenkins.yojenkins.build import Build
+from yo_jenkins.yojenkins.credential import Credential
+from yo_jenkins.yojenkins.folder import Folder
+from yo_jenkins.yojenkins.job import Job
+from yo_jenkins.yojenkins.node import Node
+from yo_jenkins.yojenkins.server import Server
+from yo_jenkins.yojenkins.stage import Stage
+from yo_jenkins.yojenkins.step import Step
 
 # Getting the logger reference
 logger = logging.getLogger()

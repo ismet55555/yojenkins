@@ -3,7 +3,7 @@
 import logging
 import os
 
-from yo_jenkins.Utility import utility
+from yo_jenkins.utility import utility
 
 # Getting the logger reference
 logger = logging.getLogger()

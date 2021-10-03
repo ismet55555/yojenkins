@@ -4,7 +4,7 @@ import logging
 import os
 from typing import Tuple
 
-from yo_jenkins.Utility import utility
+from yo_jenkins.utility import utility
 
 # Getting the logger reference
 logger = logging.getLogger()

@@ -11,10 +11,10 @@ from urllib.parse import urlencode
 import jenkins
 import xmltodict
 
-from yo_jenkins.Monitor import JobMonitor
-from yo_jenkins.Utility import utility
-from yo_jenkins.YoJenkins.jenkins_item_classes import JenkinsItemClasses
-from yo_jenkins.YoJenkins.jenkins_item_config import JenkinsItemConfig
+from yo_jenkins.monitor import JobMonitor
+from yo_jenkins.utility import utility
+from yo_jenkins.yojenkins.jenkins_item_classes import JenkinsItemClasses
+from yo_jenkins.yojenkins.jenkins_item_config import JenkinsItemConfig
 
 # Getting the logger reference
 logger = logging.getLogger()

@@ -8,9 +8,9 @@ import threading
 # from pprint import pprint
 from time import perf_counter, sleep, time
 
-from yo_jenkins.Monitor.monitor import Monitor
-from yo_jenkins.Utility.utility import get_resource_path
-from yo_jenkins.YoJenkins.status import StageStatus, Status
+from yo_jenkins.monitor.monitor import Monitor
+from yo_jenkins.utility.utility import get_resource_path
+from yo_jenkins.yojenkins.status import StageStatus, Status
 
 from . import monitor_utility as mu
 

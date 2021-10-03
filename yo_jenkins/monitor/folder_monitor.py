@@ -3,7 +3,7 @@
 # import curses
 import logging
 
-from yo_jenkins.Monitor.monitor import Monitor
+from yo_jenkins.monitor.monitor import Monitor
 
 # Getting the logger reference
 logger = logging.getLogger()

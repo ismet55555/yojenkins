@@ -10,8 +10,8 @@ from typing import Dict, Tuple
 from json2xml import json2xml
 from urllib3.util import parse_url
 
-from yo_jenkins.Utility import utility
-from yo_jenkins.YoJenkins.jenkins_item_template import JenkinsItemTemplate
+from yo_jenkins.utility import utility
+from yo_jenkins.yojenkins.jenkins_item_template import JenkinsItemTemplate
 
 # Getting the logger reference
 logger = logging.getLogger()

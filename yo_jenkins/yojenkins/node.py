@@ -7,8 +7,8 @@ from typing import Tuple
 
 import xmltodict
 
-from yo_jenkins.Utility import utility
-from yo_jenkins.YoJenkins.jenkins_item_classes import JenkinsItemClasses
+from yo_jenkins.utility import utility
+from yo_jenkins.yojenkins.jenkins_item_classes import JenkinsItemClasses
 
 # Getting the logger reference
 logger = logging.getLogger()

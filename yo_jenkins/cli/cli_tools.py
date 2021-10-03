@@ -10,8 +10,8 @@ import click
 
 from yo_jenkins.cli import cli_utility as cu
 from yo_jenkins.cli.cli_utility import CONFIG_DIR_NAME, HISTORY_FILE_NAME, log_to_history
-from yo_jenkins.Tools import Package, SharedLibrary
-from yo_jenkins.Utility.utility import browser_open, html_clean, load_contents_from_local_file
+from yo_jenkins.tools import Package, SharedLibrary
+from yo_jenkins.utility.utility import browser_open, html_clean, load_contents_from_local_file
 
 # Getting the logger reference
 logger = logging.getLogger()

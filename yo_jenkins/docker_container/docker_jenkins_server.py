@@ -10,11 +10,11 @@ if platform.system() != "Windows":
     from grp import getgrnam
 
 from time import perf_counter
-from typing import Tuple
+from typing import Any, Dict, Tuple
 
 import docker
 
-from yo_jenkins.Utility.utility import get_resource_path
+from yo_jenkins.utility.utility import get_resource_path
 
 # Getting the logger reference
 logger = logging.getLogger()
@@ -128,7 +128,7 @@ class DockerJenkinsServer():
         Returns:
             TODO
         """
-        deployed = {}
+        deployed: Dict[str, Any] = {}
 
         if not self.docker_client:
             if not self.docker_client_init():

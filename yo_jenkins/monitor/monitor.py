@@ -15,9 +15,8 @@ if platform.system() != "Windows":
 else:
     import winsound
 
-from yo_jenkins.YoJenkins.status import Color, Sound, Status
+from yo_jenkins.yojenkins.status import Color, Sound, Status
 
-# from ..YoJenkins.Status import Color, Sound, Status
 from . import monitor_utility as mu
 
 # Getting the logger reference

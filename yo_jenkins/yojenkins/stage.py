@@ -6,8 +6,8 @@ import threading
 from datetime import datetime, timedelta
 from typing import Dict, Tuple
 
-from yo_jenkins.Utility import utility
-from yo_jenkins.YoJenkins.status import StageStatus
+from yo_jenkins.utility import utility
+from yo_jenkins.yojenkins.status import StageStatus
 
 # Getting the logger reference
 logger = logging.getLogger()
