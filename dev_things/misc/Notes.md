@@ -24,7 +24,7 @@
 
 
 
-- yo-jenkins server server-deploy
+- yojenkins server server-deploy
   - Output progress, progress bar ... look in to click add-on
 
 
@@ -115,13 +115,13 @@
     - https://stackoverflow.com/questions/2919878/git-rewrite-previous-commit-usernames-and-emails
     - https://docs.github.com/en/github/setting-up-and-managing-your-github-profile/managing-contribution-graphs-on-your-profile/why-are-my-contributions-not-showing-up-on-my-profile#contributions-that-are-counted
 
-- yo-jenkins auth wipe [HOLD OFF, DO LATER]
+- yojenkins auth wipe [HOLD OFF, DO LATER]
 
 - Waiting spinning thingy [ HOLD OFF, DO LATER ]
     - OR click progress bar: https://click.palletsprojects.com/en/7.x/utils/#showing-progress-bars
 
 - Add "ey-yo" to "step" -> "'sup" ASCII sign [ HOLD OFF, DO LATER ]
-  - yo-jenkins yo ey-yo
+  - yojenkins yo ey-yo
 
 
 
@@ -129,7 +129,7 @@
 ### Zip For Moving
 ```
 ZIP_NAME='a-6.zip' && \
-zip -r $ZIP_NAME ./yo-jenkins -x \
+zip -r $ZIP_NAME ./yojenkins -x \
     "**/.git/*" \
     "**/.VSCodeCounter/*" \
     "**/env/*" \
@@ -143,7 +143,7 @@ zip -r $ZIP_NAME ./yo-jenkins -x \
 ### Zip for Testing
 ```
 ZIP_NAME='for_testing.zip' && \
-zip -r $ZIP_NAME ./yo-jenkins -x \
+zip -r $ZIP_NAME ./yojenkins -x \
     "**/.git/*" \
     "**/.VSCodeCounter/*" \
     "**/env/*" \

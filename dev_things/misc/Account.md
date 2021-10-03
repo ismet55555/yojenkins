@@ -86,7 +86,7 @@ TODO
 
 
 ```
-yo-jenkins user create \
+yojenkins user create \
     --admin \
     --password XXXX \
     --username XXXX

@@ -2,7 +2,7 @@
 
 println('==== Sample Script ====')
 
-someText = "Hello yo-jenkins!"
+someText = "Hello yojenkins!"
 println(someText)
 
 x = 3

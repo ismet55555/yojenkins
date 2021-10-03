@@ -28,10 +28,10 @@ repos:
       - id: trailing-whitespace
       - id: end-of-file-fixer
       - id: check-docstring-first
-      - id: check-json  # This hook checks json files for parseable syntax.
-      - id: check-yaml  # This hook checks yaml files for parseable syntax.
-      - id: check-toml  # This hook checks toml files for parseable syntax.
-      - id: name-tests-test  # This verifies that test files are named correctly
+      - id: check-json
+      - id: check-yaml
+      - id: check-toml
+      - id: name-tests-test
 
 
   - repo: https://github.com/pre-commit/mirrors-yapf
@@ -63,4 +63,4 @@ repos:
       - id: pylint
         # verbose: true
         name: Python Code Linting (pylint)
-        args: ["--ignore=dev_things"]
+        args: ["--ignore=dev_things", "--fail-under=8.0"]

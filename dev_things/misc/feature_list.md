@@ -141,7 +141,7 @@ Point to remote logs or local logs
 
 ## yo
     - set of custom functionalities
-    - yo-jenkins yo
+    - yojenkins yo
       - get <URL>
       - post <URL>
       - --header

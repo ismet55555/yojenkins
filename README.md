@@ -1,36 +1,36 @@
 <p align="center"><img width="120
-" alt="portfolio_view" src="https://raw.githubusercontent.com/ismet55555/yo-jenkins/main/dev_things/assets/logo_final.png"></p>
-<h1 align="center">yo-jenkins</h1>
+" alt="portfolio_view" src="https://raw.githubusercontent.com/ismet55555/yojenkins/main/dev_things/assets/logo_final.png"></p>
+<h1 align="center">yojenkins</h1>
 
 
 <p align="center">
 
-<a href="https://pypi.org/project/yo-jenkins/">
-  <img alt="PYPI Version" src="https://img.shields.io/pypi/v/yo-jenkins?color=blue">
+<a href="https://pypi.org/project/yojenkins/">
+  <img alt="PYPI Version" src="https://img.shields.io/pypi/v/yojenkins?color=blue">
 </a>
 
-<a href="https://pypi.org/project/yo-jenkins/">
-  <img alt="Python Versions" src="https://img.shields.io/pypi/pyversions/yo-jenkins">
+<a href="https://pypi.org/project/yojenkins/">
+  <img alt="Python Versions" src="https://img.shields.io/pypi/pyversions/yojenkins">
 </a>
 
-<a href="https://pypi.org/project/yo-jenkins/">
-  <img alt="PYPI Status" src="https://img.shields.io/pypi/status/yo-jenkins">
+<a href="https://pypi.org/project/yojenkins/">
+  <img alt="PYPI Status" src="https://img.shields.io/pypi/status/yojenkins">
 </a>
 
-<a href="https://github.com/ismet55555/yo-jenkins/blob/main/LICENSE">
-  <img alt="Licence" src="https://img.shields.io/github/license/ismet55555/yo-jenkins">
+<a href="https://github.com/ismet55555/yojenkins/blob/main/LICENSE">
+  <img alt="Licence" src="https://img.shields.io/github/license/ismet55555/yojenkins">
 </a>
 
 </p>
 
 
-`yo-jenkins` is a cross-platform command line interface (CLI) tool to monitor, manage, and have fun with a Jenkins server. It makes it possible to interact with Jenkins server without using the browser based Jenkins UI.
+`yojenkins` is a cross-platform command line interface (CLI) tool to monitor, manage, and have fun with a Jenkins server. It makes it possible to interact with Jenkins server without using the browser based Jenkins UI.
 
 This tool is able to be integrated into a script as middleware in order to automate Jenkins related tasks and enable Jenkins configuration as code.
 
-> `yo-jenkins` will liberate you and your browser from the Jenkins Web UI
+> `yojenkins` will liberate you and your browser from the Jenkins Web UI
 
-With `yo-jenkins` you can manage:
+With `yojenkins` you can manage:
 
 - **Authentication**: *Authentication structure similar to AWS CLI*
 - **Server**: *Create, shutdown, view queue, and more*
@@ -71,29 +71,29 @@ See [Bug Reports](#bug-reports) and [Feature Requests](#feature-requests)
 
 - **(Optional)** Start up a local Jenkins server using Docker
   - ```sh
-    yo-jenkins server server-deploy
+    yojenkins server server-deploy
     ```
 
-- Configure your first profile. Profiles are stored in the home directory in the `.yo-jenkins` directory
+- Configure your first profile. Profiles are stored in the home directory in the `.yojenkins` directory
   - ```sh
-    yo-jenkins auth configure
+    yojenkins auth configure
     ```
 
 - Generate a Jenkins server API token and add it to your first profile
   - ```sh
-    yo-jenkins auth token --profile <PROFILE NAME>
+    yojenkins auth token --profile <PROFILE NAME>
     ```
 
 - Verify that you can access the Jenkins server
   - ```sh
-    yo-jenkins auth verify
+    yojenkins auth verify
     ```
 - Now start trying some things
   - ```sh
-    Get sever info:       yo-jenkins server info
-    Get your user info:   yo-jenkins auth user --pretty
-    Search a job:         yo-jenkins job search some-job-name --fullname --yaml --list
-    Monitor a build:      yo-jenkins build monitor some-job-name --latest --sound
+    Get sever info:       yojenkins server info
+    Get your user info:   yojenkins auth user --pretty
+    Search a job:         yojenkins job search some-job-name --fullname --yaml --list
+    Monitor a build:      yojenkins build monitor some-job-name --latest --sound
     ```
 
 # Installation
@@ -106,10 +106,10 @@ See [Bug Reports](#bug-reports) and [Feature Requests](#feature-requests)
      | CentOS             | `sudo yum update && yum install -y python3-devel gcc alsa-lib-devel`           	|
 
 
-2. Install `yo-jenkins`
+2. Install `yojenkins`
     - **Option 1 (Recommended):** Install from Python Package Index (PYPI) using `pip`
       - ```bash
-        pip install yo-jenkins
+        pip install yojenkins
         ```
 
    - **Option 2:** Download all files from this GitHub repository and install using the included `setup.py`
@@ -119,22 +119,22 @@ See [Bug Reports](#bug-reports) and [Feature Requests](#feature-requests)
 
 # Usage
 
-Each top level command has sub-commands. For example, `yo-jenkins server` has sub-commands `server-deploy` and `server-start`. To see the sub-commands of a command, or to see the options of a command, use the `--help` option.
+Each top level command has sub-commands. For example, `yojenkins server` has sub-commands `server-deploy` and `server-start`. To see the sub-commands of a command, or to see the options of a command, use the `--help` option.
 
 ```txt
-                        YO-JENKINS (Version: 0.0.0)
+                        YOJENKINS (Version: 0.0.0)
 
-  yo-jenkins is a tool that is focused on interfacing with Jenkins server from
+  yojenkins is a tool that is focused on interfacing with Jenkins server from
   the comfort of the beloved command line.  This tool can also be used as a
   middleware utility, generating and passing Jenkins information or automating
   tasks.
 
   QUICK START:
 
-    1. Configure yo profile:  yo-jenkins auth configure
-    2. Add yo API token:      yo-jenkins auth token --profile <PROFILE NAME>
-    3. Verify yo creds:       yo-jenkins auth verify
-    4. Explore yo-jenkins
+    1. Configure yo profile:  yojenkins auth configure
+    2. Add yo API token:      yojenkins auth token --profile <PROFILE NAME>
+    3. Verify yo creds:       yojenkins auth verify
+    4. Explore yojenkins
 
 Options:
   -v, --version  Show the version
@@ -156,7 +156,7 @@ Commands:
 
 # Jenkins Plugin Requirements
 
-If you are using `yo-jenkins` on a pre-existing Jenkins server, make sure that the following Jenkins plugin are installed for `yo-jenkins` to use all its functionalities. However, these plugins tend to be installed by default.
+If you are using `yojenkins` on a pre-existing Jenkins server, make sure that the following Jenkins plugin are installed for `yojenkins` to use all its functionalities. However, these plugins tend to be installed by default.
 
 In order to check/install a plugin, go to *Manage Jenkins > Manage Plugins > Installed OR Available*
 
@@ -169,13 +169,13 @@ In order to check/install a plugin, go to *Manage Jenkins > Manage Plugins > Ins
 
 # Local Jenkins Server Setup Using Docker
 
-`yo-jenkins` offers an easy way to quickly set up a local Jenkins server within a Docker container. This server is setup and ready to go to tinker with `yo-jenkins`.
+`yojenkins` offers an easy way to quickly set up a local Jenkins server within a Docker container. This server is setup and ready to go to tinker with `yojenkins`.
 
 > **NOTE:** You must have Docker installed and running. See [Docker installation guide](dev_things/docker.md).
 
 Run the following command to set up a local Jenkins server:
 ```bash
-yo-jenkins server server-deploy
+yojenkins server server-deploy
 ```
 
 Use `--help` for available options, and use `--debug` to troubleshoot any issues.
@@ -190,21 +190,21 @@ As with any other software, issues do come up during various usage scenarios tha
 
 Please report and bugs and odd behaviors with either of these:
 
-- Online at [GitHub Issues](https://github.com/ismet55555/yo-jenkins/issues/new?assignees=&labels=&template=bug_report.md&title=)
--  `yo-jenkins tools bug-report`
+- Online at [GitHub Issues](https://github.com/ismet55555/yojenkins/issues/new?assignees=&labels=&template=bug_report.md&title=)
+-  `yojenkins tools bug-report`
 
-If possible, please include the command that caused the issue, running it with the `--debug` option. For example, `yo-jenkins server server-deploy --debug`
+If possible, please include the command that caused the issue, running it with the `--debug` option. For example, `yojenkins server server-deploy --debug`
 
-Note, that your issue may already be in queue, so please check the project [FIXME](https://github.com/ismet55555/yo-jenkins/projects/2).
+Note, that your issue may already be in queue, so please check the project [FIXME](https://github.com/ismet55555/yojenkins/projects/2).
 
 # Feature Requests
 
 This is a very young project, and we are always looking for new features and improvements. Please feel free to open an issue and suggest a feature. Please be as specific as possible, and include as much information as possible.
 
-- Online at [GitHub Feature Request](https://github.com/ismet55555/yo-jenkins/issues/new?assignees=&labels=&template=feature_request.md&title=)
-- `yo-jenkins tools feature-request`
+- Online at [GitHub Feature Request](https://github.com/ismet55555/yojenkins/issues/new?assignees=&labels=&template=feature_request.md&title=)
+- `yojenkins tools feature-request`
 
-Note, your suggestion may be part of the Project plan, so be sure to check the [TODO](https://github.com/ismet55555/yo-jenkins/projects/1) to see if it is already planned.
+Note, your suggestion may be part of the Project plan, so be sure to check the [TODO](https://github.com/ismet55555/yojenkins/projects/1) to see if it is already planned.
 
 
 # Contributing
@@ -213,7 +213,7 @@ This project is an on-going effort, slowly adding various features and improveme
 
 > **Any help, ideas, or user testing is much appreciated!**
 
-There is definitely work to be done. If you don't happen to have a great genius idea for the next big change, or if you spot an issue you are able to fix, please checkout the [TODO](https://github.com/ismet55555/yo-jenkins/projects/1) and [FIXME](https://github.com/ismet55555/yo-jenkins/projects/2) or add your own ideas. For guides and information on how to get started and help out, check out the `dev_things` directory.
+There is definitely work to be done. If you don't happen to have a great genius idea for the next big change, or if you spot an issue you are able to fix, please checkout the [TODO](https://github.com/ismet55555/yojenkins/projects/1) and [FIXME](https://github.com/ismet55555/yojenkins/projects/2) or add your own ideas. For guides and information on how to get started and help out, check out the `dev_things` directory.
 
 ## Contributors
 

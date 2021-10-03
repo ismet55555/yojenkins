@@ -5,13 +5,11 @@
         },
         "pipfile-spec": 6,
         "requires": {},
-        "sources": [
-            {
-                "name": "pypi",
-                "url": "https://pypi.org/simple",
-                "verify_ssl": true
-            }
-        ]
+        "sources": [{
+            "name": "pypi",
+            "url": "https://pypi.org/simple",
+            "verify_ssl": true
+        }]
     },
     "default": {
         "certifi": {
@@ -734,7 +732,7 @@
             "index": "pypi",
             "version": "==0.31.0"
         },
-        "yo-jenkins": {
+        "yojenkins": {
             "editable": true,
             "path": "."
         },
