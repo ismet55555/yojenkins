@@ -9,7 +9,7 @@ from datetime import datetime
 from inspect import getfullargspec
 from pathlib import Path
 from shlex import quote
-from typing import Type
+from typing import Callable
 
 import click
 import toml
@@ -87,7 +87,7 @@ def platform_information() -> None:
     logger.debug(f'    - Python:    {platform.python_version()} {python_rev}')
 
 
-def config_yo_jenkins(profile: str) -> Type[YoJenkins]:
+def config_yo_jenkins(profile: str) -> YoJenkins:
     """TODO Docstring
 
     Args:
@@ -194,7 +194,7 @@ def server_target_check(target: str) -> bool:
     pass
 
 
-def log_to_history(decorated_function) -> None:
+def log_to_history(decorated_function) -> Callable:
     """This function decorates a function that is a cli command.
     The function will log the CLI command and its info to the command history.
 
