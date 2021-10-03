@@ -12,7 +12,7 @@ logger = logging.getLogger()
 class Server():
     """TODO Server"""
 
-    def __init__(self, REST, Auth) -> None:
+    def __init__(self, rest, auth) -> None:
         """Object constructor method, called at object creation
 
         Args:
@@ -21,10 +21,10 @@ class Server():
         Returns:
             None
         """
-        self.REST = REST
-        self.Auth = Auth
+        self.rest = rest
+        self.auth = auth
 
-        self.server_base_url = self.Auth.jenkins_profile['jenkins_server_url']
+        self.server_base_url = auth.jenkins_profile['jenkins_server_url']
 
     def info(self) -> Dict:
         """Get the server information
@@ -37,7 +37,7 @@ class Server():
         Returns:
             Server information
         """
-        return self.REST.request('api/json', 'get')[0]
+        return self.rest.request('api/json', 'get')[0]
 
     def people(self) -> Tuple[list, list]:
         """Get the list of plugins installed on the server
@@ -50,7 +50,7 @@ class Server():
         """
         logger.debug(f'Getting all installed server plugins for "{self.server_base_url}" ...')
 
-        people_info, _, success = self.REST.request('asynchPeople/api/json?depth=1', 'get', is_endpoint=True)
+        people_info, _, success = self.rest.request('asynchPeople/api/json?depth=1', 'get', is_endpoint=True)
         if not success:
             logger.debug('Failed to fetch server plugin information')
             return [], []
@@ -74,7 +74,7 @@ class Server():
         logger.debug(f'Requesting build queue info for "{self.server_base_url}" ...')
 
         # Making the request
-        return_content = self.REST.request('queue/api/json', 'get')[0]
+        return_content = self.rest.request('queue/api/json', 'get')[0]
         if not return_content:
             logger.debug('Failed to get server queue info. Check access and permissions for this endpoint')
         return return_content
@@ -112,7 +112,7 @@ class Server():
         """
         logger.debug(f'Getting all installed server plugins for "{self.server_base_url}" ...')
 
-        plugins_info, _, success = self.REST.request('pluginManager/api/json?depth=2', 'get', is_endpoint=True)
+        plugins_info, _, success = self.rest.request('pluginManager/api/json?depth=2', 'get', is_endpoint=True)
         if not success:
             logger.debug('Failed to fetch server plugin information')
             return [], []
@@ -145,7 +145,7 @@ class Server():
             TODO
         """
         logger.debug("Initiating server force restart ..." if force else "Initiating server safe restart ...")
-        _, _, success = self.REST.request('restart' if force else 'safeRestart',
+        _, _, success = self.rest.request('restart' if force else 'safeRestart',
                                           'post',
                                           is_endpoint=True,
                                           json_content=True,
@@ -165,7 +165,7 @@ class Server():
             TODO
         """
         logger.debug("Initiating server force shutdown ..." if force else "Initiating server safe shutdown ...")
-        _, _, success = self.REST.request('exit' if force else 'safeExit',
+        _, _, success = self.rest.request('exit' if force else 'safeExit',
                                           'post',
                                           is_endpoint=True,
                                           json_content=False,
@@ -185,7 +185,7 @@ class Server():
             TODO
         """
         logger.debug("Disabeling server quiet mode ..." if off else "Enabling server quiet mode ...")
-        _, _, success = self.REST.request('cancelQuietDown' if off else 'quietDown',
+        _, _, success = self.rest.request('cancelQuietDown' if off else 'quietDown',
                                           'post',
                                           is_endpoint=True,
                                           json_content=True,

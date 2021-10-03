@@ -19,7 +19,7 @@
     - See `cli/cli_tools` -> `run_script()`
     - ```python
         # Send the request to the server
-        content, header, success = jy_obj.REST.request(target='scriptText',
+        content, header, success = yj_obj.Rest.request(target='scriptText',
                                                     request_type='post',
                                                     data={'script': script},
                                                     json_content=False)

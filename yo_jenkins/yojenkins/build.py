@@ -21,7 +21,7 @@ logger = logging.getLogger()
 class Build():
     """TODO Build"""
 
-    def __init__(self, REST, Auth) -> None:
+    def __init__(self, rest, auth) -> None:
         """Object constructor method, called at object creation
 
         Args:
@@ -30,9 +30,9 @@ class Build():
         Returns:
             None
         """
-        self.REST = REST
-        self.Auth = Auth
-        self.BM = BuildMonitor(REST, Auth, self)
+        self.rest = rest
+        self.auth = auth
+        self.build_monitor = BuildMonitor(rest, auth, self)
 
         self.build_logs_extension = ".log"
 
@@ -53,7 +53,7 @@ class Build():
         if build_url:
             # Making a direct request using the passed url
             request_url = f"{build_url.strip('/')}/api/json"
-            build_info = self.REST.request(request_url, 'get', is_endpoint=False)[0]
+            build_info = self.rest.request(request_url, 'get', is_endpoint=False)[0]
             if not build_info:
                 logger.debug('Failed to get build info')
                 return {}
@@ -63,9 +63,9 @@ class Build():
                 return {}
 
             if job_name and not job_url:
-                job_url = utility.name_to_url(self.REST.get_server_url(), job_name)
+                job_url = utility.name_to_url(self.rest.get_server_url(), job_name)
 
-            job_info, _, success = self.REST.request(f'{job_url.strip("/")}/api/json', 'get', is_endpoint=False)
+            job_info, _, success = self.rest.request(f'{job_url.strip("/")}/api/json', 'get', is_endpoint=False)
             if not success:
                 logger.debug(f'Failed to find job info: {job_url}')
                 return {}
@@ -96,7 +96,7 @@ class Build():
                     return {}
 
             logger.debug(f'Getting build info for job "{job_info["fullName"]}, build {build_number} ...')
-            build_info, _, success = self.REST.request(f'{job_url.strip("/")}/{build_number}/api/json',
+            build_info, _, success = self.rest.request(f'{job_url.strip("/")}/{build_number}/api/json',
                                                        'get',
                                                        is_endpoint=False)
             if not success:
@@ -199,7 +199,7 @@ class Build():
             logger.debug(f'Job name: {job_name}')
 
             # Requesting all queue and searching queue (NOTE: Could use Server object)
-            queue_all = self.REST.request('queue/api/json', 'get')[0]
+            queue_all = self.rest.request('queue/api/json', 'get')[0]
             logger.debug(f"Number of queued items: {len(queue_all['items'])}")
             queue_matches = utility.queue_find(queue_all, job_name=job_name, job_url=job_url)
             if not queue_matches:
@@ -253,7 +253,7 @@ class Build():
         # Making a direct request using the passed url
         logger.debug(f'Aborting build: {url} ...')
         request_url = f"{url.strip('/')}/stop"
-        if not self.REST.request(request_url, 'post', is_endpoint=False)[2]:
+        if not self.rest.request(request_url, 'post', is_endpoint=False)[2]:
             logger.debug('Failed to abort build. Build may not exist or is queued')
             return 0
 
@@ -291,7 +291,7 @@ class Build():
         # Making a direct request using the passed url
         logger.debug(f'Deleting build: {url} ...')
         request_url = f"{url.strip('/')}/doDelete"
-        if not self.REST.request(request_url, 'post', is_endpoint=False)[2]:
+        if not self.rest.request(request_url, 'post', is_endpoint=False)[2]:
             logger.debug('Failed to delete build. Build may not exist or is queued')
             return 0
 
@@ -327,7 +327,7 @@ class Build():
         # Making a direct request using the passed url
         logger.debug(f'Getting build stages for: {build_url} ...')
         request_url = f"{build_url.strip('/')}/wfapi/describe"
-        return_content, _, return_success = self.REST.request(request_url, 'get', is_endpoint=False)
+        return_content, _, return_success = self.rest.request(request_url, 'get', is_endpoint=False)
         if not return_success or not return_content:
             logger.debug('Failed to get build stages. Build may not exist, is queued, or is not a staged build')
             return [], []
@@ -417,7 +417,7 @@ class Build():
 
         if download_dir:
             # Download to local file
-            auth = requests.auth.HTTPBasicAuth(self.REST.username, self.REST.api_token)
+            auth = requests.auth.HTTPBasicAuth(self.rest.username, self.rest.api_token)
             filename = f'build-logs_{datetime.now().strftime("%m-%d-%Y_%I-%M-%S")}{self.build_logs_extension}'
             logger.debug(f'Downloading console text logs to local file "{filename}" ...')
             try:
@@ -435,7 +435,7 @@ class Build():
             # Stream the logs to console
             if not follow:
                 logger.debug('Fetching logs from server ...')
-                return_content, _, return_success = self.REST.request(request_url,
+                return_content, _, return_success = self.rest.request(request_url,
                                                                       'get',
                                                                       is_endpoint=False,
                                                                       json_content=False)
@@ -460,12 +460,12 @@ class Build():
                 logger.debug(
                     'NOTE: Jenkins server does not support requesting partial byte ranges, MUST download entire log to get log message differences'
                 )
-                auth = requests.auth.HTTPBasicAuth(self.REST.username, self.REST.api_token)
+                auth = requests.auth.HTTPBasicAuth(self.rest.username, self.rest.api_token)
                 old_dict = {}
                 fetch_number = 1
                 try:
                     while True:
-                        # FIXME: Preserve already used session!  Use REST object
+                        # FIXME: Preserve already used session!  Use Rest object
                         response = requests.head(request_url, auth=auth)
                         if 'content-length' not in response.headers:
                             logger.debug(
@@ -480,7 +480,7 @@ class Build():
                         if content_length_diff:
                             logger.debug(
                                 f'FETCH {fetch_number}: Content length difference: {content_length_diff} bytes')
-                            return_content, _, return_success = self.REST.request(request_url,
+                            return_content, _, return_success = self.rest.request(request_url,
                                                                                   'get',
                                                                                   is_endpoint=False,
                                                                                   json_content=False)
@@ -564,7 +564,7 @@ class Build():
             url = build_info['url']
 
         logger.debug(f'Starting monitor for: "{url}" ...')
-        success = self.BM.monitor_start(build_url=url, sound=sound)
+        success = self.build_monitor.monitor_start(build_url=url, sound=sound)
         if success:
             logger.debug('Successfully opened monitor')
         else:

@@ -31,7 +31,7 @@ def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profil
                         bold=True))
         sys.exit(1)
 
-    jy_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile)
 
     # Verify URLs
     if build_url:
@@ -44,9 +44,9 @@ def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profil
 
     # Request the data
     if valid_url_format:
-        data = jy_obj.Build.info(build_url=build_url, job_url=job, build_number=build_number, latest=latest)
+        data = yj_obj.build.info(build_url=build_url, job_url=job, build_number=build_number, latest=latest)
     else:
-        data = jy_obj.Build.info(build_url=build_url, job_name=job, build_number=build_number, latest=latest)
+        data = yj_obj.build.info(build_url=build_url, job_name=job, build_number=build_number, latest=latest)
 
     if not data:
         click.echo(click.style('no build information', fg='bright_red', bold=True))
@@ -71,7 +71,7 @@ def status(profile: str, job: str, build_number: int, build_url: str, latest: bo
                         bold=True))
         sys.exit(1)
 
-    jy_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile)
 
     # Verify URLs
     if build_url:
@@ -84,9 +84,9 @@ def status(profile: str, job: str, build_number: int, build_url: str, latest: bo
 
     # Request the data
     if valid_url_format:
-        data = jy_obj.Build.status_text(build_url=build_url, job_url=job, build_number=build_number, latest=latest)
+        data = yj_obj.build.status_text(build_url=build_url, job_url=job, build_number=build_number, latest=latest)
     else:
-        data = jy_obj.Build.status_text(build_url=build_url, job_name=job, build_number=build_number, latest=latest)
+        data = yj_obj.build.status_text(build_url=build_url, job_name=job, build_number=build_number, latest=latest)
 
     if not data:
         click.echo(click.style('No status found', fg='bright_red', bold=True))
@@ -125,7 +125,7 @@ def abort(profile: str, job: str, build_number: int, build_url: str, latest: boo
                         bold=True))
         sys.exit(1)
 
-    jy_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile)
 
     # Verify URLs
     if build_url:
@@ -138,9 +138,9 @@ def abort(profile: str, job: str, build_number: int, build_url: str, latest: boo
 
     # Request the data
     if valid_url_format:
-        data = jy_obj.Build.abort(build_url=build_url, job_url=job, build_number=build_number, latest=latest)
+        data = yj_obj.build.abort(build_url=build_url, job_url=job, build_number=build_number, latest=latest)
     else:
-        data = jy_obj.Build.abort(build_url=build_url, job_name=job, build_number=build_number, latest=latest)
+        data = yj_obj.build.abort(build_url=build_url, job_name=job, build_number=build_number, latest=latest)
 
     if not data:
         click.echo(click.style('failed', fg='bright_red', bold=True))
@@ -166,7 +166,7 @@ def delete(profile: str, job: str, build_number: int, build_url: str, latest: bo
                         bold=True))
         sys.exit(1)
 
-    jy_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile)
 
     # Verify URLs
     if build_url:
@@ -179,9 +179,9 @@ def delete(profile: str, job: str, build_number: int, build_url: str, latest: bo
 
     # Request the data
     if valid_url_format:
-        data = jy_obj.Build.delete(build_url=build_url, job_url=job, build_number=build_number, latest=latest)
+        data = yj_obj.build.delete(build_url=build_url, job_url=job, build_number=build_number, latest=latest)
     else:
-        data = jy_obj.Build.delete(build_url=build_url, job_name=job, build_number=build_number, latest=latest)
+        data = yj_obj.build.delete(build_url=build_url, job_name=job, build_number=build_number, latest=latest)
 
     if not data:
         click.echo(click.style('failed', fg='bright_red', bold=True))
@@ -208,7 +208,7 @@ def stages(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, prof
                         bold=True))
         sys.exit(1)
 
-    jy_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile)
 
     # Verify URLs
     if build_url:
@@ -221,12 +221,12 @@ def stages(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, prof
 
     # Request the data
     if valid_url_format:
-        data, data_list = jy_obj.Build.stage_list(build_url=build_url,
+        data, data_list = yj_obj.build.stage_list(build_url=build_url,
                                                   job_url=job,
                                                   build_number=build_number,
                                                   latest=latest)
     else:
-        data, data_list = jy_obj.Build.stage_list(build_url=build_url,
+        data, data_list = yj_obj.build.stage_list(build_url=build_url,
                                                   job_name=job,
                                                   build_number=build_number,
                                                   latest=latest)
@@ -257,7 +257,7 @@ def logs(profile: str, job: str, build_number: int, build_url: str, latest: bool
                         bold=True))
         sys.exit(1)
 
-    jy_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile)
 
     # Verify URLs
     if build_url:
@@ -270,7 +270,7 @@ def logs(profile: str, job: str, build_number: int, build_url: str, latest: bool
 
     # Request the data
     if valid_url_format:
-        data = jy_obj.Build.logs(build_url=build_url,
+        data = yj_obj.build.logs(build_url=build_url,
                                  job_url=job,
                                  build_number=build_number,
                                  latest=latest,
@@ -278,7 +278,7 @@ def logs(profile: str, job: str, build_number: int, build_url: str, latest: bool
                                  download_dir=download_dir,
                                  follow=follow)
     else:
-        data = jy_obj.Build.logs(build_url=build_url,
+        data = yj_obj.build.logs(build_url=build_url,
                                  job_name=job,
                                  build_number=build_number,
                                  latest=latest,
@@ -311,7 +311,7 @@ def browser(profile: str, job: str, build_number: int, build_url: str, latest: b
                         bold=True))
         sys.exit(1)
 
-    jy_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile)
 
     # Verify URLs
     if build_url:
@@ -324,9 +324,9 @@ def browser(profile: str, job: str, build_number: int, build_url: str, latest: b
 
     # Request the data
     if valid_url_format:
-        data = jy_obj.Build.browser_open(build_url=build_url, job_url=job, build_number=build_number, latest=latest)
+        data = yj_obj.build.browser_open(build_url=build_url, job_url=job, build_number=build_number, latest=latest)
     else:
-        data = jy_obj.Build.browser_open(build_url=build_url, job_name=job, build_number=build_number, latest=latest)
+        data = yj_obj.build.browser_open(build_url=build_url, job_name=job, build_number=build_number, latest=latest)
 
     if not data:
         click.echo(click.style('failed', fg='bright_red', bold=True))
@@ -350,7 +350,7 @@ def monitor(profile: str, job: str, build_number: int, build_url: str, latest: b
                         bold=True))
         sys.exit(1)
 
-    jy_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile)
 
     # Verify URLs
     if build_url:
@@ -363,13 +363,13 @@ def monitor(profile: str, job: str, build_number: int, build_url: str, latest: b
 
     # Request the data
     if valid_url_format:
-        data = jy_obj.Build.monitor(build_url=build_url,
+        data = yj_obj.build.monitor(build_url=build_url,
                                     job_url=job,
                                     build_number=build_number,
                                     latest=latest,
                                     sound=sound)
     else:
-        data = jy_obj.Build.monitor(build_url=build_url,
+        data = yj_obj.build.monitor(build_url=build_url,
                                     job_name=job,
                                     build_number=build_number,
                                     latest=latest,

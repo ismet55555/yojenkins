@@ -26,11 +26,11 @@ def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profil
     Returns:
         TODO
     """
-    jy_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile)
     if cu.is_full_url(folder):
-        data = jy_obj.Folder.info(folder_url=folder)
+        data = yj_obj.folder.info(folder_url=folder)
     else:
-        data = jy_obj.Folder.info(folder_name=folder)
+        data = yj_obj.folder.info(folder_name=folder)
 
     if not data:
         click.echo(click.style('no folder information', fg='bright_red', bold=True))
@@ -51,14 +51,14 @@ def search(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, prof
     Returns:
         TODO
     """
-    jy_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile)
     if cu.is_full_url(search_folder):
-        data, data_list = jy_obj.Folder.search(search_pattern=search_pattern,
+        data, data_list = yj_obj.folder.search(search_pattern=search_pattern,
                                                folder_url=search_folder,
                                                folder_depth=depth,
                                                fullname=fullname)
     else:
-        data, data_list = jy_obj.Folder.search(search_pattern=search_pattern,
+        data, data_list = yj_obj.folder.search(search_pattern=search_pattern,
                                                folder_name=search_folder,
                                                folder_depth=depth,
                                                fullname=fullname)
@@ -83,11 +83,11 @@ def subfolders(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, 
     Returns:
         TODO
     """
-    jy_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile)
     if cu.is_full_url(folder):
-        data, data_list = jy_obj.Folder.subfolder_list(folder_url=folder)
+        data, data_list = yj_obj.folder.subfolder_list(folder_url=folder)
     else:
-        data, data_list = jy_obj.Folder.subfolder_list(folder_name=folder)
+        data, data_list = yj_obj.folder.subfolder_list(folder_name=folder)
 
     if not data:
         click.echo(click.style('not found or no subfolders', fg='bright_red', bold=True))
@@ -109,11 +109,11 @@ def jobs(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profil
     Returns:
         TODO
     """
-    jy_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile)
     if cu.is_full_url(folder):
-        data, data_list = jy_obj.Folder.jobs_list(folder_url=folder)
+        data, data_list = yj_obj.folder.jobs_list(folder_url=folder)
     else:
-        data, data_list = jy_obj.Folder.jobs_list(folder_name=folder)
+        data, data_list = yj_obj.folder.jobs_list(folder_name=folder)
 
     if not data:
         click.echo(click.style('not found', fg='bright_red', bold=True))
@@ -135,11 +135,11 @@ def views(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profi
     Returns:
         TODO
     """
-    jy_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile)
     if cu.is_full_url(folder):
-        data, data_list = jy_obj.Folder.view_list(folder_url=folder)
+        data, data_list = yj_obj.folder.view_list(folder_url=folder)
     else:
-        data, data_list = jy_obj.Folder.view_list(folder_name=folder)
+        data, data_list = yj_obj.folder.view_list(folder_name=folder)
 
     if not data:
         click.echo(click.style('not found', fg='bright_red', bold=True))
@@ -161,11 +161,11 @@ def items(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profi
     Returns:
         TODO
     """
-    jy_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile)
     if cu.is_full_url(folder):
-        data, data_list = jy_obj.Folder.item_list(folder_url=folder)
+        data, data_list = yj_obj.folder.item_list(folder_url=folder)
     else:
-        data, data_list = jy_obj.Folder.item_list(folder_name=folder)
+        data, data_list = yj_obj.folder.item_list(folder_name=folder)
 
     if not data:
         click.echo(click.style('not found or no folder items', fg='bright_red', bold=True))
@@ -186,11 +186,11 @@ def browser(profile: str, folder: str) -> None:
     Returns:
         TODO
     """
-    jy_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile)
     if cu.is_full_url(folder):
-        data = jy_obj.Folder.browser_open(folder_url=folder)
+        data = yj_obj.folder.browser_open(folder_url=folder)
     else:
-        data = jy_obj.Folder.browser_open(folder_name=folder)
+        data = yj_obj.folder.browser_open(folder_name=folder)
 
     if not data:
         click.echo(click.style('failed', fg='bright_red', bold=True))
@@ -210,15 +210,15 @@ def config(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_
     Returns:
         TODO
     """
-    jy_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile)
     if cu.is_full_url(folder):
-        data, write_success = jy_obj.Folder.config(filepath=filepath,
+        data, write_success = yj_obj.folder.config(filepath=filepath,
                                                    folder_url=folder,
                                                    opt_json=opt_json,
                                                    opt_yaml=opt_yaml,
                                                    opt_toml=opt_toml)
     else:
-        data, write_success = jy_obj.Folder.config(filepath=filepath,
+        data, write_success = yj_obj.folder.config(filepath=filepath,
                                                    folder_name=folder,
                                                    opt_json=opt_json,
                                                    opt_yaml=opt_yaml,
@@ -252,15 +252,15 @@ def create(profile: str, name: str, folder: str, type: str, config: str, config_
     Returns:
         TODO
     """
-    jy_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile)
     if cu.is_full_url(folder):
-        data = jy_obj.Folder.create(name=name,
+        data = yj_obj.folder.create(name=name,
                                     type=type,
                                     config=config,
                                     folder_url=folder,
                                     config_is_json=config_is_json)
     else:
-        data = jy_obj.Folder.create(name=name,
+        data = yj_obj.folder.create(name=name,
                                     type=type,
                                     config=config,
                                     folder_name=folder,
@@ -286,11 +286,11 @@ def copy(profile: str, folder: str, original_name: str, new_name: str) -> None:
     """
     # TODO: Maybe return the newly copied item url
 
-    jy_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile)
     if cu.is_full_url(folder):
-        data = jy_obj.Folder.copy(original_name=original_name, new_name=new_name, folder_url=folder)
+        data = yj_obj.folder.copy(original_name=original_name, new_name=new_name, folder_url=folder)
     else:
-        data = jy_obj.Folder.copy(original_name=original_name, new_name=new_name, folder_name=folder)
+        data = yj_obj.folder.copy(original_name=original_name, new_name=new_name, folder_name=folder)
 
     if not data:
         click.echo(click.style('failed', fg='bright_red', bold=True))
@@ -310,11 +310,11 @@ def delete(profile: str, folder: str) -> None:
     Returns:
         TODO
     """
-    jy_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile)
     if cu.is_full_url(folder):
-        data = jy_obj.Folder.delete(folder_url=folder)
+        data = yj_obj.folder.delete(folder_url=folder)
     else:
-        data = jy_obj.Folder.delete(folder_name=folder)
+        data = yj_obj.folder.delete(folder_name=folder)
 
     if not data:
         click.echo(click.style('failed', fg='bright_red', bold=True))

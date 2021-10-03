@@ -20,7 +20,7 @@ logger = logging.getLogger()
 class Credential():
     """TODO Credential"""
 
-    def __init__(self, REST) -> None:
+    def __init__(self, rest) -> None:
         """Object constructor method, called at object creation
 
         Args:
@@ -29,7 +29,7 @@ class Credential():
         Returns:
             None
         """
-        self.REST = REST
+        self.rest = rest
 
     @staticmethod
     def _get_folder_store(folder: str) -> Tuple[str, str]:
@@ -148,7 +148,7 @@ class Credential():
         logger.debug(f'   - Keys:   {keys}')
 
         target = f'{folder}/credentials/store/{store}/domain/{domain}/api/json?tree=credentials[{keys}]'
-        credentials_info, _, success = self.REST.request(target=target,
+        credentials_info, _, success = self.rest.request(target=target,
                                                          request_type='get',
                                                          is_endpoint=True,
                                                          json_content=True)
@@ -218,7 +218,7 @@ class Credential():
                 logger.debug(f'More than one matching credential found. '
                              f'Using the first one: {credential_ids_match[0]}')
             target = f'{folder}/credentials/store/{store}/domain/{domain}/credential/{credential_ids_match[0]}/api/json'
-            credential_url = f'{self.REST.server_url}{folder}/credentials/store/{store}/domain/{domain}/credential/{credential_ids_match[0]}'
+            credential_url = f'{self.rest.server_url}{folder}/credentials/store/{store}/domain/{domain}/credential/{credential_ids_match[0]}'
 
         logger.debug('Getting all credential info with the following info:')
         logger.debug(f'   - Folder:     {folder}')
@@ -227,7 +227,7 @@ class Credential():
         logger.debug(f'   - Credential: {credential}')
 
         # Get credential info
-        credential_info, _, success = self.REST.request(target=target,
+        credential_info, _, success = self.rest.request(target=target,
                                                         request_type='get',
                                                         is_endpoint=is_endpoint,
                                                         json_content=True)
@@ -282,7 +282,7 @@ class Credential():
 
         target = f'{folder}/credentials/store/{store}/domain/{domain}/credential/{credential_id}/config.xml'
         logger.debug(f'Fetching XML configurations for credential: "{credential_id}" ...')
-        return_content, _, success = self.REST.request(target=target,
+        return_content, _, success = self.rest.request(target=target,
                                                        request_type='get',
                                                        json_content=False,
                                                        is_endpoint=True)
@@ -374,7 +374,7 @@ class Credential():
         # print(test)
 
         target = f'{folder}/credentials/store/{store}/domain/{domain}/createCredentials'
-        _, _, success = self.REST.request(target=target,
+        _, _, success = self.rest.request(target=target,
                                           request_type='post',
                                           json_content=False,
                                           is_endpoint=True,
@@ -410,6 +410,6 @@ class Credential():
             return False
 
         target = f'{folder}/credentials/store/{store}/domain/{domain}/credential/{credential_id}/config.xml'
-        _, _, success = self.REST.request(target=target, request_type='delete', is_endpoint=True)
+        _, _, success = self.rest.request(target=target, request_type='delete', is_endpoint=True)
         logger.debug('Successfully deleted credential' if success else 'Failed to delete credential')
         return success

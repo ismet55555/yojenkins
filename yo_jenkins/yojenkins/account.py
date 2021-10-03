@@ -13,7 +13,7 @@ logger = logging.getLogger()
 class Account():
     """TODO Account"""
 
-    def __init__(self, REST) -> None:
+    def __init__(self, rest) -> None:
         """Object constructor method, called at object creation
 
         Args:
@@ -22,7 +22,7 @@ class Account():
         Returns:
             None
         """
-        self.REST = REST
+        self.rest = rest
         self.groovy_script_directory = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'groovy_scripts')
 
     def list(self) -> Tuple[list, list]:
@@ -37,7 +37,7 @@ class Account():
         script_filepath = os.path.join(self.groovy_script_directory, 'user_list.groovy')
         account_list, success = utility.run_groovy_script(script_filepath=script_filepath,
                                                           json_return=True,
-                                                          REST=self.REST)
+                                                          rest=self.rest)
         if not success:
             return [], []
 
@@ -61,7 +61,7 @@ class Account():
         script_filepath = os.path.join(self.groovy_script_directory, 'user_list.groovy')
         user_list, success = utility.run_groovy_script(script_filepath=script_filepath,
                                                        json_return=True,
-                                                       REST=self.REST)
+                                                       rest=self.rest)
         if not success:
             return {}
 
@@ -96,7 +96,7 @@ class Account():
         script_filepath = os.path.join(self.groovy_script_directory, 'user_create.groovy')
         _, success = utility.run_groovy_script(script_filepath=script_filepath,
                                                json_return=False,
-                                               REST=self.REST,
+                                               rest=self.rest,
                                                **kwargs)
         if not success:
             return False
@@ -115,7 +115,7 @@ class Account():
         script_filepath = os.path.join(self.groovy_script_directory, 'user_delete.groovy')
         _, success = utility.run_groovy_script(script_filepath=script_filepath,
                                                json_return=False,
-                                               REST=self.REST,
+                                               rest=self.rest,
                                                **kwargs)
         if not success:
             return False
@@ -160,7 +160,7 @@ class Account():
         script_filepath = os.path.join(self.groovy_script_directory, 'user_permission_add_remove.groovy')
         _, success = utility.run_groovy_script(script_filepath=script_filepath,
                                                json_return=False,
-                                               REST=self.REST,
+                                               rest=self.rest,
                                                **kwargs)
         if not success:
             return False
@@ -178,7 +178,7 @@ class Account():
         script_filepath = os.path.join(self.groovy_script_directory, 'user_permission_list.groovy')
         permission_list, success = utility.run_groovy_script(script_filepath=script_filepath,
                                                              json_return=True,
-                                                             REST=self.REST)
+                                                             rest=self.rest)
         if not success:
             return [], []
 

@@ -23,7 +23,7 @@ class SharedLibrary():
         """
         self.groovy_script_directory = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'groovy_scripts')
 
-    def setup(self, REST: object, lib_name: str, repo_owner: str, repo_name: str, repo_url: str, repo_branch: str,
+    def setup(self, rest: object, lib_name: str, repo_owner: str, repo_name: str, repo_url: str, repo_branch: str,
               implicit: bool, credential_id: str) -> bool:
         """TODO Docstring
 
@@ -69,7 +69,7 @@ class SharedLibrary():
             'credential_id': credential_id
         }
         script_filepath = os.path.join(self.groovy_script_directory, 'shared_lib_setup.groovy')
-        _, success = utility.run_groovy_script(script_filepath=script_filepath, json_return=False, REST=REST, **kwargs)
+        _, success = utility.run_groovy_script(script_filepath=script_filepath, json_return=False, rest=rest, **kwargs)
         if not success:
             return False
         return True

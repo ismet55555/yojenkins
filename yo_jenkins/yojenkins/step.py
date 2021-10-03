@@ -10,7 +10,7 @@ logger = logging.getLogger()
 class Step():
     """TODO Step"""
 
-    def __init__(self, REST) -> None:
+    def __init__(self, rest) -> None:
         """Object constructor method, called at object creation
 
         Args:
@@ -19,7 +19,7 @@ class Step():
         Returns:
             None
         """
-        self.REST = REST
+        self.rest = rest
 
     def info(self, step_url=str) -> Dict:
         """Get the information of the specified step
@@ -34,7 +34,7 @@ class Step():
             Step information
         """
         request_url = f'{step_url.strip("/")}'
-        return_content = self.REST.request(request_url, 'get', is_endpoint=True)[0]
+        return_content = self.rest.request(request_url, 'get', is_endpoint=True)[0]
         if not return_content:
             logger.debug(f'Failed to get step info for: {request_url}')
             return {}

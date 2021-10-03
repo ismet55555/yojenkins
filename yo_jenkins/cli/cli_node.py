@@ -27,8 +27,8 @@ def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profil
     Returns:
         TODO
     """
-    yj = cu.config_yo_jenkins(profile)
-    data = yj.Node.info(node_name, depth)
+    yj_obj = cu.config_yo_jenkins(profile)
+    data = yj_obj.node.info(node_name, depth)
     if not data:
         click.echo(click.style('no node information', fg='bright_red', bold=True))
         sys.exit(1)
@@ -48,8 +48,8 @@ def list(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_li
     Returns:
         TODO
     """
-    yj = cu.config_yo_jenkins(profile)
-    data, data_list = yj.Node.list(depth)
+    yj_obj = cu.config_yo_jenkins(profile)
+    data, data_list = yj_obj.node.list(depth)
     if not data:
         click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
@@ -69,8 +69,8 @@ def create_permanent(profile: str, **kwargs) -> None:
     Returns:
         TODO
     """
-    yj = cu.config_yo_jenkins(profile)
-    if not yj.Node.create_permanent(**kwargs):
+    yj_obj = cu.config_yo_jenkins(profile)
+    if not yj_obj.node.create_permanent(**kwargs):
         click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
     click.echo(click.style('success', fg='bright_green', bold=True))
@@ -88,8 +88,8 @@ def delete(profile: str, node_name: str) -> None:
     Returns:
         TODO
     """
-    yj = cu.config_yo_jenkins(profile)
-    if not yj.Node.delete(node_name):
+    yj_obj = cu.config_yo_jenkins(profile)
+    if not yj_obj.node.delete(node_name):
         click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
     click.echo(click.style('success', fg='bright_green', bold=True))
@@ -107,8 +107,8 @@ def disable(profile: str, node_name: str, message: str) -> None:
     Returns:
         TODO
     """
-    yj = cu.config_yo_jenkins(profile)
-    if not yj.Node.disable(node_name, message):
+    yj_obj = cu.config_yo_jenkins(profile)
+    if not yj_obj.node.disable(node_name, message):
         click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
     click.echo(click.style('success', fg='bright_green', bold=True))
@@ -126,8 +126,8 @@ def enable(profile: str, node_name: str, message: str) -> None:
     Returns:
         TODO
     """
-    yj = cu.config_yo_jenkins(profile)
-    if not yj.Node.enable(node_name, message):
+    yj_obj = cu.config_yo_jenkins(profile)
+    if not yj_obj.node.enable(node_name, message):
         click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
     click.echo(click.style('success', fg='bright_green', bold=True))
@@ -146,12 +146,12 @@ def config(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_
     Returns:
         TODO
     """
-    yj = cu.config_yo_jenkins(profile)
-    data, write_success = yj.Node.config(filepath=filepath,
-                                         node_name=node_name,
-                                         opt_json=opt_json,
-                                         opt_yaml=opt_yaml,
-                                         opt_toml=opt_toml)
+    yj_obj = cu.config_yo_jenkins(profile)
+    data, write_success = yj_obj.node.config(filepath=filepath,
+                                             node_name=node_name,
+                                             opt_json=opt_json,
+                                             opt_yaml=opt_yaml,
+                                             opt_toml=opt_toml)
     if not data:
         click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
@@ -177,8 +177,8 @@ def reconfig(profile: str, node_name: str, config_file: str, config_is_json: str
     Returns:
         TODO
     """
-    yj = cu.config_yo_jenkins(profile)
-    success = yj.Node.reconfig(config_file=config_file, node_name=node_name, config_is_json=config_is_json)
+    yj_obj = cu.config_yo_jenkins(profile)
+    success = yj_obj.node.reconfig(config_file=config_file, node_name=node_name, config_is_json=config_is_json)
     if not success:
         click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)

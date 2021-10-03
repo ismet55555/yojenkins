@@ -19,7 +19,7 @@ logger = logging.getLogger()
 class Folder():
     """TODO Folder"""
 
-    def __init__(self, REST, JenkinsSDK) -> None:
+    def __init__(self, rest, JenkinsSDK) -> None:
         """Object constructor method, called at object creation
 
         Args:
@@ -28,8 +28,8 @@ class Folder():
         Returns:
             None
         """
-        self.REST = REST
-        self.JenkinsSDK = JenkinsSDK
+        self.rest = rest
+        self.jenkins_sdk = JenkinsSDK
 
         # Recursive search results
         self.search_results = []
@@ -116,7 +116,7 @@ class Folder():
         else:
             # Search entire Jenkins
             logger.debug(f'Searching folder in ALL Jenkins. Folder depth: "{folder_depth}"')
-            items = self.JenkinsSDK.get_all_jobs(folder_depth=folder_depth, folder_depth_per_request=20)
+            items = self.jenkins_sdk.get_all_jobs(folder_depth=folder_depth, folder_depth_per_request=20)
 
         # Search for any matching folders ("jobs")
         self.search_items_count = 0
@@ -153,9 +153,9 @@ class Folder():
             return {}
 
         if folder_name and not folder_url:
-            folder_url = utility.name_to_url(self.REST.get_server_url(), folder_name)
+            folder_url = utility.name_to_url(self.rest.get_server_url(), folder_name)
 
-        folder_info, _, success = self.REST.request(folder_url.strip('/') + '/api/json',
+        folder_info, _, success = self.rest.request(folder_url.strip('/') + '/api/json',
                                                     request_type='get',
                                                     is_endpoint=False)
         if not success:
@@ -315,7 +315,7 @@ class Folder():
         if folder_url:
             folder_url = folder_url.strip('/')
         else:
-            folder_url = utility.name_to_url(self.REST.get_server_url(), folder_name)
+            folder_url = utility.name_to_url(self.rest.get_server_url(), folder_name)
 
         logger.debug(f'Opening in web browser: "{folder_url}" ...')
         success = utility.browser_open(url=folder_url)
@@ -350,10 +350,10 @@ class Folder():
         if folder_url:
             folder_url = folder_url.strip('/')
         else:
-            folder_url = utility.name_to_url(self.REST.get_server_url(), folder_name)
+            folder_url = utility.name_to_url(self.rest.get_server_url(), folder_name)
 
         logger.debug(f'Fetching XML configurations for folder: "{folder_url}" ...')
-        return_content, _, success = self.REST.request(f'{folder_url.strip("/")}/config.xml',
+        return_content, _, success = self.rest.request(f'{folder_url.strip("/")}/config.xml',
                                                        'get',
                                                        json_content=False,
                                                        is_endpoint=False)
@@ -388,7 +388,7 @@ class Folder():
         if folder_url:
             folder_url = folder_url.strip('/')
         else:
-            folder_url = utility.name_to_url(self.REST.get_server_url(), folder_name)
+            folder_url = utility.name_to_url(self.rest.get_server_url(), folder_name)
 
         if not name:
             logger.debug('Item name is a blank')
@@ -436,13 +436,13 @@ class Folder():
                 # prefix = JenkinsItemClasses.JOB.value['prefix']
 
         # Checking if the item exists
-        if utility.item_exists_in_folder(name, folder_url, type, self.REST):
+        if utility.item_exists_in_folder(name, folder_url, type, self.rest):
             return False
 
         # Creating the item
         logger.debug(f'Creating "{type}" item "{name}" ...')
         headers = {'Content-Type': 'application/xml; charset=utf-8'}
-        _, _, success = self.REST.request(f'{folder_url.strip("/")}/{endpoint}',
+        _, _, success = self.rest.request(f'{folder_url.strip("/")}/{endpoint}',
                                           'post',
                                           data=item_config.encode('utf-8'),
                                           headers=headers,
@@ -474,7 +474,7 @@ class Folder():
         if folder_url:
             folder_url = folder_url.strip('/')
         else:
-            folder_url = utility.name_to_url(self.REST.get_server_url(), folder_name)
+            folder_url = utility.name_to_url(self.rest.get_server_url(), folder_name)
 
         if not original_name:
             logger.debug('Original item name is a blank')
@@ -488,11 +488,11 @@ class Folder():
         if utility.has_special_char(new_name):
             return False
 
-        if not utility.item_exists_in_folder(original_name, folder_url, "folder", self.REST):
+        if not utility.item_exists_in_folder(original_name, folder_url, "folder", self.rest):
             return False
 
         logger.debug(f'Copying original item "{original_name}" to new item "{new_name}" ...')
-        success = self.REST.request(
+        success = self.rest.request(
             f'{folder_url.strip("/")}/createItem?name={new_name}&mode=copy&from={original_name}',
             'post',
             is_endpoint=False)[2]
@@ -516,9 +516,9 @@ class Folder():
         if folder_url:
             folder_url = folder_url.strip('/')
         else:
-            folder_url = utility.name_to_url(self.REST.get_server_url(), folder_name)
+            folder_url = utility.name_to_url(self.rest.get_server_url(), folder_name)
 
         logger.debug(f'Deleting folder: "{folder_url}" ...')
-        success = self.REST.request(f'{folder_url.strip("/")}/doDelete', 'post', is_endpoint=False)[2]
+        success = self.rest.request(f'{folder_url.strip("/")}/doDelete', 'post', is_endpoint=False)[2]
         logger.debug('Successfully deleted folder' if success else 'Failed to delete folder')
         return success

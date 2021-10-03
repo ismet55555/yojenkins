@@ -9,7 +9,7 @@ from .jenkins_item_config import JenkinsItemConfig
 from .jenkins_item_template import JenkinsItemTemplate
 from .job import Job
 from .node import Node
-from .rest import REST
+from .rest import Rest
 from .server import Server
 from .stage import Stage
 from .step import Step

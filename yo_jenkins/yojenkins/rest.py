@@ -12,7 +12,7 @@ from requests_futures.sessions import FuturesSession
 logger = logging.getLogger()
 
 
-class REST:
+class Rest:
     """Handeling of REST requests"""
 
     def __init__(self, username: str = '', api_token: str = '', server_url: str = '', session=None) -> None:

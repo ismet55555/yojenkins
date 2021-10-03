@@ -7,7 +7,7 @@ import click
 
 from yo_jenkins.cli import cli_utility as cu
 from yo_jenkins.cli.cli_utility import log_to_history
-from yo_jenkins.yojenkins import REST, Auth
+from yo_jenkins.yojenkins import Auth, Rest
 
 # Getting the logger reference
 logger = logging.getLogger()
@@ -90,7 +90,7 @@ def verify(profile: str) -> None:
     Returns:
         TODO
     """
-    auth = Auth(REST())
+    auth = Auth(Rest())
 
     # Get the credential profile
     if not auth.get_credentials(profile):
@@ -118,7 +118,7 @@ def user(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profil
         TODO
     """
     # Request the data
-    data = cu.config_yo_jenkins(profile).Auth.user()
+    data = cu.config_yo_jenkins(profile).auth.user()
     if not data:
         click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)

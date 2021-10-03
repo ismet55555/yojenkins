@@ -17,7 +17,7 @@ logger = logging.getLogger()
 class Node():
     """TODO Node"""
 
-    def __init__(self, REST) -> None:
+    def __init__(self, rest) -> None:
         """Object constructor method, called at object creation
 
         Args:
@@ -26,7 +26,7 @@ class Node():
         Returns:
             None
         """
-        self.REST = REST
+        self.rest = rest
 
     def info(self, node_name: str, depth: int = 0) -> Tuple[list, list]:
         """TODO Docstring
@@ -42,7 +42,7 @@ class Node():
         """
         logger.debug(f'Getting info for node: {node_name} ...')
         node_name = "(master)" if node_name == 'master' else node_name  # Special case
-        node_info, _, success = self.REST.request(target=f"computer/{node_name}/api/json?depth={depth}",
+        node_info, _, success = self.rest.request(target=f"computer/{node_name}/api/json?depth={depth}",
                                                   request_type='get',
                                                   is_endpoint=True,
                                                   json_content=True)
@@ -64,7 +64,7 @@ class Node():
         """
         logger.debug('Getting a list of all nodes ...')
 
-        nodes_info, _, success = self.REST.request(target=f"computer/api/json?depth={depth}",
+        nodes_info, _, success = self.rest.request(target=f"computer/api/json?depth={depth}",
                                                    request_type='get',
                                                    is_endpoint=True,
                                                    json_content=True)
@@ -171,7 +171,7 @@ class Node():
         }
 
         # Send the request to the server
-        _, _, success = self.REST.request(target="computer/doCreateItem",
+        _, _, success = self.rest.request(target="computer/doCreateItem",
                                           request_type='post',
                                           is_endpoint=True,
                                           data=params)
@@ -191,7 +191,7 @@ class Node():
             TODO
         """
         logger.debug(f'Deleting node: {node_name}')
-        _, _, success = self.REST.request(target=f"computer/{node_name}/doDelete",
+        _, _, success = self.rest.request(target=f"computer/{node_name}/doDelete",
                                           request_type='post',
                                           is_endpoint=True,
                                           json_content=False)
@@ -221,7 +221,7 @@ class Node():
             logger.debug('Node is already disabled')
             return True
 
-        _, _, success = self.REST.request(target=f"computer/{node_name}/toggleOffline?offlineMessage={message}",
+        _, _, success = self.rest.request(target=f"computer/{node_name}/toggleOffline?offlineMessage={message}",
                                           request_type='post',
                                           is_endpoint=True,
                                           json_content=False)
@@ -251,7 +251,7 @@ class Node():
             logger.debug('Node is already enabled')
             return True
 
-        _, _, success = self.REST.request(target=f"computer/{node_name}/toggleOffline?offlineMessage={message}",
+        _, _, success = self.rest.request(target=f"computer/{node_name}/toggleOffline?offlineMessage={message}",
                                           request_type='post',
                                           is_endpoint=True,
                                           json_content=False)
@@ -277,7 +277,7 @@ class Node():
         """
         logger.debug(f'Fetching XML configurations for node: {node_name} ...')
         node_name = "(master)" if node_name == 'master' else node_name  # Special case
-        return_content, _, success = self.REST.request(f'computer/{node_name}/config.xml',
+        return_content, _, success = self.rest.request(f'computer/{node_name}/config.xml',
                                                        'get',
                                                        json_content=False,
                                                        is_endpoint=True)
@@ -326,7 +326,7 @@ class Node():
                 logger.debug(f'Failed to convert the specified JSON file to XML format. Exception: {error}')
                 return False
 
-        _, _, success = self.REST.request(target=f"computer/{node_name}/config.xml",
+        _, _, success = self.rest.request(target=f"computer/{node_name}/config.xml",
                                           request_type='post',
                                           is_endpoint=True,
                                           data=node_config.encode('utf-8'),

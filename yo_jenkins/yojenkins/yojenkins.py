@@ -22,7 +22,7 @@ class YoJenkins:
     All work is done by other, included, objects
     """
 
-    def __init__(self, Auth_obj) -> None:
+    def __init__(self, auth) -> None:
         """Object constructor method, called at object creation
 
         Args:
@@ -31,16 +31,15 @@ class YoJenkins:
         Returns:
             None
         """
-        self.Auth = Auth_obj
-        self.REST = self.Auth.get_REST()
-        self.JenkinsSDK = self.Auth.JenkinsSDK
-
-        self.Server = Server(self.REST, self.Auth)
-        self.Node = Node(self.REST)
-        self.Account = Account(self.REST)
-        self.Credential = Credential(self.REST)
-        self.Folder = Folder(self.REST, self.JenkinsSDK)
-        self.Build = Build(self.REST, self.Auth)
-        self.Job = Job(self.REST, self.Folder, self.JenkinsSDK, self.Auth, self.Build)
-        self.Step = Step(self.REST)
-        self.Stage = Stage(self.REST, self.Build, self.Step)
+        self.auth = auth
+        self.rest = self.auth.get_rest()
+        self.jenkins_sdk = self.auth.jenkins_sdk
+        self.server = Server(self.rest, self.auth)
+        self.node = Node(self.rest)
+        self.account = Account(self.rest)
+        self.credential = Credential(self.rest)
+        self.folder = Folder(self.rest, self.jenkins_sdk)
+        self.build = Build(self.rest, self.auth)
+        self.job = Job(self.rest, self.folder, self.jenkins_sdk, self.auth, self.build)
+        self.step = Step(self.rest)
+        self.stage = Stage(self.rest, self.build, self.step)

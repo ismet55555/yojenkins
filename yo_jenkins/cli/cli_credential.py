@@ -27,8 +27,8 @@ def list(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_li
     Returns:
         TODO
     """
-    jy_obj = cu.config_yo_jenkins(profile)
-    data, data_list = jy_obj.Credential.list(folder=folder, domain=domain, keys=keys)
+    yj_obj = cu.config_yo_jenkins(profile)
+    data, data_list = yj_obj.credential.list(folder=folder, domain=domain, keys=keys)
 
     if not data:
         click.echo(click.style('failed', fg='bright_red', bold=True))
@@ -50,8 +50,8 @@ def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profil
     Returns:
         TODO
     """
-    jy_obj = cu.config_yo_jenkins(profile)
-    data = jy_obj.Credential.info(credential=credential, folder=folder, domain=domain)
+    yj_obj = cu.config_yo_jenkins(profile)
+    data = yj_obj.credential.info(credential=credential, folder=folder, domain=domain)
     if not data:
         click.echo(click.style('no credential information', fg='bright_red', bold=True))
         sys.exit(1)
@@ -71,8 +71,8 @@ def config(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_
     Returns:
         TODO
     """
-    jy_obj = cu.config_yo_jenkins(profile)
-    data, write_success = jy_obj.Credential.config(credential=credential,
+    yj_obj = cu.config_yo_jenkins(profile)
+    data, write_success = yj_obj.credential.config(credential=credential,
                                                    folder=folder,
                                                    domain=domain,
                                                    opt_json=opt_json,
@@ -105,8 +105,8 @@ def get_template(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool
     Returns:
         TODO
     """
-    jy_obj = cu.config_yo_jenkins(profile)
-    data, write_success = jy_obj.Credential.get_template(cred_type=cred_type,
+    yj_obj = cu.config_yo_jenkins(profile)
+    data, write_success = yj_obj.credential.get_template(cred_type=cred_type,
                                                          opt_json=opt_json,
                                                          opt_yaml=opt_yaml,
                                                          opt_toml=opt_toml,
@@ -136,8 +136,8 @@ def create(profile: str, config_file: str, folder: str, domain: str) -> None:
     Returns:
         TODO
     """
-    jy_obj = cu.config_yo_jenkins(profile)
-    data = jy_obj.Credential.create(config_file=config_file, folder=folder, domain=domain)
+    yj_obj = cu.config_yo_jenkins(profile)
+    data = yj_obj.credential.create(config_file=config_file, folder=folder, domain=domain)
     if not data:
         click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
@@ -156,8 +156,8 @@ def delete(profile: str, credential: str, folder: str, domain: str) -> None:
     Returns:
         TODO
     """
-    jy_obj = cu.config_yo_jenkins(profile)
-    data = jy_obj.Credential.delete(credential=credential, folder=folder, domain=domain)
+    yj_obj = cu.config_yo_jenkins(profile)
+    data = yj_obj.credential.delete(credential=credential, folder=folder, domain=domain)
     if not data:
         click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)

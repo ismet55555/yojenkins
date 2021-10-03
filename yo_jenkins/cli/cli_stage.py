@@ -33,7 +33,7 @@ def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profil
                         bold=True))
         sys.exit(1)
 
-    jy_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile)
 
     # Differentiate if name or url
     if build_url:
@@ -44,13 +44,13 @@ def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profil
 
     # Request the data
     if valid_url_format:
-        data = jy_obj.Stage.info(stage_name=stage_name,
+        data = yj_obj.stage.info(stage_name=stage_name,
                                  build_url=build_url,
                                  job_url=job,
                                  build_number=build_number,
                                  latest=latest)
     else:
-        data = jy_obj.Stage.info(stage_name=stage_name,
+        data = yj_obj.stage.info(stage_name=stage_name,
                                  build_url=build_url,
                                  job_name=job,
                                  build_number=build_number,
@@ -81,7 +81,7 @@ def status(profile: str, stage_name: str, job: str, build_number: int, build_url
                         bold=True))
         sys.exit(1)
 
-    jy_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile)
 
     # Differentiate if name or url
     if build_url:
@@ -92,13 +92,13 @@ def status(profile: str, stage_name: str, job: str, build_number: int, build_url
 
     # Request the data
     if valid_url_format:
-        data = jy_obj.Stage.status_text(stage_name=stage_name,
+        data = yj_obj.stage.status_text(stage_name=stage_name,
                                         build_url=build_url,
                                         job_url=job,
                                         build_number=build_number,
                                         latest=latest)
     else:
-        data = jy_obj.Stage.status_text(stage_name=stage_name,
+        data = yj_obj.stage.status_text(stage_name=stage_name,
                                         build_url=build_url,
                                         job_name=job,
                                         build_number=build_number,
@@ -144,7 +144,7 @@ def steps(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profi
                         bold=True))
         sys.exit(1)
 
-    jy_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile)
 
     # Differentiate if name or url
     if build_url:
@@ -155,13 +155,13 @@ def steps(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profi
 
     # Request the data
     if valid_url_format:
-        data, data_list = jy_obj.Stage.step_list(stage_name=stage_name,
+        data, data_list = yj_obj.stage.step_list(stage_name=stage_name,
                                                  build_url=build_url,
                                                  job_url=job,
                                                  build_number=build_number,
                                                  latest=latest)
     else:
-        data, data_list = jy_obj.Stage.step_list(stage_name=stage_name,
+        data, data_list = yj_obj.stage.step_list(stage_name=stage_name,
                                                  build_url=build_url,
                                                  job_name=job,
                                                  build_number=build_number,
@@ -195,7 +195,7 @@ def logs(profile: str, stage_name: str, job: str, build_number: int, build_url: 
                         bold=True))
         sys.exit(1)
 
-    jy_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile)
 
     # Differentiate if name or url
     if build_url:
@@ -206,14 +206,14 @@ def logs(profile: str, stage_name: str, job: str, build_number: int, build_url: 
 
     # Request the data
     if valid_url_format:
-        data = jy_obj.Stage.logs(stage_name=stage_name,
+        data = yj_obj.stage.logs(stage_name=stage_name,
                                  build_url=build_url,
                                  job_url=job,
                                  build_number=build_number,
                                  latest=latest,
                                  download_dir=download_dir)
     else:
-        data = jy_obj.Stage.logs(stage_name=stage_name,
+        data = yj_obj.stage.logs(stage_name=stage_name,
                                  build_url=build_url,
                                  job_name=job,
                                  build_number=build_number,

@@ -23,7 +23,7 @@ logger = logging.getLogger()
 class Job():
     """TODO Job"""
 
-    def __init__(self, REST, Folder, JenkinsSDK, Auth, Build) -> None:
+    def __init__(self, rest, Folder, JenkinsSDK, auth, Build) -> None:
         """Object constructor method, called at object creation
 
         Args:
@@ -32,12 +32,12 @@ class Job():
         Returns:
             None
         """
-        self.REST = REST
-        self.Folder = Folder
-        self.JenkinsSDK = JenkinsSDK
-        self.Auth = Auth
-        self.Build = Build
-        self.JM = JobMonitor(REST, Auth, self, Build)
+        self.rest = rest
+        self.folder = Folder
+        self.jenkins_sdk = JenkinsSDK
+        self.auth = auth
+        self.build = Build
+        self.JM = JobMonitor(rest, auth, self, Build)
 
         # Recursive search results
         self.search_results = []
@@ -121,12 +121,12 @@ class Job():
             # Only recursively search the specified folder name
             logger.debug(f'Searching jobs in sub-folder "{folder_name if folder_name else folder_url}"')
             logger.debug('Folder depth does not apply. Only looking in this specific folder for job')
-            items = self.Folder.item_list(folder_name=folder_name, folder_url=folder_url)[0]
+            items = self.folder.item_list(folder_name=folder_name, folder_url=folder_url)[0]
         else:
             # Search entire Jenkins
             logger.debug(f'Searching jobs in ALL Jenkins. Folder depth: "{folder_depth}"')
             try:
-                items = self.JenkinsSDK.get_all_jobs(folder_depth=folder_depth)
+                items = self.jenkins_sdk.get_all_jobs(folder_depth=folder_depth)
             except jenkins.JenkinsException as error:
                 error_no_html = error.args[0].split("\n")[0]
                 logger.debug(f'Error while getting all items. Exception: {error_no_html}')
@@ -166,10 +166,10 @@ class Job():
             return {}
 
         if job_name and not job_url:
-            job_url = utility.name_to_url(self.REST.get_server_url(), job_name)
+            job_url = utility.name_to_url(self.rest.get_server_url(), job_name)
 
         logger.debug(f'Job url passed: {job_url}')
-        job_info, _, success = self.REST.request(f'{job_url.strip("/")}/api/json', 'get', is_endpoint=False)
+        job_info, _, success = self.rest.request(f'{job_url.strip("/")}/api/json', 'get', is_endpoint=False)
         if not success:
             logger.debug(f'Failed to find job info: {job_url}')
             return {}
@@ -282,7 +282,7 @@ class Job():
 
         try:
             # TODO: Use requests instead of jenkins-python
-            response = self.JenkinsSDK.set_next_build_number(job_name, build_number)
+            response = self.jenkins_sdk.set_next_build_number(job_name, build_number)
         except jenkins.JenkinsException as error:
             error_no_html = error.args[0].split("\n")[0]
             logger.debug(
@@ -345,7 +345,7 @@ class Job():
             job_name = utility.url_to_name(url=job_url)
         elif job_name and not job_url:
             # TODO: Use requests instead of Jenkins SDK
-            job_url = self.JenkinsSDK.build_job_url(name=job_name).strip('build')
+            job_url = self.jenkins_sdk.build_job_url(name=job_name).strip('build')
         job_url = job_url.strip('/')
 
         next_build_number = self.build_next_number(job_name=job_name, job_url=job_url)
@@ -362,7 +362,7 @@ class Job():
         logger.debug(f'POST url: {post_url}')
 
         # Posting to Jenkins
-        return_headers = self.REST.request(post_url, 'post', is_endpoint=False)[1]
+        return_headers = self.rest.request(post_url, 'post', is_endpoint=False)[1]
 
         # Parse the queue location of the build
         if return_headers:
@@ -409,12 +409,12 @@ class Job():
         else:
             logger.error('No build queue number or build queue url passed')
             return {}
-        queue_info = self.REST.request(endpoint, 'get', is_endpoint=True)[0]
+        queue_info = self.rest.request(endpoint, 'get', is_endpoint=True)[0]
 
         # Adding additional parameters
         if queue_info:
             queue_info['isQueuedItem'] = True
-            queue_info['fullUrl'] = self.REST.get_server_url().strip('/') + '/' + queue_info['url']
+            queue_info['fullUrl'] = self.rest.get_server_url().strip('/') + '/' + queue_info['url']
             queue_info['jobUrl'] = queue_info['task']['url']
             queue_info['jobFullName'] = utility.url_to_name(queue_info['jobUrl'])
             queue_info['folderUrl'] = utility.build_url_to_other_url(queue_info['fullUrl'], target_url='folder')
@@ -438,7 +438,7 @@ class Job():
             return {}
 
         # Requesting all queue and searching queue (NOTE: Could use Server object)
-        queue_all = self.REST.request('queue/api/json', 'get')[0]
+        queue_all = self.rest.request('queue/api/json', 'get')[0]
         logger.debug(f"Number of queued items: {len(queue_all['items'])}")
         queue_matches = utility.queue_find(queue_all, job_name=job_name, job_url=job_url)
         if not queue_matches:
@@ -448,7 +448,7 @@ class Job():
         # Adding additional parameters
         if queue_info:
             queue_info['inQueueSinceFormatted'] = str(timedelta(seconds=queue_info['inQueueSince'] / 1000.0))[:-3]
-            queue_info['fullUrl'] = self.REST.get_server_url() + '/' + queue_info['url']
+            queue_info['fullUrl'] = self.rest.get_server_url() + '/' + queue_info['url']
             queue_info['jobUrl'] = queue_info['task']['url']
             queue_info['jobFullName'] = utility.url_to_name(queue_info['jobUrl'])
             queue_info['folderUrl'] = utility.build_url_to_other_url(queue_info['fullUrl'], target_url='folder')
@@ -475,7 +475,7 @@ class Job():
 
         # Make the request URL
         endpoint = f'queue/cancelItem?id={build_queue_number}'
-        return_content = self.REST.request(endpoint, 'post', is_endpoint=True)[0]
+        return_content = self.rest.request(endpoint, 'post', is_endpoint=True)[0]
 
         if not return_content:
             logger.error(
@@ -506,7 +506,7 @@ class Job():
         if job_url:
             job_url = job_url.strip('/')
         else:
-            job_url = utility.name_to_url(self.REST.get_server_url(), job_name)
+            job_url = utility.name_to_url(self.rest.get_server_url(), job_name)
 
         logger.debug(f'Opening in web browser: "{job_url}" ...')
         success = utility.browser_open(url=job_url)
@@ -538,10 +538,10 @@ class Job():
         if job_url:
             job_url = job_url.strip('/')
         else:
-            job_url = utility.name_to_url(self.REST.get_server_url(), job_name)
+            job_url = utility.name_to_url(self.rest.get_server_url(), job_name)
 
         logger.debug(f'Fetching XML configurations for job: "{job_url}" ...')
-        return_content, _, success = self.REST.request(f'{job_url.strip("/")}/config.xml',
+        return_content, _, success = self.rest.request(f'{job_url.strip("/")}/config.xml',
                                                        'get',
                                                        json_content=False,
                                                        is_endpoint=False)
@@ -570,10 +570,10 @@ class Job():
         if job_url:
             job_url = job_url.strip('/')
         else:
-            job_url = utility.name_to_url(self.REST.get_server_url(), job_name)
+            job_url = utility.name_to_url(self.rest.get_server_url(), job_name)
 
         logger.debug(f'Disabling job: "{job_url}" ...')
-        success = self.REST.request(f'{job_url.strip("/")}/disable', 'post', is_endpoint=False)[2]
+        success = self.rest.request(f'{job_url.strip("/")}/disable', 'post', is_endpoint=False)[2]
         logger.debug('Successfully disabled job' if success else 'Failed to disable job')
         return success
 
@@ -593,10 +593,10 @@ class Job():
         if job_url:
             job_url = job_url.strip('/')
         else:
-            job_url = utility.name_to_url(self.REST.get_server_url(), job_name)
+            job_url = utility.name_to_url(self.rest.get_server_url(), job_name)
 
         logger.debug(f'Enabling job: "{job_url}" ...')
-        success = self.REST.request(f'{job_url.strip("/")}/enable', 'post', is_endpoint=False)[2]
+        success = self.rest.request(f'{job_url.strip("/")}/enable', 'post', is_endpoint=False)[2]
         logger.debug('Successfully enabled job' if success else 'Failed to enable job')
         return success
 
@@ -616,7 +616,7 @@ class Job():
         if job_url:
             job_url = job_url.strip('/')
         else:
-            job_url = utility.name_to_url(self.REST.get_server_url(), job_name)
+            job_url = utility.name_to_url(self.rest.get_server_url(), job_name)
 
         if not new_name:
             logger.debug('New job name is a blank')
@@ -625,7 +625,7 @@ class Job():
             return False
 
         logger.debug(f'Renaming job: "{job_url}" ...')
-        success = self.REST.request(f'{job_url.strip("/")}/doRename?newName={new_name}', 'post', is_endpoint=False)[2]
+        success = self.rest.request(f'{job_url.strip("/")}/doRename?newName={new_name}', 'post', is_endpoint=False)[2]
         logger.debug('Successfully renamed job' if success else 'Failed to rename job')
         return success
 
@@ -645,10 +645,10 @@ class Job():
         if job_url:
             job_url = job_url.strip('/')
         else:
-            job_url = utility.name_to_url(self.REST.get_server_url(), job_name)
+            job_url = utility.name_to_url(self.rest.get_server_url(), job_name)
 
         logger.debug(f'Deleting job: "{job_url}" ...')
-        success = self.REST.request(f'{job_url.strip("/")}/doDelete', 'post', is_endpoint=False)[2]
+        success = self.rest.request(f'{job_url.strip("/")}/doDelete', 'post', is_endpoint=False)[2]
         logger.debug('Successfully deleted job' if success else 'Failed to delete job')
         return success
 
@@ -668,10 +668,10 @@ class Job():
         if job_url:
             job_url = job_url.strip('/')
         else:
-            job_url = utility.name_to_url(self.REST.get_server_url(), job_name)
+            job_url = utility.name_to_url(self.rest.get_server_url(), job_name)
 
         logger.debug(f'Wiping workspace for job: "{job_url}" ...')
-        success = self.REST.request(f'{job_url.strip("/")}/doWipeOutWorkspace', 'post', is_endpoint=False)[2]
+        success = self.rest.request(f'{job_url.strip("/")}/doWipeOutWorkspace', 'post', is_endpoint=False)[2]
         logger.debug('Successfully wiped job workspace' if success else 'Failed to wipe job workspace')
         return success
 
@@ -691,7 +691,7 @@ class Job():
         if job_url:
             job_url = job_url.strip('/')
         else:
-            job_url = utility.name_to_url(self.REST.get_server_url(), job_name)
+            job_url = utility.name_to_url(self.rest.get_server_url(), job_name)
 
         logger.debug(f'Starting monitor for: "{job_url}" ...')
         success = self.JM.monitor_start(job_url=job_url, sound=sound)
@@ -722,7 +722,7 @@ class Job():
         if folder_url:
             folder_url = folder_url.strip('/')
         else:
-            folder_url = utility.name_to_url(self.REST.get_server_url(), folder_name)
+            folder_url = utility.name_to_url(self.rest.get_server_url(), folder_name)
 
         if not name:
             logger.debug('Item name is a blank')
@@ -731,7 +731,7 @@ class Job():
             return False
 
         # Check if job already exists
-        if utility.item_exists_in_folder(name, folder_url, "job", self.REST):
+        if utility.item_exists_in_folder(name, folder_url, "job", self.rest):
             return False
 
         if config_file:
@@ -758,7 +758,7 @@ class Job():
         logger.debug(f'Creating job "{name}" within folder "{folder_url}" "...')
         endpoint = f'createItem?name={name}'
         headers = {'Content-Type': 'application/xml; charset=utf-8'}
-        _, _, success = self.REST.request(f'{folder_url.strip("/")}/{endpoint}',
+        _, _, success = self.rest.request(f'{folder_url.strip("/")}/{endpoint}',
                                           'post',
                                           data=job_config.encode('utf-8'),
                                           headers=headers,

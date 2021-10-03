@@ -24,7 +24,7 @@ class BuildMonitor(Monitor):
     The BuildMonitor class enables active build monitoring
     """
 
-    def __init__(self, REST, Auth, Build) -> None:
+    def __init__(self, rest, auth, Build) -> None:
         """Object constructor method, called at object creation
 
         Args:
@@ -36,9 +36,9 @@ class BuildMonitor(Monitor):
         # Get attributes form super (parent) class
         super().__init__()
 
-        self.REST = REST
-        self.Auth = Auth
-        self.Build = Build
+        self.rest = rest
+        self.auth = auth
+        self.build = Build
 
         # Build Info Thread
         self.build_info_data = {}
@@ -121,7 +121,7 @@ class BuildMonitor(Monitor):
                 self.help = not self.help
             elif keystroke in ui_keys['OPEN']:
                 if build_url:
-                    self.Build.browser_open(build_url=build_url)
+                    self.build.browser_open(build_url=build_url)
             elif keystroke in ui_keys['SOUND']:
                 sound = not sound
                 sound_notify_msg_show = True
@@ -389,7 +389,7 @@ class BuildMonitor(Monitor):
                 if self.build_abort > 1:  # Abort Message confirmed (pressed twice)
                     if build_url:
                         self.server_interaction = True
-                        build_number = self.Build.abort(build_url=build_url)
+                        build_number = self.build.abort(build_url=build_url)
                         if build_number == 0:
                             # TODO: Show error message
                             pass
@@ -409,7 +409,7 @@ class BuildMonitor(Monitor):
                 curses.endwin()
                 if build_url:
                     self.server_interaction = True
-                    self.Build.logs(build_url=build_url)
+                    self.build.logs(build_url=build_url)
                 return True
 
             # Quit message box
@@ -477,7 +477,7 @@ class BuildMonitor(Monitor):
             if not self.paused:
                 self.server_interaction = True
                 with self._build_info_thread_lock:
-                    self.build_info_data = self.Build.info(build_url=build_url)
+                    self.build_info_data = self.build.info(build_url=build_url)
 
             # Wait some time before checking again
             start_time = time()
@@ -520,7 +520,7 @@ class BuildMonitor(Monitor):
             if not self.paused:
                 self.server_interaction = True
                 with self._build_stages_thread_lock:
-                    self.build_stages_data = self.Build.stage_list(build_url=build_url)[0]
+                    self.build_stages_data = self.build.stage_list(build_url=build_url)[0]
 
             # Wait some time before checking again
             start_time = time()

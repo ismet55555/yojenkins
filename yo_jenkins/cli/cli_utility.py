@@ -19,8 +19,10 @@ from json2xml.utils import readfromstring
 from urllib3.util import parse_url
 
 from yo_jenkins import __version__
+from yo_jenkins.yojenkins.auth import Auth
+from yo_jenkins.yojenkins.rest import Rest
+from yo_jenkins.yojenkins.yojenkins import YoJenkins
 
-from yo_jenkins.yojenkins import REST, Auth, YoJenkins  # isort:skip
 from yo_jenkins.utility.utility import iter_data_empty_item_stripper, load_contents_from_local_file, am_i_inside_docker  # isort:skip
 
 # Getting the logger reference
@@ -96,19 +98,19 @@ def config_yo_jenkins(profile: str) -> YoJenkins:
     Returns:
         TODO
     """
-    Auth_obj = Auth(REST())
+    auth = Auth(Rest())
 
     # Get the credential profile
-    if not Auth_obj.get_credentials(profile):
+    if not auth.get_credentials(profile):
         click.echo(click.style('Failed to find any credentials', fg='bright_red', bold=True))
         sys.exit(1)
 
     # Create authentication
-    if not Auth_obj.create_auth():
+    if not auth.create_auth():
         click.echo(click.style('Failed authentication', fg='bright_red', bold=True))
         sys.exit(1)
 
-    return YoJenkins(Auth_obj)
+    return YoJenkins(auth)
 
 
 def standard_out(data: dict,
@@ -191,6 +193,7 @@ def is_full_url(url: str) -> bool:
 
 
 def server_target_check(target: str) -> bool:
+    """TODO"""
     pass
 
 

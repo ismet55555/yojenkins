@@ -736,13 +736,14 @@ def get_project_dir(project_dir: str = 'yo_jenkins', sample_path: str = 'resourc
     return resource_dir_path
 
 
-def item_exists_in_folder(item_name: str, folder_url: str, item_type: str, REST: object) -> bool:
+def item_exists_in_folder(item_name: str, folder_url: str, item_type: str, rest: object) -> bool:
     """Checking if the item exists within the specified folder on server
 
     Args:
         item_name : Name of the item to check
         folder_url : URL of the folder to check
         item_type : Type of the item to check
+        rest: Rest object
 
     Returns:
         True if the item exists, False if not
@@ -753,7 +754,7 @@ def item_exists_in_folder(item_name: str, folder_url: str, item_type: str, REST:
     item_url = urljoin(folder_url, f'{prefix}/{item_name}')
 
     logger.debug(f'Checking if {item_type} "{item_name}" already exists within folder "{folder_url}" ...')
-    item_exists = REST.request(f'{item_url.strip("/")}/api/json', 'head', is_endpoint=False)[2]
+    item_exists = rest.request(f'{item_url.strip("/")}/api/json', 'head', is_endpoint=False)[2]
     if item_exists:
         logger.debug(f'Found existing {item_type} "{item_name}" within "{folder_url}"')
         return True
@@ -885,7 +886,7 @@ def template_apply(string_template: str, is_json: bool = False, **kwargs) -> Uni
     return template_filled
 
 
-def run_groovy_script(script_filepath: str, json_return: bool, REST: object,
+def run_groovy_script(script_filepath: str, json_return: bool, rest: object,
                       **kwargs) -> Tuple[Union[dict, str], bool]:
     """Run a Groovy script on the server and return the response
 
@@ -897,7 +898,7 @@ def run_groovy_script(script_filepath: str, json_return: bool, REST: object,
         script_directory: Directory where the script is located
         script_filepath: The path to the Groovy script to run
         json_return: Anticipate and format script return as JSON
-        REST: REST object
+        rest: Rest object
         kwargs (dict): Any variables to be inserted into the script text
 
     Returns:
@@ -920,12 +921,12 @@ def run_groovy_script(script_filepath: str, json_return: bool, REST: object,
 
     # Send the request to the server
     logger.debug(f'Running the following Groovy script on server: {script_filepath} ...')
-    script_result, _, success = REST.request(target='scriptText',
+    script_result, _, success = rest.request(target='scriptText',
                                              request_type='post',
                                              data={'script': script},
                                              json_content=False)
     if not success:
-        logger.debug('Failed server REST request for Groovy script execution')
+        logger.debug('Failed server Rest request for Groovy script execution')
         return {}, False
 
     # print(script_result)

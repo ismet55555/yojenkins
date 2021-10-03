@@ -35,10 +35,10 @@ class Monitor:
         Returns:
             None
         """
-        self.REST = None
-        self.Auth = None
-        self.Job = None
-        self.Build = None
+        self.rest = None
+        self.auth = None
+        self.job = None
+        self.build = None
 
         self.color = {}
         self.decor = {}
@@ -260,8 +260,8 @@ class Monitor:
             if not self.paused:
                 # Get the build information
                 self.server_interaction = True
-                self.server_status_data['reachable'] = self.REST.is_reachable()
-                self.server_status_data['auth'] = self.Auth.verify()
+                self.server_status_data['reachable'] = self.rest.is_reachable()
+                self.server_status_data['auth'] = self.auth.verify()
 
             # Wait some time before checking again
             start_time = time()

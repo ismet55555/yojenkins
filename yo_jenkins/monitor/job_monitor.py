@@ -22,7 +22,7 @@ class JobMonitor(Monitor):
     The JobMonitor class enables active job monitoring
     """
 
-    def __init__(self, REST, Auth, Job, Build) -> None:
+    def __init__(self, rest, auth, Job, Build) -> None:
         """Object constructor method, called at object creation
 
         Args:
@@ -34,10 +34,10 @@ class JobMonitor(Monitor):
         # Get attributes form super (parent) class
         super().__init__()
 
-        self.REST = REST
-        self.Auth = Auth
-        self.Job = Job
-        self.Build = Build
+        self.rest = rest
+        self.auth = auth
+        self.job = Job
+        self.build = Build
 
         # Job Info Thread
         self.job_info_data = {}
@@ -109,7 +109,7 @@ class JobMonitor(Monitor):
                 self.help = not self.help
             elif keystroke in ui_keys['OPEN']:
                 if job_url:
-                    self.Job.browser_open(job_url=job_url)
+                    self.job.browser_open(job_url=job_url)
 
             ########################################################################################
 
@@ -306,7 +306,7 @@ class JobMonitor(Monitor):
                 if self.job_build > 1:  # Abort Message confirmed (pressed twice)
                     if job_url:
                         self.server_interaction = True
-                        self.Job.build_trigger(job_url=job_url)
+                        self.job.build_trigger(job_url=job_url)
                     else:
                         pass
                     self.job_build = 0
@@ -384,7 +384,7 @@ class JobMonitor(Monitor):
             if not self.paused:
                 self.server_interaction = True
                 with self._job_info_thread_lock:
-                    self.job_info_data = self.Job.info(job_url=job_url)
+                    self.job_info_data = self.job.info(job_url=job_url)
 
             # Wait some time before checking again
             start_time = time()
@@ -429,7 +429,7 @@ class JobMonitor(Monitor):
         """
         logger.debug(f'Thread starting - Build info (INDEX: {build_data_index}, ID: {threading.get_ident()}) ...')
         self.server_interaction = True
-        self.builds_data[build_data_index] = self.Build.info(build_url=build_url)
+        self.builds_data[build_data_index] = self.build.info(build_url=build_url)
         logger.debug(f'Thread stopped - Build info (INDEX: {build_data_index}, ID: {threading.get_ident()})')
 
     def __thread_builds_data(self, monitor_interval: float) -> None:

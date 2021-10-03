@@ -16,7 +16,7 @@ logger = logging.getLogger()
 class Stage():
     """Handeling of Jenkins stage functionality"""
 
-    def __init__(self, R, Build, Step) -> None:
+    def __init__(self, rest, build, step) -> None:
         """Object constructor method, called at object creation
 
         Args:
@@ -25,9 +25,9 @@ class Stage():
         Returns:
             None
         """
-        self.R = R
-        self.Build = Build
-        self.Step = Step
+        self.rest = rest
+        self.build = build
+        self.step = step
 
         self.build_logs_extension = '.log'
 
@@ -60,7 +60,7 @@ class Stage():
             Stage information
         """
         # Getting all stages
-        build_stage_list, build_stage_name_list = self.Build.stage_list(build_url, job_name, job_url, build_number,
+        build_stage_list, build_stage_name_list = self.build.stage_list(build_url, job_name, job_url, build_number,
                                                                         latest)
         if not build_stage_name_list:
             return {}
@@ -81,7 +81,7 @@ class Stage():
 
         # Making the request to get stage info
         endpoint = f'{build_stage_item["url"]}'
-        return_content = self.R.request(endpoint, 'get', is_endpoint=True)[0]
+        return_content = self.rest.request(endpoint, 'get', is_endpoint=True)[0]
         if not return_content:
             return {}
 
@@ -106,7 +106,7 @@ class Stage():
                 step_info['url'] = step_info['_links']['self']['href']
                 step_info['url_log'] = step_info['_links']['log']['href']
                 step_info['url_console'] = step_info['_links']['console']['href']
-                step_info['url_full'] = f'{self.R.get_server_url()}{step_info["url"]}'
+                step_info['url_full'] = f'{self.rest.get_server_url()}{step_info["url"]}'
 
         # TODO: Make utility function for additional derived info
 
@@ -222,7 +222,7 @@ class Stage():
         logger.debug(f'Thread starting - Step Info - (ID: {threading.get_ident()} - INDEX: {step_index}) ...')
 
         # Getting step information
-        return_content = self.Step.info(step_url=step['url_log'])
+        return_content = self.step.info(step_url=step['url_log'])
         if not return_content:
             return []
 
