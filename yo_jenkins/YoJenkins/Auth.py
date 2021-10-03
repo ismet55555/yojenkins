@@ -524,8 +524,8 @@ class Auth:
                                          username=self.jenkins_profile['username'],
                                          password=self.jenkins_profile['api_token'],
                                          timeout=10)
-        except Exception as e:
-            logger.debug(f'Failed to create Jenkins object. Exception: {e}')
+        except Exception as error:
+            logger.debug(f'Failed to create Jenkins object. Exception: {error}')
             return False
 
         # Update the credentials in REST object

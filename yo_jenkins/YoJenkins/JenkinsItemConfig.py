@@ -7,10 +7,10 @@ class JenkinsItemConfig(Enum):
     """Enum of Jenkins item configs ordered in categories for creating
 
     Usage Examples:
-        - `JenkinsItemConfig.folder.value['blank']`
+        - `JenkinsItemConfig.FOLDER.value['blank']`
     """
 
-    folder = {
+    FOLDER = {
         "blank":
             '''<?xml version='1.1' encoding='UTF-8'?>
                     <com.cloudbees.hudson.plugins.folder.Folder plugin="cloudbees-folder@6.15">
@@ -33,7 +33,7 @@ class JenkinsItemConfig(Enum):
         "template":
             ""
     }
-    view = {
+    VIEW = {
         "blank":
             '''<?xml version="1.1" encoding="UTF-8"?>
                     <hudson.model.ListView>
@@ -59,7 +59,7 @@ class JenkinsItemConfig(Enum):
         "template":
             ""
     }
-    job = {
+    JOB = {
         "blank":
             '''<?xml version='1.1' encoding='UTF-8'?>
                     <project>

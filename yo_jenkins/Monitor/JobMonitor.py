@@ -215,7 +215,7 @@ class JobMonitor(Monitor):
                     if 'resultText' in build and build['resultText'] != None:
                         line = build['resultText']
                     else:
-                        line = BuildStatus.unknown.value
+                        line = BuildStatus.UNKNOWN.value
                     status_color = self.status_to_color(line)
                     mu.draw_text(scr, line, y_row, x_col[3], color=self.color[status_color])
 
@@ -410,8 +410,9 @@ class JobMonitor(Monitor):
                 job_url,
                 monitor_interval,
             ), daemon=False).start()
-        except Exception as e:
-            logger.error(f'Failed to start job info monitoring thread for {job_url}. Exception: {e}. Type: {type(e)}')
+        except Exception as error:
+            logger.error(
+                f'Failed to start job info monitoring thread for {job_url}. Exception: {error}. Type: {type(error)}')
 
         return True
 
@@ -475,14 +476,14 @@ class JobMonitor(Monitor):
                                                       daemon=False)
                             thread.start()
                             threads.append(thread)
-                    except Exception as e:
-                        logger.debug(f'Failure occurred when starting build data threads. Exception: {e}')
+                    except Exception as error:
+                        logger.debug(f'Failure occurred when starting build data threads. Exception: {error}')
 
                     try:
                         for thread in threads:
                             thread.join()
-                    except Exception as e:
-                        logger.debug(f'Failure occurred when ending build data threads. Exception: {e}')
+                    except Exception as error:
+                        logger.debug(f'Failure occurred when ending build data threads. Exception: {error}')
                 else:
                     logger.debug('No job info data. Waiting ...')
 
@@ -507,7 +508,7 @@ class JobMonitor(Monitor):
         logger.debug('Starting thread for job builds info ...')
         try:
             threading.Thread(target=self.__thread_builds_data, args=(monitor_interval, ), daemon=False).start()
-        except Exception as e:
-            logger.error(f'Failed to start job builds info monitoring thread. Exception: {e}. Type: {type(e)}')
+        except Exception as error:
+            logger.error(f'Failed to start job builds info monitoring thread. Exception: {error}. Type: {type(error)}')
 
         return True

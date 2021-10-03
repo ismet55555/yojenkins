@@ -57,7 +57,7 @@ class Folder():
             # print(level, "   " * level, list_item['name'])
 
             # Check if folder
-            if list_item['_class'] in JenkinsItemClasses.folder.value['class_type']:
+            if list_item['_class'] in JenkinsItemClasses.FOLDER.value['class_type']:
 
                 # Get fullname if specified and available, else get name
                 if fullname:
@@ -69,9 +69,9 @@ class Folder():
                 try:
                     if re.search(search_pattern, list_item[dict_key], re.IGNORECASE):
                         self.search_results.append(list_item)
-                except re.error as e:
+                except re.error as error:
                     logger.debug(
-                        f'Error while applying REGEX pattern "{search_pattern}" to "{list_item[dict_key]}". Exception: {e}'
+                        f'Error while applying REGEX pattern "{search_pattern}" to "{list_item[dict_key]}". Exception: {error}'
                     )
                     break
 
@@ -163,8 +163,8 @@ class Folder():
             return {}
 
         # Check if found item type/class
-        if folder_info['_class'] not in JenkinsItemClasses.folder.value[
-                'class_type'] and JenkinsItemClasses.folder.value['item_type'] not in folder_info:
+        if folder_info['_class'] not in JenkinsItemClasses.FOLDER.value[
+                'class_type'] and JenkinsItemClasses.FOLDER.value['item_type'] not in folder_info:
             logger.debug(f'Failed to match type/class. This item is "{folder_info["_class"]}"')
             return {}
 
@@ -191,8 +191,8 @@ class Folder():
         sub_folder_list, sub_folder_list_url = utility.item_subitem_list(
             item_info=folder_info,
             get_key_info='url',
-            item_type=JenkinsItemClasses.folder.value['item_type'],
-            item_class_list=JenkinsItemClasses.folder.value['class_type'])
+            item_type=JenkinsItemClasses.FOLDER.value['item_type'],
+            item_class_list=JenkinsItemClasses.FOLDER.value['class_type'])
 
         logger.debug(f'Number of subfolders found: {len(sub_folder_list)}')
         logger.debug(f'Sub-folders: {sub_folder_list_url}')
@@ -219,8 +219,8 @@ class Folder():
         # Extract lists
         job_list, job_list_url = utility.item_subitem_list(item_info=folder_info,
                                                            get_key_info='url',
-                                                           item_type=JenkinsItemClasses.job.value['item_type'],
-                                                           item_class_list=JenkinsItemClasses.job.value['class_type'])
+                                                           item_type=JenkinsItemClasses.JOB.value['item_type'],
+                                                           item_class_list=JenkinsItemClasses.JOB.value['class_type'])
 
         logger.debug(f'Number of jobs found: {len(job_list)}')
         logger.debug(f'Jobs: {job_list_url}')
@@ -247,8 +247,8 @@ class Folder():
         view_list, view_list_url = utility.item_subitem_list(
             item_info=folder_info,
             get_key_info='url',
-            item_type=JenkinsItemClasses.view.value['item_type'],
-            item_class_list=JenkinsItemClasses.view.value['class_type'])
+            item_type=JenkinsItemClasses.VIEW.value['item_type'],
+            item_class_list=JenkinsItemClasses.VIEW.value['class_type'])
 
         logger.debug(f'Number of views found: {len(view_list)}')
         logger.debug(f'Views: {view_list_url}')
@@ -275,7 +275,7 @@ class Folder():
             return [], []
 
         # Getting all possible Jenkins items listed enum
-        all_subitems = [e.value for e in JenkinsItemClasses]
+        all_subitems = [subitem.value for subitem in JenkinsItemClasses]
 
         # Searching folder info for matches
         all_item_list = []
@@ -396,48 +396,44 @@ class Folder():
         if utility.has_special_char(name):
             return False
 
-        # TODO: Check if job already exists
-
         supported_create_items = ['folder', 'view', 'job']
         if type.strip().lower() not in supported_create_items:
             logger.debug(f'Failed to match supported items to create: {supported_create_items}')
             return False
 
-        # Use item configuration from file if provided
         if config:
+            # Use item configuration from file if provided
             logger.debug(f'Opening and reading file: {config} ...')
             try:
-                config_file = open(config, 'rb')
-                item_config = config_file.read()
-            except (OSError, IOError) as error:
-                logger.debug(f'Failed to open and read file: {config_file}  Exception: {error}')
+                open_file = open(config, 'rb')
+                item_config = open_file.read()
+            except (OSError, IOError, PermissionError) as error:
+                logger.debug(f'Failed to open and read file. Exception: {error}')
+                return False
 
             if config_is_json:
                 logger.debug('Converting the specified JSON file to XML format ...')
                 try:
                     item_config = xmltodict.unparse(json.loads(item_config))
-                except Exception as error:
+                except ValueError as error:
                     logger.debug(f'Failed to convert the specified JSON file to XML format. Exception: {error}')
                     return False
-
-        # Use blank item config
-
-        # FIXME: These are not valid XML configs, try json instead
-        # FIXME: This does not account for the name of the item
-
-        if type == 'folder':
-            endpoint = f'createItem?name={name}'
-            item_config = JenkinsItemConfig.folder.value['blank']
-            # prefix = JenkinsItemClasses.folder.value['prefix']
-        elif type == 'view':
-            endpoint = f'createView?name={name}'
-            item_config = JenkinsItemConfig.view.value['blank']
-            # prefix = JenkinsItemClasses.view.value['prefix']
-        elif type == 'job':
-            endpoint = f'createItem?name={name}'
-            item_config = JenkinsItemConfig.job.value['blank']
-            # prefix = JenkinsItemClasses.job.value['prefix']
-        headers = {'Content-Type': 'application/xml; charset=utf-8'}
+        else:
+            # Use blank item config
+            # FIXME: These are not valid XML configs, try json instead
+            # FIXME: This does not account for the name of the item
+            if type == 'folder':
+                endpoint = f'createItem?name={name}'
+                item_config = JenkinsItemConfig.FOLDER.value['blank']
+                # prefix = JenkinsItemClasses.FOLDER.value['prefix']
+            elif type == 'view':
+                endpoint = f'createView?name={name}'
+                item_config = JenkinsItemConfig.VIEW.value['blank']
+                # prefix = JenkinsItemClasses.VIEW.value['prefix']
+            elif type == 'job':
+                endpoint = f'createItem?name={name}'
+                item_config = JenkinsItemConfig.JOB.value['blank']
+                # prefix = JenkinsItemClasses.JOB.value['prefix']
 
         # Checking if the item exists
         if utility.item_exists_in_folder(name, folder_url, type, self.REST):
@@ -445,6 +441,7 @@ class Folder():
 
         # Creating the item
         logger.debug(f'Creating "{type}" item "{name}" ...')
+        headers = {'Content-Type': 'application/xml; charset=utf-8'}
         _, _, success = self.REST.request(f'{folder_url.strip("/")}/{endpoint}',
                                           'post',
                                           data=item_config.encode('utf-8'),
@@ -455,8 +452,8 @@ class Folder():
 
         # Close the potentially open item configuration file
         try:
-            config_file.close()
-        except Exception:
+            open_file.close()
+        except (OSError, IOError):
             pass
 
         return success

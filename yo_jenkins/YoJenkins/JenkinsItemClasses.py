@@ -11,10 +11,10 @@ class JenkinsItemClasses(Enum):
     class_type - Any class type Jenkins categorizes this item
 
     Usage Examples:
-        - `JenkinsItemClasses.folder.value['class_type']`
-        - `JenkinsItemClasses.view.value['item_type']`
+        - `JenkinsItemClasses.FOLDER.value['class_type']`
+        - `JenkinsItemClasses.VIEW.value['item_type']`
     """
-    folder = {
+    FOLDER = {
         "item_type":
             "jobs",
         "prefix":
@@ -25,7 +25,7 @@ class JenkinsItemClasses(Enum):
             'jenkins.branch.OrganizationFolder'
         ]
     }
-    view = {
+    VIEW = {
         "item_type":
             "views",
         "prefix":
@@ -34,22 +34,22 @@ class JenkinsItemClasses(Enum):
             'hudson.model.AllView', 'hudson.model.ListView', 'jenkins.branch.MultiBranchProjectViewHolder$ViewImpl'
         ]
     }
-    job = {
+    JOB = {
         "item_type": "jobs",
         "prefix": "job",
         "class_type": ['org.jenkinsci.plugins.workflow.job.WorkflowJob', 'hudson.model.FreeStyleProject']
     }
-    build = {
+    BUILD = {
         "item_type": "builds",
         "prefix": "",
         "class_type": ['org.jenkinsci.plugins.workflow.job.WorkflowRun', 'hudson.model.FreeStyleBuild']
     }
-    queue = {
+    QUEUE = {
         "item_type": "queue",
         "prefix": "",
         "class_type": ['hudson.model.Queue$BuildableItem', 'hudson.model.Queue$BlockedItem']
     }
-    node = {
+    NODE = {
         "item_type": "computer",
         "prefix": "",
         "class_type": ['hudson.slaves.SlaveComputer', 'hudson.slaves.DumbSlave', 'hudson.model.Hudson$MasterComputer']

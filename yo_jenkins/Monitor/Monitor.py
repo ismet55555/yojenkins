@@ -139,7 +139,7 @@ class Monitor:
             try:
                 for y_2, line in enumerate(message_lines):
                     scr.addstr(1 + y_2, mu.get_center_x(scr, line), line, self.decor['bold'])
-            except Exception as e:
+            except Exception:
                 logger.debug(
                     f'Failed to render window. Window size way too small. Needed : W:{self.width_limit} x H:{self.height_limit}'
                 )
@@ -151,7 +151,7 @@ class Monitor:
 
     def status_to_color(self, status_text: str) -> str:
         """
-        Given a status text
+        Given a status text, get the color for the status
 
         Args:
             scr (obj): Handle for curses terminal screen handle
@@ -160,12 +160,12 @@ class Monitor:
         """
         for status_item in Status:
             if status_text.strip().upper() in status_item.value:
-                return Color.items.value[status_item.name]
-        return Color.items.value['unknown']
+                return Color.ITEMS.value[status_item.name]
+        return Color.ITEMS.value['UNKNOWN']
 
     def status_to_sound(self, status_text: str) -> str:
         """
-        Given a status sound
+        Given a status sound, get the sound for the status
 
         Args:
             scr (obj): Handle for curses terminal screen handle
@@ -175,8 +175,8 @@ class Monitor:
         """
         for status_item in Status:
             if status_text.strip().upper() in status_item.value:
-                return Sound.items.value[status_item.name]
-        return Sound.items.value['unknown']
+                return Sound.ITEMS.value[status_item.name]
+        return Sound.ITEMS.value['UNKNOWN']
 
     ###########################################################################
     #                         PLAY SOUND EFFECT
@@ -198,8 +198,8 @@ class Monitor:
             try:
                 wave_obj = simpleaudio.WaveObject.from_wave_file(sound_filepath)
                 play_obj = wave_obj.play()
-            except Exception as e:
-                logger.error(f'Failed to play sound. Exception: {e}')
+            except Exception as error:
+                logger.error(f'Failed to play sound. Exception: {error}')
             self.playing_sound = True
             while self.all_threads_enabled:
                 if play_obj.is_playing():
@@ -212,8 +212,8 @@ class Monitor:
             try:
                 winsound.PlaySound(sound_filepath, winsound.SND_FILENAME | winsound.SND_NODEFAULT)
                 self.playing_sound = True
-            except RuntimeError as e:
-                logger.error(f'Failed to play sound. Exception: {e}')
+            except RuntimeError as error:
+                logger.error(f'Failed to play sound. Exception: {error}')
         self.playing_sound = False
         logger.debug(f'Thread stopped - Play sound - (ID: {threading.get_ident()})')
 
@@ -229,8 +229,9 @@ class Monitor:
         logger.debug(f'Playing sound file "{sound_filepath}" ...')
         try:
             threading.Thread(target=self.__thread_play_sound, args=(sound_filepath, ), daemon=True).start()
-        except Exception as e:
-            logger.error(f'Failed to start play sound thread for "{sound_filepath}". Exception: {e}. Type: {type(e)}')
+        except Exception as error:
+            logger.error(
+                f'Failed to start play sound thread for "{sound_filepath}". Exception: {error}. Type: {type(error)}')
 
         return True
 
@@ -284,8 +285,8 @@ class Monitor:
         logger.debug(f'Starting thread for server status ...')
         try:
             threading.Thread(target=self.__thread_server_status, args=(monitor_interval, ), daemon=False).start()
-        except Exception as e:
-            logger.error(f'Failed to start server status monitoring thread. Exception: {e}. Type: {type(e)}')
+        except Exception as error:
+            logger.error(f'Failed to start server status monitoring thread. Exception: {error}. Type: {type(error)}')
 
         return True
 

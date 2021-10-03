@@ -104,8 +104,8 @@ def load_contents_from_remote_file_url(file_type: str, remote_file_url: str, all
     logger.debug(f'Getting remote file HTTP request headers for "{remote_file_url}" ...')
     try:
         return_content = requests.head(remote_file_url)
-    except Exception as e:
-        logger.debug(f'Failed to request headers. Exception: {e}')
+    except Exception as error:
+        logger.debug(f'Failed to request headers. Exception: {error}')
         return {}
     header = return_content.headers
 
@@ -140,8 +140,8 @@ def load_contents_from_remote_file_url(file_type: str, remote_file_url: str, all
         logger.debug("Loading contents of remote file ...")
         try:
             file_contents = yaml.safe_load(remote_request.content)
-        except Exception as e:
-            logger.debug(f'Failed loading requested file. Exception: {e}')
+        except Exception as error:
+            logger.debug(f'Failed loading requested file. Exception: {error}')
             return {}
     else:
         logger.debug(
@@ -540,7 +540,7 @@ def to_seconds(time_quantity: int, time_unit_text: str) -> int:
 
     if time_unit_text in ["blue moon"]:
         blue_moon = 41  # months
-        return time_quantity * blue_moon * 2.628e+6
+        return int(time_quantity * blue_moon * 2.628e+6)
 
     return 0
 
@@ -568,7 +568,7 @@ def html_clean(html: str) -> str:
     return cleaned_text
 
 
-def browser_open(url: str, new: int = 2, autoraise: bool = True) -> str:
+def browser_open(url: str, new: int = 2, autoraise: bool = True) -> bool:
     """Clean up HTML format to text without HTML tags
 
     Args:
@@ -581,8 +581,8 @@ def browser_open(url: str, new: int = 2, autoraise: bool = True) -> str:
     """
     try:
         webbrowser.open(url.strip('/'), new, autoraise)
-    except Exception as e:
-        logger.debug(f'Failed to open web browser for URL: {url.strip("/")}  Exception: {e}')
+    except Exception as error:
+        logger.debug(f'Failed to open web browser for URL: {url.strip("/")}  Exception: {error}')
         return False
     return True
 
@@ -633,14 +633,14 @@ def queue_find(all_queue_info: dict, job_name: str = '', job_url: str = '', firs
     """
     if not job_name and not job_url:
         logger.debug('Failed to get job information. No job name or job url received')
-        return {}
+        return []
     job_name = job_name if job_name else url_to_name(job_url)
 
     queue_item_matches = []
 
     for i, queue_item in enumerate(all_queue_info['items']):
         # Check the item type
-        if queue_item['task']['_class'] not in JenkinsItemClasses.job.value['class_type']:
+        if queue_item['task']['_class'] not in JenkinsItemClasses.JOB.value['class_type']:
             logger.debug(
                 f"[ITEM {i+1}/{len(all_queue_info['items'])}] Queued item not a job. Item class: {queue_item['task']['_class']}"
             )

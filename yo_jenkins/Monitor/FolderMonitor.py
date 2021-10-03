@@ -6,17 +6,6 @@ import logging
 # from Monitor.Monitor import Monitor
 from yo_jenkins.Monitor.Monitor import Monitor
 
-# import os
-# import sys
-# import textwrap
-# import threading
-# from pprint import pprint
-# from time import sleep, time
-
-# from yo_jenkins.YoJenkins.Status import BuildStatus, Color, Sound, StageStatus, Status
-
-# from . import monitor_utility as mu
-
 # Getting the logger reference
 logger = logging.getLogger()
 

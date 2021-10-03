@@ -5,7 +5,7 @@ import logging
 import re
 from datetime import timedelta
 from time import perf_counter
-from typing import Dict, Tuple
+from typing import Dict, Tuple, Union
 from urllib.parse import urlencode
 
 import jenkins
@@ -64,7 +64,7 @@ class Job():
         for list_item in search_list:
 
             # Check if it is not a job
-            if list_item['_class'] in JenkinsItemClasses.job.value['class_type']:
+            if list_item['_class'] in JenkinsItemClasses.JOB.value['class_type']:
 
                 # Get fullname, else get name
                 if fullname:
@@ -175,7 +175,7 @@ class Job():
             return {}
 
         # Check if found item type/class
-        if job_info['_class'] not in JenkinsItemClasses.job.value['class_type']:
+        if job_info['_class'] not in JenkinsItemClasses.JOB.value['class_type']:
             logger.debug(f'Failed to match type/class. This item is "{job_info["_class"]}"')
             return {}
 
@@ -211,12 +211,12 @@ class Job():
         build_list, build_url_list = utility.item_subitem_list(
             item_info=job_info,
             get_key_info='url',
-            item_type=JenkinsItemClasses.build.value['item_type'],
-            item_class_list=JenkinsItemClasses.build.value['class_type'])
+            item_type=JenkinsItemClasses.BUILD.value['item_type'],
+            item_class_list=JenkinsItemClasses.BUILD.value['class_type'])
 
         return build_list, build_url_list
 
-    def build_next_number(self, job_name: str = '', job_url: str = '') -> int:
+    def build_next_number(self, job_name: str = '', job_url: str = '') -> Union[int, None]:
         """TODO Docstring
 
         Args:
@@ -261,7 +261,7 @@ class Job():
 
         return job_info['lastBuild']['number']
 
-    def build_set_next_number(self, build_number: int, job_name: str = '', job_url: str = '') -> int:
+    def build_set_next_number(self, build_number: int, job_name: str = '', job_url: str = '') -> Union[int, None]:
         """TODO Docstring
 
         Args:
@@ -272,7 +272,7 @@ class Job():
         """
         if not job_name and not job_url:
             logger.debug('Failed to set job next build number. No job name or job url received')
-            return
+            return None
         if job_url and not job_name:
             job_name = utility.url_to_name(url=job_url)
         # Format name
@@ -283,15 +283,19 @@ class Job():
         try:
             # TODO: Use requests instead of jenkins-python
             response = self.JenkinsSDK.set_next_build_number(job_name, build_number)
-        except jenkins.JenkinsException as e:
-            error_no_html = e.args[0].split("\n")[0]
+        except jenkins.JenkinsException as error:
+            error_no_html = error.args[0].split("\n")[0]
             logger.debug(
                 f'Failed to set next build number for job "{job_name}" to {build_number}. Exception: {error_no_html}')
-            return
+            return None
 
         return build_number
 
-    def build_number_exist(self, build_number: int, job_info: dict, job_name: str = '', job_url: str = '') -> bool:
+    def build_number_exist(self,
+                           build_number: int,
+                           job_info: dict,
+                           job_name: str = '',
+                           job_url: str = '') -> Union[bool, None]:
         """TODO Docstring
 
         Args:
@@ -332,7 +336,7 @@ class Job():
 
         if not job_name and not job_url:
             logger.debug('Failed to get trigger job build. No job name or job url received')
-            return 0, ''
+            return 0
 
         logger.debug(f'Job reference passed: {job_name if job_name else job_url}')
 
@@ -730,13 +734,13 @@ class Job():
         if utility.item_exists_in_folder(name, folder_url, "job", self.REST):
             return False
 
-        # Use job config from file
         if config_file:
+            # Use job config from file
             logger.debug(f'Opening and reading file: {config_file} ...')
             try:
-                config_file = open(config_file, 'rb')
-                job_config = config_file.read()
-            except Exception as error:
+                open_file = open(config_file, 'rb')
+                job_config = open_file.read()
+            except (OSError, IOError, PermissionError) as error:
                 logger.debug(f'Failed to open and read file. Exception: {error}')
                 return False
 
@@ -744,12 +748,12 @@ class Job():
                 logger.debug('Converting the specified JSON file to XML format ...')
                 try:
                     job_config = xmltodict.unparse(json.loads(job_config))
-                except Exception as error:
+                except ValueError as error:
                     logger.debug(f'Failed to convert the specified JSON file to XML format. Exception: {error}')
                     return False
         else:
             # Use blank job config template
-            job_config = JenkinsItemConfig.job.value['blank']
+            job_config = JenkinsItemConfig.JOB.value['blank']
 
         logger.debug(f'Creating job "{name}" within folder "{folder_url}" "...')
         endpoint = f'createItem?name={name}'
@@ -762,8 +766,8 @@ class Job():
         logger.debug(f'Successfully created item "{name}"' if success else f'Failed to create item "{name}"')
 
         try:
-            config_file.close()
-        except Exception:
+            open_file.close()
+        except (OSError, IOError):
             pass
 
         return success

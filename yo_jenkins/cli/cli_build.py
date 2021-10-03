@@ -93,15 +93,15 @@ def status(profile: str, job: str, build_number: int, build_url: str, latest: bo
         sys.exit(1)
 
     # Color for output
-    if data.upper() in Status.unknown.value:
+    if data.upper() in Status.UNKNOWN.value:
         output_fg = 'black'
-    elif data.upper() in Status.queued.value:
+    elif data.upper() in Status.QUEUED.value:
         output_fg = 'yellow'
-    elif data.upper() in Status.running.value:
+    elif data.upper() in Status.RUNNING.value:
         output_fg = 'blue'
-    elif data.upper() in Status.success.value:
+    elif data.upper() in Status.SUCCESS.value:
         output_fg = 'bright_green'
-    elif data.upper() in Status.failure.value:
+    elif data.upper() in Status.FAILURE.value:
         output_fg = 'bright_red'
     else:
         output_fg = ''

@@ -105,8 +105,8 @@ class DockerJenkinsServer():
         # Get the local docker client
         try:
             self.docker_client = docker.from_env()
-        except Exception as e:
-            logger.debug(f'Failed to get docker client/engine handle. Exception: {e}')
+        except Exception as error:
+            logger.debug(f'Failed to get docker client/engine handle. Exception: {error}')
             return False
 
         # Ping the docker client
@@ -210,8 +210,8 @@ class DockerJenkinsServer():
                                             buildargs=self.image_build_args,
                                             quiet=False,
                                             forcerm=True)
-        except Exception as e:
-            logger.debug(f'Failed to build image: {self.image_fullname}. Exception: {e}')
+        except Exception as error:
+            logger.debug(f'Failed to build image: {self.image_fullname}. Exception: {error}')
             return ''
         logger.debug(
             f'Successfully build image: {self.image_fullname} (Elapsed time: {perf_counter() - start_time:.3f}s)')
@@ -231,8 +231,8 @@ class DockerJenkinsServer():
         logger.debug(f'Removing image: {self.image_fullname} ...')
         try:
             self.docker_client.images.remove(self.image_fullname)
-        except Exception as e:
-            logger.debug(f'Failed to remove image: {self.image_fullname}. Exception: {e}')
+        except Exception as error:
+            logger.debug(f'Failed to remove image: {self.image_fullname}. Exception: {error}')
             return False
         logger.debug(f'Successfully removed image: {self.image_fullname}')
         return True
@@ -305,8 +305,8 @@ class DockerJenkinsServer():
                 volume_named = self.docker_client.volumes.get(volume_name)
                 volume_named.remove(force=True)
                 logger.debug(f'    - Volume: {volume_name} - REMOVED')
-            except Exception as e:
-                logger.debug(f'    - Volume: {volume_name} - FAILED - Exception: {e}')
+            except Exception as error:
+                logger.debug(f'    - Volume: {volume_name} - FAILED - Exception: {error}')
         return True
 
     def __container_run(self) -> Tuple[str, str]:
@@ -340,8 +340,8 @@ class DockerJenkinsServer():
                                               auto_remove=self.container_remove,
                                               detach=True,
                                               group_add=docker_gid)
-        except Exception as e:
-            logger.debug(f'Failed to run container: {self.container_name} Exception: {e}')
+        except Exception as error:
+            logger.debug(f'Failed to run container: {self.container_name} Exception: {error}')
             return '', ''
         logger.debug(f'Successfully running container: {self.container_name}')
         logger.debug(f'Container "{self.container_name}" is running at this address:')
@@ -364,8 +364,8 @@ class DockerJenkinsServer():
             container_handle = self.docker_client.containers.get(self.container_name)
             container_handle.stop()
             logger.debug('Container is stopped')
-        except Exception as e:
-            logger.debug(f'Failed to stop container matching tag: {self.container_name}. Exception: {e}')
+        except Exception as error:
+            logger.debug(f'Failed to stop container matching tag: {self.container_name}. Exception: {error}')
             return False
         return True
 
@@ -385,6 +385,6 @@ class DockerJenkinsServer():
             container_handle = self.docker_client.containers.get(self.container_name)
             container_handle.kill()
             logger.debug('Container is dead')
-        except Exception as e:
-            logger.debug(f'Failed to kill container matching tag: {self.container_name}. Exception: {e}')
+        except Exception as error:
+            logger.debug(f'Failed to kill container matching tag: {self.container_name}. Exception: {error}')
         return True

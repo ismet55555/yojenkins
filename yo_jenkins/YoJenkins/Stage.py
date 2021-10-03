@@ -147,12 +147,12 @@ class Stage():
                                latest=latest)
 
         if not stage_info:
-            return StageStatus.not_found.value
+            return StageStatus.NOT_FOUND.value
 
         # Check if in process (build is there but results not posted)
         if not stage_info['status']:
             logger.debug('Stage was found running/building, however no results are posted')
-            return StageStatus.unknown.value
+            return StageStatus.UNKNOWN.value
         else:
             logger.debug('Stage found, but has concluded or stopped with result')
             return stage_info['status']
@@ -326,8 +326,8 @@ class Stage():
                 with open(os.path.join(download_dir, filename), 'w+') as file:
                     file.write(stage_log_text)
                 logger.debug('Successfully write build logs to file')
-            except Exception as e:
-                logger.debug(f'Failed to write logs to file. Exception: {e}')
+            except Exception as error:
+                logger.debug(f'Failed to write logs to file. Exception: {error}')
                 return False
         else:
             # Output to console

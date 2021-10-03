@@ -282,7 +282,7 @@ class BuildMonitor(Monitor):
                     mu.draw_text(scr, line, y_row, x_col[2])
 
                     # Status text and color
-                    result_text = build_stage['status'] if 'status' in build_stage else StageStatus.unknown.value
+                    result_text = build_stage['status'] if 'status' in build_stage else StageStatus.UNKNOWN.value
                     status_color = self.status_to_color(build_stage['status'])
 
                     mu.draw_text(scr, result_text, y_row, x_col[3], color=self.color[status_color])
@@ -319,11 +319,11 @@ class BuildMonitor(Monitor):
             # Drawing the screen border
             border_color = 'grey-dark'
             if 'resultText' in self.build_info_data:
-                if self.build_info_data['resultText'] in Status.success.value:
+                if self.build_info_data['resultText'] in Status.SUCCESS.value:
                     border_color = 'green'
-                elif self.build_info_data['resultText'] in Status.failure.value:
+                elif self.build_info_data['resultText'] in Status.FAILURE.value:
                     border_color = 'red'
-                elif self.build_info_data['resultText'] in Status.aborted.value:
+                elif self.build_info_data['resultText'] in Status.ABORTED.value:
                     border_color = 'magenta'
             mu.draw_screen_border(scr, self.color[border_color])
 
@@ -496,9 +496,10 @@ class BuildMonitor(Monitor):
                 build_url,
                 monitor_interval,
             ), daemon=False).start()
-        except Exception as e:
+        except Exception as error:
             logger.error(
-                f'Failed to start build info monitoring thread for {build_url}. Exception: {e}. Type: {type(e)}')
+                f'Failed to start build info monitoring thread for {build_url}. Exception: {error}. Type: {type(error)}'
+            )
 
         return True
 

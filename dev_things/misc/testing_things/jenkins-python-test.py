@@ -25,8 +25,8 @@ J = jenkins.Jenkins(url='https://localhost:8080/',
 # Getting user name
 try:
     user = J.get_whoami()
-except jenkins.JenkinsException as e:
-    error_no_html = e.args[0].split("\n")[0]
+except jenkins.JenkinsException as error:
+    error_no_html = error.args[0].split("\n")[0]
     logger.fatal(f'Jenkins server authentication failed.')
     logger.fatal(f'Exception: {error_no_html}')
     logger.fatal(f'Possible causes:')

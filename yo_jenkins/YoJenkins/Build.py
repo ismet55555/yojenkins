@@ -71,7 +71,7 @@ class Build():
                 return {}
 
             # Check if found item type/class is a build
-            if job_info['_class'] not in JenkinsItemClasses.job.value['class_type']:
+            if job_info['_class'] not in JenkinsItemClasses.JOB.value['class_type']:
                 logger.debug(
                     f'Failed. The passed job information does not match a job type/class. Failed to match type/class. This item is "{job_info["_class"]}"'
                 )
@@ -104,7 +104,7 @@ class Build():
                 return {}
 
         # Check if found item type/class is a build
-        if build_info['_class'] not in JenkinsItemClasses.build.value['class_type']:
+        if build_info['_class'] not in JenkinsItemClasses.BUILD.value['class_type']:
             logger.debug(f'Failed to match type/class. This item is "{build_info["_class"]}"')
             return {}
 
@@ -125,18 +125,18 @@ class Build():
                         (build_info['timestamp'] + build_info['duration']) / 1000.0).strftime("%A, %B %d, %Y %I:%M:%S")
                     build_info['elapsedFormatted'] = build_info['durationFormatted']
                 else:
-                    build_info['resultText'] = BuildStatus.running.value
+                    build_info['resultText'] = BuildStatus.RUNNING.value
                     build_info['durationFormatted'] = None
                     build_info['endDatetime'] = None
                     build_info['elapsedFormatted'] = str(
                         timedelta(seconds=((datetime.utcnow().timestamp()) - build_info['timestamp'] / 1000)))[:-3]
 
             else:
-                build_info['resultText'] = BuildStatus.unknown.value
+                build_info['resultText'] = BuildStatus.UNKNOWN.value
         else:
             build_info['startDatetime'] = None
             build_info['estimatedDurationFormatted'] = None
-            build_info['resultText'] = BuildStatus.not_run.value
+            build_info['resultText'] = BuildStatus.NOT_RUN.value
             build_info['durationFormatted'] = None
             build_info['endDatetime'] = None
             build_info['elapsedFormatted'] = None
@@ -208,17 +208,17 @@ class Build():
 
             if not queue_info:
                 logger.debug('Build for job NOT found in queue')
-                return BuildStatus.not_found.value
+                return BuildStatus.NOT_FOUND.value
             else:
                 logger.debug(f'Build for job found in queue. Queue number {queue_info["id"]}')
-                return BuildStatus.queued.value
+                return BuildStatus.QUEUED.value
 
         # FIXME: resultText is returned in build info. Maybe move queue check to build_info??
 
         # Check if in process (build is there but results not posted)
         if 'result' not in build_info:
             logger.debug('Build was found running/building, however no results are posted')
-            return BuildStatus.running.value
+            return BuildStatus.RUNNING.value
         else:
             # FIXME: Get "No status found" when "yo-jenkins build status --url" on build that is "RUNNING" (result: Null)
             logger.debug('Build found, but has concluded or stopped with result')
@@ -428,8 +428,8 @@ class Build():
                             if chunk:
                                 open_file.write(chunk)
                 logger.debug('Successfully download build logs to file')
-            except Exception as e:
-                logger.debug('Failed to download or save logs for build. Exception: {e}')
+            except Exception as error:
+                logger.debug('Failed to download or save logs for build. Exception: {error}')
                 return False
         else:
             # Stream the logs to console
@@ -497,7 +497,7 @@ class Build():
                             print(diff_text)
                         else:
                             logger.debug('NO content length difference')
-                except KeyboardInterrupt as e:
+                except KeyboardInterrupt:
                     logger.debug('Keyboard Interrupt (CTRL-C) by user. Stopping log following ...')
         return True
 

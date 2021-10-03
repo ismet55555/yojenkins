@@ -79,8 +79,8 @@ class Node():
         node_list, node_list_name = utility.item_subitem_list(
             item_info=nodes_info,
             get_key_info='displayName',
-            item_type=JenkinsItemClasses.node.value['item_type'],
-            item_class_list=JenkinsItemClasses.node.value['class_type'])
+            item_type=JenkinsItemClasses.NODE.value['item_type'],
+            item_class_list=JenkinsItemClasses.NODE.value['class_type'])
 
         logger.debug(f'Number of nodes found: {len(node_list)}')
         logger.debug(f'Node names: {node_list_name}')
@@ -314,16 +314,16 @@ class Node():
             with open(config_file, 'rb') as file:
                 node_config = file.read()
             logger.debug('Successfully read configuration file')
-        except Exception as e:
-            logger.debug(f'Failed to read configuration file. Exception: {e}')
+        except Exception as error:
+            logger.debug(f'Failed to read configuration file. Exception: {error}')
             return False
 
         if config_is_json:
             logger.debug('Converting the specified JSON file to XML format ...')
             try:
                 node_config = xmltodict.unparse(json.loads(node_config))
-            except Exception as e:
-                logger.debug(f'Failed to convert the specified JSON file to XML format. Exception: {e}')
+            except Exception as error:
+                logger.debug(f'Failed to convert the specified JSON file to XML format. Exception: {error}')
                 return False
 
         _, _, success = self.REST.request(target=f"computer/{node_name}/config.xml",
