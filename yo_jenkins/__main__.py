@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+"""Main entry point for program"""
 
 import logging
 import sys
@@ -1200,15 +1200,15 @@ def history(debug, profile, clear):
     set_debug_log_level(debug)
     cli_tools.history(profile, clear)
 
-@tools.command(short_help='\tSend a generic REST request to server')
+@tools.command(short_help='\tSend a generic Rest request to server')
 @cli_decorators.debug
 @cli_decorators.profile
 @click.argument('request_text', nargs=1, type=str, required=True)
-@click.option('--request-type', type=click.Choice(['GET', 'POST', 'HEAD'], case_sensitive=False), default='GET', show_default=True, required=False, help='Type of REST request')
+@click.option('--request-type', type=click.Choice(['GET', 'POST', 'HEAD'], case_sensitive=False), default='GET', show_default=True, required=False, help='Type of Rest request')
 @click.option('--raw', type=bool, required=False, default=False, is_flag=True, help='Return raw return text')
 @click.option('--clean-html', type=bool, required=False, default=False, is_flag=True, help='Clean any HTML tags from return')
 def rest_request(debug, profile, request_text, request_type, raw, clean_html):
-    """Use this command to send REST calls to the server.
+    """Use this command to send Rest calls to the server.
     The request will be send with the proper authentication form your profile.
     This can be useful if yo-jenkins does not have the functionality you need.
 

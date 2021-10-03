@@ -14,5 +14,5 @@ filepath = 'yo_jenkins\sound\positive_alert_notification_musical_short_marimba_p
 
 try:
     winsound.PlaySound(filepath, winsound.SND_FILENAME | winsound.SND_NODEFAULT)
-except RuntimeError as e:
-    logger.error(f'Failed to play sound. Exception: {e}')
+except RuntimeError as error:
+    logger.error(f'Failed to play sound. Exception: {error}')

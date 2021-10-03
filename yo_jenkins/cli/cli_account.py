@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+"""Account Menu CLI Entrypoints"""
 
 import logging
 import sys
@@ -24,8 +24,8 @@ def list(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_li
     Returns:
         TODO
     """
-    jy_obj = cu.config_yo_jenkins(profile)
-    data, data_list = jy_obj.Account.list()
+    yj_obj = cu.config_yo_jenkins(profile)
+    data, data_list = yj_obj.account.list()
     if not data:
         click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
@@ -45,8 +45,8 @@ def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profil
     Returns:
         TODO
     """
-    jy_obj = cu.config_yo_jenkins(profile)
-    data = jy_obj.Account.info(user_id=user_id)
+    yj_obj = cu.config_yo_jenkins(profile)
+    data = yj_obj.account.info(user_id=user_id)
     if not data:
         click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
@@ -65,8 +65,8 @@ def create(profile: str, user_id: str, password: str, is_admin: bool, email: str
     Returns:
         TODO
     """
-    jy_obj = cu.config_yo_jenkins(profile)
-    data = jy_obj.Account.create(user_id=user_id,
+    yj_obj = cu.config_yo_jenkins(profile)
+    data = yj_obj.account.create(user_id=user_id,
                                  password=password,
                                  is_admin=is_admin,
                                  email=email,
@@ -89,8 +89,8 @@ def delete(profile: str, user_id: str) -> None:
     Returns:
         TODO
     """
-    jy_obj = cu.config_yo_jenkins(profile)
-    data = jy_obj.Account.delete(user_id=user_id)
+    yj_obj = cu.config_yo_jenkins(profile)
+    data = yj_obj.account.delete(user_id=user_id)
     if not data:
         click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
@@ -109,8 +109,8 @@ def permission(profile: str, user_id: str, action: str, permission_id: str) -> N
     Returns:
         TODO
     """
-    jy_obj = cu.config_yo_jenkins(profile)
-    data = jy_obj.Account.permission(user_id=user_id, action=action, permission_id=permission_id)
+    yj_obj = cu.config_yo_jenkins(profile)
+    data = yj_obj.account.permission(user_id=user_id, action=action, permission_id=permission_id)
     if not data:
         click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
@@ -130,8 +130,8 @@ def permission_list(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: b
     Returns:
         TODO
     """
-    jy_obj = cu.config_yo_jenkins(profile)
-    data, data_list = jy_obj.Account.permission_list()
+    yj_obj = cu.config_yo_jenkins(profile)
+    data, data_list = yj_obj.account.permission_list()
     if not data:
         click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)

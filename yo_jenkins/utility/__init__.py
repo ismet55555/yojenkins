@@ -1,3 +1,3 @@
 """Importing sub-modules"""
 
-from . import *
+from .utility import *

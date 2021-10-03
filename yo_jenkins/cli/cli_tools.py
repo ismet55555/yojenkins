@@ -1,17 +1,18 @@
-#!/usr/bin/env python3
+"""Tools Menu CLI Entrypoints"""
 
 import json
 import logging
 import os
 import sys
 from pathlib import Path
+from typing import Tuple
 
 import click
 
 from yo_jenkins.cli import cli_utility as cu
-from yo_jenkins.cli.cli_utility import CONFIG_DIR_NAME, HISTORY_FILE_NAME, log_to_history
-from yo_jenkins.Tools import Package, SharedLibrary
-from yo_jenkins.Utility.utility import browser_open, html_clean, load_contents_from_local_file
+from yo_jenkins.cli.cli_utility import log_to_history
+from yo_jenkins.tools import Package, SharedLibrary
+from yo_jenkins.utility.utility import browser_open, html_clean, load_contents_from_local_file
 
 # Getting the logger reference
 logger = logging.getLogger()
@@ -109,7 +110,7 @@ def history(profile: str, clear: bool) -> None:
         None
     """
     # Load contents form history file
-    history_file_path = os.path.join(os.path.join(Path.home(), CONFIG_DIR_NAME), HISTORY_FILE_NAME)
+    history_file_path = os.path.join(os.path.join(Path.home(), cu.CONFIG_DIR_NAME), cu.HISTORY_FILE_NAME)
     contents = load_contents_from_local_file('json', history_file_path)
     if not contents:
         click.echo(click.style('No history found', fg='bright_red', bold=True))
@@ -165,9 +166,9 @@ def rest_request(profile: str, request_text: str, request_type: str, raw: bool, 
     Returns:
         None
     """
-    jy_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile)
     request_text = request_text.strip('/')
-    content, header, success = jy_obj.REST.request(
+    content, header, success = yj_obj.rest.request(
         target=request_text,
         request_type=request_type,
         json_content=(not raw),
@@ -198,7 +199,7 @@ def rest_request(profile: str, request_text: str, request_type: str, raw: bool, 
 
 
 @log_to_history
-def run_script(profile: str, script_text: str, script_filepath: str, output_filepath: str) -> None:
+def run_script(profile: str, script_text: str, script_filepath: str, output_filepath: str) -> Tuple[str, bool]:
     """TODO
 
     Details: TODO:
@@ -209,7 +210,7 @@ def run_script(profile: str, script_text: str, script_filepath: str, output_file
     Returns:
         None
     """
-    jy_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile)
 
     # Prepare the commands/script
     if script_text:
@@ -228,7 +229,7 @@ def run_script(profile: str, script_text: str, script_filepath: str, output_file
             sys.exit(1)
 
     # Send the request to the server
-    content, _, success = jy_obj.REST.request(target='scriptText',
+    content, _, success = yj_obj.rest.request(target='scriptText',
                                               request_type='post',
                                               data={'script': script},
                                               json_content=False)
@@ -269,8 +270,8 @@ def shared_lib_setup(profile: str, lib_name: str, repo_owner: str, repo_name: st
     Returns:
         True if the setup was successful, else False
     """
-    jy_obj = cu.config_yo_jenkins(profile)
-    data = SharedLibrary().setup(jy_obj.REST, lib_name, repo_owner, repo_name, repo_url, repo_branch, implicit,
+    yj_obj = cu.config_yo_jenkins(profile)
+    data = SharedLibrary().setup(yj_obj.rest, lib_name, repo_owner, repo_name, repo_url, repo_branch, implicit,
                                  credential_id)
     if not data:
         click.echo(click.style('failed', fg='bright_red', bold=True))

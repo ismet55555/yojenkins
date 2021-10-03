@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+"""Utility/Tools Menu CLI Entrypoints"""
 
 import json
 import logging
@@ -9,7 +9,7 @@ from datetime import datetime
 from inspect import getfullargspec
 from pathlib import Path
 from shlex import quote
-from typing import Type
+from typing import Callable
 
 import click
 import toml
@@ -19,9 +19,11 @@ from json2xml.utils import readfromstring
 from urllib3.util import parse_url
 
 from yo_jenkins import __version__
+from yo_jenkins.yojenkins.auth import Auth
+from yo_jenkins.yojenkins.rest import Rest
+from yo_jenkins.yojenkins.yojenkins import YoJenkins
 
-from yo_jenkins.YoJenkins import REST, Auth, YoJenkins  # isort:skip
-from yo_jenkins.Utility.utility import iter_data_empty_item_stripper, load_contents_from_local_file, am_i_inside_docker  # isort:skip
+from yo_jenkins.utility.utility import iter_data_empty_item_stripper, load_contents_from_local_file, am_i_inside_docker  # isort:skip
 
 # Getting the logger reference
 logger = logging.getLogger()
@@ -87,7 +89,7 @@ def platform_information() -> None:
     logger.debug(f'    - Python:    {platform.python_version()} {python_rev}')
 
 
-def config_yo_jenkins(profile: str) -> Type[YoJenkins]:
+def config_yo_jenkins(profile: str) -> YoJenkins:
     """TODO Docstring
 
     Args:
@@ -96,19 +98,19 @@ def config_yo_jenkins(profile: str) -> Type[YoJenkins]:
     Returns:
         TODO
     """
-    Auth_obj = Auth(REST())
+    auth = Auth(Rest())
 
     # Get the credential profile
-    if not Auth_obj.get_credentials(profile):
+    if not auth.get_credentials(profile):
         click.echo(click.style('Failed to find any credentials', fg='bright_red', bold=True))
         sys.exit(1)
 
     # Create authentication
-    if not Auth_obj.create_auth():
+    if not auth.create_auth():
         click.echo(click.style('Failed authentication', fg='bright_red', bold=True))
         sys.exit(1)
 
-    return YoJenkins(Auth_obj)
+    return YoJenkins(auth)
 
 
 def standard_out(data: dict,
@@ -175,7 +177,7 @@ def is_full_url(url: str) -> bool:
 
     # TODO: Remove this function from this file
     #       Do url check within the class, not within the cli to not keep repeating it
-    #       In classes use yo_jenkins.Utility.utility.is_full_url()
+    #       In classes use yo_jenkins.utility.utility.is_full_url()
 
     parsed_url = parse_url(url)
     if all([parsed_url.scheme, parsed_url.netloc, parsed_url.path]):
@@ -191,10 +193,11 @@ def is_full_url(url: str) -> bool:
 
 
 def server_target_check(target: str) -> bool:
+    """TODO"""
     pass
 
 
-def log_to_history(decorated_function) -> None:
+def log_to_history(decorated_function) -> Callable:
     """This function decorates a function that is a cli command.
     The function will log the CLI command and its info to the command history.
 

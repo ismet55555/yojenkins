@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+"""Server Menu CLI Entrypoints"""
 
 import json
 import logging
@@ -9,9 +9,9 @@ import click
 
 from yo_jenkins.cli import cli_utility as cu
 from yo_jenkins.cli.cli_utility import log_to_history
-from yo_jenkins.Docker import DockerJenkinsServer
-from yo_jenkins.Utility.utility import get_project_dir, get_resource_path
-from yo_jenkins.YoJenkins import Auth, YoJenkins
+from yo_jenkins.docker_container import DockerJenkinsServer
+from yo_jenkins.utility.utility import get_project_dir, get_resource_path
+from yo_jenkins.yojenkins import Auth, YoJenkins
 
 # Getting the logger reference
 logger = logging.getLogger()
@@ -29,7 +29,7 @@ def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profil
     Returns:
         TODO
     """
-    data = cu.config_yo_jenkins(profile).Server.info()
+    data = cu.config_yo_jenkins(profile).server.info()
     if not data:
         click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
@@ -48,7 +48,7 @@ def people(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, prof
     Returns:
         TODO
     """
-    data, data_list = cu.config_yo_jenkins(profile).Server.people()
+    data, data_list = cu.config_yo_jenkins(profile).server.people()
     if not data:
         click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
@@ -68,11 +68,11 @@ def queue(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profi
     Returns:
         TODO
     """
-    yj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile)
     if opt_list:
-        data = yj.Server.queue_list()  # TODO: Combine with server_queue_list adding a list argument
+        data = yj_obj.server.queue_list()  # TODO: Combine with server_queue_list adding a list argument
     else:
-        data = yj.Server.queue_info()
+        data = yj_obj.server.queue_info()
     if not data:
         click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
@@ -91,7 +91,7 @@ def plugins(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, pro
     Returns:
         TODO
     """
-    data, data_list = cu.config_yo_jenkins(profile).Server.plugin_list()
+    data, data_list = cu.config_yo_jenkins(profile).server.plugin_list()
     if not data:
         click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
@@ -109,7 +109,7 @@ def browser(profile: str) -> None:
     Returns:
         TODO
     """
-    data = cu.config_yo_jenkins(profile).Server.browser_open()
+    data = cu.config_yo_jenkins(profile).server.browser_open()
     if not data:
         click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
@@ -131,7 +131,7 @@ def reachable(profile: str, timeout: int) -> None:
     if not auth.get_credentials(profile):
         click.echo(click.style('failed to find any credentials', fg='bright_red', bold=True))
         sys.exit(1)
-    if not YoJenkins(Auth_obj=auth).REST.is_reachable(auth.jenkins_profile['jenkins_server_url'], timeout=timeout):
+    if not YoJenkins(auth=auth).rest.is_reachable(auth.jenkins_profile['jenkins_server_url'], timeout=timeout):
         click.echo(click.style('false', fg='bright_red', bold=True))
         sys.exit(1)
     click.echo(click.style('true', fg='bright_green', bold=True))
@@ -149,7 +149,7 @@ def quiet(profile: str, off: bool):
     Returns:
         TODO
     """
-    if not cu.config_yo_jenkins(profile).Server.quiet(off=off):
+    if not cu.config_yo_jenkins(profile).server.quiet(off=off):
         click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
     click.echo(click.style('success', fg='bright_green', bold=True))
@@ -167,7 +167,7 @@ def restart(profile: str, force: bool):
     Returns:
         TODO
     """
-    if not cu.config_yo_jenkins(profile).Server.restart(force=force):
+    if not cu.config_yo_jenkins(profile).server.restart(force=force):
         click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
     click.echo(click.style('success', fg='bright_green', bold=True))
@@ -185,7 +185,7 @@ def shutdown(profile: str, force: bool):
     Returns:
         TODO
     """
-    if not cu.config_yo_jenkins(profile).Server.shutdown(force=force):
+    if not cu.config_yo_jenkins(profile).server.shutdown(force=force):
         click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
     click.echo(click.style('success', fg='bright_green', bold=True))

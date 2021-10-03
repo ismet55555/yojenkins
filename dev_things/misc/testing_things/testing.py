@@ -26,8 +26,8 @@ if request_return.status_code == 404:
 try:
     build_return_content = request_return.json()
     pprint(build_return_content)
-except Exception as e:
-    print(f"Failed to parse request return. Possible HTML content. Exception: {e})")
+except Exception as error:
+    print(f"Failed to parse request return. Possible HTML content. Exception: {error})")
     exit()
 
 # pprint(build_return_content)
