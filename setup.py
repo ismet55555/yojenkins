@@ -1,8 +1,7 @@
-#!/usr/bin/env python3
+"""Installation/Packaging Definition for Python Project"""
 
 import os
 import sys
-from pprint import pprint
 
 import setuptools
 
@@ -35,8 +34,8 @@ def get_pipfile_requirements():
 
     # Loading Pipfile
     try:
-        with open ('Pipfile', 'r') as fh:
-            pipfile = fh.read()
+        with open ('Pipfile', 'r') as open_file:
+            pipfile = open_file.read()
         pipfile_toml = loads(pipfile)
     except FileNotFoundError:
         return []
@@ -49,16 +48,16 @@ def get_pipfile_requirements():
 
     # Parsing Pipfile
     packages = []
-    for p, v in required_packages:
-        version = v
-        if not isinstance(v, str):  # Check for a dict
+    for package_name, ver in required_packages:
+        version = ver
+        if not isinstance(ver, str):  # Check for a dict
             version_parts = []
-            if 'version' in v:
-                version_parts.append(v['version'] if v['version'] != '*' else "")
-            if 'platform_system' in v:
-                version_parts.append(f"platform_system {v['platform_system']}")
+            if 'version' in ver:
+                version_parts.append(ver['version'] if ver['version'] != '*' else "")
+            if 'platform_system' in ver:
+                version_parts.append(f"platform_system {ver['platform_system']}")
             version = '; '.join(version_parts)
-        packages.append(p if version == "*" else f"{p}{version}")
+        packages.append(package_name if version == "*" else f"{package_name}{version}")
     return packages
 
 def read(fname):

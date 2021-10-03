@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+"""Main entry point for program"""
 
 import logging
 import sys

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+"""Folder class definition"""
 
 import json
 import logging

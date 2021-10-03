@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+"""Jenkins Shared Library Management"""
 
 import logging
 import os

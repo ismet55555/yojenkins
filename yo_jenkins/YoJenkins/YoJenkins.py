@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+"""YoJenkins class definition"""
 
 import logging
 

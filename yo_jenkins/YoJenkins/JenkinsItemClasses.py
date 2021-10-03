@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+"""Jenkins item type/class definition"""
 
 from enum import Enum
 

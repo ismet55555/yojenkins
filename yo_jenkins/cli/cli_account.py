@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+"""Account Menu CLI Entrypoints"""
 
 import logging
 import sys

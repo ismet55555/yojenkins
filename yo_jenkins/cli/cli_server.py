@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+"""Server Menu CLI Entrypoints"""
 
 import json
 import logging

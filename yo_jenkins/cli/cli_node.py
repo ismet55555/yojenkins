@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+"""Node Menu CLI Entrypoints"""
 
 import json
 import logging

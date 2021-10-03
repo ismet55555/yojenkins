@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+"""Account class definition"""
 
 import logging
 import os

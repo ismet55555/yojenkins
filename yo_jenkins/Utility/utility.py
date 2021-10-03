@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+"""General utility and tools"""
 
 import json
 import logging
@@ -22,6 +22,19 @@ from yo_jenkins import __version__
 from yo_jenkins.YoJenkins.JenkinsItemClasses import JenkinsItemClasses
 
 logger = logging.getLogger()
+
+
+class TextStyle:
+    """Text style definitions"""
+    HEADER = '\033[95m'
+    BLUE = '\033[94m'
+    CYAN = '\033[96m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    RED = '\033[91m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+    NORMAL = '\033[0m'
 
 
 def load_contents_from_local_file(file_type: str, local_file_path: str) -> Dict:

@@ -1,12 +1,10 @@
-#!/usr/bin/env python3
+"""Job monitor"""
 
 import curses
 import logging
 import sys
-import textwrap
 import threading
 from datetime import datetime
-from pprint import pprint
 from time import perf_counter, sleep, time
 
 from yo_jenkins.Monitor.Monitor import Monitor

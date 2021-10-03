@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+"""Utility/Tools Menu CLI Entrypoints"""
 
 import json
 import logging

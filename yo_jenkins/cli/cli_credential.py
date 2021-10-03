@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+"""Credential Menu CLI Entrypoints"""
 
 import json
 import logging

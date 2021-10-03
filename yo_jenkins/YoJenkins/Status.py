@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+"""Status class definition"""
 
 from enum import Enum
 

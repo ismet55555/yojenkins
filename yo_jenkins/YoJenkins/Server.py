@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+"""Server class definition"""
 
 import logging
 from typing import Dict, List, Tuple

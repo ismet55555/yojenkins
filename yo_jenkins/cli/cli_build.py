@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+"""Build Menu CLI Entrypoints"""
 
 import logging
 import sys

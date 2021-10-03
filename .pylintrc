@@ -146,7 +146,8 @@ disable=print-statement,
         comprehension-escape,
         logging-fstring-interpolation,
         missing-module-docstring,
-        no-value-for-parameter
+        no-value-for-parameter,
+        too-few-public-methods
 
 
 # Enable the message, report, category or checker with the given id(s). You can

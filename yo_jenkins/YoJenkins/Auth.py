@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+"""Auth class definition"""
 
 import logging
 import os
@@ -13,9 +13,8 @@ import toml
 from jenkins import Jenkins as JenkinsSDK
 
 from yo_jenkins.Utility import utility
+from yo_jenkins.Utility.utility import TextStyle
 from yo_jenkins.YoJenkins.REST import REST
-
-from . import colors
 
 # Getting the logger reference
 logger = logging.getLogger()
@@ -108,22 +107,22 @@ class Auth:
         """
         # Ask for anything not passed
         if not token_name:
-            prompt_text = colors.BOLD + colors.YELLOW + "Enter desired API TOKEN NAME: " + colors.NORMAL
+            prompt_text = TextStyle.BOLD + TextStyle.YELLOW + "Enter desired API TOKEN NAME: " + TextStyle.NORMAL
             token_name = input(prompt_text)
             logger.debug(f'User input: {token_name}')
 
         if not server_base_url:
-            prompt_text = colors.BOLD + colors.YELLOW + "Enter Jenkins SERVER BASE URL: " + colors.NORMAL
+            prompt_text = TextStyle.BOLD + TextStyle.YELLOW + "Enter Jenkins SERVER BASE URL: " + TextStyle.NORMAL
             server_base_url = input(prompt_text)
             logger.debug(f'User input: {server_base_url}')
 
         if not username:
-            prompt_text = colors.BOLD + colors.YELLOW + 'Enter Jenkins server USERNAME: ' + colors.NORMAL
+            prompt_text = TextStyle.BOLD + TextStyle.YELLOW + 'Enter Jenkins server USERNAME: ' + TextStyle.NORMAL
             username = input(prompt_text)
             logger.debug(f'User input: {username}')
 
         if not password:
-            prompt_text = colors.BOLD + colors.YELLOW + f'Enter "{username}" PASSWORD: ' + colors.NORMAL
+            prompt_text = TextStyle.BOLD + TextStyle.YELLOW + f'Enter "{username}" PASSWORD: ' + TextStyle.NORMAL
             password = getpass(prompt=prompt_text, stream=None)
             logger.debug('User entered password')
 
@@ -283,25 +282,25 @@ class Auth:
             print('')
 
         # Prompting user for details
-        profile_name = input(colors.BOLD + colors.YELLOW + '[ OPTIONAL ] Enter PROFILE NAME (default):  ' +
-                             colors.NORMAL)
+        profile_name = input(TextStyle.BOLD + TextStyle.YELLOW + '[ OPTIONAL ] Enter PROFILE NAME (default):  ' +
+                             TextStyle.NORMAL)
         profile_name = 'default' if not profile_name else profile_name
         if profile_name in profiles:
             print('')
             print(f'WARNING : You are about to overwrite the current profile "{profile_name}"')
             print('')
         profiles[profile_name] = {}
-        profiles[profile_name]['jenkins_server_url'] = input(colors.BOLD + colors.YELLOW +
+        profiles[profile_name]['jenkins_server_url'] = input(TextStyle.BOLD + TextStyle.YELLOW +
                                                              '[ REQUIRED ] Enter Jenkins SERVER BASE URL:  ' +
-                                                             colors.NORMAL)
-        profiles[profile_name]['username'] = input(colors.BOLD + colors.YELLOW + '[ REQUIRED ] Enter USERNAME:  ' +
-                                                   colors.NORMAL)
+                                                             TextStyle.NORMAL)
+        profiles[profile_name]['username'] = input(TextStyle.BOLD + TextStyle.YELLOW +
+                                                   '[ REQUIRED ] Enter USERNAME:  ' + TextStyle.NORMAL)
         if not api_token:
-            profiles[profile_name]['api_token'] = input(colors.BOLD + colors.YELLOW +
-                                                        '[ OPTIONAL ] Enter API TOKEN:  ' + colors.NORMAL)
+            profiles[profile_name]['api_token'] = input(TextStyle.BOLD + TextStyle.YELLOW +
+                                                        '[ OPTIONAL ] Enter API TOKEN:  ' + TextStyle.NORMAL)
         else:
             print('')
-            print(colors.BOLD + 'WARNING: Adding provided API token to this profile' + colors.NORMAL)
+            print(TextStyle.BOLD + 'WARNING: Adding provided API token to this profile' + TextStyle.NORMAL)
             print('')
             profiles[profile_name]['api_token'] = api_token
         profiles[profile_name]['active'] = True
@@ -495,9 +494,9 @@ class Auth:
         # Check if password is listed, if not, ask for it
         if 'api_token' not in self.jenkins_profile or not self.jenkins_profile['api_token']:
             print('')
-            prompt_text = colors.BOLD + colors.YELLOW + f'Profile {self.jenkins_profile["profile"]} does not contain a "api_token" key' + colors.NORMAL
+            prompt_text = TextStyle.BOLD + TextStyle.YELLOW + f'Profile {self.jenkins_profile["profile"]} does not contain a "api_token" key' + TextStyle.NORMAL
             print(prompt_text)
-            prompt_text = colors.BOLD + colors.YELLOW + f"Enter Jenkins password or server API Token for user {self.jenkins_profile['username']}: " + colors.NORMAL
+            prompt_text = TextStyle.BOLD + TextStyle.YELLOW + f"Enter Jenkins password or server API Token for user {self.jenkins_profile['username']}: " + TextStyle.NORMAL
             self.jenkins_profile['api_token'] = getpass(
                 prompt=prompt_text,
                 stream=None,

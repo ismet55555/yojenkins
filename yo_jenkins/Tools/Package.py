@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+"""Project dynamic management"""
 
 import logging
 import subprocess

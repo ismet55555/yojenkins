@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+"""Utility functions for monitors"""
 
 import curses
 import logging

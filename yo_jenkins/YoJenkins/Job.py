@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+"""Job class definition"""
 
 import json
 import logging

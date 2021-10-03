@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+"""Jenkins item configuration definition"""
 
 from enum import Enum
 
@@ -10,13 +10,6 @@ class JenkinsItemConfig(Enum):
         - `JenkinsItemConfig.folder.value['blank']`
     """
 
-    # {
-    #     "displayNameOrNull": f"{name}",
-    #     "icon": {
-    #         "stapler-class": "com.cloudbees.hudson.plugins.folder.icons.StockFolderIcon",
-    #     },
-    #     "core:apply": ""
-    # }
     folder = {
         "blank":
             '''<?xml version='1.1' encoding='UTF-8'?>

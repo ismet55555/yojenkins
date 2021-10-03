@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+"""Build class definition"""
 
 import logging
 import os

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+"""Stage class definition"""
 
 import logging
 import os

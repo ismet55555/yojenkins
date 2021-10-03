@@ -1,4 +1,6 @@
-#!/usr/bin/env python3
+""""Logger Setup"""
+
+# TODO: Move to utilities
 
 import logging
 import sys

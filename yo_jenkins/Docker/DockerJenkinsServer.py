@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+"""Containerized Jenkins instance Management"""
 
 import logging
 import os
@@ -6,6 +6,7 @@ import platform
 from datetime import datetime
 
 if platform.system() != "Windows":
+    # Non-windows systems get group ID
     from grp import getgrnam
 
 from time import perf_counter

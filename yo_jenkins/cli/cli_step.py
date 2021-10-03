@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+"""Step Menu CLI Entrypoints"""
 
 import logging
 import sys

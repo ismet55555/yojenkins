@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+"""Rest class definition"""
 
 import logging
 from time import perf_counter

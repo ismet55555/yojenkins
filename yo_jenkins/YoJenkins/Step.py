@@ -1,7 +1,6 @@
-#!/usr/bin/env python3
+"""Step class definition"""
 
 import logging
-from pprint import pprint
 from typing import Dict
 
 # Getting the logger reference
@@ -11,7 +10,7 @@ logger = logging.getLogger()
 class Step():
     """TODO Step"""
 
-    def __init__(self, R) -> None:
+    def __init__(self, REST) -> None:
         """Object constructor method, called at object creation
 
         Args:
@@ -20,9 +19,7 @@ class Step():
         Returns:
             None
         """
-
-        # REST Request object
-        self.R = R
+        self.REST = REST
 
     def info(self, step_url=str) -> Dict:
         """Get the information of the specified step
@@ -36,9 +33,8 @@ class Step():
         Returns:
             Step information
         """
-        # Making the request
         request_url = f'{step_url.strip("/")}'
-        return_content = self.R.request(request_url, 'get', is_endpoint=True)[0]
+        return_content = self.REST.request(request_url, 'get', is_endpoint=True)[0]
         if not return_content:
             logger.debug(f'Failed to get step info for: {request_url}')
             return {}

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+"""Build monitor"""
 
 import curses
 import logging

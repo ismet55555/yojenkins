@@ -17,6 +17,11 @@
 ##############################################################################
 
 repos:
+  - repo: meta
+    hooks:
+    -   id: check-hooks-apply
+    -   id: check-useless-excludes
+
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.0.1
     hooks:
@@ -28,10 +33,6 @@ repos:
       - id: check-toml  # This hook checks toml files for parseable syntax.
       - id: name-tests-test  # This verifies that test files are named correctly
 
-  - repo: meta
-    hooks:
-    -   id: check-hooks-apply
-    -   id: check-useless-excludes
 
   - repo: https://github.com/pre-commit/mirrors-yapf
     rev: v0.31.0

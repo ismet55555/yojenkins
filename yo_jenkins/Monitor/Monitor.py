@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+"""Monitor parent class"""
 
 import curses
 import logging
@@ -25,7 +25,7 @@ logger = logging.getLogger()
 
 
 class Monitor:
-    """Abstract class for all monitor objects"""
+    """Parent class for all monitor objects"""
 
     def __init__(self) -> None:
         """Object constructor method, called at object creation
