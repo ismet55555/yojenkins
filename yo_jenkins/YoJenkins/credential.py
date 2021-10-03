@@ -11,7 +11,7 @@ from json2xml import json2xml
 from urllib3.util import parse_url
 
 from yo_jenkins.Utility import utility
-from yo_jenkins.YoJenkins.JenkinsItemTemplate import JenkinsItemTemplate
+from yo_jenkins.YoJenkins.jenkins_item_template import JenkinsItemTemplate
 
 # Getting the logger reference
 logger = logging.getLogger()

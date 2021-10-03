@@ -14,7 +14,7 @@ from jenkins import Jenkins as JenkinsSDK
 
 from yo_jenkins.Utility import utility
 from yo_jenkins.Utility.utility import TextStyle
-from yo_jenkins.YoJenkins.REST import REST
+from yo_jenkins.YoJenkins.rest import REST
 
 # Getting the logger reference
 logger = logging.getLogger()

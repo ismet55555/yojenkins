@@ -3,9 +3,7 @@
 import curses
 import logging
 from math import floor
-from pprint import pprint
-from time import sleep
-from typing import Dict, List, Tuple, Type
+from typing import Tuple, Type
 
 # Getting the logger reference
 logger = logging.getLogger()

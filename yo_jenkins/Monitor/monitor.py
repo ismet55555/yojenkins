@@ -5,9 +5,7 @@ import logging
 import platform
 import sys
 import threading
-from pprint import pprint
 from time import sleep, time
-from typing import Dict, List, Tuple, Type
 
 if platform.system() != "Windows":
     try:
@@ -17,7 +15,9 @@ if platform.system() != "Windows":
 else:
     import winsound
 
-from ..YoJenkins.Status import Color, Sound, Status
+from yo_jenkins.YoJenkins.status import Color, Sound, Status
+
+# from ..YoJenkins.Status import Color, Sound, Status
 from . import monitor_utility as mu
 
 # Getting the logger reference

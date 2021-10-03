@@ -19,7 +19,7 @@ import yaml
 from urllib3.util import parse_url
 
 from yo_jenkins import __version__
-from yo_jenkins.YoJenkins.JenkinsItemClasses import JenkinsItemClasses
+from yo_jenkins.YoJenkins.jenkins_item_classes import JenkinsItemClasses
 
 logger = logging.getLogger()
 

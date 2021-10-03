@@ -7,8 +7,8 @@ import threading
 from datetime import datetime
 from time import perf_counter, sleep, time
 
-from yo_jenkins.Monitor.Monitor import Monitor
-from yo_jenkins.YoJenkins.Status import BuildStatus
+from yo_jenkins.Monitor.monitor import Monitor
+from yo_jenkins.YoJenkins.status import BuildStatus
 
 from . import monitor_utility as mu
 

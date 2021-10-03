@@ -11,8 +11,8 @@ import requests
 
 from yo_jenkins.Monitor import BuildMonitor
 from yo_jenkins.Utility import utility
-from yo_jenkins.YoJenkins.JenkinsItemClasses import JenkinsItemClasses
-from yo_jenkins.YoJenkins.Status import BuildStatus
+from yo_jenkins.YoJenkins.jenkins_item_classes import JenkinsItemClasses
+from yo_jenkins.YoJenkins.status import BuildStatus
 
 # Getting the logger reference
 logger = logging.getLogger()

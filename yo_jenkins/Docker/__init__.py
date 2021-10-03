@@ -1,3 +1,3 @@
 """Importing sub-modules"""
 
-from .DockerJenkinsServer import DockerJenkinsServer
+from .docker_jenkins_server import DockerJenkinsServer

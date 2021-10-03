@@ -1,4 +1,4 @@
 """Importing sub-modules"""
 
-from .Package import Package
-from .SharedLibrary import SharedLibrary
+from .package import Package
+from .shared_library import SharedLibrary
