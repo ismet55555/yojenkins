@@ -35,7 +35,7 @@ except jenkins.JenkinsException as error:
     logger.fatal(f'  - Expired API Token')
     logger.fatal('')
     logger.fatal('To update Jenkins credentials run:')
-    logger.fatal('    yo-jenkins --configure')
+    logger.fatal('    yojenkins --configure')
 
 # Getting Jenkins version
 version = J.get_version()

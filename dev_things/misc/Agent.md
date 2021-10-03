@@ -3,7 +3,7 @@
 ## Goal
 
 1. Setup a permanent node/agent
-   1. Locally - Through an created docker container (created with yo-jenkins or independently)
+   1. Locally - Through an created docker container (created with yojenkins or independently)
    2. Remotely - Public IP address or DNS reference
 
 2. Setup a ephemeral node/agent (Only started once job is run, Docker based)
@@ -25,7 +25,7 @@
 
 ### Prepare Mode - HOLD OFF FOR NOW
 ```
-yo-jenkins node prepare <HOST ADDRESS>
+yojenkins node prepare <HOST ADDRESS>
     --ssh-port <PORT NUMBER>
     --ssh-user <USERNAME>
     --ssh-public-key-file <KEY FILE PATH>
@@ -37,7 +37,7 @@ yo-jenkins node prepare <HOST ADDRESS>
 ### Permanent Mode
 Only need to do api calls to Jenkins Server to set up.
 ```
-yo-jenkins node setup-permanent [NAME] [HOST] [CRED_ID]
+yojenkins node setup-permanent [NAME] [HOST] [CRED_ID]
     --description <DESCRIPTION>
     --labels <LIST OF LABELS>
     --executors <NUMBER OF EXECUTORS>
@@ -52,7 +52,7 @@ yo-jenkins node setup-permanent [NAME] [HOST] [CRED_ID]
 
 ### Ephemeral Mode
 ```
-yo-jenkins node setup-ephemeral [NAME] [HOST] <--- can be "local"
+yojenkins node setup-ephemeral [NAME] [HOST] <--- can be "local"
   --labels linux,test
   --image my_repo/my_image:latest         <--- default image "jenkins/ssh-agent:alpine"
   --jenkins-home /home/jenkins
@@ -159,7 +159,7 @@ yo-jenkins node setup-ephemeral [NAME] [HOST] <--- can be "local"
 ## Next Steps
 
 1. Set up remote agent on AWS EC2 via SSH
-2. Adding a persistent agent to jenkins with yo-jenkins
+2. Adding a persistent agent to jenkins with yojenkins
 
 ---
 
@@ -179,7 +179,7 @@ yo-jenkins node setup-ephemeral [NAME] [HOST] <--- can be "local"
 
 - Maybe have a remote server setup script ready to go that preps it
   - Docker settings, restarts services, etc ...
-  - yo-jenkins node prep 13.54.56.34 ec2-user
+  - yojenkins node prep 13.54.56.34 ec2-user
         --ssh-password password
         --ssh-private-key path_to_key
 
@@ -199,7 +199,7 @@ yo-jenkins node setup-ephemeral [NAME] [HOST] <--- can be "local"
         --key-name aws-key-1 \
         --security-group-ids sg-5dd41e7a \
         --subnet-id subnet-5b44903d \
-        --user-data file:///home/ismet/Projects/yo-jenkins/yo_jenkins/resources/scripts/node_prepare_amazonlinux2.sh
+        --user-data file:///home/ismet/Projects/yojenkins/yojenkins/resources/scripts/node_prepare_amazonlinux2.sh
     ```
   - SSH in
     ```

@@ -24,7 +24,7 @@ Also, note that as of now there are no sufficient tests setup (ie. pytest, unite
 
 
 1. Change directory into the repo directory
-    - `cd yo-jenkins`
+    - `cd yojenkins`
 
 2. Find out what python 3 version you are working with
     - `python --version`
@@ -64,8 +64,8 @@ Also, note that as of now there are no sufficient tests setup (ie. pytest, unite
 3. Make your changes to the project
 
 4. Run the changes
-    - `yo-jenkins` - This works because the current package is marked as editable in `Pipfile`
-    - `python yo_jenkins/__main__py` - This is effectively what is run when running `yo-jenkins`
+    - `yojenkins` - This works because the current package is marked as editable in `Pipfile`
+    - `python yojenkins/__main__py` - This is effectively what is run when running `yojenkins`
 
 5. `git` add and commit as you like, adding good and useful commit messages
 
@@ -89,7 +89,7 @@ Also, note that as of now there are no sufficient tests setup (ie. pytest, unite
     - `yapf --in-place --recursive .`
 
 3. Run `pylint` code linter
-    - `pylint yo_jenkins --fail-under=8 --reports y`
+    - `pylint yojenkins --fail-under=8 --reports y`
 
 
 ## Adding a New Dependency *(If needed)*
@@ -116,7 +116,7 @@ This step is mainly to check if installation and building gives no errors
     - `python setup.py install --verbose`
 
 2. Run the project to test that everything set up fine
-    - `yo-jenkins --help`
+    - `yojenkins --help`
 
 3. Build the project
     - `python setup.py sdist bdist_wheel`

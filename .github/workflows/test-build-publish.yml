@@ -51,13 +51,13 @@ jobs:
         run: pipenv graph
 
       - name: Code Linting
-        run: pipenv run pylint yo_jenkins --fail-under=8.0
+        run: pipenv run pylint yojenkins --fail-under=9.0 --ignore=dev_things
 
       - name: Build the package
         run: pipenv run python setup.py install --verbose
 
       - name: Testing --help
-        run: pipenv run yo-jenkins --help
+        run: pipenv run yojenkins --help
 
 
   build-n-ship:

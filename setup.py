@@ -6,7 +6,7 @@ import sys
 import setuptools
 
 # Package version number (Updated via bump2version tool)
-__version__ = "0.0.44"
+__version__ = "0.0.45"
 
 def check_py_version():
     """Check the python version"""
@@ -66,14 +66,14 @@ def read(fname):
 
 
 setuptools.setup(
-    name="yo-jenkins",
+    name="yojenkins",
     version=__version__,
     author="Ismet Handzic",
     author_email="ismet.handzic@gmail.com",
     maintainer="Ismet Handzic",
     description="A CLI tool to manage and have fun with Jenkins server",
     keywords="jenkins monitor manage job build fun",
-    url="https://github.com/ismet55555/yo-jenkins",
+    url="https://github.com/ismet55555/yojenkins",
     packages=setuptools.find_packages(),
     install_requires=get_requirements(),
     include_package_data=True,
@@ -81,10 +81,10 @@ setuptools.setup(
     long_description_content_type='text/markdown',
     python_requires='>=3.7',
     setup_requires=['wheel'],
-    py_modules=["yo_jenkins"],
+    py_modules=["yojenkins"],
     entry_points={
         "console_scripts": [
-                "yo-jenkins = yo_jenkins.__main__:main"
+                "yojenkins = yo_jenkins.__main__:main"
             ]
         },
     classifiers=[

@@ -17,7 +17,7 @@ setuptools = "*"
 twine = "*"
 wheel = "*"
 yapf = "*"
-yo-jenkins = {editable = true, path = "."}
+yojenkins = {editable = true, path = "."}
 
 [packages]
 click = "*"
