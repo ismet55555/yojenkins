@@ -1,40 +1,47 @@
-# Description
+## Change Motivation
 
-Please include a summary of the change and which issue is fixed.
-Please also include relevant motivation and context.
-List any dependencies that are required for this change.
-
-- ...
+A very brief summary on why you made these changes ...
 
 
-## List and Type of Changes
+## Change Description
 
-**Type Categories:** Bug Fix, New Feature, Code Refactoring, Docummentation and Formatting
+Please describe the change here ...
 
-- TYPE - CHANGE DESCRIPTION
-- ...
+
+## Change Type
+
+*(Check any that apply)*
+
+- [ ] Bug Fix
+- [ ] New Feature
+- [ ] Code Refactoring
+- [ ] Documentation
+- [ ] Formatting
+- [ ] Automation
+- [ ] Unit Tests
+- [ ] Other
 
 
 ## How Has This Been Tested?
 
-Please describe the tests that you ran to verify your changes.
-Provide instructions so we can reproduce.
-Please also list any relevant details for your test configuration
+Please describe the tests/commands that you ran to verify your changes.
 
-- ...
 
-**Test Configuration**:
-* Python Version(s): ...
-* Hardware: ...
+## Test Configuration ##
 
+```
+Please paste the initial part of the `--debug` output when running the program here.
+This includes the tool and system information.
+
+Example:
+  yojenkins auth user --debug
+```
 
 # Checklist:
 
-- [ ] My code follows the style guidelines of this project
-- [ ] I have performed a self-review of my own code
-- [ ] I have commented my code, particularly in hard-to-understand areas
-- [ ] I have made corresponding changes to the documentation
-- [ ] My changes generate no new warnings
-- [ ] I have added tests that prove my fix is effective or that my feature works
+- [ ] I have added `pytest` tests that prove my fix is effective or that my feature works
 - [ ] New and existing unit tests pass locally with my changes
-- [ ] Any dependent changes have been merged and published in downstream modules
+- [ ] I have ran `pre-commit` to verify my changes are ready to commit
+- [ ] I have commented my code, particularly in hard-to-understand areas
+- [ ] I have made corresponding changes to the documentation (if applicable)
+- [ ] My changes generate no new warnings

@@ -1,0 +1,52 @@
+name: Feature Request
+description: Suggest an idea for this project
+title: "[Feature-Request]: "
+labels: ["feature-request"]
+assignees:
+  - ismet55555
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this feature request!
+        Any input or ideas are greatly appreciated and taken seriously.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the feature you would like to see
+      description: A clear and concise description of what you want to happen
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Describe alternatives you've considered
+      description: A clear and concise description of any alternative solutions or features you've considered
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: operating-systems
+    attributes:
+      label: Which operating systems are you using?
+      description: You may select more than one
+      options:
+        - label: macOS
+        - label: Windows
+        - label: Linux
+
+  - type: dropdown
+    id: day-check
+    attributes:
+      label: How is your day going?
+      options:
+        - Amazing
+        - Pretty good
+        - Not bad
+        - Terrible
+        - Ugh, don't remind me
+    validations:
+      required: false
