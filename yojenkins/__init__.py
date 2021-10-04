@@ -1,3 +1,3 @@
 """yojenkins package version defintion"""
 
-__version__ = "0.0.46"
+__version__ = "0.0.47"
