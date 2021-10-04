@@ -748,7 +748,7 @@ def item_exists_in_folder(item_name: str, folder_url: str, item_type: str, rest:
     Returns:
         True if the item exists, False if not
     """
-    item_type_info = getattr(JenkinsItemClasses, item_type)
+    item_type_info = getattr(JenkinsItemClasses, item_type.upper())
     prefix = item_type_info.value['prefix']
 
     item_url = urljoin(folder_url, f'{prefix}/{item_name}')

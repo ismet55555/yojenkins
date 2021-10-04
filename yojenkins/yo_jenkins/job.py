@@ -766,7 +766,8 @@ class Job():
         logger.debug(f'Successfully created item "{name}"' if success else f'Failed to create item "{name}"')
 
         try:
-            open_file.close()
+            if 'open_file' in locals():
+                open_file.close()
         except (OSError, IOError):
             pass
 

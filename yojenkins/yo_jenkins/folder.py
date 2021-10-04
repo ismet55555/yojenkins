@@ -452,7 +452,8 @@ class Folder():
 
         # Close the potentially open item configuration file
         try:
-            open_file.close()
+            if 'open_file' in locals():
+                open_file.close()
         except (OSError, IOError):
             pass
 
