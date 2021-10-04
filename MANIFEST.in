@@ -3,4 +3,4 @@ include Pipfile.lock
 recursive-include yojenkins/resources *
 recursive-include yojenkins/resources/server_docker_settings/ *
 recursive-include yojenkins/resources/sound/ *
-recursive-include yojenkins/YoJenkins/groovy_scripts/ *
+recursive-include yojenkins/yo_jenkins/groovy_scripts/ *

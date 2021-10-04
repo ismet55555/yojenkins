@@ -1,0 +1,96 @@
+---
+
+name: Bug Report
+description: File a bug report
+title: "[Bug]: "
+labels: ["bug", "triage"]
+assignees:
+  - ismet55555
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+        Any information you provide will help a lot!
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Also tell us, what did you expect to happen?
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction-steps
+    attributes:
+      label: How can we reproduce this?
+      placeholder: |
+        "Example: I set up my authentication creds with `yojenkins auth configure`"
+        "         Then tried `yojenkins auth verify`"
+    validations:
+      required: true
+
+  - type: textarea
+    id: debug-output
+    attributes:
+      label: Command `--debug` output
+      description: Enter the output when running with `--debug`
+      placeholder: >
+        Paste the output of `--debug` here.
+        If needed remove any sensitive information.
+    validations:
+      required: false
+
+  - type: input
+    id: version
+    attributes:
+      label: Software version
+      description: Enter the version you were using
+      placeholder: "Example: 0.0.45"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: jenkins-server-type
+    attributes:
+      label: Where was yojenkins run in relation to the Jenkins server?
+      options:
+        - Locally
+        - Remotely
+    validations:
+      required: true
+
+  - type: dropdown
+    id: jenkins-containerized
+    attributes:
+      label: Is the Jenkins server containerized?
+      options:
+        - "Yes"
+        - "No"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: operating-systems
+    attributes:
+      label: Which operating systems were you using when this happened?
+      description: You may select more than one
+      options:
+        - label: macOS
+        - label: Windows
+        - label: Linux
+
+  - type: dropdown
+    id: day-check
+    attributes:
+      label: How is your day going?
+      options:
+        - Amazing
+        - Pretty good
+        - Not bad
+        - Terrible
+        - Ugh, don't remind me
+    validations:
+      required: false

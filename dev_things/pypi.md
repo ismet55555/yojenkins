@@ -46,19 +46,19 @@ If you have and suggestions or imporvements, feel free to submit a pull request.
 
 - TestPYPI:
   - This is preferred for development work
-  - https://test.pypi.org/project/exam-terminal/
+  - https://test.pypi.org/project/yojenkins/
   - `twine upload -r testpypi dist/* --verbose`
 - PYPI:
   - The real deal. This is what users will download from
-  - https://pypi.org/project/exam-terminal/
+  - https://pypi.org/project/yojenkins/
   - `twine upload dist/* --verbose`
 
 
 ## Post-hoc Installation of the Package from PYPI
 
 - TestPYPI:
-  - `pip install --extra-index-url https://test.pypi.org/simple/ exam-terminal -U`
+  - `pip install --extra-index-url https://test.pypi.org/simple/ yojenkins -U`
   - *NOTE:* The `-i` *(another index/repo url)* option will not work because `pip` will try
   to install dependencies from TestPYPI
 - PYPI:
-  - `pip install exam-terminal`
+  - `pip install yojenkins`

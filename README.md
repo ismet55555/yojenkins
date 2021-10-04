@@ -1,5 +1,5 @@
-<p align="center"><img width="120
-" alt="portfolio_view" src="https://raw.githubusercontent.com/ismet55555/yojenkins/main/dev_things/assets/logo_final.png"></p>
+<!-- <p align="center"><img width="120
+" alt="portfolio_view" src="https://raw.githubusercontent.com/ismet55555/yojenkins/main/dev_things/assets/logo_final.png"></p> -->
 <h1 align="center">yojenkins</h1>
 
 
@@ -18,7 +18,7 @@
 </a>
 
 <a href="https://github.com/ismet55555/yojenkins/blob/main/LICENSE">
-  <img alt="Licence" src="https://img.shields.io/github/license/ismet55555/yojenkins">
+  <img alt="Licence" src="https://img.shields.io/pypi/l/yojenkins">
 </a>
 
 </p>
