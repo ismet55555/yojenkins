@@ -51,7 +51,7 @@ jobs:
         run: pipenv graph
 
       - name: Code Linting
-        run: pipenv run pylint yojenkins --rcfile=.pylintrc --fail-under=9.0 --ignore=dev_things
+        run: pipenv run pylint ./yojenkins --rcfile=.pylintrc --fail-under=9.0
 
       - name: Build the package
         run: pipenv run python setup.py install --verbose
