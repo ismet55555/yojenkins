@@ -84,7 +84,7 @@ setuptools.setup(
     py_modules=["yojenkins"],
     entry_points={
         "console_scripts": [
-                "yojenkins = yo_jenkins.__main__:main"
+                "yojenkins = yojenkins.__main__:main"
             ]
         },
     classifiers=[

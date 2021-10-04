@@ -39,15 +39,20 @@ repos:
     hooks:
       - id: yapf
         name: Python Code Formatting (yapf)
-        verbose: true
+        language: python
+        types: [python]
         args: ["--style=.style.yapf", "--parallel", "--in-place"]
+        verbose: true
 
   - repo: https://github.com/PyCQA/isort
     rev: 5.9.3
     hooks:
       - id: isort
-        verbose: true
         name: Python Imports Sorting (isort)
+        language: python
+        language_version: python3
+        types_or: [python]
+        verbose: true
 
   # - repo: https://github.com/PyCQA/bandit
   #   rev: 1.7.0
@@ -61,6 +66,7 @@ repos:
     rev: pylint-2.6.0
     hooks:
       - id: pylint
-        # verbose: true
         name: Python Code Linting (pylint)
         args: ["--ignore=dev_things", "--fail-under=8.0"]
+        language: python
+        # verbose: true
