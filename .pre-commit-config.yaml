@@ -67,6 +67,6 @@ repos:
     hooks:
       - id: pylint
         name: Python Code Linting (pylint)
-        args: ["--ignore=dev_things", "--fail-under=8.0"]
+        args: ["--rcfile=.pylintrc", "--ignore=dev_things", "--fail-under=8.0"]
         language: python
         # verbose: true
