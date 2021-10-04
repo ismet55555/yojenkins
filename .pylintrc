@@ -15,14 +15,7 @@ extension-pkg-whitelist=curses
 fail-under=8.0
 
 # Files or directories to be skipped. They should be base names, not paths.
-ignore=CVS,
-       env,
-       venv,
-       virtalenv,
-       ENV,
-       test,
-       dev_things,
-       __main__.py
+ignore=CVS,env,venv,virtalenv,ENV,test,dev_things,__main__.py
 
 # Files or directories matching the regex patterns are skipped. The regex
 # matches against base names, not paths.
