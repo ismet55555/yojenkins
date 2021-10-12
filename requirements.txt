@@ -3,7 +3,7 @@
 click-help-colors==0.9.1
 click==8.0.1
 coloredlogs==15.0.1
-docker==5.0.2
+docker==5.0.3
 json2xml==3.7.0
 python-jenkins==1.8.0.0a0
 pywin32==227; platform_system == "Windows"
