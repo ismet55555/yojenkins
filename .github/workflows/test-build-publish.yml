@@ -28,6 +28,10 @@ jobs:
       - name: Display Python version
         run: python -c "import sys; print(sys.version)"
 
+      - name: Update APT
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt-get update
+
       - name: Install Linux simpleaudio dependency
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get install -y python3-dev libasound2-dev
