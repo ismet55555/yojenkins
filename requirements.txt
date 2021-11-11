@@ -1,13 +1,13 @@
 # This file for setup.py run
 
 click-help-colors==0.9.1
-click==8.0.1
+click==8.0.3
 coloredlogs==15.0.1
-docker==5.0.2
-json2xml==3.7.0
+docker==5.0.3
+json2xml==3.8.4
 python-jenkins==1.8.0.0a0
 pywin32==227; platform_system == "Windows"
-PyYAML==5.4.1
+PyYAML==6.0
 requests-futures==1.0.0
 simpleaudio==1.0.4; platform_system != "Windows"
 toml==0.10.2
