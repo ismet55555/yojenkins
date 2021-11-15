@@ -709,6 +709,7 @@ def get_project_dir(sample_path: str = 'resources') -> str:
             'pyinstaller': sys._MEIPASS,
         }
     else:
+        project_dir = 'yojenkins'
         possible_dirs = {
             'relative': os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')),
             'sys_dirs': sysconfig.get_paths()["purelib"],

@@ -33,4 +33,4 @@
 
 - Command
   - Will create the `.spec` file: `pyinstaller .\yojenkins\__main__.py --name yojenkins --hidden-import "site.getusersitepackages" -y --clean`
-  - Using existing `.spec` file: `pyinstaller yojenkins--onefile.spec  -y --clean`
+  - Using existing `.spec` file: `pyinstaller yojenkins-onefile.spec  -y --clean`

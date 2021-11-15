@@ -4,7 +4,7 @@
 block_cipher = None
 
 
-a = Analysis(['yojenkins\\__main__.py'],
+a = Analysis(['yojenkins/__main__.py'],
              pathex=[],
              binaries=[],
              datas=[],

@@ -19,7 +19,7 @@ FROM $JENKINS_BASE_IMAGE:$JENKINS_BASE_VERSION
 
 # Passed build arguments
 ARG JENKINS_CONFIG_FILE='config_as_code.yaml'
-ARG JENKINS_PLUGINS_FILE
+ARG JENKINS_PLUGINS_FILE'plugins.txt'
 ARG PROTOCOL_SCHEMA='http'
 ARG JENKINS_HOSTNAME='localhost'
 ARG JENKINS_PORT='8080'
@@ -45,13 +45,12 @@ ENV CASC_JENKINS_CONFIG /var/jenkins_home/casc.yaml
 
 # Installing Plugins
 COPY ${JENKINS_PLUGINS_FILE} /usr/share/jenkins/ref/plugins.txt
-RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
-
+RUN jenkins-plugin-cli --plugins < /usr/share/jenkins/ref/plugins.txt
 
 # Creating directory for potential bind mount
 RUN mkdir /tmp/my_things
 
 
 # Get configuration as code file
-# TODO: Remote URL for configuration as code
+# TODO: URL option ARG for remote configuration as code
 COPY ${JENKINS_CONFIG_FILE} /var/jenkins_home/casc.yaml

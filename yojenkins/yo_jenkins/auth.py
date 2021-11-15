@@ -65,7 +65,7 @@ class Auth:
             True if successfull, else False
         """
         # Storing configurations in file
-        output_path = os.path.join(os.path.join(Path.home(), CONFIG_DIR_NAME), CREDS_FILE_NAME)
+        output_path = os.path.join(Path.home(), CONFIG_DIR_NAME, CREDS_FILE_NAME)
         logger.debug(f'Saving new file (TOML format): "{output_path}" ...')
         with open(os.path.join(output_path), 'w') as file:  # Overwrite previous content
             toml.dump(profiles, file)

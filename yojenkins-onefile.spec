@@ -4,7 +4,7 @@ from PyInstaller.utils.hooks import collect_submodules
 
 block_cipher = None
 
-a = Analysis(['yojenkins\\__main__.py'],
+a = Analysis(['yojenkins/__main__.py'],
              pathex=[],
              binaries=[],
              datas=[],
