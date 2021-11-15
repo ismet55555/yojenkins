@@ -211,15 +211,12 @@ class DockerJenkinsServer():
         logger.debug(f'Building image: {self.image_fullname} ...')
         logger.debug(f'Dockerfile directory: {self.image_dockerfile_dir}')
         try:
-            generator = self.docker_client.images.build(path=self.image_dockerfile_dir,
-                                                        tag=self.image_fullname,
-                                                        rm=True,
-                                                        buildargs=self.image_build_args,
-                                                        quiet=False,
-                                                        forcerm=True)
-            # for i in generator[1]:
-            #     print(i.get('stream'))
-
+            self.docker_client.images.build(path=self.image_dockerfile_dir,
+                                            tag=self.image_fullname,
+                                            rm=True,
+                                            buildargs=self.image_build_args,
+                                            quiet=False,
+                                            forcerm=True)
         except DockerException as error:
             logger.debug(f'Failed to build image: {self.image_fullname}. Exception: {error}')
             return ''
