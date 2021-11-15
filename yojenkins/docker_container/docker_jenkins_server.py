@@ -55,11 +55,6 @@ class DockerJenkinsServer():
 
         self.docker_client = None
 
-        # resources_path = get_resource_path(os.path.join('resources', 'server_docker_settings'))
-        # print(resources_path)
-        # plugins_file = os.path.join(resources_path, plugins_file)
-        # print(plugins_file)
-
         # Image Related
         self.docker_registry = registry
         self.image_base_image = image_base

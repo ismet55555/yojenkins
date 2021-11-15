@@ -1,8 +1,8 @@
 # -*- mode: python ; coding: utf-8 -*-
 
-from PyInstaller.utils.hooks import collect_submodules
 
 block_cipher = None
+
 
 a = Analysis(['yojenkins/__main__.py'],
              pathex=[],
