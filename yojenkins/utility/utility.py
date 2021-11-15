@@ -4,7 +4,7 @@ import json
 import logging
 import os
 import re
-import site
+import sys
 import sysconfig
 import webbrowser
 from pathlib import Path
@@ -689,29 +689,35 @@ def get_resource_path(relative_path: str) -> str:
     return resource_path
 
 
-def get_project_dir(project_dir: str = 'yojenkins', sample_path: str = 'resources') -> str:
+def get_project_dir(sample_path: str = 'resources') -> str:
     """Getting the path to the directory containing project resources
 
     Details:
-        Effectively this function is looking through all possible package locations
-    and checking if it contains a directory with the project name
-
-    NOTE: Probably only need the relative path!
+        - Effectively this function is looking through all possible package locations
+        and checking if it contains a directory with the project name
 
     Args:
-        project_dir : The name of the project's directory
         sample_path : A directory that is directly inside the project directory (ie. yojenkins/resources)
 
     Returns:
         Project directory absolute path
     """
-    possible_dirs = {
-        'relative': os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')),
-        'sys_dirs': sysconfig.get_paths()["purelib"],
-        'usr_dirs': site.getusersitepackages(),
-        'site_dirs': site.getsitepackages(),
-        'cwd': os.getcwd(),
-    }
+    if am_i_bundled():
+        # Program is running within a pyinstaller bundle
+        project_dir = ''
+        possible_dirs = {
+            'pyinstaller': sys._MEIPASS,
+        }
+    else:
+        project_dir = 'yojenkins'
+        possible_dirs = {
+            'relative': os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')),
+            'sys_dirs': sysconfig.get_paths()["purelib"],
+            'cwd': os.getcwd(),
+        }
+        # NOTE: "site" module does not work with pyinstaller bundle (AttributeError)
+        # 'usr_dirs': site.getusersitepackages(),
+        # 'site_dirs': site.getsitepackages(),
 
     dirs = []
     for possible_dir in possible_dirs.values():
@@ -722,17 +728,16 @@ def get_project_dir(project_dir: str = 'yojenkins', sample_path: str = 'resource
 
     logger.debug('Searching project resource directory ...')
     resource_dir_path = ''
-    for d in dirs:
-        if os.path.exists(os.path.join(d, project_dir, sample_path)):
-            resource_dir_path = os.path.join(d, project_dir)
-            logger.debug(f'    - {d} - FOUND')
+    for possible_dir in dirs:
+        if os.path.exists(os.path.join(possible_dir, project_dir, sample_path)):
+            resource_dir_path = os.path.join(possible_dir, project_dir)
+            logger.debug(f'    - {possible_dir} - FOUND')
             break
-        logger.debug(f'    - {d} - NOT FOUND')
+        logger.debug(f'    - {possible_dir} - NOT FOUND')
 
     if not resource_dir_path:
-        logger.debug('Failed to find included data directory')
+        logger.fatal('Failed to find included data directory')
         return ''
-
     return resource_dir_path
 
 
@@ -764,9 +769,23 @@ def item_exists_in_folder(item_name: str, folder_url: str, item_type: str, rest:
     return item_exists
 
 
-def am_i_inside_docker():
+def am_i_inside_docker() -> bool:
+    """Find out if the program is running inside a docker container
+
+    Returns:
+        True if running in docker container, else False
+    """
     path = '/proc/self/cgroup'
     return (os.path.exists('/.dockerenv') or os.path.isfile(path) and any('docker' in line for line in open(path)))
+
+
+def am_i_bundled() -> bool:
+    """Find out if the program is running as part of a pyinstaller bundle
+
+    Returns:
+        True if running bundled, else False
+    """
+    return getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS')
 
 
 def parse_and_check_input_string_list(string_list: str, join_back_char: str = '', split_char: str = ',') -> list:

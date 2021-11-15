@@ -4,6 +4,7 @@ import json
 import logging
 import os
 import sys
+from pathlib import Path
 
 import click
 
@@ -15,6 +16,9 @@ from yojenkins.yo_jenkins import Auth, YoJenkins
 
 # Getting the logger reference
 logger = logging.getLogger()
+
+# TODO: Find centralized location for these static values
+CONFIG_DIR_NAME = '.yojenkins'
 
 
 @log_to_history
@@ -234,13 +238,13 @@ def server_deploy(config_file: str, plugins_file: str, protocol_schema: str, hos
     deployed, success = djs.setup()
     if not success:
         click.echo(click.style('Failed to setup server', fg='bright_red', bold=True))
-        click.echo(click.style('Items deployed for partial deployment:', fg='bright_red', bold=True))
         if deployed:
+            click.echo(click.style('Items deployed for partial deployment:', fg='bright_red', bold=True))
             click.echo(click.style(deployed, fg='bright_red', bold=True))
         sys.exit(1)
 
     # Write current server docker attributes to file
-    filepath = os.path.join(get_project_dir(), 'resources', 'server_docker_settings', 'last_deploy_info.json')
+    filepath = os.path.join(Path.home(), CONFIG_DIR_NAME, 'last_deploy_info.json')
     if not filepath:
         click.echo(click.style('Failed to find yojenkins included data directory', fg='bright_red', bold=True))
         sys.exit(1)
@@ -259,6 +263,7 @@ def server_deploy(config_file: str, plugins_file: str, protocol_schema: str, hos
     click.echo(click.style(f'   - Docker image:      {deployed["image"]}', fg='bright_green', bold=True))
     click.echo(click.style(f'   - Docker volumes:    {deployed["container"]}', fg='bright_green', bold=True))
     click.echo(click.style(f'   - Docker container:  {", ".join(volumes_named)}', fg='bright_green', bold=True))
+    click.echo(click.style(f'   - Deployment file:   {filepath}', fg='bright_green', bold=True))
     click.echo()
     click.echo(click.style(f'Address:  {deployed["address"]}', fg='bright_green', bold=True))
     click.echo(click.style(f'Username: {admin_user}', fg='bright_green', bold=True))
@@ -280,7 +285,7 @@ def server_teardown(remove_volume: bool, remove_image: bool):
         TODO
     """
     # Load deployment info file with deployment information
-    filepath = get_resource_path(os.path.join('resources', 'server_docker_settings', 'last_deploy_info.json'))
+    filepath = os.path.join(Path.home(), CONFIG_DIR_NAME, 'last_deploy_info.json')
     logger.debug(f'Detecting server deployment info file: {filepath} ...')
     try:
         with open(os.path.join(filepath), 'r') as file:

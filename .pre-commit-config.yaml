@@ -69,4 +69,4 @@ repos:
         name: Python Code Linting (pylint)
         args: ["--rcfile=.pylintrc", "--ignore=dev_things", "--fail-under=8.0"]
         language: python
-        # verbose: true
+        verbose: false

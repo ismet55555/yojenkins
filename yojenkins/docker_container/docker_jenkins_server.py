@@ -13,6 +13,7 @@ from time import perf_counter
 from typing import Any, Dict, Tuple
 
 import docker
+from docker.errors import DockerException
 
 from yojenkins.utility.utility import get_resource_path
 
@@ -24,7 +25,7 @@ class DockerJenkinsServer():
     """Class managing containerized Jenkins instance"""
 
     def __init__(self,
-                 config_file: str = 'Docker/server_docker_settings/config_as_code.yaml',
+                 config_file: str = 'config_as_code.yaml',
                  plugins_file: str = 'plugins.txt',
                  protocol_schema: str = 'http',
                  host: str = 'localhost',
@@ -40,6 +41,8 @@ class DockerJenkinsServer():
                  admin_user: str = 'admin',
                  password: str = 'password'):
         """Object constructor method, called at object creation
+
+        ### TODO: Use kwargs instead of positional arguments
 
         Args:
             None
@@ -86,9 +89,10 @@ class DockerJenkinsServer():
         self.new_volume = new_volume
 
         logger.debug(f'Jenkins server build attributes:')
-        for k, v in vars(self).items():
-            if k in ['image_build_args', 'docker_client', 'container_env_vars']: continue
-            logger.debug(f'    - {k}: {v}')
+        for key, value in vars(self).items():
+            if key in ['image_build_args', 'docker_client', 'container_env_vars']:
+                continue
+            logger.debug(f'    - {key}: {value}')
 
     def docker_client_init(self) -> bool:
         """TODO Docstring
@@ -105,7 +109,7 @@ class DockerJenkinsServer():
         # Get the local docker client
         try:
             self.docker_client = docker.from_env()
-        except Exception as error:
+        except DockerException as error:
             logger.debug(f'Failed to get docker client/engine handle. Exception: {error}')
             return False
 
@@ -135,23 +139,23 @@ class DockerJenkinsServer():
                 logger.debug('Docker client was not initialized. Please run .docker_client_init() first')
                 return deployed
 
-        if not self.__container_kill():
+        if not self._container_kill():
             return deployed, False
         if self.image_rebuild:
-            if not self.__image_remove():
+            if not self._image_remove():
                 return deployed, False
 
-        image_name = self.__image_build()
+        image_name = self._image_build()
         if not image_name:
             return deployed, False
         deployed['image'] = image_name
 
-        volume_names = self.__volumes_create()
+        volume_names = self._volumes_create()
         if not volume_names:
             return deployed, False
         deployed['volumes'] = volume_names
 
-        container_name, server_address = self.__container_run()
+        container_name, server_address = self._container_run()
         if not server_address:
             return deployed, False
         deployed['container'] = container_name
@@ -176,29 +180,27 @@ class DockerJenkinsServer():
         """
         removed = {}
 
-        if not self.__container_kill():
+        if not self._container_kill():
             return False
 
         if remove_volume:
-            if not self.__volumes_remove():
+            if not self._volumes_remove():
                 return False
 
         if remove_image:
-            if not self.__image_remove():
+            if not self._image_remove():
                 return False
 
         return True
 
-    def __image_build(self) -> str:
-        """TODO Docstring
+    def _image_build(self) -> str:
+        """Building docker image with specified parameters
 
-        Details: TODO
-
-        Args:
-            TODO
+        Details:
+            - https://docker-py.readthedocs.io/en/stable/images.html
 
         Returns:
-            TODO
+            Name of the image that was built
         """
         start_time = perf_counter()
         logger.debug(f'Building image: {self.image_fullname} ...')
@@ -210,34 +212,29 @@ class DockerJenkinsServer():
                                             buildargs=self.image_build_args,
                                             quiet=False,
                                             forcerm=True)
-        except Exception as error:
+        except DockerException as error:
             logger.debug(f'Failed to build image: {self.image_fullname}. Exception: {error}')
             return ''
         logger.debug(
             f'Successfully build image: {self.image_fullname} (Elapsed time: {perf_counter() - start_time:.3f}s)')
         return self.image_fullname
 
-    def __image_remove(self) -> bool:
-        """TODO Docstring
-
-        Details: TODO
-
-        Args:
-            TODO
+    def _image_remove(self) -> bool:
+        """Remove a specified docker image
 
         Returns:
-            TODO
+            True if successful, False otherwise
         """
         logger.debug(f'Removing image: {self.image_fullname} ...')
         try:
             self.docker_client.images.remove(self.image_fullname)
-        except Exception as error:
+        except DockerException as error:
             logger.debug(f'Failed to remove image: {self.image_fullname}. Exception: {error}')
             return False
         logger.debug(f'Successfully removed image: {self.image_fullname}')
         return True
 
-    def __volumes_create(self) -> list:
+    def _volumes_create(self) -> list:
         """TODO Docstring
 
         Details: TODO
@@ -288,7 +285,7 @@ class DockerJenkinsServer():
         logger.debug(f'Number of volumes to be mounted to container: {len(self.volumes_mounts)}')
         return volume_mounts_names
 
-    def __volumes_remove(self) -> bool:
+    def _volumes_remove(self) -> bool:
         """TODO Docstring
 
         Details: TODO
@@ -305,11 +302,11 @@ class DockerJenkinsServer():
                 volume_named = self.docker_client.volumes.get(volume_name)
                 volume_named.remove(force=True)
                 logger.debug(f'    - Volume: {volume_name} - REMOVED')
-            except Exception as error:
+            except DockerException as error:
                 logger.debug(f'    - Volume: {volume_name} - FAILED - Exception: {error}')
         return True
 
-    def __container_run(self) -> Tuple[str, str]:
+    def _container_run(self) -> Tuple[str, str]:
         """TODO Docstring
 
         Details: TODO
@@ -340,7 +337,7 @@ class DockerJenkinsServer():
                                               auto_remove=self.container_remove,
                                               detach=True,
                                               group_add=docker_gid)
-        except Exception as error:
+        except DockerException as error:
             logger.debug(f'Failed to run container: {self.container_name} Exception: {error}')
             return '', ''
         logger.debug(f'Successfully running container: {self.container_name}')
@@ -348,7 +345,7 @@ class DockerJenkinsServer():
         logger.debug(f'    --> {self.container_address}')
         return self.container_name, self.container_address
 
-    def __container_stop(self) -> bool:
+    def _container_stop(self) -> bool:
         """TODO Docstring
 
         Details: TODO
@@ -364,12 +361,12 @@ class DockerJenkinsServer():
             container_handle = self.docker_client.containers.get(self.container_name)
             container_handle.stop()
             logger.debug('Container is stopped')
-        except Exception as error:
+        except DockerException as error:
             logger.debug(f'Failed to stop container matching tag: {self.container_name}. Exception: {error}')
             return False
         return True
 
-    def __container_kill(self) -> bool:
+    def _container_kill(self) -> bool:
         """TODO Docstring
 
         Details: TODO
@@ -385,6 +382,6 @@ class DockerJenkinsServer():
             container_handle = self.docker_client.containers.get(self.container_name)
             container_handle.kill()
             logger.debug('Container is dead')
-        except Exception as error:
+        except DockerException as error:
             logger.debug(f'Failed to kill container matching tag: {self.container_name}. Exception: {error}')
         return True

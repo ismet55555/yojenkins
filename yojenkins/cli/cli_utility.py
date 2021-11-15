@@ -23,7 +23,7 @@ from yojenkins.yo_jenkins.auth import Auth
 from yojenkins.yo_jenkins.rest import Rest
 from yojenkins.yo_jenkins.yojenkins import YoJenkins
 
-from yojenkins.utility.utility import iter_data_empty_item_stripper, load_contents_from_local_file, am_i_inside_docker  # isort:skip
+from yojenkins.utility.utility import iter_data_empty_item_stripper, load_contents_from_local_file, am_i_inside_docker, am_i_bundled  # isort:skip
 
 # Getting the logger reference
 logger = logging.getLogger()
@@ -68,13 +68,7 @@ def set_debug_log_level(debug_flag: bool) -> None:
 
 
 def platform_information() -> None:
-    """TODO Docstring
-
-    Args:
-        TODO
-
-    Returns:
-        TODO
+    """Display (Console out) current system and program information
     """
     python_rev = f'(REV:{platform.python_revision()})' if platform.python_revision() else ''
 
@@ -85,8 +79,9 @@ def platform_information() -> None:
     logger.debug(f'    - Version:   {platform.version()}')
     logger.debug(f'    - Machine:   {platform.uname().machine}')
     logger.debug(f'    - Processor: {platform.uname().processor}')
-    logger.debug(f'    - In Docker: {am_i_inside_docker()}')
     logger.debug(f'    - Python:    {platform.python_version()} {python_rev}')
+    logger.debug(f'    - In Docker: {am_i_inside_docker()}')
+    logger.debug(f'    - Bundled:   {am_i_bundled()}')
 
 
 def config_yo_jenkins(profile: str) -> YoJenkins:
