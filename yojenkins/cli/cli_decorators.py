@@ -1,11 +1,12 @@
 """Click CLI Decorator Shortcuts/Utilities"""
 
 import functools
+from typing import Callable
 
 import click
 
 
-def format_output(decorated_function):
+def format_output(decorated_function: Callable) -> Callable:
     """click module options for formatting the output
 
     Details: This function is a convenience function to use to add click options
@@ -14,7 +15,7 @@ def format_output(decorated_function):
         decorated_function : Function that is decorated
 
     Returns:
-        None
+        Decorated function
     """
 
     @click.option('-p',
@@ -34,7 +35,7 @@ def format_output(decorated_function):
     return wrapper
 
 
-def debug(decorated_function):
+def debug(decorated_function: Callable) -> Callable:
     """click module options for debug level
 
     Details: This function is a convenience function to use to add click options
@@ -43,7 +44,7 @@ def debug(decorated_function):
         decorated_function : Function that is decorated
 
     Returns:
-        None
+        Decorated function
     """
 
     # TODO: Just call/move the debug log level update function here
@@ -61,7 +62,7 @@ def debug(decorated_function):
     return wrapper
 
 
-def profile(decorated_function):
+def profile(decorated_function: Callable) -> Callable:
     """click module options for selecting the credentials profile to be used with the command
 
     Details: This function is a convenience function to use to add click options
@@ -70,7 +71,7 @@ def profile(decorated_function):
         decorated_function : Function that is decorated
 
     Returns:
-        None
+        Decorated function
     """
 
     @click.option('--profile', type=str, required=False, is_flag=False, help='Authentication profile for command')
@@ -81,7 +82,7 @@ def profile(decorated_function):
     return wrapper
 
 
-def list(decorated_function):
+def list(decorated_function: Callable) -> Callable:
     """click module options for outputting as a list
 
     Details: This function is a convenience function to use to add click options
@@ -90,7 +91,7 @@ def list(decorated_function):
         decorated_function : Function that is decorated
 
     Returns:
-        None
+        Decorated function
     """
 
     @click.option('-l', '--list', type=bool, default=False, required=False, is_flag=True, help='Output as list')

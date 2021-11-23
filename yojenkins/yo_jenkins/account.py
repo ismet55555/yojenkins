@@ -11,7 +11,7 @@ logger = logging.getLogger()
 
 
 class Account():
-    """TODO Account"""
+    """Account Class"""
 
     def __init__(self, rest) -> None:
         """Object constructor method, called at object creation

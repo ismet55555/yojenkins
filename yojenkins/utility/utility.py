@@ -16,6 +16,7 @@ import requests
 import toml
 import xmltodict
 import yaml
+from click import echo, style
 from urllib3.util import parse_url
 
 from yojenkins import __version__
@@ -35,6 +36,27 @@ class TextStyle:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
     NORMAL = '\033[0m'
+
+
+def failure_out(message: str) -> None:
+    """Output a failure message to the console, then exit
+
+    Args:
+        message: Message to output to console
+    """
+    echo(style(message, fg='bright_red', bold=True))
+    sys.exit(1)
+
+
+def failures_out(messages: list) -> None:
+    """Output multiple failure messages to the console, then exit
+
+    Args:
+        message: Messages to output to console
+    """
+    for message in messages:
+        echo(style(message, fg='bright_red', bold=True))
+    sys.exit(1)
 
 
 def load_contents_from_local_file(file_type: str, local_file_path: str) -> Dict:

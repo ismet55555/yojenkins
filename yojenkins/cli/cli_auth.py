@@ -15,17 +15,14 @@ logger = logging.getLogger()
 
 @log_to_history
 def configure(api_token: str) -> None:
-    """TODO Docstring
-
-    Details: TODO
+    """Configure authentication
 
     Args:
-        TODO
+        api_token: API token to use for profile setup
 
     Returns:
-        TODO
+        None
     """
-    # Request the data
     if not Auth().configure(api_token=api_token):
         click.echo(click.style('Failed to configure credentials file', fg='bright_red', bold=True))
         sys.exit(1)
@@ -34,15 +31,13 @@ def configure(api_token: str) -> None:
 
 @log_to_history
 def token(profile: str) -> None:
-    """TODO Docstring
-
-    Details: TODO
+    """Generate authentication API token
 
     Args:
-        TODO
+        profile: The profile/account to use
 
     Returns:
-        TODO
+        None
     """
     auth = Auth()
 
@@ -60,15 +55,16 @@ def token(profile: str) -> None:
 
 @log_to_history
 def show(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool) -> None:
-    """TODO Docstring
-
-    Details: TODO
+    """Show the local credentials profiles
 
     Args:
-        TODO
+        opt_pretty: Option to pretty print the output
+        opt_yaml: Option to output in YAML format
+        opt_xml: Option to output in XML format
+        opt_toml: Option to output in TOML format
 
     Returns:
-        TODO
+        None
     """
     data = Auth().show_local_credentials()
     if not data:
@@ -80,24 +76,20 @@ def show(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool) -> Non
 
 @log_to_history
 def verify(profile: str) -> None:
-    """TODO Docstring
-
-    Details: TODO
+    """Check if credentials can authenticate
 
     Args:
-        TODO
+        profile: The profile/account to use
 
     Returns:
-        TODO
+        None
     """
     auth = Auth(Rest())
 
-    # Get the credential profile
     if not auth.get_credentials(profile):
         click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
 
-    # Create authentication
     if not auth.create_auth():
         click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
@@ -107,21 +99,21 @@ def verify(profile: str) -> None:
 
 @log_to_history
 def user(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str) -> None:
-    """TODO Docstring
-
-    Details: TODO
+    """Show current user information
 
     Args:
-        TODO
+        opt_pretty: Option to pretty print the output
+        opt_yaml: Option to output in YAML format
+        opt_xml: Option to output in XML format
+        opt_toml: Option to output in TOML format
+        profile: The profile/account to use
 
     Returns:
-        TODO
+        None
     """
-    # Request the data
     data = cu.config_yo_jenkins(profile).auth.user()
     if not data:
         click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
 
-    # Console output
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)

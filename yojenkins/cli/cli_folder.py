@@ -16,15 +16,13 @@ logger = logging.getLogger()
 
 @log_to_history
 def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, folder: str) -> None:
-    """TODO Docstring
-
-    Details: TODO
+    """Folder information
 
     Args:
         TODO
 
     Returns:
-        TODO
+        None
     """
     yj_obj = cu.config_yo_jenkins(profile)
     if cu.is_full_url(folder):
@@ -33,7 +31,7 @@ def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profil
         data = yj_obj.folder.info(folder_name=folder)
 
     if not data:
-        click.echo(click.style('no folder information', fg='bright_red', bold=True))
+        click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
@@ -41,15 +39,13 @@ def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profil
 @log_to_history
 def search(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, search_pattern: str,
            search_folder: str, depth: int, fullname: bool, opt_list: bool) -> None:
-    """TODO Docstring
-
-    Details: TODO
+    """Search folders by REGEX pattern
 
     Args:
         TODO
 
     Returns:
-        TODO
+        None
     """
     yj_obj = cu.config_yo_jenkins(profile)
     if cu.is_full_url(search_folder):
@@ -64,7 +60,7 @@ def search(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, prof
                                                fullname=fullname)
 
     if not data:
-        click.echo(click.style('"not found', fg='bright_red', bold=True))
+        click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
     data = data_list if opt_list else data
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
@@ -73,15 +69,13 @@ def search(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, prof
 @log_to_history
 def subfolders(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, folder: str,
                opt_list: bool) -> None:
-    """TODO Docstring
-
-    Details: TODO
+    """List all subfolders in folder
 
     Args:
         TODO
 
     Returns:
-        TODO
+        None
     """
     yj_obj = cu.config_yo_jenkins(profile)
     if cu.is_full_url(folder):
@@ -90,7 +84,7 @@ def subfolders(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, 
         data, data_list = yj_obj.folder.subfolder_list(folder_name=folder)
 
     if not data:
-        click.echo(click.style('not found or no subfolders', fg='bright_red', bold=True))
+        click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
     data = data_list if opt_list else data
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
@@ -99,15 +93,13 @@ def subfolders(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, 
 @log_to_history
 def jobs(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, folder: str,
          opt_list: bool) -> None:
-    """TODO Docstring
-
-    Details: TODO
+    """List all jobs in folder
 
     Args:
         TODO
 
     Returns:
-        TODO
+        None
     """
     yj_obj = cu.config_yo_jenkins(profile)
     if cu.is_full_url(folder):
@@ -116,7 +108,7 @@ def jobs(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profil
         data, data_list = yj_obj.folder.jobs_list(folder_name=folder)
 
     if not data:
-        click.echo(click.style('not found', fg='bright_red', bold=True))
+        click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
     data = data_list if opt_list else data
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
@@ -125,15 +117,13 @@ def jobs(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profil
 @log_to_history
 def views(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, folder: str,
           opt_list: int) -> None:
-    """TODO Docstring
-
-    Details: TODO
+    """List all views in folder
 
     Args:
         TODO
 
     Returns:
-        TODO
+        None
     """
     yj_obj = cu.config_yo_jenkins(profile)
     if cu.is_full_url(folder):
@@ -142,7 +132,7 @@ def views(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profi
         data, data_list = yj_obj.folder.view_list(folder_name=folder)
 
     if not data:
-        click.echo(click.style('not found', fg='bright_red', bold=True))
+        click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
     data = data_list if opt_list else data
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
@@ -151,15 +141,13 @@ def views(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profi
 @log_to_history
 def items(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, folder: str,
           opt_list: int) -> None:
-    """TODO Docstring
-
-    Details: TODO
+    """List all items in folder
 
     Args:
         TODO
 
     Returns:
-        TODO
+        None
     """
     yj_obj = cu.config_yo_jenkins(profile)
     if cu.is_full_url(folder):
@@ -168,7 +156,7 @@ def items(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profi
         data, data_list = yj_obj.folder.item_list(folder_name=folder)
 
     if not data:
-        click.echo(click.style('not found or no folder items', fg='bright_red', bold=True))
+        click.echo(click.style('failed', fg='bright_red', bold=True))
         sys.exit(1)
     data = data_list if opt_list else data
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
@@ -176,15 +164,13 @@ def items(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profi
 
 @log_to_history
 def browser(profile: str, folder: str) -> None:
-    """TODO Docstring
-
-    Details: TODO
+    """Open folder in web browser
 
     Args:
         TODO
 
     Returns:
-        TODO
+        None
     """
     yj_obj = cu.config_yo_jenkins(profile)
     if cu.is_full_url(folder):
@@ -200,15 +186,13 @@ def browser(profile: str, folder: str) -> None:
 @log_to_history
 def config(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_json: bool, profile: str, folder: str,
            filepath: str) -> None:
-    """TODO Docstring
-
-    Details: TODO
+    """Get folder configuration
 
     Args:
         TODO
 
     Returns:
-        TODO
+        None
     """
     yj_obj = cu.config_yo_jenkins(profile)
     if cu.is_full_url(folder):
@@ -229,7 +213,7 @@ def config(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_
         sys.exit(1)
 
     if not write_success:
-        click.echo(click.style('failed to write', fg='bright_red', bold=True))
+        click.echo(click.style('Failed to write configuration file', fg='bright_red', bold=True))
         sys.exit(1)
 
     # Converting XML to dict
@@ -242,16 +226,16 @@ def config(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_
 
 @log_to_history
 def create(profile: str, name: str, folder: str, type: str, config: str, config_is_json: bool) -> None:
-    """TODO Docstring
-
-    Details: TODO
+    """Create an item
 
     Args:
         TODO
 
     Returns:
-        TODO
+        None
     """
+    # TODO: Maybe return the newly created item url
+
     yj_obj = cu.config_yo_jenkins(profile)
     if cu.is_full_url(folder):
         data = yj_obj.folder.create(name=name,
@@ -274,15 +258,13 @@ def create(profile: str, name: str, folder: str, type: str, config: str, config_
 
 @log_to_history
 def copy(profile: str, folder: str, original_name: str, new_name: str) -> None:
-    """TODO Docstring
-
-    Details: TODO
+    """Copy an existing item
 
     Args:
         TODO
 
     Returns:
-        TODO
+        None
     """
     # TODO: Maybe return the newly copied item url
 
@@ -300,15 +282,13 @@ def copy(profile: str, folder: str, original_name: str, new_name: str) -> None:
 
 @log_to_history
 def delete(profile: str, folder: str) -> None:
-    """TODO Docstring
-
-    Details: TODO
+    """Delete folder or view
 
     Args:
         TODO
 
     Returns:
-        TODO
+        None
     """
     yj_obj = cu.config_yo_jenkins(profile)
     if cu.is_full_url(folder):
