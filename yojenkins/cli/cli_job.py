@@ -209,9 +209,9 @@ def browser(profile: str, job: str) -> None:
     """
     yj_obj = cu.config_yo_jenkins(profile)
     if cu.is_full_url(job):
-        data = yj_obj.job.browser_open(job_url=job)
+        yj_obj.job.browser_open(job_url=job)
     else:
-        data = yj_obj.job.browser_open(job_name=job)
+        yj_obj.job.browser_open(job_name=job)
 
 
 @log_to_history
@@ -352,9 +352,9 @@ def monitor(profile: str, job: str, sound: bool) -> None:
     """
     yj_obj = cu.config_yo_jenkins(profile)
     if cu.is_full_url(job):
-        data = yj_obj.job.monitor(job_url=job, sound=sound)
+        yj_obj.job.monitor(job_url=job, sound=sound)
     else:
-        data = yj_obj.job.monitor(job_name=job, sound=sound)
+        yj_obj.job.monitor(job_name=job, sound=sound)
 
 
 @log_to_history
