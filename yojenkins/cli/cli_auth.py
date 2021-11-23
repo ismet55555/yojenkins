@@ -23,9 +23,7 @@ def configure(api_token: str) -> None:
     Returns:
         None
     """
-    if not Auth().configure(api_token=api_token):
-        click.echo(click.style('Failed to configure credentials file', fg='bright_red', bold=True))
-        sys.exit(1)
+    Auth().configure(api_token=api_token)
     click.echo(click.style('Successfully configured credentials file', fg='bright_green', bold=True))
 
 
@@ -47,9 +45,6 @@ def token(profile: str) -> None:
     else:
         # Simply display the new API Token
         data = auth.generate_token()
-    if not data:
-        click.echo(click.style('Failed to generate API token', fg='bright_red', bold=True))
-        sys.exit(1)
     click.echo(click.style(data, fg='bright_green', bold=True))
 
 
@@ -67,10 +62,6 @@ def show(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool) -> Non
         None
     """
     data = Auth().show_local_credentials()
-    if not data:
-        click.echo(click.style('Failed to find or read local configuration file', fg='bright_red', bold=True))
-        sys.exit(1)
-
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
@@ -85,15 +76,8 @@ def verify(profile: str) -> None:
         None
     """
     auth = Auth(Rest())
-
-    if not auth.get_credentials(profile):
-        click.echo(click.style('failed', fg='bright_red', bold=True))
-        sys.exit(1)
-
-    if not auth.create_auth():
-        click.echo(click.style('failed', fg='bright_red', bold=True))
-        sys.exit(1)
-
+    auth.get_credentials(profile)
+    auth.create_auth()
     click.echo(click.style('success', fg='bright_green', bold=True))
 
 
