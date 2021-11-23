@@ -42,7 +42,7 @@ jobs:
           python -m pip install --upgrade-strategy=only-if-needed pipenv setuptools wheel twine build
 
       - id: cache-pipenv
-        uses: actions/cache@v2.1.6
+        uses: actions/cache@v2.1.7
         with:
           path: ~/.local/share/virtualenvs
           key: ${{ runner.os }}-pipenv-V5-${{ hashFiles('**/Pipfile.lock') }}
@@ -89,7 +89,7 @@ jobs:
           python -m pip install --upgrade-strategy=only-if-needed pipenv
 
       - id: cache-pipenv
-        uses: actions/cache@v2.1.6
+        uses: actions/cache@v2.1.7
         with:
           path: ~/.local/share/virtualenvs
           key: ${{ runner.os }}-pipenv-V5-${{ hashFiles('**/Pipfile.lock') }}
