@@ -112,8 +112,4 @@ def user(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profil
         None
     """
     data = cu.config_yo_jenkins(profile).auth.user()
-    if not data:
-        click.echo(click.style('failed', fg='bright_red', bold=True))
-        sys.exit(1)
-
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)

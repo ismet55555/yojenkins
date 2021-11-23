@@ -5,7 +5,7 @@ import os
 from typing import Tuple
 
 from yojenkins.utility import utility
-from yojenkins.utility.utility import failure_out
+from yojenkins.utility.utility import fail_out
 
 # Getting the logger reference
 logger = logging.getLogger()
@@ -40,7 +40,7 @@ class Account():
                                                                  json_return=True,
                                                                  rest=self.rest)
         if not success:
-            failure_out(f'Failed to list account. {error}')
+            fail_out(f'Failed to list account. {error}')
 
         # Get a list of only account ids
         account_list_id = [account["id"] for account in account_list if "id" in account]
@@ -64,12 +64,12 @@ class Account():
                                                               json_return=True,
                                                               rest=self.rest)
         if not success:
-            failure_out(f'Failed to get account info. {error}')
+            fail_out(f'Failed to get account info. {error}')
         for user in user_list:
             if user['id'] == user_id:
                 logger.debug(f'Successfully found account: {user_id}')
                 return user
-        failure_out(f'Failed to find account: {user_id}')
+        fail_out(f'Failed to find account: {user_id}')
 
     def create(self, user_id: str, password: str, is_admin: str, email: str, description: str) -> bool:
         """Create a new user account
@@ -97,7 +97,7 @@ class Account():
                                                       rest=self.rest,
                                                       **kwargs)
         if not success:
-            failure_out(f'Failed to create account. {error}')
+            fail_out(f'Failed to create account. {error}')
         return True
 
     def delete(self, user_id: str) -> bool:
@@ -116,7 +116,7 @@ class Account():
                                                       rest=self.rest,
                                                       **kwargs)
         if not success:
-            failure_out(f'Failed to delete account. {error}')
+            fail_out(f'Failed to delete account. {error}')
         return True
 
     def permission(self, user_id: str, action: str, permission_id: str) -> bool:
@@ -152,7 +152,7 @@ class Account():
                 'permission_enabled': 'false'
             }
         else:
-            failure_out(f'Invalid permission action specified: {action}')
+            fail_out(f'Invalid permission action specified: {action}')
 
         script_filepath = os.path.join(self.groovy_script_directory, 'user_permission_add_remove.groovy')
         _, success, error = utility.run_groovy_script(script_filepath=script_filepath,
@@ -160,7 +160,7 @@ class Account():
                                                       rest=self.rest,
                                                       **kwargs)
         if not success:
-            failure_out(f'Failed to {action} account permissions. {error}')
+            fail_out(f'Failed to {action} account permissions. {error}')
         return True
 
     def permission_list(self) -> Tuple[list, list]:
@@ -177,7 +177,7 @@ class Account():
                                                                     json_return=True,
                                                                     rest=self.rest)
         if not success:
-            failure_out(f'Failed to list all available permissions. {error}')
+            fail_out(f'Failed to list all available permissions. {error}')
 
         # Get a list of only permission ids
         permission_list_id = [permission["id"] for permission in permission_list if "id" in permission]

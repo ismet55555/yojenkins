@@ -402,8 +402,6 @@ class Credential():
             logger.debug('Failed to get credential information. No folder name or folder url received')
             return False
 
-        print(credential_info)
-
         credential_id = credential_info.get('id')
         if not credential_id:
             logger.debug('Failed to find "id" key within credential information')

@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 from typing import Dict, Tuple
 
 from yojenkins.utility import utility
+from yojenkins.utility.utility import print2
 from yojenkins.yo_jenkins.status import StageStatus
 
 # Getting the logger reference
@@ -331,7 +332,7 @@ class Stage():
         else:
             # Output to console
             logger.debug('Printing out console text logs ...')
-            print(stage_log_text)
+            print2(stage_log_text)
         stage_log_text = None
 
         return True

@@ -27,4 +27,4 @@ class FolderMonitor(Monitor):
         # Get attributes form super (parent) class
         super().__init__()
 
-        print(Build)
+        pass

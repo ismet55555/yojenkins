@@ -38,7 +38,22 @@ class TextStyle:
     NORMAL = '\033[0m'
 
 
-def failure_out(message: str) -> None:
+def print2(message: str, bold: bool = False, color: str = 'reset') -> None:
+    """Print a message to the console using click
+
+    Details:
+        - Colors: `black` (might be a gray), `red`, `green`, `yellow` (might be an orange), `blue`,
+          `magenta`, `cyan`, `white` (might be light gray), `reset` (reset the color code only)
+
+    Args:
+        message: Message to print to console
+        bold   : Whether to bold the message
+        color  : Color to use for the message ()
+    """
+    echo(style(message, fg=color, bold=bold))
+
+
+def fail_out(message: str) -> None:
     """Output a failure message to the console, then exit
 
     Args:
@@ -74,25 +89,23 @@ def load_contents_from_local_file(file_type: str, local_file_path: str) -> Dict:
 
     # Check if file exists
     if not os.path.isfile(local_file_path):
-        logger.debug(f'Failed to find file: {local_file_path}')
-        return {}
+        fail_out(f'Failed to find file: {local_file_path}')
 
     logger.debug(f"Loading specified local .{file_type} file: '{local_file_path}' ...")
     try:
-        with open(local_file_path, 'r') as file:
+        with open(local_file_path, 'r') as open_file:
             if file_type == 'yaml':
-                file_contents = yaml.safe_load(file)
+                file_contents = yaml.safe_load(open_file)
             elif file_type == 'toml':
-                file_contents = toml.load(file)
+                file_contents = toml.load(open_file)
             elif file_type == 'json':
-                file_contents = json.load(file)
+                file_contents = json.load(open_file)
             else:
                 logger.debug(f"Unknown file type passed: '{file_type}'")
                 raise ValueError(f"Unknown file type passed: '{file_type}'")
         logger.debug(f"Successfully loaded local .{file_type} file")
     except Exception as error:
-        logger.debug(f"Failed to load specified local .{file_type} file: '{local_file_path}'. Exception: {error}")
-        return {}
+        fail_out(f"Failed to load specified local .{file_type} file: '{local_file_path}'. Exception: {error}")
     return file_contents
 
 
@@ -970,8 +983,6 @@ def run_groovy_script(script_filepath: str, json_return: bool, rest: object,
     if not success:
         logger.debug('Failed server REST request for Groovy script execution')
         return {}, False, 'Failed server REST request for Groovy script execution'
-
-    # print(script_result)
 
     # Check for yojenkins Groovy script error flag
     if "yojenkins groovy script failed" in script_result:

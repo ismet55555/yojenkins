@@ -13,7 +13,7 @@ import xmltodict
 
 from yojenkins.monitor import JobMonitor
 from yojenkins.utility import utility
-from yojenkins.utility.utility import failure_out, failures_out
+from yojenkins.utility.utility import fail_out, failures_out
 from yojenkins.yo_jenkins.jenkins_item_classes import JenkinsItemClasses
 from yojenkins.yo_jenkins.jenkins_item_config import JenkinsItemConfig
 
@@ -130,9 +130,9 @@ class Job():
                 items = self.jenkins_sdk.get_all_jobs(folder_depth=folder_depth)
             except jenkins.JenkinsException as error:
                 error_no_html = error.args[0].split("\n")[0]
-                failure_out(f'Error while getting all items. Exception: {error_no_html}')
+                fail_out(f'Error while getting all items. Exception: {error_no_html}')
             except Exception as error:
-                failure_out(error)
+                fail_out(error)
 
         # Search for any matching folders ("jobs")
         self.search_results = []
@@ -162,7 +162,7 @@ class Job():
             TODO
         """
         if not job_name and not job_url:
-            failure_out('No job name or job URL provided')
+            fail_out('No job name or job URL provided')
 
         if job_name and not job_url:
             job_url = utility.name_to_url(self.rest.get_server_url(), job_name)
@@ -170,11 +170,11 @@ class Job():
         logger.debug(f'Job url passed: {job_url}')
         job_info, _, success = self.rest.request(f'{job_url.strip("/")}/api/json', 'get', is_endpoint=False)
         if not success:
-            failure_out(f'Failed to find job info: {job_url}')
+            fail_out(f'Failed to find job info: {job_url}')
 
         # Check if found item type/class
         if job_info['_class'] not in JenkinsItemClasses.JOB.value['class_type']:
-            failure_out(f'Failed to match type/class. The found item is "{job_info["_class"]}"')
+            fail_out(f'Failed to match type/class. The found item is "{job_info["_class"]}"')
 
         if 'url' in job_info:
             job_info['fullName'] = utility.url_to_name(job_info['url'])
@@ -224,7 +224,7 @@ class Job():
         job_info = self.info(job_name=job_name, job_url=job_url)
 
         if not job_info.get('nextBuildNumber'):
-            failure_out('Failed to get next build number from job. "builds" key missing in job information')
+            fail_out('Failed to get next build number from job. "builds" key missing in job information')
 
         return job_info['nextBuildNumber']
 
@@ -245,9 +245,9 @@ class Job():
             job_info = self.info(job_name=job_name, job_url=job_url)
 
         if 'lastBuild' not in job_info:
-            failure_out('Failed to get last build number from job. "lastBuild" key missing in job information')
+            fail_out('Failed to get last build number from job. "lastBuild" key missing in job information')
         if 'number' not in job_info['lastBuild']:
-            failure_out('Failed to get last build number from job. "lastBuild.number" key missing in job information')
+            fail_out('Failed to get last build number from job. "lastBuild.number" key missing in job information')
 
         return job_info['lastBuild']['number']
 
@@ -261,7 +261,7 @@ class Job():
             TODO
         """
         if not job_name and not job_url:
-            failure_out('No job name or job URL provided')
+            fail_out('No job name or job URL provided')
         if job_url and not job_name:
             job_name = utility.url_to_name(url=job_url)
         # Format name
@@ -274,7 +274,7 @@ class Job():
             self.jenkins_sdk.set_next_build_number(job_name, build_number)
         except jenkins.JenkinsException as error:
             error_no_html = error.args[0].split("\n")[0]
-            failure_out(
+            fail_out(
                 f'Failed to set next build number for job "{job_name}" to {build_number}. Exception: {error_no_html}')
 
         return build_number
@@ -297,7 +297,7 @@ class Job():
             job_info = self.info(job_name=job_name, job_url=job_url)
 
         if 'builds' not in job_info:
-            failure_out('Failed to get build list from job. "builds" key missing in job information')
+            fail_out('Failed to get build list from job. "builds" key missing in job information')
 
         # Iterate through all listed builds
         for build in job_info['builds']:
@@ -318,7 +318,7 @@ class Job():
         # NOTE: The jenkins-python module build_job() does not work. Using requests instead
 
         if not job_name and not job_url:
-            failure_out('No job name or job URL provided')
+            fail_out('No job name or job URL provided')
 
         logger.debug(f'Job reference passed: {job_name if job_name else job_url}')
 
@@ -356,7 +356,7 @@ class Job():
             logger.debug(f'Build queue URL: {queue_location}')
             logger.debug(f'Build queue ID: {build_queue_number}')
         else:
-            failure_out('Failed to trigger build. Failed to send request')
+            fail_out('Failed to trigger build. Failed to send request')
 
         return build_queue_number
 
@@ -389,7 +389,7 @@ class Job():
         elif build_queue_url:
             endpoint = f'{build_queue_url}api/json'
         else:
-            failure_out('No build queue number or build queue url passed')
+            fail_out('No build queue number or build queue url passed')
         queue_info = self.rest.request(endpoint, 'get', is_endpoint=True)[0]
 
         # Adding additional parameters
@@ -415,7 +415,7 @@ class Job():
             TODO
         """
         if not job_name and not job_url:
-            failure_out('No job name or job URL provided')
+            fail_out('No job name or job URL provided')
 
         # Requesting all queue and searching queue (NOTE: Could use Server object)
         queue_all = self.rest.request('queue/api/json', 'get')[0]
@@ -450,7 +450,7 @@ class Job():
         logger.debug(f'Aborting build queue "{build_queue_number}" ...')
 
         if not build_queue_number:
-            failure_out('No build queue number passed')
+            fail_out('No build queue number passed')
 
         # Make the request URL
         endpoint = f'queue/cancelItem?id={build_queue_number}'
@@ -478,7 +478,7 @@ class Job():
             TODO
         """
         if not job_name and not job_url:
-            failure_out('No job name or job URL provided')
+            fail_out('No job name or job URL provided')
 
         if job_url:
             job_url = job_url.strip('/')
@@ -487,7 +487,7 @@ class Job():
 
         logger.debug(f'Opening in web browser: "{job_url}" ...')
         if not utility.browser_open(url=job_url):
-            failure_out('Failed to open job in web browser')
+            fail_out('Failed to open job in web browser')
         logger.debug('Successfully oped job in web browser')
 
         return True
@@ -511,7 +511,7 @@ class Job():
             True if configuration written to file, else False
         """
         if not job_name and not job_url:
-            failure_out('No job name or job URL provided')
+            fail_out('No job name or job URL provided')
 
         if job_url:
             job_url = job_url.strip('/')
@@ -524,7 +524,7 @@ class Job():
                                                        json_content=False,
                                                        is_endpoint=False)
         if not success:
-            failure_out('Failed to get job configuration')
+            fail_out('Failed to get job configuration')
         logger.debug('Successfully fetched XML configurations')
 
         if filepath:
@@ -544,7 +544,7 @@ class Job():
             TODO
         """
         if not job_name and not job_url:
-            failure_out('No job name or job URL provided')
+            fail_out('No job name or job URL provided')
 
         if job_url:
             job_url = job_url.strip('/')
@@ -554,7 +554,7 @@ class Job():
         logger.debug(f'Disabling job: "{job_url}" ...')
         success = self.rest.request(f'{job_url.strip("/")}/disable', 'post', is_endpoint=False)[2]
         if not success:
-            failure_out('Failed to disable job')
+            fail_out('Failed to disable job')
         logger.debug('Successfully disabled job')
 
         return success
@@ -569,7 +569,7 @@ class Job():
             TODO
         """
         if not job_name and not job_url:
-            failure_out('No job name or job URL provided')
+            fail_out('No job name or job URL provided')
 
         if job_url:
             job_url = job_url.strip('/')
@@ -579,7 +579,7 @@ class Job():
         logger.debug(f'Enabling job: "{job_url}" ...')
         success = self.rest.request(f'{job_url.strip("/")}/enable', 'post', is_endpoint=False)[2]
         if not success:
-            failure_out('Failed to enable job')
+            fail_out('Failed to enable job')
         logger.debug('Successfully enabled job')
 
         return success
@@ -594,7 +594,7 @@ class Job():
             TODO
         """
         if not job_name and not job_url:
-            failure_out('No job name or job URL provided')
+            fail_out('No job name or job URL provided')
 
         if job_url:
             job_url = job_url.strip('/')
@@ -610,7 +610,7 @@ class Job():
         logger.debug(f'Renaming job: "{job_url}" ...')
         success = self.rest.request(f'{job_url.strip("/")}/doRename?newName={new_name}', 'post', is_endpoint=False)[2]
         if not success:
-            failure_out('Failed to rename job')
+            fail_out('Failed to rename job')
         logger.debug('Successfully renamed job')
 
         return success
@@ -625,7 +625,7 @@ class Job():
             TODO
         """
         if not job_name and not job_url:
-            failure_out('No job name or job URL provided')
+            fail_out('No job name or job URL provided')
 
         if job_url:
             job_url = job_url.strip('/')
@@ -635,7 +635,7 @@ class Job():
         logger.debug(f'Deleting job: "{job_url}" ...')
         success = self.rest.request(f'{job_url.strip("/")}/doDelete', 'post', is_endpoint=False)[2]
         if not success:
-            failure_out('Failed to delete job')
+            fail_out('Failed to delete job')
         logger.debug('Successfully deleted job')
 
         return success
@@ -650,7 +650,7 @@ class Job():
             TODO
         """
         if not job_name and not job_url:
-            failure_out('No job name or job URL provided')
+            fail_out('No job name or job URL provided')
 
         if job_url:
             job_url = job_url.strip('/')
@@ -660,7 +660,7 @@ class Job():
         logger.debug(f'Wiping workspace for job: "{job_url}" ...')
         success = self.rest.request(f'{job_url.strip("/")}/doWipeOutWorkspace', 'post', is_endpoint=False)[2]
         if not success:
-            failure_out('Failed to wipe workspace')
+            fail_out('Failed to wipe workspace')
         logger.debug('Successfully wiped workspace')
 
         return success
@@ -675,7 +675,7 @@ class Job():
             TODO
         """
         if not job_name and not job_url:
-            failure_out('No job name or job URL provided')
+            fail_out('No job name or job URL provided')
 
         if job_url:
             job_url = job_url.strip('/')
@@ -683,12 +683,12 @@ class Job():
             job_url = utility.name_to_url(self.rest.get_server_url(), job_name)
 
         if not self.rest.request(f'{job_url.strip("/")}/api/json', 'head', is_endpoint=False)[2]:
-            failure_out(f'Failed to find job. The job may not exist: {job_url}')
+            fail_out(f'Failed to find job. The job may not exist: {job_url}')
 
         logger.debug(f'Starting monitor for: "{job_url}" ...')
         success = self.JM.monitor_start(job_url=job_url, sound=sound)
         if not success:
-            failure_out('Failed to start job monitor')
+            fail_out('Failed to start job monitor')
         logger.debug('Successfully started job monitor')
 
         return success
@@ -708,7 +708,7 @@ class Job():
             TODO
         """
         if not folder_name and not folder_url:
-            failure_out('No folder name or folder url received')
+            fail_out('No folder name or folder url received')
 
         if folder_url:
             folder_url = folder_url.strip('/')
@@ -716,13 +716,13 @@ class Job():
             folder_url = utility.name_to_url(self.rest.get_server_url(), folder_name)
 
         if not name:
-            failure_out('Provided item name is a blank')
+            fail_out('Provided item name is a blank')
         if utility.has_special_char(name):
-            failure_out('Provided item name contains special characters')
+            fail_out('Provided item name contains special characters')
 
         # Check if job already exists
         if utility.item_exists_in_folder(name, folder_url, "job", self.rest):
-            failure_out(f'Job "{name}" already exists in folder "{folder_url}"')
+            fail_out(f'Job "{name}" already exists in folder "{folder_url}"')
 
         if config_file:
             # Use job config from file
@@ -731,14 +731,14 @@ class Job():
                 open_file = open(config_file, 'rb')
                 job_config = open_file.read()
             except (OSError, IOError, PermissionError) as error:
-                failure_out(f'Failed to open and read file. Exception: {error}')
+                fail_out(f'Failed to open and read file. Exception: {error}')
 
             if config_is_json:
                 logger.debug('Converting the specified JSON file to XML format ...')
                 try:
                     job_config = xmltodict.unparse(json.loads(job_config))
                 except ValueError as error:
-                    failure_out(f'Failed to convert the specified JSON file to XML format. Exception: {error}')
+                    fail_out(f'Failed to convert the specified JSON file to XML format. Exception: {error}')
         else:
             # Use blank job config template
             job_config = JenkinsItemConfig.JOB.value['blank']

@@ -12,7 +12,7 @@ def check_py_version():
     """Check the python version"""
     if sys.version_info < (3, 7):
         print('Your Python version ({}.{}) is not supported'.format(sys.version_info.major, sys.version_info.minor))
-        print('Must have Python version 3.7 or higher')
+        print('You must have Python version 3.7 or higher to run this program')
         if sys.version_info.major < 3:
             print('You may have used "python" where you needed to use "python3"?')
         sys.exit(1)
