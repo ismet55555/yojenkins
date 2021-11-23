@@ -65,10 +65,6 @@ def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profil
         data = yj_obj.build.info(build_url=build_url, job_url=job, build_number=build_number, latest=latest)
     else:
         data = yj_obj.build.info(build_url=build_url, job_name=job, build_number=build_number, latest=latest)
-
-    if not data:
-        click.echo(click.style('failed', fg='bright_red', bold=True))
-        sys.exit(1)
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
@@ -99,10 +95,6 @@ def status(profile: str, job: str, build_number: int, build_url: str, latest: bo
         data = yj_obj.build.status_text(build_url=build_url, job_url=job, build_number=build_number, latest=latest)
     else:
         data = yj_obj.build.status_text(build_url=build_url, job_name=job, build_number=build_number, latest=latest)
-
-    if not data:
-        click.echo(click.style('No build status found', fg='bright_red', bold=True))
-        sys.exit(1)
 
     # Color for output
     if data.upper() in Status.UNKNOWN.value:
@@ -147,11 +139,6 @@ def abort(profile: str, job: str, build_number: int, build_url: str, latest: boo
         data = yj_obj.build.abort(build_url=build_url, job_url=job, build_number=build_number, latest=latest)
     else:
         data = yj_obj.build.abort(build_url=build_url, job_name=job, build_number=build_number, latest=latest)
-
-    if not data:
-        click.echo(click.style('failed', fg='bright_red', bold=True))
-        sys.exit(1)
-
     click.echo(click.style('success', fg='bright_green', bold=True))
 
 
@@ -182,11 +169,6 @@ def delete(profile: str, job: str, build_number: int, build_url: str, latest: bo
         data = yj_obj.build.delete(build_url=build_url, job_url=job, build_number=build_number, latest=latest)
     else:
         data = yj_obj.build.delete(build_url=build_url, job_name=job, build_number=build_number, latest=latest)
-
-    if not data:
-        click.echo(click.style('failed', fg='bright_red', bold=True))
-        sys.exit(1)
-
     click.echo(click.style('success', fg='bright_green', bold=True))
 
 
@@ -229,11 +211,6 @@ def stages(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, prof
                                                   job_name=job,
                                                   build_number=build_number,
                                                   latest=latest)
-
-    if not data:
-        click.echo(click.style('failed', fg='bright_red', bold=True))
-        sys.exit(1)
-
     data = data_list if opt_list else data
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
@@ -266,26 +243,21 @@ def logs(profile: str, job: str, build_number: int, build_url: str, latest: bool
     yj_obj = cu.config_yo_jenkins(profile)
 
     if _verify_build_url_get_job_format(build_url=build_url, job=job):
-        data = yj_obj.build.logs(build_url=build_url,
-                                 job_url=job,
-                                 build_number=build_number,
-                                 latest=latest,
-                                 tail=tail,
-                                 download_dir=download_dir,
-                                 follow=follow)
+        yj_obj.build.logs(build_url=build_url,
+                          job_url=job,
+                          build_number=build_number,
+                          latest=latest,
+                          tail=tail,
+                          download_dir=download_dir,
+                          follow=follow)
     else:
-        data = yj_obj.build.logs(build_url=build_url,
-                                 job_name=job,
-                                 build_number=build_number,
-                                 latest=latest,
-                                 tail=tail,
-                                 download_dir=download_dir,
-                                 follow=follow)
-
-    if not data:
-        click.echo(click.style('failed', fg='bright_red', bold=True))
-        sys.exit(1)
-
+        yj_obj.build.logs(build_url=build_url,
+                          job_name=job,
+                          build_number=build_number,
+                          latest=latest,
+                          tail=tail,
+                          download_dir=download_dir,
+                          follow=follow)
     if download_dir:
         click.echo(click.style('success', fg='bright_green', bold=True))
 
@@ -314,13 +286,9 @@ def browser(profile: str, job: str, build_number: int, build_url: str, latest: b
     yj_obj = cu.config_yo_jenkins(profile)
 
     if _verify_build_url_get_job_format(build_url=build_url, job=job):
-        data = yj_obj.build.browser_open(build_url=build_url, job_url=job, build_number=build_number, latest=latest)
+        yj_obj.build.browser_open(build_url=build_url, job_url=job, build_number=build_number, latest=latest)
     else:
-        data = yj_obj.build.browser_open(build_url=build_url, job_name=job, build_number=build_number, latest=latest)
-
-    if not data:
-        click.echo(click.style('failed', fg='bright_red', bold=True))
-        sys.exit(1)
+        yj_obj.build.browser_open(build_url=build_url, job_name=job, build_number=build_number, latest=latest)
 
 
 @log_to_history
@@ -348,18 +316,6 @@ def monitor(profile: str, job: str, build_number: int, build_url: str, latest: b
     yj_obj = cu.config_yo_jenkins(profile)
 
     if _verify_build_url_get_job_format(build_url=build_url, job=job):
-        data = yj_obj.build.monitor(build_url=build_url,
-                                    job_url=job,
-                                    build_number=build_number,
-                                    latest=latest,
-                                    sound=sound)
+        yj_obj.build.monitor(build_url=build_url, job_url=job, build_number=build_number, latest=latest, sound=sound)
     else:
-        data = yj_obj.build.monitor(build_url=build_url,
-                                    job_name=job,
-                                    build_number=build_number,
-                                    latest=latest,
-                                    sound=sound)
-
-    if not data:
-        click.echo(click.style('failed', fg='bright_red', bold=True))
-        sys.exit(1)
+        yj_obj.build.monitor(build_url=build_url, job_name=job, build_number=build_number, latest=latest, sound=sound)

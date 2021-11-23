@@ -162,7 +162,7 @@ class Job():
             TODO
         """
         if not job_name and not job_url:
-            failure_out('No job name or job url received')
+            failure_out('No job name or job URL provided')
 
         if job_name and not job_url:
             job_url = utility.name_to_url(self.rest.get_server_url(), job_name)
@@ -261,7 +261,7 @@ class Job():
             TODO
         """
         if not job_name and not job_url:
-            failure_out('No job name or job url received')
+            failure_out('No job name or job URL provided')
         if job_url and not job_name:
             job_name = utility.url_to_name(url=job_url)
         # Format name
@@ -318,7 +318,7 @@ class Job():
         # NOTE: The jenkins-python module build_job() does not work. Using requests instead
 
         if not job_name and not job_url:
-            failure_out('No job name or job url received')
+            failure_out('No job name or job URL provided')
 
         logger.debug(f'Job reference passed: {job_name if job_name else job_url}')
 
@@ -415,7 +415,7 @@ class Job():
             TODO
         """
         if not job_name and not job_url:
-            failure_out('No job name or job url received')
+            failure_out('No job name or job URL provided')
 
         # Requesting all queue and searching queue (NOTE: Could use Server object)
         queue_all = self.rest.request('queue/api/json', 'get')[0]
@@ -478,7 +478,7 @@ class Job():
             TODO
         """
         if not job_name and not job_url:
-            failure_out('No job name or job url received')
+            failure_out('No job name or job URL provided')
 
         if job_url:
             job_url = job_url.strip('/')
@@ -511,7 +511,7 @@ class Job():
             True if configuration written to file, else False
         """
         if not job_name and not job_url:
-            failure_out('No job name or job url received')
+            failure_out('No job name or job URL provided')
 
         if job_url:
             job_url = job_url.strip('/')
@@ -544,7 +544,7 @@ class Job():
             TODO
         """
         if not job_name and not job_url:
-            failure_out('No job name or job url received')
+            failure_out('No job name or job URL provided')
 
         if job_url:
             job_url = job_url.strip('/')
@@ -569,7 +569,7 @@ class Job():
             TODO
         """
         if not job_name and not job_url:
-            failure_out('No job name or job url received')
+            failure_out('No job name or job URL provided')
 
         if job_url:
             job_url = job_url.strip('/')
@@ -594,7 +594,7 @@ class Job():
             TODO
         """
         if not job_name and not job_url:
-            failure_out('No job name or job url received')
+            failure_out('No job name or job URL provided')
 
         if job_url:
             job_url = job_url.strip('/')
@@ -625,7 +625,7 @@ class Job():
             TODO
         """
         if not job_name and not job_url:
-            failure_out('No job name or job url received')
+            failure_out('No job name or job URL provided')
 
         if job_url:
             job_url = job_url.strip('/')
@@ -650,7 +650,7 @@ class Job():
             TODO
         """
         if not job_name and not job_url:
-            failure_out('No job name or job url received')
+            failure_out('No job name or job URL provided')
 
         if job_url:
             job_url = job_url.strip('/')
@@ -675,12 +675,15 @@ class Job():
             TODO
         """
         if not job_name and not job_url:
-            failure_out('No job name or job url received')
+            failure_out('No job name or job URL provided')
 
         if job_url:
             job_url = job_url.strip('/')
         else:
             job_url = utility.name_to_url(self.rest.get_server_url(), job_name)
+
+        if not self.rest.request(f'{job_url.strip("/")}/api/json', 'head', is_endpoint=False)[2]:
+            failure_out(f'Failed to find job. The job may not exist: {job_url}')
 
         logger.debug(f'Starting monitor for: "{job_url}" ...')
         success = self.JM.monitor_start(job_url=job_url, sound=sound)

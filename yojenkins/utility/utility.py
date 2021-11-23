@@ -654,7 +654,7 @@ def queue_find(all_queue_info: dict, job_name: str = '', job_url: str = '', firs
         TODO
     """
     if not job_name and not job_url:
-        logger.debug('Failed to get job information. No job name or job url received')
+        logger.debug('=No job name or job URL provided')
         return []
     job_name = job_name if job_name else url_to_name(job_url)
 
