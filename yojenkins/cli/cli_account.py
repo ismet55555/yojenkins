@@ -29,9 +29,6 @@ def list(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_li
     """
     yj_obj = cu.config_yo_jenkins(profile)
     data, data_list = yj_obj.account.list()
-    if not data:
-        click.echo(click.style('failed', fg='bright_red', bold=True))
-        sys.exit(1)
     data = data_list if opt_list else data
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
@@ -54,9 +51,6 @@ def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profil
     """
     yj_obj = cu.config_yo_jenkins(profile)
     data = yj_obj.account.info(user_id=user_id)
-    if not data:
-        click.echo(click.style('failed', fg='bright_red', bold=True))
-        sys.exit(1)
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
@@ -81,9 +75,6 @@ def create(profile: str, user_id: str, password: str, is_admin: bool, email: str
                                  is_admin=is_admin,
                                  email=email,
                                  description=description)
-    if not data:
-        click.echo(click.style('failed', fg='bright_red', bold=True))
-        sys.exit(1)
     click.echo(click.style('success', fg='bright_green', bold=True))
 
 
@@ -100,9 +91,6 @@ def delete(profile: str, user_id: str) -> None:
     """
     yj_obj = cu.config_yo_jenkins(profile)
     data = yj_obj.account.delete(user_id=user_id)
-    if not data:
-        click.echo(click.style('failed', fg='bright_red', bold=True))
-        sys.exit(1)
     click.echo(click.style('success', fg='bright_green', bold=True))
 
 
@@ -121,9 +109,6 @@ def permission(profile: str, user_id: str, action: str, permission_id: str) -> N
     """
     yj_obj = cu.config_yo_jenkins(profile)
     data = yj_obj.account.permission(user_id=user_id, action=action, permission_id=permission_id)
-    if not data:
-        click.echo(click.style('failed', fg='bright_red', bold=True))
-        sys.exit(1)
     click.echo(click.style('success', fg='bright_green', bold=True))
 
 
@@ -145,8 +130,5 @@ def permission_list(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: b
     """
     yj_obj = cu.config_yo_jenkins(profile)
     data, data_list = yj_obj.account.permission_list()
-    if not data:
-        click.echo(click.style('failed', fg='bright_red', bold=True))
-        sys.exit(1)
     data = data_list if opt_list else data
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)

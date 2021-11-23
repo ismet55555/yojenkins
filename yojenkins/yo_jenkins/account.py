@@ -5,6 +5,7 @@ import os
 from typing import Tuple
 
 from yojenkins.utility import utility
+from yojenkins.utility.utility import failure_out
 
 # Getting the logger reference
 logger = logging.getLogger()
@@ -35,11 +36,11 @@ class Account():
             List of credentials in dictionary format and a list of credential names
         """
         script_filepath = os.path.join(self.groovy_script_directory, 'user_list.groovy')
-        account_list, success = utility.run_groovy_script(script_filepath=script_filepath,
-                                                          json_return=True,
-                                                          rest=self.rest)
+        account_list, success, error = utility.run_groovy_script(script_filepath=script_filepath,
+                                                                 json_return=True,
+                                                                 rest=self.rest)
         if not success:
-            return [], []
+            failure_out(f'Failed to list account. {error}')
 
         # Get a list of only account ids
         account_list_id = [account["id"] for account in account_list if "id" in account]
@@ -59,19 +60,16 @@ class Account():
             Dictionary of account information
         """
         script_filepath = os.path.join(self.groovy_script_directory, 'user_list.groovy')
-        user_list, success = utility.run_groovy_script(script_filepath=script_filepath,
-                                                       json_return=True,
-                                                       rest=self.rest)
+        user_list, success, error = utility.run_groovy_script(script_filepath=script_filepath,
+                                                              json_return=True,
+                                                              rest=self.rest)
         if not success:
-            return {}
-
+            failure_out(f'Failed to get account info. {error}')
         for user in user_list:
             if user['id'] == user_id:
                 logger.debug(f'Successfully found account: {user_id}')
                 return user
-
-        logger.debug(f'Failed to find account: {user_id}')
-        return {}
+        failure_out(f'Failed to find account: {user_id}')
 
     def create(self, user_id: str, password: str, is_admin: str, email: str, description: str) -> bool:
         """Create a new user account
@@ -94,12 +92,12 @@ class Account():
             'description': '' if not description else description
         }
         script_filepath = os.path.join(self.groovy_script_directory, 'user_create.groovy')
-        _, success = utility.run_groovy_script(script_filepath=script_filepath,
-                                               json_return=False,
-                                               rest=self.rest,
-                                               **kwargs)
+        _, success, error = utility.run_groovy_script(script_filepath=script_filepath,
+                                                      json_return=False,
+                                                      rest=self.rest,
+                                                      **kwargs)
         if not success:
-            return False
+            failure_out(f'Failed to create account. {error}')
         return True
 
     def delete(self, user_id: str) -> bool:
@@ -113,12 +111,12 @@ class Account():
         """
         kwargs = {'user_id': user_id}
         script_filepath = os.path.join(self.groovy_script_directory, 'user_delete.groovy')
-        _, success = utility.run_groovy_script(script_filepath=script_filepath,
-                                               json_return=False,
-                                               rest=self.rest,
-                                               **kwargs)
+        _, success, error = utility.run_groovy_script(script_filepath=script_filepath,
+                                                      json_return=False,
+                                                      rest=self.rest,
+                                                      **kwargs)
         if not success:
-            return False
+            failure_out(f'Failed to delete account. {error}')
         return True
 
     def permission(self, user_id: str, action: str, permission_id: str) -> bool:
@@ -154,16 +152,15 @@ class Account():
                 'permission_enabled': 'false'
             }
         else:
-            logger.debug(f'Invalid permission action specified: {action}')
-            return False
+            failure_out(f'Invalid permission action specified: {action}')
 
         script_filepath = os.path.join(self.groovy_script_directory, 'user_permission_add_remove.groovy')
-        _, success = utility.run_groovy_script(script_filepath=script_filepath,
-                                               json_return=False,
-                                               rest=self.rest,
-                                               **kwargs)
+        _, success, error = utility.run_groovy_script(script_filepath=script_filepath,
+                                                      json_return=False,
+                                                      rest=self.rest,
+                                                      **kwargs)
         if not success:
-            return False
+            failure_out(f'Failed to {action} account permissions. {error}')
         return True
 
     def permission_list(self) -> Tuple[list, list]:
@@ -176,11 +173,11 @@ class Account():
             Dictionary of availabe permissions and descriptions
         """
         script_filepath = os.path.join(self.groovy_script_directory, 'user_permission_list.groovy')
-        permission_list, success = utility.run_groovy_script(script_filepath=script_filepath,
-                                                             json_return=True,
-                                                             rest=self.rest)
+        permission_list, success, error = utility.run_groovy_script(script_filepath=script_filepath,
+                                                                    json_return=True,
+                                                                    rest=self.rest)
         if not success:
-            return [], []
+            failure_out(f'Failed to list all available permissions. {error}')
 
         # Get a list of only permission ids
         permission_list_id = [permission["id"] for permission in permission_list if "id" in permission]

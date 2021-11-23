@@ -928,7 +928,7 @@ def template_apply(string_template: str, is_json: bool = False, **kwargs) -> Uni
 
 
 def run_groovy_script(script_filepath: str, json_return: bool, rest: object,
-                      **kwargs) -> Tuple[Union[dict, str], bool]:
+                      **kwargs) -> Tuple[Union[dict, str], bool, str]:
     """Run a Groovy script on the server and return the response
 
     Details:
@@ -945,20 +945,21 @@ def run_groovy_script(script_filepath: str, json_return: bool, rest: object,
     Returns:
         Response from the script
         Success flag
+        Error message
     """
     logger.debug(f'Loading Groovy script: {script_filepath}')
     try:
         with open(script_filepath, 'r') as open_file:
             script = open_file.read()
-    except (FileNotFoundError, IOError) as error:
-        logger.debug(f'Failed to find or read specified script file ({script_filepath}). Exception: {error}')
-        return {}, False
+    except (FileNotFoundError, IOError, PermissionError) as error:
+        logger.debug(f'Failed to find or read specified Groovy script file ({script_filepath}). Exception: {error}')
+        return {}, False, f'Failed to find or read specified Groovy script file ({script_filepath}). Exception: {error}'
 
     # Apply passed kwargs to the string template
     if kwargs:
         script = template_apply(string_template=script, is_json=False, **kwargs)
         if not script:
-            return {}, False
+            return {}, False, "Failed to apply variables to Groovy script template"
 
     # Send the request to the server
     logger.debug(f'Running the following Groovy script on server: {script_filepath} ...')
@@ -967,8 +968,8 @@ def run_groovy_script(script_filepath: str, json_return: bool, rest: object,
                                              data={'script': script},
                                              json_content=False)
     if not success:
-        logger.debug('Failed server Rest request for Groovy script execution')
-        return {}, False
+        logger.debug('Failed server REST request for Groovy script execution')
+        return {}, False, 'Failed server REST request for Groovy script execution'
 
     # print(script_result)
 
@@ -978,13 +979,13 @@ def run_groovy_script(script_filepath: str, json_return: bool, rest: object,
         logger.debug('Failed to execute Groovy script')
         logger.debug(f'Groovy Exception: {groovy_return[1]}')
         logger.debug(groovy_return[2])
-        return {}, False
+        return {}, False, f'Error while executing Groovy script: {groovy_return[1]}: {groovy_return[2]}'
 
     # Check for script exception
     exception_keywords = ['Exception', 'java:']
     if any(exception_keyword in script_result for exception_keyword in exception_keywords):
         logger.debug(f'Error keyword matched in script response: {exception_keywords}')
-        return {}, False
+        return {}, False, f'Error keyword matched in script response: {exception_keywords}'
 
     # Parse script result as JSON
     if json_return:
@@ -992,6 +993,6 @@ def run_groovy_script(script_filepath: str, json_return: bool, rest: object,
             script_result = json.loads(script_result)
         except json.JSONDecodeError as error:
             logger.debug('Failed to parse response to JSON format')
-            return {}, False
+            return {}, False, 'Failed to parse response to JSON format'
 
-    return script_result, True
+    return script_result, True, ''

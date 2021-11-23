@@ -69,7 +69,11 @@ class SharedLibrary():
             'credential_id': credential_id
         }
         script_filepath = os.path.join(self.groovy_script_directory, 'shared_lib_setup.groovy')
-        _, success = utility.run_groovy_script(script_filepath=script_filepath, json_return=False, rest=rest, **kwargs)
+        _, success, error = utility.run_groovy_script(script_filepath=script_filepath,
+                                                      json_return=False,
+                                                      rest=rest,
+                                                      **kwargs)
         if not success:
+            logger.debug(f"Failed to setup Jenkins shared library. {error}")
             return False
         return True
