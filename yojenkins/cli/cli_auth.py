@@ -45,7 +45,10 @@ def token(profile: str) -> None:
     else:
         # Simply display the new API Token
         data = auth.generate_token()
-    click.echo(click.style(data, fg='bright_green', bold=True))
+    if profile:
+        click.echo(click.style('success', fg='bright_green', bold=True))
+    else:
+        click.echo(click.style(data, fg='bright_green', bold=True))
 
 
 @log_to_history
