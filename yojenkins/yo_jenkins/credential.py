@@ -257,7 +257,6 @@ class Credential():
 
         Returns:
             Folder config.xml contents
-            True if configuration written to file, else False
         """
         folder, store = self._get_folder_store(folder)
         domain = self._get_domain(domain)

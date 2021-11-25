@@ -9,6 +9,7 @@ import xmltodict
 
 from yojenkins.cli import cli_utility as cu
 from yojenkins.cli.cli_utility import log_to_history
+from yojenkins.utility.utility import print2
 
 # Getting the logger reference
 logger = logging.getLogger()
@@ -55,7 +56,7 @@ def search(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, prof
                                             folder_depth=depth,
                                             fullname=fullname)
     if not data:
-        click.echo(click.style('No jobs found', fg='bright_red', bold=True))
+        print2("No folders found", color="yellow")
         sys.exit(1)
     data = data_list if opt_list else data
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)

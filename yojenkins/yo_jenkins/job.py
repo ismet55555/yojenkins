@@ -174,7 +174,7 @@ class Job():
 
         # Check if found item type/class
         if job_info['_class'] not in JenkinsItemClasses.JOB.value['class_type']:
-            fail_out(f'Failed to match type/class. The found item is "{job_info["_class"]}"')
+            fail_out(f'Job found, but failed to match type/class. The found item is "{job_info["_class"]}"')
 
         if 'url' in job_info:
             job_info['fullName'] = utility.url_to_name(job_info['url'])
@@ -498,7 +498,7 @@ class Job():
                job_url: str = '',
                opt_json: bool = False,
                opt_yaml: bool = False,
-               opt_toml: bool = False) -> Tuple[str, bool]:
+               opt_toml: bool = False) -> str:
         """Get the folder XML configuration (config.xml)
 
         Args:
@@ -508,7 +508,6 @@ class Job():
 
         Returns:
             Folder config.xml contents
-            True if configuration written to file, else False
         """
         if not job_name and not job_url:
             fail_out('No job name or job URL provided')
@@ -530,9 +529,9 @@ class Job():
         if filepath:
             write_success = utility.write_xml_to_file(return_content, filepath, opt_json, opt_yaml, opt_toml)
             if not write_success:
-                return "", False
+                fail_out('Failed to write configuration file')
 
-        return return_content, True
+        return return_content
 
     def disable(self, job_name: str = '', job_url: str = '') -> bool:
         """TODO Docstring
@@ -602,10 +601,9 @@ class Job():
             job_url = utility.name_to_url(self.rest.get_server_url(), job_name)
 
         if not new_name:
-            logger.debug('New job name is a blank')
-            return False
+            fail_out('The new job name is a blank')
         if utility.has_special_char(new_name):
-            return False
+            fail_out('The new job name contains special characters')
 
         logger.debug(f'Renaming job: "{job_url}" ...')
         success = self.rest.request(f'{job_url.strip("/")}/doRename?newName={new_name}', 'post', is_endpoint=False)[2]

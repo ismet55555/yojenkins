@@ -20,7 +20,7 @@ logger = logging.getLogger()
 
 
 class Build():
-    """TODO Build"""
+    """Buld class"""
 
     def __init__(self, rest, auth) -> None:
         """Object constructor method, called at object creation
@@ -94,11 +94,11 @@ class Build():
                                                        'get',
                                                        is_endpoint=False)
             if not success:
-                fail_out(f'Failed to request build info')
+                fail_out('Failed to request build info')
 
         # Check if found item type/class is a build
         if build_info['_class'] not in JenkinsItemClasses.BUILD.value['class_type']:
-            fail_out(f'Failed to match build type/class. This item is "{build_info["_class"]}"')
+            fail_out(f'Build found, but failed to match build type/class. This item is "{build_info["_class"]}"')
 
         # Add additional derived information
         if 'timestamp' in build_info:

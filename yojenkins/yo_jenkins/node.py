@@ -8,6 +8,7 @@ from typing import Tuple
 import xmltodict
 
 from yojenkins.utility import utility
+from yojenkins.utility.utility import fail_out
 from yojenkins.yo_jenkins.jenkins_item_classes import JenkinsItemClasses
 
 # Getting the logger reference
@@ -103,7 +104,7 @@ class Node():
 
         # Checking name for special characters
         if utility.has_special_char(kwargs['name']):
-            return False
+            fail_out('Provided node name contains special characters')
 
         # Processing labels
         if kwargs['labels']:

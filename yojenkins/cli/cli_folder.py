@@ -9,6 +9,7 @@ import xmltodict
 
 from yojenkins.cli import cli_utility as cu
 from yojenkins.cli.cli_utility import log_to_history
+from yojenkins.utility.utility import print2
 
 # Getting the logger reference
 logger = logging.getLogger()
@@ -29,10 +30,6 @@ def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profil
         data = yj_obj.folder.info(folder_url=folder)
     else:
         data = yj_obj.folder.info(folder_name=folder)
-
-    if not data:
-        click.echo(click.style('failed', fg='bright_red', bold=True))
-        sys.exit(1)
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
@@ -58,9 +55,8 @@ def search(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, prof
                                                folder_name=search_folder,
                                                folder_depth=depth,
                                                fullname=fullname)
-
     if not data:
-        click.echo(click.style('failed', fg='bright_red', bold=True))
+        print2("No folders found", color="yellow")
         sys.exit(1)
     data = data_list if opt_list else data
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
@@ -82,10 +78,6 @@ def subfolders(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, 
         data, data_list = yj_obj.folder.subfolder_list(folder_url=folder)
     else:
         data, data_list = yj_obj.folder.subfolder_list(folder_name=folder)
-
-    if not data:
-        click.echo(click.style('failed', fg='bright_red', bold=True))
-        sys.exit(1)
     data = data_list if opt_list else data
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
@@ -106,10 +98,6 @@ def jobs(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profil
         data, data_list = yj_obj.folder.jobs_list(folder_url=folder)
     else:
         data, data_list = yj_obj.folder.jobs_list(folder_name=folder)
-
-    if not data:
-        click.echo(click.style('failed', fg='bright_red', bold=True))
-        sys.exit(1)
     data = data_list if opt_list else data
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
@@ -130,10 +118,6 @@ def views(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profi
         data, data_list = yj_obj.folder.view_list(folder_url=folder)
     else:
         data, data_list = yj_obj.folder.view_list(folder_name=folder)
-
-    if not data:
-        click.echo(click.style('failed', fg='bright_red', bold=True))
-        sys.exit(1)
     data = data_list if opt_list else data
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
@@ -154,10 +138,6 @@ def items(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profi
         data, data_list = yj_obj.folder.item_list(folder_url=folder)
     else:
         data, data_list = yj_obj.folder.item_list(folder_name=folder)
-
-    if not data:
-        click.echo(click.style('failed', fg='bright_red', bold=True))
-        sys.exit(1)
     data = data_list if opt_list else data
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
@@ -174,13 +154,9 @@ def browser(profile: str, folder: str) -> None:
     """
     yj_obj = cu.config_yo_jenkins(profile)
     if cu.is_full_url(folder):
-        data = yj_obj.folder.browser_open(folder_url=folder)
+        yj_obj.folder.browser_open(folder_url=folder)
     else:
-        data = yj_obj.folder.browser_open(folder_name=folder)
-
-    if not data:
-        click.echo(click.style('failed', fg='bright_red', bold=True))
-        sys.exit(1)
+        yj_obj.folder.browser_open(folder_name=folder)
 
 
 @log_to_history
@@ -196,26 +172,17 @@ def config(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_
     """
     yj_obj = cu.config_yo_jenkins(profile)
     if cu.is_full_url(folder):
-        data, write_success = yj_obj.folder.config(filepath=filepath,
-                                                   folder_url=folder,
-                                                   opt_json=opt_json,
-                                                   opt_yaml=opt_yaml,
-                                                   opt_toml=opt_toml)
+        data = yj_obj.folder.config(filepath=filepath,
+                                    folder_url=folder,
+                                    opt_json=opt_json,
+                                    opt_yaml=opt_yaml,
+                                    opt_toml=opt_toml)
     else:
-        data, write_success = yj_obj.folder.config(filepath=filepath,
-                                                   folder_name=folder,
-                                                   opt_json=opt_json,
-                                                   opt_yaml=opt_yaml,
-                                                   opt_toml=opt_toml)
-
-    if not data:
-        click.echo(click.style('failed', fg='bright_red', bold=True))
-        sys.exit(1)
-
-    if not write_success:
-        click.echo(click.style('Failed to write configuration file', fg='bright_red', bold=True))
-        sys.exit(1)
-
+        data = yj_obj.folder.config(filepath=filepath,
+                                    folder_name=folder,
+                                    opt_json=opt_json,
+                                    opt_yaml=opt_yaml,
+                                    opt_toml=opt_toml)
     # Converting XML to dict
     # data = json.loads(json.dumps(xmltodict.parse(data)))
 
@@ -249,10 +216,6 @@ def create(profile: str, name: str, folder: str, type: str, config: str, config_
                                     config=config,
                                     folder_name=folder,
                                     config_is_json=config_is_json)
-
-    if not data:
-        click.echo(click.style('failed', fg='bright_red', bold=True))
-        sys.exit(1)
     click.echo(click.style('success', fg='bright_green', bold=True))
 
 
@@ -273,10 +236,6 @@ def copy(profile: str, folder: str, original_name: str, new_name: str) -> None:
         data = yj_obj.folder.copy(original_name=original_name, new_name=new_name, folder_url=folder)
     else:
         data = yj_obj.folder.copy(original_name=original_name, new_name=new_name, folder_name=folder)
-
-    if not data:
-        click.echo(click.style('failed', fg='bright_red', bold=True))
-        sys.exit(1)
     click.echo(click.style('success', fg='bright_green', bold=True))
 
 
@@ -295,8 +254,4 @@ def delete(profile: str, folder: str) -> None:
         data = yj_obj.folder.delete(folder_url=folder)
     else:
         data = yj_obj.folder.delete(folder_name=folder)
-
-    if not data:
-        click.echo(click.style('failed', fg='bright_red', bold=True))
-        sys.exit(1)
     click.echo(click.style('success', fg='bright_green', bold=True))

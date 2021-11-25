@@ -9,6 +9,7 @@ from typing import Dict, Tuple
 import xmltodict
 
 from yojenkins.utility import utility
+from yojenkins.utility.utility import fail_out
 from yojenkins.yo_jenkins.jenkins_item_classes import JenkinsItemClasses
 from yojenkins.yo_jenkins.jenkins_item_config import JenkinsItemConfig
 
@@ -149,8 +150,7 @@ class Folder():
             Folder information
         """
         if not folder_name and not folder_url:
-            logger.debug('Failed to get folder information. No folder name or folder url received')
-            return {}
+            fail_out('Failed to get folder information. No folder name or folder url received')
 
         if folder_name and not folder_url:
             folder_url = utility.name_to_url(self.rest.get_server_url(), folder_name)
@@ -159,14 +159,12 @@ class Folder():
                                                     request_type='get',
                                                     is_endpoint=False)
         if not success:
-            logger.debug(f'Failed to find folder info: {folder_url}')
-            return {}
+            fail_out(f'Failed to find folder info: {folder_url}')
 
         # Check if found item type/class
         if folder_info['_class'] not in JenkinsItemClasses.FOLDER.value[
                 'class_type'] and JenkinsItemClasses.FOLDER.value['item_type'] not in folder_info:
-            logger.debug(f'Failed to match type/class. This item is "{folder_info["_class"]}"')
-            return {}
+            fail_out(f'Folder found, but failed to match type/class. This item is "{folder_info["_class"]}"')
 
         return folder_info
 
@@ -184,8 +182,6 @@ class Folder():
 
         # Get the folder information
         folder_info = self.info(folder_name=folder_name, folder_url=folder_url)
-        if not folder_info:
-            return [], []
 
         # Extract lists
         sub_folder_list, sub_folder_list_url = utility.item_subitem_list(
@@ -194,7 +190,7 @@ class Folder():
             item_type=JenkinsItemClasses.FOLDER.value['item_type'],
             item_class_list=JenkinsItemClasses.FOLDER.value['class_type'])
 
-        logger.debug(f'Number of subfolders found: {len(sub_folder_list)}')
+        logger.debug(f'Number of subfolders found in folder: {len(sub_folder_list)}')
         logger.debug(f'Sub-folders: {sub_folder_list_url}')
 
         return sub_folder_list, sub_folder_list_url
@@ -213,8 +209,6 @@ class Folder():
 
         # Get the folder information
         folder_info = self.info(folder_name=folder_name, folder_url=folder_url)
-        if not folder_info:
-            return [], []
 
         # Extract lists
         job_list, job_list_url = utility.item_subitem_list(item_info=folder_info,
@@ -222,7 +216,7 @@ class Folder():
                                                            item_type=JenkinsItemClasses.JOB.value['item_type'],
                                                            item_class_list=JenkinsItemClasses.JOB.value['class_type'])
 
-        logger.debug(f'Number of jobs found: {len(job_list)}')
+        logger.debug(f'Number of jobs found within folder: {len(job_list)}')
         logger.debug(f'Jobs: {job_list_url}')
 
         return job_list, job_list_url
@@ -239,18 +233,15 @@ class Folder():
         """
         # Get the folder information
         folder_info = self.info(folder_name=folder_name, folder_url=folder_url)
-        if not folder_info:
-            return [], []
 
         logger.debug(f'Getting all view items for folder "{folder_name if folder_name else folder_url}" ...')
-
         view_list, view_list_url = utility.item_subitem_list(
             item_info=folder_info,
             get_key_info='url',
             item_type=JenkinsItemClasses.VIEW.value['item_type'],
             item_class_list=JenkinsItemClasses.VIEW.value['class_type'])
 
-        logger.debug(f'Number of views found: {len(view_list)}')
+        logger.debug(f'Number of views found in folder: {len(view_list)}')
         logger.debug(f'Views: {view_list_url}')
 
         return view_list, view_list_url
@@ -271,8 +262,6 @@ class Folder():
 
         # Get the folder information
         folder_info = self.info(folder_name=folder_name, folder_url=folder_url)
-        if not folder_info:
-            return [], []
 
         # Getting all possible Jenkins items listed enum
         all_subitems = [subitem.value for subitem in JenkinsItemClasses]
@@ -293,7 +282,7 @@ class Folder():
             else:
                 logger.debug(f'No "{item["item_type"]}" items found in this folder')
 
-        logger.debug(f'Number of folder items found: {len(all_item_list)}')
+        logger.debug(f'Number of folder items found in folder: {len(all_item_list)}')
         logger.debug(f'Items: {all_item_url}')
 
         return all_item_list, all_item_url
@@ -309,17 +298,19 @@ class Folder():
             True if successfull, else False
         """
         if not folder_name and not folder_url:
-            logger.debug('Failed to get folder information. No folder name or folder url received')
-            return False
+            fail_out('Failed to get folder information. No folder name or folder url received')
 
         if folder_url:
             folder_url = folder_url.strip('/')
         else:
             folder_url = utility.name_to_url(self.rest.get_server_url(), folder_name)
 
-        logger.debug(f'Opening in web browser: "{folder_url}" ...')
+        logger.debug(f'Opening folder in web browser: "{folder_url}" ...')
         success = utility.browser_open(url=folder_url)
-        logger.debug('Successfully opened in web browser' if success else 'Failed to open in web browser')
+        if not success:
+            fail_out('Failed to open folder in web browser')
+        logger.debug('Successfully opened folder in web browser')
+
         return success
 
     def config(self,
@@ -328,7 +319,7 @@ class Folder():
                folder_url: str = '',
                opt_json: bool = False,
                opt_yaml: bool = False,
-               opt_toml: bool = False) -> Tuple[str, bool]:
+               opt_toml: bool = False) -> str:
         """Get the folder configuration (ie .config.xml)
 
         Args:
@@ -341,11 +332,9 @@ class Folder():
 
         Returns:
             Folder config.xml contents
-            True if configuration written to file, else False
         """
         if not folder_name and not folder_url:
-            logger.debug('Failed to get folder information. No folder name or folder url received')
-            return '', False
+            fail_out('Failed to get folder information. No folder name or folder url received')
 
         if folder_url:
             folder_url = folder_url.strip('/')
@@ -357,14 +346,16 @@ class Folder():
                                                        'get',
                                                        json_content=False,
                                                        is_endpoint=False)
-        logger.debug('Successfully fetched XML configurations' if success else 'Failed to fetch XML configurations')
+        if not success:
+            fail_out('Failed to get folder configuration')
+        logger.debug('Successfully fetched folder configuration')
 
         if filepath:
             write_success = utility.write_xml_to_file(return_content, filepath, opt_json, opt_yaml, opt_toml)
             if not write_success:
-                return "", False
+                fail_out('Failed to write configuration file')
 
-        return return_content, True
+        return return_content
 
     def create(self,
                name: str,
@@ -382,8 +373,7 @@ class Folder():
             TODO
         """
         if not folder_name and not folder_url:
-            logger.debug('Failed to get folder information. No folder name or folder url received')
-            return False
+            fail_out('Failed to get folder information. No folder name or folder url received')
 
         if folder_url:
             folder_url = folder_url.strip('/')
@@ -391,33 +381,29 @@ class Folder():
             folder_url = utility.name_to_url(self.rest.get_server_url(), folder_name)
 
         if not name:
-            logger.debug('Item name is a blank')
-            return False
+            fail_out('The item name is a blank')
         if utility.has_special_char(name):
-            return False
+            fail_out('The item name contains special characters')
 
         supported_create_items = ['folder', 'view', 'job']
         if type.strip().lower() not in supported_create_items:
-            logger.debug(f'Failed to match supported items to create: {supported_create_items}')
-            return False
+            fail_out(f'Failed to match supported "{type}" items to create: {", ".join(supported_create_items)}')
 
         if config:
             # Use item configuration from file if provided
-            logger.debug(f'Opening and reading file: {config} ...')
+            logger.debug(f'Opening and reading "{type}" item configuration file: {config} ...')
             try:
                 open_file = open(config, 'rb')
                 item_config = open_file.read()
             except (OSError, IOError, PermissionError) as error:
-                logger.debug(f'Failed to open and read file. Exception: {error}')
-                return False
+                fail_out(f'Failed to open and read "{type}" item configuration file. Exception: {error}')
 
             if config_is_json:
                 logger.debug('Converting the specified JSON file to XML format ...')
                 try:
                     item_config = xmltodict.unparse(json.loads(item_config))
                 except ValueError as error:
-                    logger.debug(f'Failed to convert the specified JSON file to XML format. Exception: {error}')
-                    return False
+                    fail_out(f'Failed to convert the specified JSON file to XML format. Exception: {error}')
         else:
             # Use blank item config
             # FIXME: These are not valid XML configs, try json instead
@@ -437,18 +423,19 @@ class Folder():
 
         # Checking if the item exists
         if utility.item_exists_in_folder(name, folder_url, type, self.rest):
-            return False
+            fail_out(f'The new "{type}" item "{name}" exists within the folder')
 
         # Creating the item
         logger.debug(f'Creating "{type}" item "{name}" ...')
         headers = {'Content-Type': 'application/xml; charset=utf-8'}
-        _, _, success = self.rest.request(f'{folder_url.strip("/")}/{endpoint}',
-                                          'post',
-                                          data=item_config.encode('utf-8'),
-                                          headers=headers,
-                                          is_endpoint=False)
-        logger.debug(
-            f'Successfully created "{type}" item "{name}"' if success else f'Failed to create "{type}" item "{name}"')
+        success = self.rest.request(f'{folder_url.strip("/")}/{endpoint}',
+                                    'post',
+                                    data=item_config.encode('utf-8'),
+                                    headers=headers,
+                                    is_endpoint=False)[2]
+        if not success:
+            fail_out(f'Failed to create "{type}" item "{name}"')
+        logger.debug(f'Successfully created "{type}" item "{name}"')
 
         # Close the potentially open item configuration file
         try:
@@ -469,8 +456,7 @@ class Folder():
             TODO
         """
         if not folder_name and not folder_url:
-            logger.debug('Failed to get folder information. No folder name or folder url received')
-            return False
+            fail_out('Failed to get folder information. No folder name or folder url received')
 
         if folder_url:
             folder_url = folder_url.strip('/')
@@ -478,26 +464,27 @@ class Folder():
             folder_url = utility.name_to_url(self.rest.get_server_url(), folder_name)
 
         if not original_name:
-            logger.debug('Original item name is a blank')
-            return False
+            fail_out('The original folder name is a blank')
         if utility.has_special_char(original_name):
-            return False
+            fail_out('The original folder name contains special characters')
 
         if not new_name:
-            logger.debug('New item name is a blank')
-            return False
+            fail_out('New folder name is a blank')
         if utility.has_special_char(new_name):
-            return False
+            fail_out('The new folder name contains special characters')
 
         if not utility.item_exists_in_folder(original_name, folder_url, "folder", self.rest):
-            return False
+            fail_out(f'The original folder "{original_name}" does not exist')
 
         logger.debug(f'Copying original item "{original_name}" to new item "{new_name}" ...')
         success = self.rest.request(
             f'{folder_url.strip("/")}/createItem?name={new_name}&mode=copy&from={original_name}',
             'post',
             is_endpoint=False)[2]
-        logger.debug('Successfully copied item' if success else 'Failed to copy item')
+        if not success:
+            fail_out('Failed to copy folder')
+        logger.debug('Successfully copied folder')
+
         return success
 
     def delete(self, folder_name: str = '', folder_url: str = '') -> bool:
@@ -511,8 +498,7 @@ class Folder():
             True if successfull, else False
         """
         if not folder_name and not folder_url:
-            logger.debug('Failed to get folder information. No folder name or folder url received')
-            return False
+            fail_out('Failed to get folder information. No folder name or folder url received')
 
         if folder_url:
             folder_url = folder_url.strip('/')
@@ -521,5 +507,8 @@ class Folder():
 
         logger.debug(f'Deleting folder: "{folder_url}" ...')
         success = self.rest.request(f'{folder_url.strip("/")}/doDelete', 'post', is_endpoint=False)[2]
-        logger.debug('Successfully deleted folder' if success else 'Failed to delete folder')
+        if not success:
+            fail_out('Failed to delete folder')
+        logger.debug('Successfully deleted folder')
+
         return success
