@@ -8,7 +8,7 @@ from typing import Tuple
 import xmltodict
 
 from yojenkins.utility import utility
-from yojenkins.utility.utility import fail_out
+from yojenkins.utility.utility import fail_out, print2
 from yojenkins.yo_jenkins.jenkins_item_classes import JenkinsItemClasses
 
 # Getting the logger reference
@@ -18,7 +18,7 @@ logger = logging.getLogger()
 class Node():
     """TODO Node"""
 
-    def __init__(self, rest) -> None:
+    def __init__(self, rest: object) -> None:
         """Object constructor method, called at object creation
 
         Args:
@@ -48,8 +48,8 @@ class Node():
                                                   is_endpoint=True,
                                                   json_content=True)
         if not success:
-            logger.debug(f'Failed to find folder info: {node_info}')
-            return {}
+            fail_out(f'Failed to find node info: {node_info}')
+
         return node_info
 
     def list(self, depth: int = 0) -> bool:
@@ -64,18 +64,15 @@ class Node():
             TODO
         """
         logger.debug('Getting a list of all nodes ...')
-
         nodes_info, _, success = self.rest.request(target=f"computer/api/json?depth={depth}",
                                                    request_type='get',
                                                    is_endpoint=True,
                                                    json_content=True)
         if not success:
-            logger.debug('Failed to get any nodes')
-            return {}
+            fail_out('Failed to get any nodes')
 
         if "computer" not in nodes_info:
-            logger.debug('Failed to find "computer" section in return content')
-            return False
+            fail_out('Failed to find "computer" section in return content')
 
         node_list, node_list_name = utility.item_subitem_list(
             item_info=nodes_info,
@@ -172,12 +169,12 @@ class Node():
         }
 
         # Send the request to the server
-        _, _, success = self.rest.request(target="computer/doCreateItem",
-                                          request_type='post',
-                                          is_endpoint=True,
-                                          data=params)
+        success = self.rest.request(target="computer/doCreateItem", request_type='post', is_endpoint=True,
+                                    data=params)[2]
+        if not success:
+            fail_out('Failed to create permanent node')
+        logger.debug('Successfully created permanent node')
 
-        logger.debug('Successfully created node' if success else 'Failed to create node')
         return success
 
     def delete(self, node_name: str) -> bool:
@@ -192,11 +189,14 @@ class Node():
             TODO
         """
         logger.debug(f'Deleting node: {node_name}')
-        _, _, success = self.rest.request(target=f"computer/{node_name}/doDelete",
-                                          request_type='post',
-                                          is_endpoint=True,
-                                          json_content=False)
-        logger.debug('Successfully deleted node' if success else 'Failed to delete node')
+        success = self.rest.request(target=f"computer/{node_name}/doDelete",
+                                    request_type='post',
+                                    is_endpoint=True,
+                                    json_content=False)[2]
+        if not success:
+            fail_out(f'Failed to delete node "{node_name}"')
+        logger.debug(f'Successfully deleted node "{node_name}"')
+
         return success
 
     def disable(self, node_name: str, message: str = None) -> bool:
@@ -215,18 +215,18 @@ class Node():
 
         # Check if node is disabled already
         node_info = self.info(node_name=node_name)
-        if not node_info:
-            return False
-
         if node_info['offline']:
-            logger.debug('Node is already disabled')
+            print2('Node is already disabled')
             return True
 
-        _, _, success = self.rest.request(target=f"computer/{node_name}/toggleOffline?offlineMessage={message}",
-                                          request_type='post',
-                                          is_endpoint=True,
-                                          json_content=False)
-        logger.debug('Successfully disabled node' if success else 'Failed to disable node')
+        success = self.rest.request(target=f"computer/{node_name}/toggleOffline?offlineMessage={message}",
+                                    request_type='post',
+                                    is_endpoint=True,
+                                    json_content=False)[2]
+        if not success:
+            fail_out(f'Failed to disable node "{node_name}"')
+        logger.debug(f'Successfully disabled node "{node_name}"')
+
         return success
 
     def enable(self, node_name: str, message: str = None) -> bool:
@@ -245,18 +245,18 @@ class Node():
 
         # Check if node is disabled already
         node_info = self.info(node_name=node_name)
-        if not node_info:
-            return False
-
         if not node_info['offline']:
-            logger.debug('Node is already enabled')
+            print2('Node is already enabled')
             return True
 
-        _, _, success = self.rest.request(target=f"computer/{node_name}/toggleOffline?offlineMessage={message}",
-                                          request_type='post',
-                                          is_endpoint=True,
-                                          json_content=False)
-        logger.debug('Successfully enabled node' if success else 'Failed to enabled node')
+        success = self.rest.request(target=f"computer/{node_name}/toggleOffline?offlineMessage={message}",
+                                    request_type='post',
+                                    is_endpoint=True,
+                                    json_content=False)[2]
+        if not success:
+            fail_out(f'Failed to enable node "{node_name}"')
+        logger.debug(f'Successfully enabled node "{node_name}"')
+
         return success
 
     def config(self,
@@ -282,14 +282,16 @@ class Node():
                                                        'get',
                                                        json_content=False,
                                                        is_endpoint=True)
-        logger.debug('Successfully fetched XML configurations' if success else 'Failed to fetch XML configurations')
+        if not success:
+            fail_out(f'Failed to fetch node configurations for node "{node_name}"')
+        logger.debug(f'Successfully fetched node configurations for node "{node_name}"')
 
         if filepath:
             write_success = utility.write_xml_to_file(return_content, filepath, opt_json, opt_yaml, opt_toml)
             if not write_success:
-                return "", False
+                fail_out('Failed to write node configurations to file')
 
-        return return_content, True
+        return return_content
 
     def reconfig(self, node_name: str, config_file: str = None, config_is_json: bool = False) -> bool:
         """TODO Docstring
@@ -307,30 +309,30 @@ class Node():
 
         logger.debug(f'Checking if file exists: {config_file} ...')
         if not os.path.isfile(config_file):
-            logger.debug('Specified configuration file does not exist')
-            return False
+            fail_out('Specified node configuration file does not exist')
 
         logger.debug(f'Reading configuration file: {config_file} ...')
         try:
             with open(config_file, 'rb') as file:
                 node_config = file.read()
             logger.debug('Successfully read configuration file')
-        except Exception as error:
-            logger.debug(f'Failed to read configuration file. Exception: {error}')
-            return False
+        except (OSError, IOError, PermissionError) as error:
+            fail_out(f'Failed to open and read node configuration file. Exception: {error}')
 
         if config_is_json:
             logger.debug('Converting the specified JSON file to XML format ...')
             try:
                 node_config = xmltodict.unparse(json.loads(node_config))
             except Exception as error:
-                logger.debug(f'Failed to convert the specified JSON file to XML format. Exception: {error}')
-                return False
+                fail_out(f'Failed to convert the specified JSON file to XML format. Exception: {error}')
 
-        _, _, success = self.rest.request(target=f"computer/{node_name}/config.xml",
-                                          request_type='post',
-                                          is_endpoint=True,
-                                          data=node_config.encode('utf-8'),
-                                          json_content=False)
-        logger.debug('Successfully reconfigured node' if success else 'Failed to reconfigure node')
+        success = self.rest.request(target=f"computer/{node_name}/config.xml",
+                                    request_type='post',
+                                    is_endpoint=True,
+                                    data=node_config.encode('utf-8'),
+                                    json_content=False)[2]
+        if not success:
+            fail_out(f'Failed to reconfigure node "{node_name}"')
+        logger.debug(f'Successfully reconfigured node "{node_name}"')
+
         return success

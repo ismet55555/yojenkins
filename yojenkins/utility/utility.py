@@ -849,6 +849,7 @@ def parse_and_check_input_string_list(string_list: str, join_back_char: str = ''
         parsed_items = join_back_char.join(parsed_items)
 
     logger.debug(f'Parsed and checked string list: "{string_list}" => "{parsed_items}"')
+
     return parsed_items
 
 
