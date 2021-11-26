@@ -517,44 +517,43 @@ class Auth:
 
         # Check network connection
         if not self.rest.is_reachable():
-            click.echo(
-                click.style(f'Jenkins server connection failed (Server: {self.jenkins_profile["jenkins_server_url"]})',
-                            fg='bright_red',
-                            bold=True))
-            click.echo(click.style('Possible causes:', fg='bright_red'))
-            click.echo(
-                click.style(f'  - Wrong Jenkins server URL: {self.jenkins_profile["jenkins_server_url"]}',
-                            fg='bright_red'))
-            click.echo(click.style('  - Network/Internet is down', fg='bright_red'))
-            click.echo(click.style('Possible solutions:', fg='bright_red'))
-            click.echo(click.style('   - Fix yo network connection to server', fg='bright_red'))
+            print2(f'Jenkins server connection failed (Server: {self.jenkins_profile["jenkins_server_url"]})',
+                   bold=True,
+                   color='red')
+            print2('Possible causes:', bold=True, color='red')
+            print2(f'  - Wrong Jenkins server URL: {self.jenkins_profile["jenkins_server_url"]}',
+                   bold=True,
+                   color='red')
+            print2('  - Network/Internet is down', bold=True, color='red')
+            print2('  - Server container is down', bold=True, color='red')
+            print2('Possible solutions:', bold=True, color='red')
+            print2('   - Fix yo network connection to server', bold=True, color='red')
+            print2('   - Check if the server container or container engine is up and running', bold=True, color='red')
             sys.exit(1)
 
         # Checking authentication
         logger.debug(f'Checking authentication to Jenkins server: {self.jenkins_profile["jenkins_server_url"]} ...')
         if not self.verify():
             # TODO: Move this message to cli_auth.py, only return bool
-            click.echo(
-                click.style(f'Jenkins server authentication failed (Username: {self.jenkins_profile["username"]})',
-                            fg='bright_red',
-                            bold=True))
-            click.echo(click.style('Possible causes:', fg='bright_red'))
-            click.echo(
-                click.style(f'    - Wrong Jenkins server URL: {self.jenkins_profile["jenkins_server_url"]}',
-                            fg='bright_red'))
-            click.echo(click.style(f'    - Incorrect username: {self.jenkins_profile["username"]}', fg='bright_red'))
-            click.echo(click.style('    - Incorrect, removed, or expired API Token', fg='bright_red'))
-            click.echo(
-                click.style(f'    - Username, {self.jenkins_profile["username"]}, does not have permission',
-                            fg='bright_red'))
-            click.echo(click.style('    - Jenkins server is still in the process of starting up', fg='bright_red'))
-            click.echo(click.style('Possible solutions:', fg='bright_red'))
-            click.echo(click.style('    - yojenkins auth token', fg='bright_red'))
-            click.echo(click.style('    - yojenkins auth configure', fg='bright_red'))
-            click.echo(
-                click.style('    - Manually create or update credentials file in home directory', fg='bright_red'))
-            click.echo(click.style('    - Go to Jenkins Web UI and check user configurations', fg='bright_red'))
-            click.echo(click.style('    - Give Jenkins server a little to start up', fg='bright_red'))
+            print2(f'Jenkins server authentication failed (Username: {self.jenkins_profile["username"]})',
+                   bold=True,
+                   color='red')
+            print2('Possible causes:', bold=True, color='red')
+            print2(f'    - Wrong Jenkins server URL: {self.jenkins_profile["jenkins_server_url"]}',
+                   bold=True,
+                   color='red')
+            print2(f'    - Incorrect username: {self.jenkins_profile["username"]}', bold=True, color='red')
+            print2('    - Incorrect, removed, or expired API Token', bold=True, color='red')
+            print2(f'    - Username, {self.jenkins_profile["username"]}, does not have permission',
+                   bold=True,
+                   color='red')
+            print2('    - Jenkins server is still in the process of starting up', bold=True, color='red')
+            print2('Possible solutions:', bold=True, color='red')
+            print2('    - yojenkins auth token', bold=True, color='red')
+            print2('    - yojenkins auth configure', bold=True, color='red')
+            print2('    - Manually create or update credentials file in home directory', bold=True, color='red')
+            print2('    - Go to Jenkins Web UI and check user configurations', bold=True, color='red')
+            print2('    - Give Jenkins server a little to start up', bold=True, color='red')
             sys.exit(1)
 
         return True
