@@ -17,7 +17,7 @@ logger = logging.getLogger()
 class Stage():
     """Handeling of Jenkins stage functionality"""
 
-    def __init__(self, rest, build, step) -> None:
+    def __init__(self, rest: object, build: object, step: object) -> None:
         """Object constructor method, called at object creation
 
         Args:

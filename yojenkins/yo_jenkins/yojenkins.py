@@ -22,7 +22,7 @@ class YoJenkins:
     All work is done by other, included, objects
     """
 
-    def __init__(self, auth) -> None:
+    def __init__(self, auth: object) -> None:
         """Object constructor method, called at object creation
 
         Args:

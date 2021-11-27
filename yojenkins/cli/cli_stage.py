@@ -1,9 +1,6 @@
 """Stage Menu CLI Entrypoints"""
 
 import logging
-import sys
-
-import click
 
 from yojenkins.cli import cli_utility as cu
 from yojenkins.cli.cli_utility import log_to_history
