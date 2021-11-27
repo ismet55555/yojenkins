@@ -7,6 +7,7 @@ import click
 
 from yojenkins.cli import cli_utility as cu
 from yojenkins.cli.cli_utility import log_to_history
+from yojenkins.utility.utility import fail_out, print2
 from yojenkins.yo_jenkins.status import Status
 
 # Getting the logger reference
@@ -27,11 +28,7 @@ def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profil
         TODO
     """
     if job and not build_number and not latest:
-        click.echo(
-            click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
-                        fg='bright_red',
-                        bold=True))
-        sys.exit(1)
+        fail_out('INPUT ERROR: For job, either specify --number or --latest. See --help')
 
     yj_obj = cu.config_yo_jenkins(profile)
 
@@ -55,10 +52,6 @@ def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profil
                                  job_name=job,
                                  build_number=build_number,
                                  latest=latest)
-
-    if not data:
-        click.echo(click.style('no stage information', fg='bright_red', bold=True))
-        sys.exit(1)
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
@@ -75,11 +68,7 @@ def status(profile: str, stage_name: str, job: str, build_number: int, build_url
         TODO
     """
     if job and not build_number and not latest:
-        click.echo(
-            click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
-                        fg='bright_red',
-                        bold=True))
-        sys.exit(1)
+        fail_out('INPUT ERROR: For job, either specify --number or --latest. See --help')
 
     yj_obj = cu.config_yo_jenkins(profile)
 
@@ -104,24 +93,20 @@ def status(profile: str, stage_name: str, job: str, build_number: int, build_url
                                         build_number=build_number,
                                         latest=latest)
 
-    if not data:
-        click.echo(click.style('no status found', fg='bright_red', bold=True))
-        sys.exit(1)
-
     # Color for output
     if data.upper() in Status.UNKNOWN.value:
-        output_fg = 'black'
+        color = 'black'
     elif data.upper() in Status.QUEUED.value:
-        output_fg = 'yellow'
+        color = 'yellow'
     elif data.upper() in Status.RUNNING.value:
-        output_fg = 'blue'
+        color = 'blue'
     elif data.upper() in Status.SUCCESS.value:
-        output_fg = 'bright_green'
+        color = 'green'
     elif data.upper() in Status.FAILURE.value:
-        output_fg = 'bright_red'
+        color = 'red'
     else:
-        output_fg = ''
-    click.echo(click.style(f'{data}', fg=output_fg, bold=True))
+        color = ''
+    print2(f'{data}', bold=True, color=color)
 
 
 @log_to_history
@@ -138,11 +123,7 @@ def steps(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profi
         TODO
     """
     if job and not build_number and not latest:
-        click.echo(
-            click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
-                        fg='bright_red',
-                        bold=True))
-        sys.exit(1)
+        fail_out('INPUT ERROR: For job, either specify --number or --latest. See --help')
 
     yj_obj = cu.config_yo_jenkins(profile)
 
@@ -166,11 +147,6 @@ def steps(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profi
                                                  job_name=job,
                                                  build_number=build_number,
                                                  latest=latest)
-
-    if not data:
-        click.echo(click.style('failed', fg='bright_red', bold=True))
-        sys.exit(1)
-
     data = data_list if opt_list else data
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
@@ -189,11 +165,7 @@ def logs(profile: str, stage_name: str, job: str, build_number: int, build_url: 
         TODO
     """
     if job and not build_number and not latest:
-        click.echo(
-            click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
-                        fg='bright_red',
-                        bold=True))
-        sys.exit(1)
+        fail_out('INPUT ERROR: For job, either specify --number or --latest. See --help')
 
     yj_obj = cu.config_yo_jenkins(profile)
 
@@ -206,20 +178,16 @@ def logs(profile: str, stage_name: str, job: str, build_number: int, build_url: 
 
     # Request the data
     if valid_url_format:
-        data = yj_obj.stage.logs(stage_name=stage_name,
-                                 build_url=build_url,
-                                 job_url=job,
-                                 build_number=build_number,
-                                 latest=latest,
-                                 download_dir=download_dir)
+        yj_obj.stage.logs(stage_name=stage_name,
+                          build_url=build_url,
+                          job_url=job,
+                          build_number=build_number,
+                          latest=latest,
+                          download_dir=download_dir)
     else:
-        data = yj_obj.stage.logs(stage_name=stage_name,
-                                 build_url=build_url,
-                                 job_name=job,
-                                 build_number=build_number,
-                                 latest=latest,
-                                 download_dir=download_dir)
-
-    if not data:
-        click.echo(click.style('failed', fg='bright_red', bold=True))
-        sys.exit(1)
+        yj_obj.stage.logs(stage_name=stage_name,
+                          build_url=build_url,
+                          job_name=job,
+                          build_number=build_number,
+                          latest=latest,
+                          download_dir=download_dir)
