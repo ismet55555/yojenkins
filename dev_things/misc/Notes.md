@@ -14,13 +14,13 @@
 - `<URL>/wfapi/describe` will show stages
 
 - python module python-jenkins ".build_job()" FIX:
-    - FIXED BY USING REQUESTS !!!!
-    - jenkins_api_test/env/lib/python3.8/site-packages/jenkins/__init__.py
-    - Line 378
-    - SHOULD BE: if self.crumb and isinstance(req.headers, dict):
-    - Script to fix this after pip install?  install script?
-    - Consider replacing the errored thing (build or remove) with requests call
-    - Create a Pull request
+  - FIXED BY USING REQUESTS !!!!
+  - jenkins_api_test/env/lib/python3.8/site-packages/jenkins/__init__.py
+  - Line 378
+  - SHOULD BE: if self.crumb and isinstance(req.headers, dict):
+  - Script to fix this after pip install?  install script?
+  - Consider replacing the errored thing (build or remove) with requests call
+  - Create a Pull request
 
 
 
@@ -36,9 +36,9 @@
 
 
 - Job
-    - Add on single bash or powershell script
-    - RUN SCRIPT: https://www.jenkins.io/doc/book/managing/script-console/
-    - Give
+  - Add on single bash or powershell script
+  - RUN SCRIPT: https://www.jenkins.io/doc/book/managing/script-console/
+  - Give
 
 
 
@@ -51,30 +51,30 @@
   - https://github.com/ultrajson/ultrajson
 
 - server
-    - Run a groovy script
+  - Run a groovy script
 
 - Look into scrolling
-    - https://docs.python.org/2/library/curses.html#curses.window.scroll
+  - https://docs.python.org/2/library/curses.html#curses.window.scroll
 
 - Job Monitors
   - Job queue check
 
 - Job monitor sound
-    - New job arrives - halo sound
+  - New job arrives - halo sound
 
 - Build and Job Monitor
-    - I key to stop monitor and output job/build info in yaml format
+  - I key to stop monitor and output job/build info in yaml format
 
 - Build Monitor:
-    - L - Build logs
-        - L - All logs output
-        - S - For certain stage - need a way to pick? (enter text for now?)
-        - F - Switch to follow logs
+  - L - Build logs
+    - L - All logs output
+    - S - For certain stage - need a way to pick? (enter text for now?)
+    - F - Switch to follow logs
 
 - For temporary message, look into
   threading timer
-    - t = threading.Timer(30.0, my_function)
-    - maybe itertools.cycle((True, False))
+  - t = threading.Timer(30.0, my_function)
+  - maybe itertools.cycle((True, False))
 
 - Folder combine the following:
   - items
@@ -83,7 +83,7 @@
   - views
 
 - Folder
-    - View - delete
+  - View - delete
 
 - __main__.py
   - sort in alphabetical order
@@ -93,32 +93,32 @@
   - yapf
 
 - Add pre-commit hook on the code
-    - https://github.com/google/yapf/tree/main/plugins
+  - https://github.com/google/yapf/tree/main/plugins
 
 - In monitor, D key - Debug curses stats
-    - elapsed loop time
-    - curses.boudrate
-    - ... need at least like 4
-    - Find a way to show user error messages
+  - elapsed loop time
+  - curses.boudrate
+  - ... need at least like 4
+  - Find a way to show user error messages
 
 - Curses scrolling:
-    - Build Monitor - Stages
-    - Job Monitor - Builds
-    - Folder Monitor - Jobs
+  - Build Monitor - Stages
+  - Job Monitor - Builds
+  - Folder Monitor - Jobs
 
 
 - Clean sensitive data fro repo history
-    - https://www.cidean.com/blog/2019/clean-sensitive-files-from-git-repo/
-    - https://stackoverflow.com/questions/4110652/how-to-substitute-text-from-files-in-git-history
+  - https://www.cidean.com/blog/2019/clean-sensitive-files-from-git-repo/
+  - https://stackoverflow.com/questions/4110652/how-to-substitute-text-from-files-in-git-history
 
 - Change the username and email for past commits:
-    - https://stackoverflow.com/questions/2919878/git-rewrite-previous-commit-usernames-and-emails
-    - https://docs.github.com/en/github/setting-up-and-managing-your-github-profile/managing-contribution-graphs-on-your-profile/why-are-my-contributions-not-showing-up-on-my-profile#contributions-that-are-counted
+  - https://stackoverflow.com/questions/2919878/git-rewrite-previous-commit-usernames-and-emails
+  - https://docs.github.com/en/github/setting-up-and-managing-your-github-profile/managing-contribution-graphs-on-your-profile/why-are-my-contributions-not-showing-up-on-my-profile#contributions-that-are-counted
 
 - yojenkins auth wipe [HOLD OFF, DO LATER]
 
 - Waiting spinning thingy [ HOLD OFF, DO LATER ]
-    - OR click progress bar: https://click.palletsprojects.com/en/7.x/utils/#showing-progress-bars
+  - OR click progress bar: https://click.palletsprojects.com/en/7.x/utils/#showing-progress-bars
 
 - Add "ey-yo" to "step" -> "'sup" ASCII sign [ HOLD OFF, DO LATER ]
   - yojenkins yo ey-yo

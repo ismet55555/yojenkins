@@ -11,6 +11,7 @@ from json2xml import json2xml
 from urllib3.util import parse_url
 
 from yojenkins.utility import utility
+from yojenkins.utility.utility import fail_out
 from yojenkins.yo_jenkins.jenkins_item_template import JenkinsItemTemplate
 
 # Getting the logger reference
@@ -18,7 +19,7 @@ logger = logging.getLogger()
 
 
 class Credential():
-    """TODO Credential"""
+    """Credential class"""
 
     def __init__(self, rest) -> None:
         """Object constructor method, called at object creation
@@ -153,16 +154,13 @@ class Credential():
                                                          is_endpoint=True,
                                                          json_content=True)
         if not success:
-            logger.debug('Failed to get any credentials')
-            return [], []
+            fail_out('Failed to get any credentials')
 
         if "credentials" not in credentials_info:
-            logger.debug('Failed to find "credentials" section in return content')
-            return [], []
+            fail_out('Failed to find "credentials" section in request return content')
         credential_list = credentials_info["credentials"]
         if not any(credential_list):
-            logger.debug('No credentials listed')
-            return [], []
+            fail_out('No credentials listed for the specified folder or domain')
 
         # Get a list of only credentail names
         credential_list_name = [
@@ -212,8 +210,7 @@ class Credential():
                                      f'{key_name} "{credential}" ({credential_item["id"]})')
 
             if not credential_ids_match:
-                logger.debug(f'Failed to find any credentials matching display name or ID: {credential}')
-                return {}
+                fail_out(f'Failed to find any credentials matching display name or ID: {credential}')
             if len(credential_ids_match) > 1:
                 logger.debug(f'More than one matching credential found. '
                              f'Using the first one: {credential_ids_match[0]}')
@@ -232,8 +229,7 @@ class Credential():
                                                         is_endpoint=is_endpoint,
                                                         json_content=True)
         if not success:
-            logger.debug('Failed to get credential information')
-            return [], []
+            fail_out('Failed to get credential information')
 
         # Add URL to the credential info
         credential_info['url'] = credential_url
@@ -247,7 +243,7 @@ class Credential():
                filepath: str = None,
                opt_json: bool = False,
                opt_yaml: bool = False,
-               opt_toml: bool = False) -> Tuple[str, bool]:
+               opt_toml: bool = False) -> str:
         """Get the folder configuration (ie .config.xml)
 
         Args:
@@ -261,20 +257,14 @@ class Credential():
 
         Returns:
             Folder config.xml contents
-            True if configuration written to file, else False
         """
         folder, store = self._get_folder_store(folder)
         domain = self._get_domain(domain)
 
         credential_info = self.info(credential=credential, folder=folder, domain=domain)
-        if not credential_info:
-            logger.debug('Failed to get credential information. No folder name or folder url received')
-            return '', False
-
         credential_id = credential_info.get('id')
         if not credential_id:
-            logger.debug('Failed to find "id" key within credential information')
-            return '', False
+            fail_out('Failed to find "id" key within credential information')
 
         # If URL passed, parse out folder and domain
         if utility.is_full_url(credential):
@@ -291,16 +281,16 @@ class Credential():
         if filepath:
             write_success = utility.write_xml_to_file(return_content, filepath, opt_json, opt_yaml, opt_toml)
             if not write_success:
-                return "", False
+                fail_out('Failed to write configuration file')
 
-        return return_content, True
+        return return_content
 
     def get_template(self,
                      cred_type: str,
                      filepath: str = None,
                      opt_json: bool = False,
                      opt_yaml: bool = False,
-                     opt_toml: bool = False) -> Tuple[str, bool]:
+                     opt_toml: bool = False) -> str:
         """Get the template file for a credential type
 
         Args:
@@ -320,9 +310,9 @@ class Credential():
         if filepath:
             write_success = utility.write_xml_to_file(template, filepath, opt_json, opt_yaml, opt_toml)
             if not write_success:
-                return "", False
+                fail_out('Failed to write configuration file')
 
-        return template, True
+        return template
 
     def create(self, config_file: str, folder: str, domain: str) -> bool:
         """Create a credential
@@ -338,12 +328,10 @@ class Credential():
         """
         logger.debug(f'Opening and reading file: {config_file} ...')
         try:
-            # FIXME: Use context manager to open file (with)
-            config_file = open(config_file, 'rb')
-            credential_config = config_file.read()
-        except (OSError, IOError) as error:
-            logger.debug(f'Failed to open and read file: {config_file}  Exception: {error}')
-            return False
+            with open(config_file, 'rb') as open_file:
+                credential_config = open_file.read()
+        except (OSError, IOError, PermissionError) as error:
+            fail_out(f'Failed to open and read file: {config_file}  Exception: {error}')
 
         try:
             cred_config_dict = json.loads(credential_config)
@@ -380,7 +368,10 @@ class Credential():
                                           is_endpoint=True,
                                           headers={'Content-Type': 'application/xml; charset=utf-8'},
                                           data=credential_config_xml)
-        logger.debug('Successfully created credential' if success else 'Failed to create credential')
+        if not success:
+            fail_out('Failed to create credential')
+        logger.debug('Successfully created credential')
+
         return success
 
     def delete(self, credential: str, folder: str = None, domain: str = None) -> bool:
@@ -399,17 +390,16 @@ class Credential():
 
         credential_info = self.info(credential=credential, folder=folder, domain=domain)
         if not credential_info:
-            logger.debug('Failed to get credential information. No folder name or folder url received')
-            return False
-
-        print(credential_info)
+            fail_out('Failed to get credential information. No folder name or folder url received')
 
         credential_id = credential_info.get('id')
         if not credential_id:
-            logger.debug('Failed to find "id" key within credential information')
-            return False
+            fail_out('Failed to find "id" key within credential information')
 
         target = f'{folder}/credentials/store/{store}/domain/{domain}/credential/{credential_id}/config.xml'
         _, _, success = self.rest.request(target=target, request_type='delete', is_endpoint=True)
-        logger.debug('Successfully deleted credential' if success else 'Failed to delete credential')
+        if not success:
+            fail_out('Failed to delete credential')
+        logger.debug('Successfully deleted credential')
+
         return success

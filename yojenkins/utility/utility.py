@@ -16,6 +16,7 @@ import requests
 import toml
 import xmltodict
 import yaml
+from click import echo, style
 from urllib3.util import parse_url
 
 from yojenkins import __version__
@@ -37,6 +38,42 @@ class TextStyle:
     NORMAL = '\033[0m'
 
 
+def print2(message: str, bold: bool = False, color: str = 'reset') -> None:
+    """Print a message to the console using click
+
+    Details:
+        - Colors: `black` (might be a gray), `red`, `green`, `yellow` (might be an orange), `blue`,
+          `magenta`, `cyan`, `white` (might be light gray), `reset` (reset the color code only)
+
+    Args:
+        message: Message to print to console
+        bold   : Whether to bold the message
+        color  : Color to use for the message ()
+    """
+    echo(style(message, fg=color, bold=bold))
+
+
+def fail_out(message: str) -> None:
+    """Output a failure message to the console, then exit
+
+    Args:
+        message: Message to output to console
+    """
+    echo(style(message, fg='bright_red', bold=True))
+    sys.exit(1)
+
+
+def failures_out(messages: list) -> None:
+    """Output multiple failure messages to the console, then exit
+
+    Args:
+        message: Messages to output to console
+    """
+    for message in messages:
+        echo(style(message, fg='bright_red', bold=True))
+    sys.exit(1)
+
+
 def load_contents_from_local_file(file_type: str, local_file_path: str) -> Dict:
     """Loading a local file contents
 
@@ -52,25 +89,23 @@ def load_contents_from_local_file(file_type: str, local_file_path: str) -> Dict:
 
     # Check if file exists
     if not os.path.isfile(local_file_path):
-        logger.debug(f'Failed to find file: {local_file_path}')
-        return {}
+        fail_out(f'Failed to find file: {local_file_path}')
 
     logger.debug(f"Loading specified local .{file_type} file: '{local_file_path}' ...")
     try:
-        with open(local_file_path, 'r') as file:
+        with open(local_file_path, 'r') as open_file:
             if file_type == 'yaml':
-                file_contents = yaml.safe_load(file)
+                file_contents = yaml.safe_load(open_file)
             elif file_type == 'toml':
-                file_contents = toml.load(file)
+                file_contents = toml.load(open_file)
             elif file_type == 'json':
-                file_contents = json.load(file)
+                file_contents = json.load(open_file)
             else:
                 logger.debug(f"Unknown file type passed: '{file_type}'")
                 raise ValueError(f"Unknown file type passed: '{file_type}'")
         logger.debug(f"Successfully loaded local .{file_type} file")
     except Exception as error:
-        logger.debug(f"Failed to load specified local .{file_type} file: '{local_file_path}'. Exception: {error}")
-        return {}
+        fail_out(f"Failed to load specified local .{file_type} file: '{local_file_path}'. Exception: {error}")
     return file_contents
 
 
@@ -632,7 +667,7 @@ def queue_find(all_queue_info: dict, job_name: str = '', job_url: str = '', firs
         TODO
     """
     if not job_name and not job_url:
-        logger.debug('Failed to get job information. No job name or job url received')
+        logger.debug('=No job name or job URL provided')
         return []
     job_name = job_name if job_name else url_to_name(job_url)
 
@@ -814,6 +849,7 @@ def parse_and_check_input_string_list(string_list: str, join_back_char: str = ''
         parsed_items = join_back_char.join(parsed_items)
 
     logger.debug(f'Parsed and checked string list: "{string_list}" => "{parsed_items}"')
+
     return parsed_items
 
 
@@ -906,7 +942,7 @@ def template_apply(string_template: str, is_json: bool = False, **kwargs) -> Uni
 
 
 def run_groovy_script(script_filepath: str, json_return: bool, rest: object,
-                      **kwargs) -> Tuple[Union[dict, str], bool]:
+                      **kwargs) -> Tuple[Union[dict, str], bool, str]:
     """Run a Groovy script on the server and return the response
 
     Details:
@@ -923,20 +959,21 @@ def run_groovy_script(script_filepath: str, json_return: bool, rest: object,
     Returns:
         Response from the script
         Success flag
+        Error message
     """
     logger.debug(f'Loading Groovy script: {script_filepath}')
     try:
         with open(script_filepath, 'r') as open_file:
             script = open_file.read()
-    except (FileNotFoundError, IOError) as error:
-        logger.debug(f'Failed to find or read specified script file ({script_filepath}). Exception: {error}')
-        return {}, False
+    except (FileNotFoundError, IOError, PermissionError) as error:
+        logger.debug(f'Failed to find or read specified Groovy script file ({script_filepath}). Exception: {error}')
+        return {}, False, f'Failed to find or read specified Groovy script file ({script_filepath}). Exception: {error}'
 
     # Apply passed kwargs to the string template
     if kwargs:
         script = template_apply(string_template=script, is_json=False, **kwargs)
         if not script:
-            return {}, False
+            return {}, False, "Failed to apply variables to Groovy script template"
 
     # Send the request to the server
     logger.debug(f'Running the following Groovy script on server: {script_filepath} ...')
@@ -945,10 +982,8 @@ def run_groovy_script(script_filepath: str, json_return: bool, rest: object,
                                              data={'script': script},
                                              json_content=False)
     if not success:
-        logger.debug('Failed server Rest request for Groovy script execution')
-        return {}, False
-
-    # print(script_result)
+        logger.debug('Failed server REST request for Groovy script execution')
+        return {}, False, 'Failed server REST request for Groovy script execution'
 
     # Check for yojenkins Groovy script error flag
     if "yojenkins groovy script failed" in script_result:
@@ -956,13 +991,13 @@ def run_groovy_script(script_filepath: str, json_return: bool, rest: object,
         logger.debug('Failed to execute Groovy script')
         logger.debug(f'Groovy Exception: {groovy_return[1]}')
         logger.debug(groovy_return[2])
-        return {}, False
+        return {}, False, f'Error while executing Groovy script: {groovy_return[1]}: {groovy_return[2]}'
 
     # Check for script exception
     exception_keywords = ['Exception', 'java:']
     if any(exception_keyword in script_result for exception_keyword in exception_keywords):
         logger.debug(f'Error keyword matched in script response: {exception_keywords}')
-        return {}, False
+        return {}, False, f'Error keyword matched in script response: {exception_keywords}'
 
     # Parse script result as JSON
     if json_return:
@@ -970,6 +1005,6 @@ def run_groovy_script(script_filepath: str, json_return: bool, rest: object,
             script_result = json.loads(script_result)
         except json.JSONDecodeError as error:
             logger.debug('Failed to parse response to JSON format')
-            return {}, False
+            return {}, False, 'Failed to parse response to JSON format'
 
-    return script_result, True
+    return script_result, True, ''

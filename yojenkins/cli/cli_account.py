@@ -14,56 +14,60 @@ logger = logging.getLogger()
 
 @log_to_history
 def list(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_list: bool, profile: str) -> None:
-    """TODO Docstring
-
-    Details: TODO
+    """List all users
 
     Args:
-        TODO
+        opt_pretty: Option to pretty print the output
+        opt_yaml: Option to output in YAML format
+        opt_xml: Option to output in XML format
+        opt_toml: Option to output in TOML format
+        opt_list: Option to list the available profiles
+        profile: The profile/account to use
 
     Returns:
-        TODO
+        None
     """
     yj_obj = cu.config_yo_jenkins(profile)
     data, data_list = yj_obj.account.list()
-    if not data:
-        click.echo(click.style('failed', fg='bright_red', bold=True))
-        sys.exit(1)
     data = data_list if opt_list else data
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
 @log_to_history
 def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, user_id: str) -> None:
-    """TODO Docstring
-
-    Details: TODO
+    """Get user information
 
     Args:
-        TODO
+        opt_pretty: Option to pretty print the output
+        opt_yaml: Option to output in YAML format
+        opt_xml: Option to output in XML format
+        opt_toml: Option to output in TOML format
+        opt_list: Option to list the available profiles
+        profile: The profile/account to use
+        user_id: The user id to look up
 
     Returns:
-        TODO
+        None
     """
     yj_obj = cu.config_yo_jenkins(profile)
     data = yj_obj.account.info(user_id=user_id)
-    if not data:
-        click.echo(click.style('failed', fg='bright_red', bold=True))
-        sys.exit(1)
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
 @log_to_history
 def create(profile: str, user_id: str, password: str, is_admin: bool, email: str, description: str) -> None:
-    """TODO Docstring
-
-    Details: TODO
+    """Delete a user account
 
     Args:
-        TODO
+        profile: The profile/account to use
+        user_id: The user id to look up
+        password: The password to set for this user
+        is_admin: Is this user an admin
+        email: The email address for this user
+        description: The description for this user
 
     Returns:
-        TODO
+        None
     """
     yj_obj = cu.config_yo_jenkins(profile)
     data = yj_obj.account.create(user_id=user_id,
@@ -71,69 +75,60 @@ def create(profile: str, user_id: str, password: str, is_admin: bool, email: str
                                  is_admin=is_admin,
                                  email=email,
                                  description=description)
-    if not data:
-        click.echo(click.style('failed', fg='bright_red', bold=True))
-        sys.exit(1)
     click.echo(click.style('success', fg='bright_green', bold=True))
 
 
 @log_to_history
 def delete(profile: str, user_id: str) -> None:
-    """TODO Docstring
-
-    Details: TODO
+    """Delete a user account
 
     Args:
-        TODO
+        profile: The profile/account to use
+        user_id: The user id to look up
 
     Returns:
-        TODO
+        None
     """
     yj_obj = cu.config_yo_jenkins(profile)
     data = yj_obj.account.delete(user_id=user_id)
-    if not data:
-        click.echo(click.style('failed', fg='bright_red', bold=True))
-        sys.exit(1)
     click.echo(click.style('success', fg='bright_green', bold=True))
 
 
 @log_to_history
 def permission(profile: str, user_id: str, action: str, permission_id: str) -> None:
-    """TODO Docstring
-
-    Details: TODO
+    """Add or remove user permission
 
     Args:
-        TODO
+        profile: The profile/account to use
+        user_id: The user id to look up
+        action: The action to perform ("add" or "remove")
+        permission_id: The permission to add or remove to action
 
     Returns:
-        TODO
+        None
     """
     yj_obj = cu.config_yo_jenkins(profile)
     data = yj_obj.account.permission(user_id=user_id, action=action, permission_id=permission_id)
-    if not data:
-        click.echo(click.style('failed', fg='bright_red', bold=True))
-        sys.exit(1)
     click.echo(click.style('success', fg='bright_green', bold=True))
 
 
 @log_to_history
 def permission_list(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_list: bool,
                     profile: str) -> None:
-    """TODO Docstring
-
-    Details: TODO
+    """List all available permissions
 
     Args:
-        TODO
+        opt_pretty: Option to pretty print the output
+        opt_yaml: Option to output in YAML format
+        opt_xml: Option to output in XML format
+        opt_toml: Option to output in TOML format
+        opt_list: Option to list the available profiles
+        profile: The profile/account to use
 
     Returns:
-        TODO
+        None
     """
     yj_obj = cu.config_yo_jenkins(profile)
     data, data_list = yj_obj.account.permission_list()
-    if not data:
-        click.echo(click.style('failed', fg='bright_red', bold=True))
-        sys.exit(1)
     data = data_list if opt_list else data
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)

@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 from typing import Dict, Tuple
 
 from yojenkins.utility import utility
+from yojenkins.utility.utility import fail_out, print2
 from yojenkins.yo_jenkins.status import StageStatus
 
 # Getting the logger reference
@@ -16,7 +17,7 @@ logger = logging.getLogger()
 class Stage():
     """Handeling of Jenkins stage functionality"""
 
-    def __init__(self, rest, build, step) -> None:
+    def __init__(self, rest: object, build: object, step: object) -> None:
         """Object constructor method, called at object creation
 
         Args:
@@ -62,8 +63,6 @@ class Stage():
         # Getting all stages
         build_stage_list, build_stage_name_list = self.build.stage_list(build_url, job_name, job_url, build_number,
                                                                         latest)
-        if not build_stage_name_list:
-            return {}
         logger.debug(f'Stages found: {build_stage_name_list}')
 
         # Formate stage name form user input
@@ -72,8 +71,7 @@ class Stage():
 
         # Check if lowercase stage name is in list of stages in this build
         if not stage_name in [x.lower() for x in build_stage_name_list]:
-            logger.debug(f'Failed to find stage name "{stage_name}" among listed stages')
-            return {}
+            fail_out(f'Failed to find stage name "{stage_name}" among listed stages')
 
         # Getting the right stage item
         logger.debug('Getting stage URL from build information ...')
@@ -83,7 +81,7 @@ class Stage():
         endpoint = f'{build_stage_item["url"]}'
         return_content = self.rest.request(endpoint, 'get', is_endpoint=True)[0]
         if not return_content:
-            return {}
+            fail_out(f'Failed to fetch stage information for "{stage_name}"')
 
         # Add additional derived information for stage
         return_content['startDatetime'] = datetime.fromtimestamp(return_content["startTimeMillis"] /
@@ -188,28 +186,26 @@ class Stage():
                                job_url=job_url,
                                build_number=build_number,
                                latest=latest)
-        if not stage_info:
-            return [], []
 
         # Check if there are steps in this stage
         if "stageFlowNodes" not in stage_info:
-            logger.debug('Failed to get stage step information. No stage steps listed')
-            return [], []
+            fail_out('Failed to get stage step information. No stage steps listed')
 
         # Accounting for no stage step command
         for step_info in stage_info['stageFlowNodes']:
             if not 'parameterDescription' in step_info:
                 step_info['parameterDescription'] = "No command parameters listed"
 
-        # Getting the stage items
-        step_list = stage_info['stageFlowNodes']
-
-        # Getting only the names/labels of the stages
-        step_name_list = [s['name'] for s in step_list]
+        # Getting the stage items, and getting only the names/labels of the stages
+        try:
+            step_list = stage_info['stageFlowNodes']
+            step_name_list = [s['name'] for s in step_list]
+        except KeyError as error:
+            fail_out(f'Failed to parse stage information. Specific keys not found: {error}')
 
         return step_list, step_name_list
 
-    def __thread_step_info(self, step_index: int, total_steps: int, step: dict) -> None:
+    def _thread_step_info(self, step_index: int, total_steps: int, step: dict) -> None:
         """TODO
 
         Details: TODO
@@ -223,8 +219,6 @@ class Stage():
 
         # Getting step information
         return_content = self.step.info(step_url=step['url_log'])
-        if not return_content:
-            return []
 
         logger.debug(f"---> {step_index+1}/{total_steps} - {step['name']}")
         if 'parameterDescription' in step:
@@ -289,15 +283,13 @@ class Stage():
                                          job_url=job_url,
                                          build_number=build_number,
                                          latest=latest)[0]
-        if not stage_step_list:
-            return '', []
 
         logger.debug(
             f'Downloading logs for {len(stage_step_list)} step in the stage using {len(stage_step_list)} threads ...')
         self.stage_log_dict = {}
         threads = []
         for i, stage_step in enumerate(stage_step_list):
-            thread = threading.Thread(target=self.__thread_step_info,
+            thread = threading.Thread(target=self._thread_step_info,
                                       args=(
                                           i,
                                           len(stage_step_list),
@@ -325,13 +317,12 @@ class Stage():
                 with open(os.path.join(download_dir, filename), 'w+') as file:
                     file.write(stage_log_text)
                 logger.debug('Successfully write build logs to file')
-            except Exception as error:
-                logger.debug(f'Failed to write logs to file. Exception: {error}')
-                return False
+            except (IOError, PermissionError) as error:
+                fail_out(f'Failed to write logs to file. Exception: {error}')
         else:
             # Output to console
             logger.debug('Printing out console text logs ...')
-            print(stage_log_text)
+            print2(stage_log_text)
         stage_log_text = None
 
         return True

@@ -17,22 +17,23 @@ logger = logging.getLogger()
 @log_to_history
 def list(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_list: bool, profile: str, folder: str,
          domain: str, keys: str) -> None:
-    """TODO Docstring
-
-    Details: TODO
+    """List credentials
 
     Args:
-        TODO
+        opt_pretty: Option to pretty print the output
+        opt_yaml: Option to output in YAML format
+        opt_xml: Option to output in XML format
+        opt_toml: Option to output in TOML format
+        profile: The profile/account to use
+        folder: The folder to use for the credential
+        domain: The domain to use for the credential
+        keys: Credential keys to list
 
     Returns:
-        TODO
+        None
     """
     yj_obj = cu.config_yo_jenkins(profile)
     data, data_list = yj_obj.credential.list(folder=folder, domain=domain, keys=keys)
-
-    if not data:
-        click.echo(click.style('failed', fg='bright_red', bold=True))
-        sys.exit(1)
     data = data_list if opt_list else data
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
@@ -40,53 +41,51 @@ def list(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_li
 @log_to_history
 def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, credential: str, folder: str,
          domain: str) -> None:
-    """TODO Docstring
-
-    Details: TODO
+    """Credential information
 
     Args:
-        TODO
+        opt_pretty: Option to pretty print the output
+        opt_yaml: Option to output in YAML format
+        opt_xml: Option to output in XML format
+        opt_toml: Option to output in TOML format
+        profile: The profile/account to use
+        folder: The folder to use for the credential
+        domain: The domain to use for the credential
 
     Returns:
-        TODO
+        None
     """
     yj_obj = cu.config_yo_jenkins(profile)
     data = yj_obj.credential.info(credential=credential, folder=folder, domain=domain)
-    if not data:
-        click.echo(click.style('no credential information', fg='bright_red', bold=True))
-        sys.exit(1)
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
 @log_to_history
 def config(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_json: bool, profile: str,
            credential: str, folder: str, domain: str, filepath: str) -> None:
-    """TODO Docstring
-
-    Details: TODO
+    """Get credential configuration
 
     Args:
-        TODO
+        opt_pretty: Option to pretty print the output
+        opt_yaml: Option to output in YAML format
+        opt_xml: Option to output in XML format
+        opt_toml: Option to output in TOML format
+        profile: The profile/account to use
+        folder: The folder to use for the credential
+        domain: The domain to use for the credential
+        filepath: The filepath of the credential configuration
 
     Returns:
-        TODO
+        None
     """
     yj_obj = cu.config_yo_jenkins(profile)
-    data, write_success = yj_obj.credential.config(credential=credential,
-                                                   folder=folder,
-                                                   domain=domain,
-                                                   opt_json=opt_json,
-                                                   opt_yaml=opt_yaml,
-                                                   opt_toml=opt_toml,
-                                                   filepath=filepath)
-    if not data:
-        click.echo(click.style('failed', fg='bright_red', bold=True))
-        sys.exit(1)
-
-    if not write_success:
-        click.echo(click.style('failed to write', fg='bright_red', bold=True))
-        sys.exit(1)
-
+    data = yj_obj.credential.config(credential=credential,
+                                    folder=folder,
+                                    domain=domain,
+                                    opt_json=opt_json,
+                                    opt_yaml=opt_yaml,
+                                    opt_toml=opt_toml,
+                                    filepath=filepath)
     opt_xml = not any([opt_json, opt_yaml, opt_toml])
     data = data if opt_xml else json.loads(json.dumps(xmltodict.parse(data)))
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
@@ -95,30 +94,26 @@ def config(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_
 @log_to_history
 def get_template(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_json: bool, profile: str,
                  cred_type: str, filepath: str) -> None:
-    """TODO Docstring
-
-    Details: TODO
+    """Credential type template to create a credential
 
     Args:
-        TODO
+        opt_pretty: Option to pretty print the output
+        opt_yaml: Option to output in YAML format
+        opt_xml: Option to output in XML format
+        opt_toml: Option to output in TOML format
+        profile: The profile/account to use
+        cred_type: The credential type to get the template for
+        filepath: The filepath to save the credential configuration
 
     Returns:
-        TODO
+        None
     """
     yj_obj = cu.config_yo_jenkins(profile)
-    data, write_success = yj_obj.credential.get_template(cred_type=cred_type,
-                                                         opt_json=opt_json,
-                                                         opt_yaml=opt_yaml,
-                                                         opt_toml=opt_toml,
-                                                         filepath=filepath)
-    if not data:
-        click.echo(click.style('failed', fg='bright_red', bold=True))
-        sys.exit(1)
-
-    if not write_success:
-        click.echo(click.style('failed to write', fg='bright_red', bold=True))
-        sys.exit(1)
-
+    data = yj_obj.credential.get_template(cred_type=cred_type,
+                                          opt_json=opt_json,
+                                          opt_yaml=opt_yaml,
+                                          opt_toml=opt_toml,
+                                          filepath=filepath)
     opt_xml = not any([opt_json, opt_yaml, opt_toml])
     data = data if opt_xml else json.loads(json.dumps(xmltodict.parse(data)))
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
@@ -126,39 +121,35 @@ def get_template(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool
 
 @log_to_history
 def create(profile: str, config_file: str, folder: str, domain: str) -> None:
-    """TODO Docstring
-
-    Details: TODO
+    """Create new credentials
 
     Args:
-        TODO
+        profile: The profile/account to use
+        config_file: The filepath of the credential configuration
+        folder: The folder to use for the credential
+        domain: The domain to use for the credential
 
     Returns:
-        TODO
+        None
     """
     yj_obj = cu.config_yo_jenkins(profile)
     data = yj_obj.credential.create(config_file=config_file, folder=folder, domain=domain)
-    if not data:
-        click.echo(click.style('failed', fg='bright_red', bold=True))
-        sys.exit(1)
     click.echo(click.style('success', fg='bright_green', bold=True))
 
 
 @log_to_history
 def delete(profile: str, credential: str, folder: str, domain: str) -> None:
-    """TODO Docstring
-
-    Details: TODO
+    """Remove credentials
 
     Args:
-        TODO
+        profile: The profile/account to use
+        credential: The credential ID or URL to delete
+        folder: The folder of the credential
+        domain: The domain of the credential
 
     Returns:
-        TODO
+        None
     """
     yj_obj = cu.config_yo_jenkins(profile)
     data = yj_obj.credential.delete(credential=credential, folder=folder, domain=domain)
-    if not data:
-        click.echo(click.style('failed', fg='bright_red', bold=True))
-        sys.exit(1)
     click.echo(click.style('success', fg='bright_green', bold=True))

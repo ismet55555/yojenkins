@@ -12,7 +12,12 @@ import click
 from yojenkins.cli import cli_utility as cu
 from yojenkins.cli.cli_utility import log_to_history
 from yojenkins.tools import Package, SharedLibrary
-from yojenkins.utility.utility import browser_open, html_clean, load_contents_from_local_file
+from yojenkins.utility.utility import (
+    browser_open,
+    html_clean,
+    load_contents_from_local_file,
+    print2,
+)
 
 # Getting the logger reference
 logger = logging.getLogger()
@@ -179,20 +184,20 @@ def rest_request(profile: str, request_text: str, request_type: str, raw: bool, 
         sys.exit(1)
 
     if request_type == 'HEAD':
-        print(header)
+        print2(header)
         sys.exit(0)
 
     if content:
         if clean_html:
             try:
-                print(html_clean(content))
+                print2(html_clean(content))
             except Exception:
-                print(content)
+                print2(content)
         else:
             try:
-                print(json.dumps(content, indent=4))
+                print2(json.dumps(content, indent=4))
             except Exception:
-                print(content)
+                print2(content)
     else:
         click.echo(
             click.style('Content returned, however possible HTML content. Try --raw.', fg='bright_red', bold=True))

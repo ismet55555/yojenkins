@@ -3,6 +3,8 @@
 import logging
 from typing import Dict
 
+from yojenkins.utility.utility import fail_out
+
 # Getting the logger reference
 logger = logging.getLogger()
 
@@ -10,7 +12,7 @@ logger = logging.getLogger()
 class Step():
     """TODO Step"""
 
-    def __init__(self, rest) -> None:
+    def __init__(self, rest: object) -> None:
         """Object constructor method, called at object creation
 
         Args:
@@ -36,7 +38,6 @@ class Step():
         request_url = f'{step_url.strip("/")}'
         return_content = self.rest.request(request_url, 'get', is_endpoint=True)[0]
         if not return_content:
-            logger.debug(f'Failed to get step info for: {request_url}')
-            return {}
+            fail_out(f'Failed to get step info for: {request_url}')
 
         return return_content

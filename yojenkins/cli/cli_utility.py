@@ -23,7 +23,7 @@ from yojenkins.yo_jenkins.auth import Auth
 from yojenkins.yo_jenkins.rest import Rest
 from yojenkins.yo_jenkins.yojenkins import YoJenkins
 
-from yojenkins.utility.utility import iter_data_empty_item_stripper, load_contents_from_local_file, am_i_inside_docker, am_i_bundled  # isort:skip
+from yojenkins.utility.utility import iter_data_empty_item_stripper, load_contents_from_local_file, am_i_inside_docker, am_i_bundled, print2  # isort:skip
 
 # Getting the logger reference
 logger = logging.getLogger()
@@ -134,30 +134,30 @@ def standard_out(data: dict,
             data = readfromstring(json.dumps(data))
             data_xml = json2xml.Json2xml(data, pretty=opt_pretty, wrapper=None, attr_type=False).to_xml()
             if opt_pretty:
-                print(data_xml)
+                print2(data_xml)
             else:
-                print(data_xml.decode())
+                print2(data_xml.decode())
         else:
             # When configs are fetched in XML format
-            print(data)
+            print2(data)
         return
 
     if opt_yaml:
         # YAML format
         logger.debug('Outputting YAML format ...')
-        print(yaml.safe_dump(data, default_flow_style=False, indent=2))
+        print2(yaml.safe_dump(data, default_flow_style=False, indent=2))
     elif opt_toml:
         # TOML format
         data = {'item': data} if isinstance(data, list) else data
         logger.debug('Outputting TOML format ...')
-        print(toml.dumps(data))
+        print2(toml.dumps(data))
     else:
         # JSON format
         logger.debug('Outputting JSON format ...')
         if opt_pretty:
-            print(json.dumps(data, indent=4, sort_keys=True))
+            print2(json.dumps(data, indent=4, sort_keys=True))
         else:
-            print(json.dumps(data))
+            print2(json.dumps(data))
 
 
 def is_full_url(url: str) -> bool:
