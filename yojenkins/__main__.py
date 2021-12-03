@@ -59,7 +59,7 @@ def main():
 def auth():
     """Authentication And Profile Management"""
     pass
-import yojenkins.cli_sub_commands.auth
+from yojenkins.cli_sub_commands import auth
 
 
 # -----------------------------------------------------------------------------
@@ -67,7 +67,7 @@ import yojenkins.cli_sub_commands.auth
 def server():
     """Server Management"""
     pass
-import yojenkins.cli_sub_commands.server
+from yojenkins.cli_sub_commands import server
 
 
 # -----------------------------------------------------------------------------
@@ -82,7 +82,7 @@ import yojenkins.cli_sub_commands.server
 def node():
     """Node Management"""
     pass
-import yojenkins.cli_sub_commands.node
+from yojenkins.cli_sub_commands import node
 
 
 # -----------------------------------------------------------------------------
@@ -94,7 +94,7 @@ cls=HelpColorsGroup,
 def account():
     """Account Management"""
     pass
-import yojenkins.cli_sub_commands.account
+from yojenkins.cli_sub_commands import account
 
 
 # -----------------------------------------------------------------------------
@@ -107,7 +107,7 @@ cls=HelpColorsGroup,
 def credential():
     """Credentials Management"""
     pass
-import yojenkins.cli_sub_commands.credential
+from yojenkins.cli_sub_commands import credential
 
 
 # -----------------------------------------------------------------------------
@@ -115,7 +115,7 @@ import yojenkins.cli_sub_commands.credential
 def folder():
     """Folder Management"""
     pass
-import yojenkins.cli_sub_commands.folder
+from yojenkins.cli_sub_commands import folder
 
 
 # -----------------------------------------------------------------------------
@@ -127,7 +127,7 @@ import yojenkins.cli_sub_commands.folder
 def job():
     """Job Management"""
     pass
-import yojenkins.cli_sub_commands.job
+from yojenkins.cli_sub_commands import job
 
 
 # -----------------------------------------------------------------------------
@@ -135,7 +135,7 @@ import yojenkins.cli_sub_commands.job
 def build():
     """Build Management"""
     pass
-import yojenkins.cli_sub_commands.build
+from yojenkins.cli_sub_commands import build
 
 
 # -----------------------------------------------------------------------------
@@ -143,7 +143,7 @@ import yojenkins.cli_sub_commands.build
 def stage():
     """Stage Management"""
     pass
-import yojenkins.cli_sub_commands.stage
+from yojenkins.cli_sub_commands import stage
 
 
 # -----------------------------------------------------------------------------
@@ -151,7 +151,7 @@ import yojenkins.cli_sub_commands.stage
 def step():
     """Step Management"""
     pass
-import yojenkins.cli_sub_commands.step
+from yojenkins.cli_sub_commands import step
 
 
 # -----------------------------------------------------------------------------
@@ -163,7 +163,7 @@ import yojenkins.cli_sub_commands.step
 def tools():
     """Utility And More"""
     pass
-import yojenkins.cli_sub_commands.tools
+from yojenkins.cli_sub_commands import tools
 
 ##############################################################################
 ##############################################################################
