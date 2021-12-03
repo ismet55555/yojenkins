@@ -3,7 +3,7 @@
 ## Goal
 
 1. Setup a permanent node/agent
-   1. Locally - Through an created docker container (created with yo-jenkins or independently)
+   1. Locally - Through an created docker container (created with yojenkins or independently)
    2. Remotely - Public IP address or DNS reference
 
 2. Setup a ephemeral node/agent (Only started once job is run, Docker based)
@@ -25,10 +25,10 @@
 
 ### Prepare Mode - HOLD OFF FOR NOW
 ```
-yo-jenkins node prepare <HOST ADDRESS>
+yojenkins node prepare <HOST ADDRESS>
     --ssh-port <PORT NUMBER>
     --ssh-user <USERNAME>
-    --ssh-public-key-file <KEY FILE PATH> 
+    --ssh-public-key-file <KEY FILE PATH>
     --ssh-public-key-text <KEY TEXT>
     --system-type <ubuntu, amazonlinux, macos, windows>
     --custom-script <PATH TO SCRIPT>
@@ -37,7 +37,7 @@ yo-jenkins node prepare <HOST ADDRESS>
 ### Permanent Mode
 Only need to do api calls to Jenkins Server to set up.
 ```
-yo-jenkins node setup-permanent [NAME] [HOST] [CRED_ID]
+yojenkins node setup-permanent [NAME] [HOST] [CRED_ID]
     --description <DESCRIPTION>
     --labels <LIST OF LABELS>
     --executors <NUMBER OF EXECUTORS>
@@ -52,7 +52,7 @@ yo-jenkins node setup-permanent [NAME] [HOST] [CRED_ID]
 
 ### Ephemeral Mode
 ```
-yo-jenkins node setup-ephemeral [NAME] [HOST] <--- can be "local"
+yojenkins node setup-ephemeral [NAME] [HOST] <--- can be "local"
   --labels linux,test
   --image my_repo/my_image:latest         <--- default image "jenkins/ssh-agent:alpine"
   --jenkins-home /home/jenkins
@@ -71,7 +71,7 @@ yo-jenkins node setup-ephemeral [NAME] [HOST] <--- can be "local"
        - Install and configure docker
        - `export JENKINS_AGENT_SSH_PUBKEY="<PUBLIC KEY>"`
        - `docker run --rm --name jenkins-ssh-agent jenkins/ssh-agent $JENKINS_AGENT_SSH_PUBKEY`
-- 
+-
      - Container on remote host **(FAILED SSH AUTHENTICATION)**
        - Install and configure docker
        - Ensure SSHD is running inside the container
@@ -86,7 +86,7 @@ yo-jenkins node setup-ephemeral [NAME] [HOST] <--- can be "local"
          - AWSLinux: `yum -y install openssh-server && systemctl enable sshd && systemctl start sshd`
       - Install Java as `root` user
           - AWS EC2: `amazon-linux-extras install -y java-openjdk11 && which java`
-      - Add `jenkins` user 
+      - Add `jenkins` user
         - `adduser jenkins --shell /bin/bash && awk -F: '{ print $1}' /etc/passwd`
       - Log in as `jenkins` user
         - `su jenkins`
@@ -146,7 +146,7 @@ yo-jenkins node setup-ephemeral [NAME] [HOST] <--- can be "local"
 
 ## Challenges
 
-- Passing group ID to docker container 
+- Passing group ID to docker container
   - This is a docker-in-docker problem
   - Currently using Python Docker SDK at container run (group_add=[docker_gid])
     - How does this work on Windows and setting up a remote windows host?
@@ -159,7 +159,7 @@ yo-jenkins node setup-ephemeral [NAME] [HOST] <--- can be "local"
 ## Next Steps
 
 1. Set up remote agent on AWS EC2 via SSH
-2. Adding a persistent agent to jenkins with yo-jenkins
+2. Adding a persistent agent to jenkins with yojenkins
 
 ---
 
@@ -167,7 +167,7 @@ yo-jenkins node setup-ephemeral [NAME] [HOST] <--- can be "local"
 
 - Programmatically, Use same class as the server?
   - Start a new class then see later if we can combine to a base class somehow
-  
+
 - Configuration as code
   - Either prepackaged image or custom Dockerfile
   - If remote, this needs to be available on Dockerhub
@@ -179,13 +179,13 @@ yo-jenkins node setup-ephemeral [NAME] [HOST] <--- can be "local"
 
 - Maybe have a remote server setup script ready to go that preps it
   - Docker settings, restarts services, etc ...
-  - yo-jenkins node prep 13.54.56.34 ec2-user
+  - yojenkins node prep 13.54.56.34 ec2-user
         --ssh-password password
         --ssh-private-key path_to_key
 
 - COnfigure Cloud - Docker
-  - Connect with JNLP 
-  - Attach Docker container 
+  - Connect with JNLP
+  - Attach Docker container
     - https://www.bogotobogo.com/DevOps/Docker/Docker-Jenkins-Master-Slave-Agent-ssh.php
     - Image Used: jenkins/inbound-agent
 
@@ -199,7 +199,7 @@ yo-jenkins node setup-ephemeral [NAME] [HOST] <--- can be "local"
         --key-name aws-key-1 \
         --security-group-ids sg-5dd41e7a \
         --subnet-id subnet-5b44903d \
-        --user-data file:///home/ismet/Projects/yo-jenkins/yo_jenkins/resources/scripts/node_prepare_amazonlinux2.sh
+        --user-data file:///home/ismet/Projects/yojenkins/yojenkins/resources/scripts/node_prepare_amazonlinux2.sh
     ```
   - SSH in
     ```
@@ -230,7 +230,7 @@ yo-jenkins node setup-ephemeral [NAME] [HOST] <--- can be "local"
 
 - How to
   - https://medium.com/xebia-engineering/using-docker-containers-as-jenkins-build-slaves-a0bb1c9190d
-  - https://devopscube.com/docker-containers-as-build-slaves-jenkins/ 
+  - https://devopscube.com/docker-containers-as-build-slaves-jenkins/
   - https://youtu.be/3GAzfOk7XO8
 
 - SSH Verfication Startegy

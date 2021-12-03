@@ -7,7 +7,7 @@
 
 #### List all
 ```
-yo-jenkins credential list \
+yojenkins credential list \
     --folder <folder> \          # <--- default: root
     --domain global \            # <--- default: global ("_")
     --keys id,displayName        # <--- default: *
@@ -15,7 +15,7 @@ yo-jenkins credential list \
 
 #### Get info
 ```
-yo-jenkins credential info \
+yojenkins credential info \
     --credential <credential> \  # <--- id, name, or url
     --folder <folder> \          # <--- default: root
     --domain global \            # <--- default: global ("_")
@@ -27,14 +27,14 @@ yo-jenkins credential info \
 - Saved as json, but can be outputted in different format
 
 ```
-yo-jenkins credential config \
+yojenkins credential config \
     --store system \             # <--- default: system
     --domain global \            # <--- default: global ("_")
 ```
 
 #### Generate credential template
 ```
-yo-jenkins credential template \
+yojenkins credential template \
     --
 
 ```
@@ -45,7 +45,7 @@ yo-jenkins credential template \
 - For not maybe only have a configuration file setting?
     - Def need a little smoother way than this ...
 ```
-yo-jenkins credential create \
+yojenkins credential create \
     --folder <folder> \                     # <--- default: root
     --domain <domain> \                     # <--- default: global ("_")
     --type user-pass|ssh-key|secret-text    # <--- default: user-pass
@@ -159,7 +159,7 @@ yo-jenkins credential create \
                     "$class": "org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl"
                 }
             }
-        ``` 
+        ```
 
 
 ## Domain information
@@ -236,8 +236,8 @@ yo-jenkins credential create \
         "_class": "com.cloudbees.plugins.credentials.CredentialsStoreAction$DomainWrapper",
         "credentials": [
         {
-            "description": "yo-jenkins key",
-            "displayName": "jenkins (yo-jenkins key)",
+            "description": "yojenkins key",
+            "displayName": "jenkins (yojenkins key)",
             "fingerprint": {},
             "fullName": "system/_/883b70d2-b689-4a2b-98ba-c3d7037256c0",
             "id": "883b70d2-b689-4a2b-98ba-c3d7037256c0",

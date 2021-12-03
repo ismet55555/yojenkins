@@ -1,6 +1,6 @@
 name: Testing, Building, and Publishing
 
-on: 
+on:
   push:
     branches:
       - main
@@ -28,6 +28,10 @@ jobs:
       - name: Display Python version
         run: python -c "import sys; print(sys.version)"
 
+      - name: Update APT
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt-get update
+
       - name: Install Linux simpleaudio dependency
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get install -y python3-dev libasound2-dev
@@ -38,10 +42,10 @@ jobs:
           python -m pip install --upgrade-strategy=only-if-needed pipenv setuptools wheel twine build
 
       - id: cache-pipenv
-        uses: actions/cache@v2.1.6
+        uses: actions/cache@v2.1.7
         with:
           path: ~/.local/share/virtualenvs
-          key: ${{ runner.os }}-pipenv-V4-${{ hashFiles('**/Pipfile.lock') }}
+          key: ${{ runner.os }}-pipenv-V1-${{ hashFiles('**/Pipfile.lock') }}
 
       - name: Install dependencies
         if: steps.cache-pipenv.outputs.cache-hit != 'true'
@@ -51,13 +55,13 @@ jobs:
         run: pipenv graph
 
       - name: Code Linting
-        run: pipenv run pylint yo_jenkins --fail-under=8.0
+        run: pipenv run pylint ./yojenkins --rcfile=.pylintrc --fail-under=9.0
 
       - name: Build the package
         run: pipenv run python setup.py install --verbose
 
       - name: Testing --help
-        run: pipenv run yo-jenkins --help
+        run: pipenv run yojenkins --help
 
 
   build-n-ship:
@@ -85,10 +89,10 @@ jobs:
           python -m pip install --upgrade-strategy=only-if-needed pipenv
 
       - id: cache-pipenv
-        uses: actions/cache@v2.1.6
+        uses: actions/cache@v2.1.7
         with:
           path: ~/.local/share/virtualenvs
-          key: ${{ runner.os }}-pipenv-V4-${{ hashFiles('**/Pipfile.lock') }}
+          key: ${{ runner.os }}-pipenv-V1-${{ hashFiles('**/Pipfile.lock') }}
 
       - name: Install dependencies
         if: steps.cache-pipenv.outputs.cache-hit != 'true'
@@ -110,7 +114,6 @@ jobs:
           repository_url: https://test.pypi.org/legacy/
 
       - name: Publish distribution 📦 to PyPI
-        # if: startsWith(github.ref, 'refs/tags')
         uses: pypa/gh-action-pypi-publish@master
         with:
           password: ${{ secrets.PYPI_API_TOKEN }}

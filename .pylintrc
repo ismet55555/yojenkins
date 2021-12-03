@@ -12,14 +12,14 @@ extension-pkg-allow-list=curses
 extension-pkg-whitelist=curses
 
 # Specify a score threshold to be exceeded before program exits with error.
-fail-under=7.0
+fail-under=8.0
 
 # Files or directories to be skipped. They should be base names, not paths.
-ignore=CVS,env,venv,ENV,test,dev_things,__main__.py
+ignore=CVS,env,venv,virtalenv,ENV,test,dev_things,__main__.py
 
 # Files or directories matching the regex patterns are skipped. The regex
 # matches against base names, not paths.
-ignore-patterns=
+ignore-patterns=dev_things
 
 # Python code to execute, usually for sys.path manipulation such as
 # pygtk.require().
@@ -145,7 +145,11 @@ disable=print-statement,
         exception-escape,
         comprehension-escape,
         logging-fstring-interpolation,
-        missing-module-docstring
+        missing-module-docstring,
+        no-value-for-parameter,
+        too-few-public-methods,
+        consider-using-with
+
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
@@ -173,7 +177,7 @@ evaluation=10.0 - ((float(5 * error + warning + refactor + convention) / stateme
 output-format=colorized
 
 # Tells whether to display a full report or only the messages.
-reports=yes
+reports=no
 
 # Activate the evaluation score.
 score=yes
@@ -455,7 +459,20 @@ ignored-classes=optparse.Values,thread._local,_thread._local
 # (useful for modules/projects where namespaces are manipulated during runtime
 # and thus existing member attributes cannot be deduced by static analysis). It
 # supports qualified module names, as well as Unix pattern matching.
-ignored-modules=curses
+ignored-modules=click,
+                colordlogs,
+                curses,
+                docker,
+                jenkins,
+                json2xml
+                requests,
+                simpleaudio,
+                urllib3,
+                winsound,
+                xmltodict,
+                yaml,
+
+
 
 # Show a hint with possible names when a member name was not found. The aspect
 # of finding the hint is based on edit distance.
