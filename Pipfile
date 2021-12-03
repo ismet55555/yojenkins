@@ -6,14 +6,15 @@ name = "pypi"
 url = "https://pypi.org/simple"
 verify_ssl = true
 
+[requires]
+python_version = "3"
+
 [dev-packages]
 bump2version = "*"
 pre-commit = "*"
 pyinstaller = "*"
 pylint = "*"
 pytest = "*"
-# pytest-cov = "*"
-# pytest-mock = "*"
 setuptools = "*"
 twine = "*"
 wheel = "*"
@@ -32,7 +33,8 @@ pyyaml = "*"
 requests_futures = "*"
 simpleaudio = {version = "*", platform_system = "!= 'Windows'"}
 toml = "*"
-windows-curses = {version = "2.2.0", platform_system = "== 'Windows'"}
+windows-curses = {version = "2.3.0", platform_system = "== 'Windows'"}
+pywin32 = {version = "227", platform_system = "== 'Windows'"}
 xmltodict = "*"
 
 [pipenv]

@@ -54,7 +54,7 @@ jobs:
 
       - name: Install dependencies if not in cache
         if: steps.cache-pipenv.outputs.cache-hit != 'true'
-        run: pipenv sync --dev --three
+        run: pipenv sync --dev
 
       - name: Show All dependencies
         run: pipenv graph
@@ -107,7 +107,7 @@ jobs:
 
       - name: Install dependencies if not in cache
         if: steps.cache-pipenv.outputs.cache-hit != 'true'
-        run: pipenv sync --dev --three
+        run: pipenv sync --dev
 
       - name: Build with PyInstaller
         env:
@@ -171,7 +171,7 @@ jobs:
 
       - name: Install dependencies if not in cache
         if: steps.cache-pipenv.outputs.cache-hit != 'true'
-        run: pipenv sync --dev --three
+        run: pipenv sync --dev
 
       - name: Install pypa/build tooling
         run: pipenv run python -m pip install build

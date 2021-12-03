@@ -11,5 +11,5 @@ PyYAML==6.0
 requests-futures==1.0.0
 simpleaudio==1.0.4; platform_system != "Windows"
 toml==0.10.2
-windows-curses==2.2.0; platform_system == "Windows"
+windows-curses==2.3.0; platform_system == "Windows"
 xmltodict
