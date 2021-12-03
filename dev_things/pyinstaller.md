@@ -31,6 +31,9 @@
   - `--log-level=DEBUG` - Detailed logging output
     - Save to file: `pyinstaller --log-level=DEBUG <PROJECT>.py 2> build_log.txt`
 
-- Command
-  - Will create the `.spec` file: `pyinstaller .\yojenkins\__main__.py --name yojenkins --hidden-import "site.getusersitepackages" -y --clean`
-  - Using existing `.spec` file: `pyinstaller yojenkins-onefile.spec  -y --clean`
+## Command
+
+- Will create the `.spec` file:
+  - `pyinstaller .\yojenkins\__main__.py --name yojenkins --hidden-import "site.getusersitepackages" -y --clean`
+- Using existing `.spec` file:
+  - `pyinstaller pyinstaller-onefile.spec -y --clean`
