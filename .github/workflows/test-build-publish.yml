@@ -10,6 +10,11 @@ on:
       # - '**'        # matches every branch
       # - '!main'     # excludes master
 
+# on:
+#   push:
+#     tags:
+#     - '*'
+
 jobs:
   test:
     name: Testing
@@ -186,7 +191,7 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ github.ref }}
-          artifacts: "dist/yojenkins.*"
+          artifacts: "dist/*"
           body: "testing"
           token: ${{ secrets.GITHUB_TOKEN }}
           allowUpdates: true
@@ -214,7 +219,7 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ github.ref }}
-          artifacts: "dist/yojenkins-*"
+          artifacts: "dist/*"
           body: "testing"
           token: ${{ secrets.GITHUB_TOKEN }}
           allowUpdates: true
