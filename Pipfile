@@ -34,7 +34,7 @@ requests_futures = "*"
 simpleaudio = {version = "*", platform_system = "!= 'Windows'"}
 toml = "*"
 windows-curses = {version = "2.3.0", platform_system = "== 'Windows'"}
-pywin32 = {version = "227", platform_system = "== 'Windows'"}
+pypiwin32 = {version = "*", platform_system = "== 'Windows'"}
 xmltodict = "*"
 
 [pipenv]

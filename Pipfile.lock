@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "bc9162ff1e01a18078be10e8456c57da3b0e72b829918b5765cadfef86aa8d05"
+            "sha256": "5705169ae460177338fd77670ecec86a558416e6da0ca00e7beae52a0f9def3e"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -183,6 +183,15 @@
             "markers": "python_version >= '2.6' and python_version not in '3.0, 3.1, 3.2, 3.3'",
             "version": "==2.4.7"
         },
+        "pypiwin32": {
+            "hashes": [
+                "sha256:67adf399debc1d5d14dffc1ab5acacb800da569754fafdc576b2a039485aa775",
+                "sha256:71be40c1fbd28594214ecaecb58e7aa8b708eabfa0125c8a109ebd51edbd776a"
+            ],
+            "index": "pypi",
+            "markers": "platform_system == 'Windows'",
+            "version": "==223"
+        },
         "pyreadline3": {
             "hashes": [
                 "sha256:0003fd0079d152ecbd8111202c5a7dfa6a5569ffd65b235e45f3c2ecbee337b4",
@@ -222,8 +231,7 @@
                 "sha256:f27cec5e7f588c3d1051651830ecc00294f90728d19c3bf6916e6dba93ea357c",
                 "sha256:f4c5be1a293bae0076d93c88f37ee8da68136744588bc5e2be2f299a34ceb7aa"
             ],
-            "index": "pypi",
-            "markers": "platform_system == 'Windows'",
+            "markers": "sys_platform == 'win32'",
             "version": "==227"
         },
         "pyyaml": {
