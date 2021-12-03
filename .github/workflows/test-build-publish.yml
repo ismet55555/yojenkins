@@ -45,7 +45,7 @@ jobs:
         uses: actions/cache@v2.1.7
         with:
           path: ~/.local/share/virtualenvs
-          key: ${{ runner.os }}-pipenv-V1-${{ hashFiles('**/Pipfile.lock') }}
+          key: ${{ runner.os }}-pipenv-V2-${{ hashFiles('**/Pipfile.lock') }}
 
       - name: Install dependencies if not in cache
         if: steps.cache-pipenv.outputs.cache-hit != 'true'
@@ -98,7 +98,7 @@ jobs:
         uses: actions/cache@v2.1.7
         with:
           path: ~/.local/share/virtualenvs
-          key: ${{ runner.os }}-pipenv-V1-${{ hashFiles('**/Pipfile.lock') }}
+          key: ${{ runner.os }}-pipenv-V2-${{ hashFiles('**/Pipfile.lock') }}
 
       - name: Install dependencies if not in cache
         if: steps.cache-pipenv.outputs.cache-hit != 'true'
@@ -144,7 +144,7 @@ jobs:
         uses: actions/cache@v2.1.7
         with:
           path: ~/.local/share/virtualenvs
-          key: ${{ runner.os }}-pipenv-V1-${{ hashFiles('**/Pipfile.lock') }}
+          key: ${{ runner.os }}-pipenv-V2-${{ hashFiles('**/Pipfile.lock') }}
 
       - name: Install dependencies if not in cache
         if: steps.cache-pipenv.outputs.cache-hit != 'true'
