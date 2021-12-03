@@ -166,7 +166,7 @@ jobs:
 
   release-binary:
     name: Releasing Binaries to GitHub Releases
-    needs: [test]
+    needs: [build-binaries]
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -198,7 +198,7 @@ jobs:
 
   release-package:
     name: Releasing Package to PyPI
-    needs: [bulid]
+    needs: [build-package]
     runs-on: ubuntu-latest
 
     # TODO: Add check to see if bumpversion has been run, if not, skip
