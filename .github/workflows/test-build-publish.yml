@@ -74,7 +74,7 @@ jobs:
 
   build-binaries:
     name: Building Binaries
-    needs: [test]
+    # needs: [test]
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -141,7 +141,7 @@ jobs:
 
   build-package:
     name: Building Package
-    needs: [test]
+    # needs: [test]
     runs-on: ubuntu-latest
 
     # TODO: Add check to see if bumpversion has been run, if not, skip
