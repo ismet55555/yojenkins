@@ -49,11 +49,11 @@ def set_debug_log_level(debug_flag: bool) -> None:
     """
     if debug_flag:
         logging_level = logging.DEBUG
-        click.echo(click.style('\n[ LOGGING LEVEL ] : DEBUG\n', fg='bright_yellow', bold=True))
+        click.secho('\n[ LOGGING LEVEL ] : DEBUG\n', fg='bright_yellow', bold=True)
         line = '[  TIME  ] [ MS ] [FILENAME              :  LN] MESSAGE'
-        click.echo(click.style(line, fg='bright_yellow', bold=True))
+        click.secho(line, fg='bright_yellow', bold=True)
         line = '---------------------------------------------------------------------------'
-        click.echo(click.style(line, fg='bright_yellow', bold=True))
+        click.secho(line, fg='bright_yellow', bold=True)
     else:
         logging_level = logging.INFO
     logger.setLevel(logging_level)
@@ -97,12 +97,12 @@ def config_yo_jenkins(profile: str) -> YoJenkins:
 
     # Get the credential profile
     if not auth.get_credentials(profile):
-        click.echo(click.style('Failed to find any credentials', fg='bright_red', bold=True))
+        click.secho('Failed to find any credentials', fg='bright_red', bold=True)
         sys.exit(1)
 
     # Create authentication
     if not auth.create_auth():
-        click.echo(click.style('Failed authentication', fg='bright_red', bold=True))
+        click.secho('Failed authentication', fg='bright_red', bold=True)
         sys.exit(1)
 
     return YoJenkins(auth)

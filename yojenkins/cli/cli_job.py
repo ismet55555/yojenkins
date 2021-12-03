@@ -97,7 +97,7 @@ def build_next(profile: str, job: str) -> None:
         data = yj_obj.job.build_next_number(job_url=job)
     else:
         data = yj_obj.job.build_next_number(job_name=job)
-    click.echo(click.style(f'{data}', fg='bright_green', bold=True))
+    click.secho(f'{data}', fg='bright_green', bold=True)
 
 
 @log_to_history
@@ -115,7 +115,7 @@ def build_last(profile: str, job: str) -> None:
         data = yj_obj.job.build_last_number(job_url=job)
     else:
         data = yj_obj.job.build_last_number(job_name=job)
-    click.echo(click.style(f'{data}', fg='bright_green', bold=True))
+    click.secho(f'{data}', fg='bright_green', bold=True)
 
 
 @log_to_history
@@ -133,7 +133,7 @@ def build_set(profile: str, job: str, build_number: int) -> None:
         data = yj_obj.job.build_set_next_number(build_number=build_number, job_url=job)
     else:
         data = yj_obj.job.build_set_next_number(build_number=build_number, job_name=job)
-    click.echo(click.style(f'{build_number}', fg='bright_green', bold=True))
+    click.secho(f'{build_number}', fg='bright_green', bold=True)
 
 
 @log_to_history
@@ -151,7 +151,7 @@ def build_exist(profile: str, job: str, build_number: int) -> None:
         data = yj_obj.job.build_number_exist(build_number=build_number, job_url=job)
     else:
         data = yj_obj.job.build_number_exist(build_number=build_number, job_name=job)
-    click.echo(click.style('true', fg='bright_green', bold=True))
+    click.secho('true', fg='bright_green', bold=True)
 
 
 @log_to_history
@@ -173,7 +173,7 @@ def build(profile: str, job: str, parameters: tuple) -> None:
         data = yj_obj.job.build_trigger(job_url=job, paramters=parameters)
     else:
         data = yj_obj.job.build_trigger(job_name=job, paramters=parameters)
-    click.echo(click.style(f'success. queue number: {data}', fg='bright_green', bold=True))
+    click.secho(f'success. queue number: {data}', fg='bright_green', bold=True)
 
 
 @log_to_history
@@ -193,7 +193,7 @@ def queue_check(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool,
     else:
         data, queue_id = yj_obj.job.in_queue_check(job_name=job)
     if opt_id:
-        click.echo(click.style(f'{queue_id}', fg='bright_green', bold=True))
+        click.secho(f'{queue_id}', fg='bright_green', bold=True)
     else:
         cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
@@ -240,7 +240,7 @@ def config(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_
                                                 opt_yaml=opt_yaml,
                                                 opt_toml=opt_toml)
     if not write_success:
-        click.echo(click.style('failed to write to file', fg='bright_red', bold=True))
+        click.secho('failed to write to file', fg='bright_red', bold=True)
         sys.exit(1)
 
     # Converting XML to dict
@@ -266,7 +266,7 @@ def disable(profile: str, job: str) -> None:
         data = yj_obj.job.disable(job_url=job)
     else:
         data = yj_obj.job.disable(job_name=job)
-    click.echo(click.style('success', fg='bright_green', bold=True))
+    click.secho('success', fg='bright_green', bold=True)
 
 
 @log_to_history
@@ -284,7 +284,7 @@ def enable(profile: str, job: str) -> None:
         data = yj_obj.job.enable(job_url=job)
     else:
         data = yj_obj.job.enable(job_name=job)
-    click.echo(click.style('success', fg='bright_green', bold=True))
+    click.secho('success', fg='bright_green', bold=True)
 
 
 @log_to_history
@@ -302,7 +302,7 @@ def rename(profile: str, job: str, new_name: str) -> None:
         data = yj_obj.job.rename(new_name=new_name, job_url=job)
     else:
         data = yj_obj.job.rename(new_name=new_name, job_name=job)
-    click.echo(click.style('success', fg='bright_green', bold=True))
+    click.secho('success', fg='bright_green', bold=True)
 
 
 @log_to_history
@@ -320,7 +320,7 @@ def delete(profile: str, job: str) -> None:
         data = yj_obj.job.delete(job_url=job)
     else:
         data = yj_obj.job.delete(job_name=job)
-    click.echo(click.style('success', fg='bright_green', bold=True))
+    click.secho('success', fg='bright_green', bold=True)
 
 
 @log_to_history
@@ -338,7 +338,7 @@ def wipe(profile: str, job: str) -> None:
         data = yj_obj.job.wipe_workspace(job_url=job)
     else:
         data = yj_obj.job.wipe_workspace(job_name=job)
-    click.echo(click.style('success', fg='bright_green', bold=True))
+    click.secho('success', fg='bright_green', bold=True)
 
 
 @log_to_history
@@ -373,4 +373,4 @@ def create(profile: str, name: str, folder: str, config_file: str, config_is_jso
         data = yj_obj.job.create(name=name, folder_url=folder, config_file=config_file, config_is_json=config_is_json)
     else:
         data = yj_obj.job.create(name=name, folder_name=folder, config_file=config_file, config_is_json=config_is_json)
-    click.echo(click.style('success', fg='bright_green', bold=True))
+    click.secho('success', fg='bright_green', bold=True)

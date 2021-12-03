@@ -134,7 +134,7 @@ def create(profile: str, config_file: str, folder: str, domain: str) -> None:
     """
     yj_obj = cu.config_yo_jenkins(profile)
     data = yj_obj.credential.create(config_file=config_file, folder=folder, domain=domain)
-    click.echo(click.style('success', fg='bright_green', bold=True))
+    click.secho('success', fg='bright_green', bold=True)
 
 
 @log_to_history
@@ -152,4 +152,4 @@ def delete(profile: str, credential: str, folder: str, domain: str) -> None:
     """
     yj_obj = cu.config_yo_jenkins(profile)
     data = yj_obj.credential.delete(credential=credential, folder=folder, domain=domain)
-    click.echo(click.style('success', fg='bright_green', bold=True))
+    click.secho('success', fg='bright_green', bold=True)

@@ -75,7 +75,7 @@ def create(profile: str, user_id: str, password: str, is_admin: bool, email: str
                                  is_admin=is_admin,
                                  email=email,
                                  description=description)
-    click.echo(click.style('success', fg='bright_green', bold=True))
+    click.secho('success', fg='bright_green', bold=True)
 
 
 @log_to_history
@@ -91,7 +91,7 @@ def delete(profile: str, user_id: str) -> None:
     """
     yj_obj = cu.config_yo_jenkins(profile)
     data = yj_obj.account.delete(user_id=user_id)
-    click.echo(click.style('success', fg='bright_green', bold=True))
+    click.secho('success', fg='bright_green', bold=True)
 
 
 @log_to_history
@@ -109,7 +109,7 @@ def permission(profile: str, user_id: str, action: str, permission_id: str) -> N
     """
     yj_obj = cu.config_yo_jenkins(profile)
     data = yj_obj.account.permission(user_id=user_id, action=action, permission_id=permission_id)
-    click.echo(click.style('success', fg='bright_green', bold=True))
+    click.secho('success', fg='bright_green', bold=True)
 
 
 @log_to_history

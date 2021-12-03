@@ -64,7 +64,7 @@ def create_permanent(profile: str, **kwargs) -> None:
     """
     yj_obj = cu.config_yo_jenkins(profile)
     yj_obj.node.create_permanent(**kwargs)
-    click.echo(click.style('success', fg='bright_green', bold=True))
+    click.secho('success', fg='bright_green', bold=True)
 
 
 @log_to_history
@@ -81,7 +81,7 @@ def delete(profile: str, node_name: str) -> None:
     """
     yj_obj = cu.config_yo_jenkins(profile)
     yj_obj.node.delete(node_name)
-    click.echo(click.style('success', fg='bright_green', bold=True))
+    click.secho('success', fg='bright_green', bold=True)
 
 
 @log_to_history
@@ -98,7 +98,7 @@ def disable(profile: str, node_name: str, message: str) -> None:
     """
     yj_obj = cu.config_yo_jenkins(profile)
     yj_obj.node.disable(node_name, message)
-    click.echo(click.style('success', fg='bright_green', bold=True))
+    click.secho('success', fg='bright_green', bold=True)
 
 
 @log_to_history
@@ -115,7 +115,7 @@ def enable(profile: str, node_name: str, message: str) -> None:
     """
     yj_obj = cu.config_yo_jenkins(profile)
     yj_obj.node.enable(node_name, message)
-    click.echo(click.style('success', fg='bright_green', bold=True))
+    click.secho('success', fg='bright_green', bold=True)
 
 
 @log_to_history
@@ -156,4 +156,4 @@ def reconfig(profile: str, node_name: str, config_file: str, config_is_json: str
     """
     yj_obj = cu.config_yo_jenkins(profile)
     yj_obj.node.reconfig(config_file=config_file, node_name=node_name, config_is_json=config_is_json)
-    click.echo(click.style('success', fg='bright_green', bold=True))
+    click.secho('success', fg='bright_green', bold=True)

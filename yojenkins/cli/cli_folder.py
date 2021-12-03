@@ -216,7 +216,7 @@ def create(profile: str, name: str, folder: str, type: str, config: str, config_
                                     config=config,
                                     folder_name=folder,
                                     config_is_json=config_is_json)
-    click.echo(click.style('success', fg='bright_green', bold=True))
+    click.secho('success', fg='bright_green', bold=True)
 
 
 @log_to_history
@@ -236,7 +236,7 @@ def copy(profile: str, folder: str, original_name: str, new_name: str) -> None:
         data = yj_obj.folder.copy(original_name=original_name, new_name=new_name, folder_url=folder)
     else:
         data = yj_obj.folder.copy(original_name=original_name, new_name=new_name, folder_name=folder)
-    click.echo(click.style('success', fg='bright_green', bold=True))
+    click.secho('success', fg='bright_green', bold=True)
 
 
 @log_to_history
@@ -254,4 +254,4 @@ def delete(profile: str, folder: str) -> None:
         data = yj_obj.folder.delete(folder_url=folder)
     else:
         data = yj_obj.folder.delete(folder_name=folder)
-    click.echo(click.style('success', fg='bright_green', bold=True))
+    click.secho('success', fg='bright_green', bold=True)

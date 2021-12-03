@@ -25,7 +25,7 @@ def _verify_build_url_get_job_format(build_url: str, job: str) -> bool:
     """
     if build_url:
         if not cu.is_full_url(build_url):
-            click.echo(click.style('The build url not formatted correctly', fg='bright_red', bold=True))
+            click.secho('The build url not formatted correctly', fg='bright_red', bold=True)
             sys.exit(1)
         valid_url_format = True
     else:
@@ -109,7 +109,7 @@ def status(profile: str, job: str, build_number: int, build_url: str, latest: bo
         output_fg = 'bright_red'
     else:
         output_fg = ''
-    click.echo(click.style(f'{data}', fg=output_fg, bold=True))
+    click.secho(f'{data}', fg=output_fg, bold=True)
 
 
 @log_to_history
@@ -139,7 +139,7 @@ def abort(profile: str, job: str, build_number: int, build_url: str, latest: boo
         data = yj_obj.build.abort(build_url=build_url, job_url=job, build_number=build_number, latest=latest)
     else:
         data = yj_obj.build.abort(build_url=build_url, job_name=job, build_number=build_number, latest=latest)
-    click.echo(click.style('success', fg='bright_green', bold=True))
+    click.secho('success', fg='bright_green', bold=True)
 
 
 @log_to_history
@@ -169,7 +169,7 @@ def delete(profile: str, job: str, build_number: int, build_url: str, latest: bo
         data = yj_obj.build.delete(build_url=build_url, job_url=job, build_number=build_number, latest=latest)
     else:
         data = yj_obj.build.delete(build_url=build_url, job_name=job, build_number=build_number, latest=latest)
-    click.echo(click.style('success', fg='bright_green', bold=True))
+    click.secho('success', fg='bright_green', bold=True)
 
 
 @log_to_history
@@ -259,7 +259,7 @@ def logs(profile: str, job: str, build_number: int, build_url: str, latest: bool
                           download_dir=download_dir,
                           follow=follow)
     if download_dir:
-        click.echo(click.style('success', fg='bright_green', bold=True))
+        click.secho('success', fg='bright_green', bold=True)
 
 
 @log_to_history

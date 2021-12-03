@@ -26,7 +26,7 @@ def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profil
     """
     # Check if URL is ok
     if not cu.is_full_url(step_url):
-        click.echo(click.style(f'INPUT ERROR: Step url is not a URL: {step_url}', fg='bright_red', bold=True))
+        click.secho(f'INPUT ERROR: Step url is not a URL: {step_url}', fg='bright_red', bold=True)
         sys.exit(1)
 
     yj_obj = cu.config_yo_jenkins(profile)
@@ -35,6 +35,6 @@ def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profil
     data = yj_obj.step.info(step_url=step_url)
 
     if not data:
-        click.echo(click.style('No step information', fg='bright_red', bold=True))
+        click.secho('No step information', fg='bright_red', bold=True)
         sys.exit(1)
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)

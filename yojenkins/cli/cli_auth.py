@@ -24,7 +24,7 @@ def configure(api_token: str) -> None:
         None
     """
     Auth().configure(api_token=api_token)
-    click.echo(click.style('Successfully configured credentials file', fg='bright_green', bold=True))
+    click.secho('Successfully configured credentials file', fg='bright_green', bold=True)
 
 
 @log_to_history
@@ -46,9 +46,9 @@ def token(profile: str) -> None:
         # Simply display the new API Token
         data = auth.generate_token()
     if profile:
-        click.echo(click.style('success', fg='bright_green', bold=True))
+        click.secho('success', fg='bright_green', bold=True)
     else:
-        click.echo(click.style(data, fg='bright_green', bold=True))
+        click.secho(data, fg='bright_green', bold=True)
 
 
 @log_to_history
@@ -81,7 +81,7 @@ def verify(profile: str) -> None:
     auth = Auth(Rest())
     auth.get_credentials(profile)
     auth.create_auth()
-    click.echo(click.style('success', fg='bright_green', bold=True))
+    click.secho('success', fg='bright_green', bold=True)
 
 
 @log_to_history
