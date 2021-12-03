@@ -124,7 +124,7 @@ def reachable(profile: str, timeout: int) -> None:
     auth = Auth()
     auth.get_credentials(profile)
     YoJenkins(auth=auth).rest.is_reachable(auth.jenkins_profile['jenkins_server_url'], timeout=timeout)
-    click.echo(click.style('success', fg='bright_green', bold=True))
+    click.secho('success', fg='bright_green', bold=True)
 
 
 @log_to_history
@@ -140,7 +140,7 @@ def quiet(profile: str, off: bool):
         TODO
     """
     cu.config_yo_jenkins(profile).server.quiet(off=off)
-    click.echo(click.style('success', fg='bright_green', bold=True))
+    click.secho('success', fg='bright_green', bold=True)
 
 
 @log_to_history
@@ -156,7 +156,7 @@ def restart(profile: str, force: bool):
         TODO
     """
     cu.config_yo_jenkins(profile).server.restart(force=force)
-    click.echo(click.style('success', fg='bright_green', bold=True))
+    click.secho('success', fg='bright_green', bold=True)
 
 
 @log_to_history
@@ -172,7 +172,7 @@ def shutdown(profile: str, force: bool):
         TODO
     """
     cu.config_yo_jenkins(profile).server.shutdown(force=force)
-    click.echo(click.style('success', fg='bright_green', bold=True))
+    click.secho('success', fg='bright_green', bold=True)
 
 
 @log_to_history

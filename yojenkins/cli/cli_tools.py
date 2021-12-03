@@ -39,9 +39,9 @@ def upgrade(user: bool, proxy: str) -> None:
         TODO
     """
     if not Package.install(user=user, proxy=proxy):
-        click.echo(click.style('failed to upgrade', fg='bright_red', bold=True))
+        click.secho('failed to upgrade', fg='bright_red', bold=True)
         sys.exit(1)
-    click.echo(click.style('successfully upgraded', fg='bright_green', bold=True))
+    click.secho('successfully upgraded', fg='bright_green', bold=True)
 
 
 @log_to_history
@@ -118,7 +118,7 @@ def history(profile: str, clear: bool) -> None:
     history_file_path = os.path.join(os.path.join(Path.home(), cu.CONFIG_DIR_NAME), cu.HISTORY_FILE_NAME)
     contents = load_contents_from_local_file('json', history_file_path)
     if not contents:
-        click.echo(click.style('No history found', fg='bright_red', bold=True))
+        click.secho('No history found', fg='bright_red', bold=True)
         sys.exit(1)
 
     # Clearing the history file if requested
@@ -128,10 +128,10 @@ def history(profile: str, clear: bool) -> None:
             os.remove(history_file_path)
         except OSError:
             logger.debug('Failed to clear history file')
-            click.echo(click.style('failed', fg='bright_red', bold=True))
+            click.secho('failed', fg='bright_red', bold=True)
         else:
             logger.debug('Successfully cleared history file')
-            click.echo(click.style('successfully cleared', fg='bright_green', bold=True))
+            click.secho('successfully cleared', fg='bright_green', bold=True)
             sys.exit(0)
 
     # Displaying the command history
@@ -151,7 +151,7 @@ def history(profile: str, clear: bool) -> None:
         if profile in contents:
             output_history_to_console(contents[profile], profile)
         else:
-            click.echo(click.style('No history found for profile: ' + profile, fg='bright_red', bold=True))
+            click.secho('No history found for profile: ' + profile, fg='bright_red', bold=True)
     else:
         for profile_name in contents:
             output_history_to_console(contents[profile_name], profile_name)
@@ -180,7 +180,7 @@ def rest_request(profile: str, request_text: str, request_type: str, raw: bool, 
     )
 
     if not success:
-        click.echo(click.style('Failed to make request', fg='bright_red', bold=True))
+        click.secho('Failed to make request', fg='bright_red', bold=True)
         sys.exit(1)
 
     if request_type == 'HEAD':
@@ -240,7 +240,7 @@ def run_script(profile: str, script_text: str, script_filepath: str, output_file
                                               json_content=False)
 
     if not success:
-        click.echo(click.style('Failed to make script run request', fg='bright_red', bold=True))
+        click.secho('Failed to make script run request', fg='bright_red', bold=True)
         sys.exit(1)
 
     # Save script result to file
@@ -279,6 +279,6 @@ def shared_lib_setup(profile: str, lib_name: str, repo_owner: str, repo_name: st
     data = SharedLibrary().setup(yj_obj.rest, lib_name, repo_owner, repo_name, repo_url, repo_branch, implicit,
                                  credential_id)
     if not data:
-        click.echo(click.style('failed', fg='bright_red', bold=True))
+        click.secho('failed', fg='bright_red', bold=True)
         sys.exit(1)
-    click.echo(click.style('success', fg='bright_green', bold=True))
+    click.secho('success', fg='bright_green', bold=True)
