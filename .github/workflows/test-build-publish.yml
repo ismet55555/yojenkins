@@ -110,7 +110,25 @@ jobs:
         run: pipenv sync --dev --three
 
       - name: Build with PyInstaller
+        env:
+          PYTHONOPTIMIZE: 1 # Enable optimizations as if the -O flag is given.
+          PYTHONHASHSEED: 42 # Try to ensure deterministic results.
         run: pipenv run pyinstaller pyinstaller-onefile.spec -y --clean
+
+      - name: List distribution files
+        run: find dist
+
+      - name: Rename binary artifact (Linux)
+        if: (matrix.os == 'ubuntu-latest')
+        run: mv dist/yojenkins* dist/yojenkins-linux-x86_64
+
+      - name: Rename binary artifact (MacOS)
+        if: (matrix.os == 'macos-latest')
+        run: mv dist/yojenkins* dist/yojenkins-macos-x86_64
+
+      - name: Rename binary artifact (Windows)
+        if: (matrix.os == 'windows-latest')
+        run: mv dist/yojenkins*.exe dist/yojenkins-windows-x86_64.exe
 
       - uses: actions/upload-artifact@v2
         with:
@@ -195,7 +213,6 @@ jobs:
           body: "testing"
           token: ${{ secrets.GITHUB_TOKEN }}
           allowUpdates: true
-
 
 
   # --------------------------------------------------------------------------
