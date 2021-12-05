@@ -228,7 +228,7 @@ jobs:
         id: create_release
         uses: ncipollo/release-action@v1
         with:
-          tag: ${{ echo $RELEASE_TAG }}
+          tag: ${{ RELEASE_TAG }}
           artifacts: "dist/*"
           body: "Changelog here ... TODO"
           token: ${{ secrets.GITHUB_TOKEN }}
