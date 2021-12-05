@@ -140,16 +140,14 @@ jobs:
 
 
 
+        
+      - name: Set the value
+        id: step_one
+        run: echo "action_state=$(cat VERSION)" >> $GITHUB_ENV
 
-      - name: List Files
-        run: ls -la
-
-      - name: Set env
-        run: cat VERSION >> $env.RELEASE_TAG
-
-      - name: Test
-        run: echo $env.RELEASE_TAG
-
+      - name: Use the value
+        id: step_two
+        run: echo "${{ env.action_state }}" # This will output 'yellow'
 
       # - name: Read VERSION file
       #   id: release_version
@@ -246,7 +244,7 @@ jobs:
         id: create_release
         uses: ncipollo/release-action@v1
         with:
-          tag: v${{ env.RELEASE_TAG }}
+          tag: v${{ env.action_state }}
           artifacts: "dist/*"
           body: "Changelog here ... TODO"
           token: ${{ secrets.GITHUB_TOKEN }}
