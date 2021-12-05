@@ -79,7 +79,7 @@ jobs:
 
   build-package:
     name: Building Package
-    # needs: [test]
+    needs: [test]
     runs-on: ubuntu-latest
 
     steps:
@@ -138,7 +138,7 @@ jobs:
 
   build-binaries:
     name: Building Binaries
-    # needs: [test]
+    needs: [test]
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
