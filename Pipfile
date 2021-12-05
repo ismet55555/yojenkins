@@ -35,7 +35,8 @@ simpleaudio = {version = "*", platform_system = "!= 'Windows'"}
 toml = "*"
 windows-curses = {version = "*", markers = "sys_platform == 'win32' or platform_system == 'Windows' or os_name =='nt'"}
 # pywin32 = {version = "==302", platform_system = "== 'win32'"}  # <-- Doesn't work, doesn't match env
-pywin32 = {version = "*", markers = "sys_platform == 'win32' or platform_system == 'Windows' or os_name =='nt'"}
+# pywin32 = {version = "*", markers = "sys_platform == 'win32' or platform_system == 'Windows' or os_name =='nt'"}
+pypiwin32 = {version = "*", markers = "sys_platform == 'win32' or platform_system == 'Windows' or os_name =='nt'"}
 xmltodict = "*"
 
 [pipenv]
