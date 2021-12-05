@@ -24,57 +24,57 @@ on:
 #     - '*'
 
 jobs:
-  test:
-    name: Testing
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest] #, windows-latest]  # ! FIXME: Add windows
-        python-version: [3.9]  # ! FIXME: Add 3.7
+  # test:
+  #   name: Testing
+  #   runs-on: ${{ matrix.os }}
+  #   strategy:
+  #     matrix:
+  #       os: [ubuntu-latest, macos-latest] #, windows-latest]  # ! FIXME: Add windows
+  #       python-version: [3.9]  # ! FIXME: Add 3.7
 
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python-version }}
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Set up Python ${{ matrix.python-version }}
+  #       uses: actions/setup-python@v2
+  #       with:
+  #         python-version: ${{ matrix.python-version }}
 
-      - name: Display Python version
-        run: python -c "import sys; print(sys.version)"
+  #     - name: Display Python version
+  #       run: python -c "import sys; print(sys.version)"
 
-      - name: Update apt package repositories
-        if: matrix.os == 'ubuntu-latest'
-        run: sudo apt-get update
+  #     - name: Update apt package repositories
+  #       if: matrix.os == 'ubuntu-latest'
+  #       run: sudo apt-get update
 
-      - name: Install Linux simpleaudio dependency
-        if: matrix.os == 'ubuntu-latest'
-        run: sudo apt-get install -y python3-dev libasound2-dev
+  #     - name: Install Linux simpleaudio dependency
+  #       if: matrix.os == 'ubuntu-latest'
+  #       run: sudo apt-get install -y python3-dev libasound2-dev
 
-      - name: Install pipenv
-        run: |
-          python -m pip install --upgrade-strategy=only-if-needed pip pipenv
+  #     - name: Install pipenv
+  #       run: |
+  #         python -m pip install --upgrade-strategy=only-if-needed pip pipenv
 
-      - id: cache-pipenv
-        uses: actions/cache@v2.1.7
-        with:
-          path: ~/.local/share/virtualenvs
-          key: ${{ runner.os }}-pipenv-V2-${{ hashFiles('**/Pipfile.lock') }}
+  #     - id: cache-pipenv
+  #       uses: actions/cache@v2.1.7
+  #       with:
+  #         path: ~/.local/share/virtualenvs
+  #         key: ${{ runner.os }}-pipenv-V2-${{ hashFiles('**/Pipfile.lock') }}
 
-      - name: Install dependencies if not in cache
-        if: steps.cache-pipenv.outputs.cache-hit != 'true'
-        run: pipenv sync --dev
+  #     - name: Install dependencies if not in cache
+  #       if: steps.cache-pipenv.outputs.cache-hit != 'true'
+  #       run: pipenv sync --dev
 
-      - name: Show All dependencies
-        run: pipenv graph
+  #     - name: Show All dependencies
+  #       run: pipenv graph
 
-      - name: Code Linting
-        run: pipenv run pylint ./yojenkins --rcfile=.pylintrc --fail-under=9.0
+  #     - name: Code Linting
+  #       run: pipenv run pylint ./yojenkins --rcfile=.pylintrc --fail-under=9.0
 
-      - name: Build the package
-        run: pipenv run python setup.py install --verbose
+  #     - name: Build the package
+  #       run: pipenv run python setup.py install --verbose
 
-      - name: Testing --help
-        run: pipenv run yojenkins --help
+  #     - name: Testing --help
+  #       run: pipenv run yojenkins --help
 
 
   # --------------------------------------------------------------------------
@@ -82,7 +82,7 @@ jobs:
 
   build-binaries:
     name: Building Binaries
-    needs: [test]
+    # needs: [test]
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -138,6 +138,27 @@ jobs:
         if: (matrix.os == 'windows-latest')
         run: mv dist/yojenkins*.exe dist/yojenkins-windows-x86_64.exe
 
+
+
+
+      - name: List Files
+        run: ls -la
+
+      - name: Set env
+        run: cat VERSION >> $env.RELEASE_TAG
+
+      - name: Test
+        run: echo $env.RELEASE_TAG
+
+
+      # - name: Read VERSION file
+      #   id: release_version
+      #   run: echo "::set-output name=version::$(cat VERSION)"
+
+      # - name: Test output
+      #   run: echo ${{ steps.release_version.outputs.version }}
+
+
       - uses: actions/upload-artifact@v2
         with:
           name: binary-${{ runner.os }}
@@ -151,7 +172,7 @@ jobs:
 
   build-package:
     name: Building Package
-    needs: [test]
+    # needs: [test]
     runs-on: ubuntu-latest
 
     # TODO: Add check to see if bumpversion has been run, if not, skip
@@ -221,21 +242,11 @@ jobs:
           name: binary-${{ runner.os }}
           path: dist/
 
-      - name: List Files
-        run: ls -la
-
-      - name: Read VERSION file
-        id: release_version
-        run: echo "::set-output name=version::$(cat VERSION)"
-
-      - name: Test output
-        run: echo ${{ steps.release_version.outputs.version }}
-
       - name: Create GitHub Release
         id: create_release
         uses: ncipollo/release-action@v1
         with:
-          tag: v${{ steps.release_version.outputs.version }}
+          tag: v${{ env.RELEASE_TAG }}
           artifacts: "dist/*"
           body: "Changelog here ... TODO"
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -245,36 +256,36 @@ jobs:
   # --------------------------------------------------------------------------
 
 
-  release-package:
-    name: Releasing Package to PyPI
-    needs: [build-package]
-    runs-on: ubuntu-latest
+  # release-package:
+  #   name: Releasing Package to PyPI
+  #   needs: [build-package]
+  #   runs-on: ubuntu-latest
 
-    # TODO: Add check to see if bumpversion has been run, if not, skip
+  #   # TODO: Add check to see if bumpversion has been run, if not, skip
 
-    steps:
-      - uses: actions/download-artifact@v2
-        with:
-          name: pypi-distribution
-          path: dist/
+  #   steps:
+  #     - uses: actions/download-artifact@v2
+  #       with:
+  #         name: pypi-distribution
+  #         path: dist/
 
-      - name: Create GitHub Release
-        id: create_release
-        uses: ncipollo/release-action@v1
-        with:
-          tag: ${{ github.ref }}
-          artifacts: "dist/*"
-          body: "testing"
-          token: ${{ secrets.GITHUB_TOKEN }}
-          allowUpdates: true
+  #     - name: Create GitHub Release
+  #       id: create_release
+  #       uses: ncipollo/release-action@v1
+  #       with:
+  #         tag: ${{ github.ref }}
+  #         artifacts: "dist/*"
+  #         body: "testing"
+  #         token: ${{ secrets.GITHUB_TOKEN }}
+  #         allowUpdates: true
 
-      - name: Publish distribution 📦 to TEST PyPI
-        uses: pypa/gh-action-pypi-publish@master
-        with:
-          password: ${{ secrets.TEST_PYPI_API_TOKEN }}
-          repository_url: https://test.pypi.org/legacy/
+  #     - name: Publish distribution 📦 to TEST PyPI
+  #       uses: pypa/gh-action-pypi-publish@master
+  #       with:
+  #         password: ${{ secrets.TEST_PYPI_API_TOKEN }}
+  #         repository_url: https://test.pypi.org/legacy/
 
-      - name: Publish distribution 📦 to PyPI
-        uses: pypa/gh-action-pypi-publish@master
-        with:
-          password: ${{ secrets.PYPI_API_TOKEN }}
+  #     - name: Publish distribution 📦 to PyPI
+  #       uses: pypa/gh-action-pypi-publish@master
+  #       with:
+  #         password: ${{ secrets.PYPI_API_TOKEN }}
