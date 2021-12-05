@@ -7,7 +7,7 @@ docker==5.0.3
 json2xml==3.8.4
 python-jenkins==1.8.0.0a0
 # pywin32==227; platform_system == "Windows"  # docker package needs 227!
-pypiwin32==227; platform_system == "Windows"  # docker package needs 227!
+pypiwin32==223; platform_system == "Windows"
 PyYAML==6.0
 requests-futures==1.0.0
 simpleaudio==1.0.4; sys_platform != "win32"
