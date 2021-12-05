@@ -16,7 +16,7 @@ on:
       # - '*'         # matches every branch that doesn't contain a '/'
       # - '*/*'       # matches every branch containing a single '/'
       # - '**'        # matches every branch
-      # - '!main'     # excludes master
+      # - '!main'     # excludes main
     tags:
     - '*'
 
@@ -81,8 +81,6 @@ jobs:
     name: Building Package
     # needs: [test]
     runs-on: ubuntu-latest
-
-    # TODO: Add check to see if bumpversion has been run, if not, skip
 
     steps:
       - uses: actions/checkout@v2
@@ -226,9 +224,9 @@ jobs:
         id: create_release
         uses: ncipollo/release-action@v1
         with:
-          tag: ${{ github.ref }}
+          tag: v${{ needs.build-binaries.outputs.release_version_tag }}
           artifacts: "dist/*"
-          body: "testing"
+          # body: "testing"
           token: ${{ secrets.GITHUB_TOKEN }}
           allowUpdates: true
 
@@ -261,7 +259,7 @@ jobs:
         with:
           tag: v${{ needs.build-binaries.outputs.release_version_tag }}
           artifacts: "dist/*"
-          body: "Changelog here ... TODO"
+          # body: ""
           token: ${{ secrets.GITHUB_TOKEN }}
           allowUpdates: true
 
