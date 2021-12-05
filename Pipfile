@@ -31,12 +31,17 @@ json2xml = "*"
 python-jenkins = "*"
 pyyaml = "*"
 requests_futures = "*"
-simpleaudio = {version = "*", platform_system = "!= 'win32'"}
+simpleaudio = {version = "*", os_name = "!='nt'"}
 toml = "*"
-windows-curses = {version = "2.3.0", platform_system = "== 'win32'"}
-pywin32 = {version = "302", platform_system = "== 'win32'"}
-# pypiwin32 = {version = "*", platform_system = "== 'win32'"}
+windows-curses = {version = "2.3.0", markers = "sys_platform == 'win32' or platform_system == 'windows' or os_name =='nt'"}
+pywin32 = {version = "==227", markers = "sys_platform == 'win32' or platform_system == 'windows' or os_name =='nt'"}
+# pypiwin32 = {version = "*", markers = "sys_platform == 'win32' or sys_platform == 'windows'"}
 xmltodict = "*"
+
+# simpleaudio = {version = "*", sys_platform = "!= 'win32'"}
+# pywin32 = {version = "302", platform_system = "== 'windows'"}
+
+#  markers = "sys_platform == 'win32' or platform_system == 'windows' or os_name =='nt'"}
 
 [pipenv]
 allow_prereleases = true

@@ -6,11 +6,11 @@ coloredlogs==15.0.1
 docker==5.0.3
 json2xml==3.8.4
 python-jenkins==1.8.0.0a0
-pywin32==302; platform_system == "Windows"
+pywin32==227; sys_platform == "win32"
 # pypiwin32; platform_system == "Windows"
 PyYAML==6.0
 requests-futures==1.0.0
-simpleaudio==1.0.4; platform_system != "Windows"
+simpleaudio==1.0.4; sys_platform != "win32"
 toml==0.10.2
-windows-curses==2.3.0; platform_system == "Windows"
+windows-curses==2.3.0; sys_platform == "win32"
 xmltodict
