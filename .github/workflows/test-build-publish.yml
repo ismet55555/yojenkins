@@ -117,6 +117,10 @@ jobs:
       - name: Show all installed pip packages
         run: pipenv run pip list
 
+      - name: Create release version tag
+        id: release
+        run: echo "::set-output name=release_version_tag::$(cat VERSION)"
+
       - name: Build a package wheel and tarball
         run: pipenv run python setup.py sdist bdist_wheel
 
@@ -126,7 +130,8 @@ jobs:
           path: dist/
           if-no-files-found: error
           retention-days: 1
-
+    outputs:
+      release_version_tag: ${{ steps.release.outputs.release_version_tag }}
 
   # --------------------------------------------------------------------------
 
@@ -199,7 +204,6 @@ jobs:
           path: dist/
           if-no-files-found: error
           retention-days: 1
-
     outputs:
       release_version_tag: ${{ steps.release.outputs.release_version_tag }}
 
@@ -224,7 +228,7 @@ jobs:
         id: create_release
         uses: ncipollo/release-action@v1
         with:
-          tag: v${{ needs.build-binaries.outputs.release_version_tag }}
+          tag: v${{ needs.build-package.outputs.release_version_tag }}
           artifacts: "dist/*"
           # body: "testing"
           token: ${{ secrets.GITHUB_TOKEN }}
