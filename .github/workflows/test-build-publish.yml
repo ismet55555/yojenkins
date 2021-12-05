@@ -271,7 +271,7 @@ jobs:
 
   release-package-to-pypi:
     name: Releasing Package to PyPI
-    needs: [build-package, release-package-to-github]
+    needs: [build-package, release-package-to-github, release-binary-github]
     runs-on: ubuntu-latest
 
     steps:
