@@ -221,6 +221,9 @@ jobs:
           name: binary-${{ runner.os }}
           path: dist/
 
+      - name: List Files
+        run: ls -la
+
       - name: Read VERSION file
         id: release_version
         run: echo "::set-output name=version::$(cat VERSION)"
