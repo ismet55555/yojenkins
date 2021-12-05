@@ -221,14 +221,18 @@ jobs:
           name: binary-${{ runner.os }}
           path: dist/
 
-      - name: Set release tag name
-        run: export RELEASE_TAG=$(cat VERSION)
+      - name: Read VERSION file
+        id: release_version
+        run: echo "::set-output name=version::$(cat VERSION)"
+
+      - name: Test output
+        run: echo ${{ steps.release_version.outputs.version }}
 
       - name: Create GitHub Release
         id: create_release
         uses: ncipollo/release-action@v1
         with:
-          tag: ${{ RELEASE_TAG }}
+          tag: v${{ steps.release_version.outputs.version }}
           artifacts: "dist/*"
           body: "Changelog here ... TODO"
           token: ${{ secrets.GITHUB_TOKEN }}
