@@ -140,14 +140,14 @@ jobs:
 
 
 
-        
+
       - name: Set the value
         id: step_one
-        run: echo "action_state=$(cat VERSION)" >> $GITHUB_ENV
+        run: echo "release_version_tag=$(cat VERSION)" >> $GITHUB_ENV
 
       - name: Use the value
         id: step_two
-        run: echo "${{ env.action_state }}" # This will output 'yellow'
+        run: echo "${{ env.release_version_tag }}" # This will output 'yellow'
 
       # - name: Read VERSION file
       #   id: release_version
@@ -163,7 +163,8 @@ jobs:
           path: dist/
           if-no-files-found: error
           retention-days: 1
-
+    outputs:
+      release_tag_version: ${{ env.release_version_tag }}
 
   # --------------------------------------------------------------------------
 
@@ -244,7 +245,7 @@ jobs:
         id: create_release
         uses: ncipollo/release-action@v1
         with:
-          tag: v${{ env.action_state }}
+          tag: v${{ needs.build-binaries.outputs.release_version_tag }}
           artifacts: "dist/*"
           body: "Changelog here ... TODO"
           token: ${{ secrets.GITHUB_TOKEN }}
