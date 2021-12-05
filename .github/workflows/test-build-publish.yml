@@ -184,11 +184,11 @@ jobs:
 
       - name: Rename binary artifact (Linux)
         if: (matrix.os == 'ubuntu-latest')
-        run: mv dist/yojenkins* dist/yojenkins-linux-x86_64
+        run: mv dist/yojenkins* dist/yojenkins-${{ steps.release.outputs.release_version_tag }}-linux-x86_64
 
       - name: Rename binary artifact (MacOS)
         if: (matrix.os == 'macos-latest')
-        run: mv dist/yojenkins* dist/yojenkins-macos-x86_64
+        run: mv dist/yojenkins* dist/yojenkins-${{ steps.release.outputs.release_version_tag }}-macos-x86_64
 
       - name: Create release version tag
         id: release
@@ -238,7 +238,7 @@ jobs:
   # --------------------------------------------------------------------------
 
 
-  release-binary-github:
+  release-binary-to-github:
     name: Releasing Binaries to GitHub Releases
     needs: [build-binaries]
     runs-on: ${{ matrix.os }}
@@ -273,7 +273,7 @@ jobs:
 
   release-package-to-pypi:
     name: Releasing Package to PyPI
-    needs: [build-package, release-package-to-github, release-binary-github]
+    needs: [build-package, release-package-to-github, release-binary-to-github]
     runs-on: ubuntu-latest
 
     steps:
