@@ -141,13 +141,13 @@ jobs:
 
 
 
-      - name: Set the value
-        id: step_one
-        run: echo "release_version_tag=$(cat VERSION)" >> $GITHUB_ENV
+      # - name: Set the value
+      #   id: step_one
+      #   run: echo "release_version_tag=$(cat VERSION)" >> $GITHUB_ENV
 
-      - name: Use the value
-        id: step_two
-        run: echo "${{ env.release_version_tag }}" # This will output 'yellow'
+      # - name: Use the value
+      #   id: step_two
+      #   run: echo "${{ env.release_version_tag }}" # This will output 'yellow'
 
       # - name: Read VERSION file
       #   id: release_version
@@ -156,6 +156,12 @@ jobs:
       # - name: Test output
       #   run: echo ${{ steps.release_version.outputs.version }}
 
+      - name: SET
+        id: release
+        run: echo "::set-output name=release_version_tag::$(cat VERSION)"
+
+      - name: GET
+        run: echo "The selected color is ${{ steps.release.outputs.release_version_tag }}"
 
       - uses: actions/upload-artifact@v2
         with:
@@ -164,7 +170,7 @@ jobs:
           if-no-files-found: error
           retention-days: 1
     outputs:
-      release_tag_version: ${{ env.release_version_tag }}
+      release_version_tag: ${{ steps.release.outputs.release_version_tag }}
 
   # --------------------------------------------------------------------------
 
@@ -240,6 +246,10 @@ jobs:
         with:
           name: binary-${{ runner.os }}
           path: dist/
+
+      - name: Use the value
+        id: step_two
+        run: echo "${{ needs.build-binaries.outputs.release_version_tag }}" # This will output 'yellow'
 
       - name: Create GitHub Release
         id: create_release
