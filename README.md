@@ -21,6 +21,10 @@
   <img alt="Licence" src="https://img.shields.io/pypi/l/yojenkins">
 </a>
 
+<a href="https://github.com/ismet55555/yojenkins/actions/workflows/test-build-publish.yml">
+  <img alt="Workflow" src="https://github.com/ismet55555/yojenkins/actions/workflows/test-build-publish.yml/badge.svg">
+</a>
+
 </p>
 
 
