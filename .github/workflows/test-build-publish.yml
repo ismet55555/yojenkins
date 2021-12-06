@@ -1,6 +1,7 @@
-name: Testing, Building, and Publishing
+name: Test, Build, and Publish
 
-# FIXME: Unable to release with windows-latest
+# FIXME:
+# Unable to release with windows-latest
 # ERROR in GitHub Actions:
       # [pipenv.exceptions.InstallError]: ERROR: Could not find a version that satisfies the requirement pywin32==227 (from versions: 302)
       # [pipenv.exceptions.InstallError]: ERROR: No matching distribution found for pywin32==227
