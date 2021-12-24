@@ -18,6 +18,7 @@ from yojenkins.cli.cli_utility import set_debug_log_level
 @click.option('--latest', type=bool, required=False, is_flag=True, help='Latest build (Replaces --number)')
 @click.pass_context
 def info(ctx, debug, pretty, yaml, xml, toml, profile, job, number, url, latest):
+    """Build information"""
     set_debug_log_level(debug)
     if job or url:
         cli_build.info(pretty, yaml, xml, toml, profile, job, number, url, latest)
@@ -34,6 +35,7 @@ def info(ctx, debug, pretty, yaml, xml, toml, profile, job, number, url, latest)
 @click.option('--latest', type=bool, required=False, is_flag=True, help='Latest build (Replaces --number)')
 @click.pass_context
 def status(ctx, debug, profile, job, number, url, latest):
+    """Build status text/label"""
     set_debug_log_level(debug)
     if job or url:
         cli_build.status(profile, job, number, url, latest)
@@ -51,6 +53,7 @@ def status(ctx, debug, profile, job, number, url, latest):
 @click.option('--latest', type=str, required=False, is_flag=True, help='Latest build (Replaces --number)')
 @click.pass_context
 def abort(ctx, debug, profile, job, number, url, latest):
+    """Abort build"""
     set_debug_log_level(debug)
     if job or url:
         cli_build.abort(profile, job, number, url, latest)
@@ -67,6 +70,7 @@ def abort(ctx, debug, profile, job, number, url, latest):
 @click.option('--latest', type=str, required=False, is_flag=True, help='Latest build (Replaces --number)')
 @click.pass_context
 def delete(ctx, debug, profile, job, number, url, latest):
+    """Delete build"""
     # TODO: Pass a list of build numbers
     set_debug_log_level(debug)
     if job or url:
@@ -86,6 +90,7 @@ def delete(ctx, debug, profile, job, number, url, latest):
 @click.option('--latest', type=str, required=False, is_flag=True, help='Latest build (Replaces --number)')
 @click.pass_context
 def stages(ctx, debug, pretty, yaml, xml, toml, profile, list, job, number, url, latest):
+    """Get build stages"""
     set_debug_log_level(debug)
     if job or url:
         cli_build.stages(pretty, yaml, xml, toml, profile, list, job, number, url, latest)
@@ -115,6 +120,7 @@ def stages(ctx, debug, pretty, yaml, xml, toml, profile, list, job, number, url,
               help='Follow/Stream the logs as they are generated')
 @click.pass_context
 def logs(ctx, debug, profile, job, number, url, latest, tail, download_dir, follow):
+    """Get build logs"""
     set_debug_log_level(debug)
     if job or url:
         cli_build.logs(profile, job, number, url, latest, tail, download_dir, follow)
@@ -131,6 +137,7 @@ def logs(ctx, debug, profile, job, number, url, latest, tail, download_dir, foll
 @click.option('--latest', type=str, required=False, is_flag=True, help='Latest build (Replaces --number)')
 @click.pass_context
 def browser(ctx, debug, profile, job, number, url, latest):
+    """Open build in web browser"""
     # TODO: Pass a list of build numbers
     set_debug_log_level(debug)
     if job or url:
@@ -149,6 +156,7 @@ def browser(ctx, debug, profile, job, number, url, latest):
 @click.option('-s', '--sound', type=bool, required=False, is_flag=True, help='Enable sound effects')
 @click.pass_context
 def monitor(ctx, debug, profile, job, number, url, latest, sound):
+    """Start monitor UI"""
     # TODO: Pass a list of build numbers
     set_debug_log_level(debug)
     if job or url:

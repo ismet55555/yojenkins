@@ -23,6 +23,7 @@ from yojenkins.cli.cli_utility import set_debug_log_level
               required=False,
               help='Credential info keys to return [ie. displayName,id,etc]')
 def list(debug, pretty, yaml, xml, toml, list, profile, folder, domain, keys):
+    """List credentials"""
     set_debug_log_level(debug)
     cli_credential.list(pretty, yaml, xml, toml, list, profile, folder, domain, keys)
 
@@ -35,6 +36,7 @@ def list(debug, pretty, yaml, xml, toml, list, profile, folder, domain, keys):
 @click.option('--folder', type=str, default="root", show_default=True, required=False, help='Credential folder')
 @click.option('--domain', type=str, default="global", show_default=True, required=False, help='Credential domain')
 def info(debug, pretty, yaml, xml, toml, profile, credential, folder, domain):
+    """Credential information"""
     set_debug_log_level(debug)
     cli_credential.info(pretty, yaml, xml, toml, profile, credential, folder, domain)
 
@@ -58,6 +60,7 @@ def info(debug, pretty, yaml, xml, toml, profile, credential, folder, domain):
               required=False,
               help='File/Filepath to write configurations to')
 def config(debug, pretty, yaml, xml, toml, json, profile, credential, folder, domain, filepath):
+    """Get credential configuration"""
     set_debug_log_level(debug)
     cli_credential.config(pretty, yaml, xml, toml, json, profile, credential, folder, domain, filepath)
 
@@ -82,6 +85,7 @@ def config(debug, pretty, yaml, xml, toml, json, profile, credential, folder, do
               required=False,
               help='File/Filepath to write template to')
 def get_template(debug, pretty, yaml, xml, toml, json, profile, type, filepath):
+    """Credential type template to create a credential"""
     set_debug_log_level(debug)
     cli_credential.get_template(pretty, yaml, xml, toml, json, profile, type, filepath)
 
@@ -94,6 +98,7 @@ def get_template(debug, pretty, yaml, xml, toml, json, profile, type, filepath):
 @click.option('--folder', type=str, default="root", show_default=True, required=False, help='Credential folder')
 @click.option('--domain', type=str, default="global", show_default=True, required=False, help='Credential domain')
 def create(debug, profile, config_file, folder, domain):
+    """Create new credentials"""
     set_debug_log_level(debug)
     cli_credential.create(profile, config_file, folder, domain)
 
@@ -105,6 +110,7 @@ def create(debug, profile, config_file, folder, domain):
 @click.option('--folder', type=str, default="root", show_default=True, required=False, help='Credential folder')
 @click.option('--domain', type=str, default="global", show_default=True, required=False, help='Credential domain')
 def delete(debug, profile, credential, folder, domain):
+    """Remove credentials"""
     set_debug_log_level(debug)
     cli_credential.delete(profile, credential, folder, domain)
 
@@ -112,6 +118,7 @@ def delete(debug, profile, credential, folder, domain):
 @credential.command(short_help='\tReconfigure existing credentials')
 @cli_decorators.debug
 def update(debug):
+    """Reconfigure existing credentials"""
     set_debug_log_level(debug)
     click.secho('TODO :-/', fg='yellow')
 
@@ -119,5 +126,6 @@ def update(debug):
 @credential.command(short_help='\tMove a credential to another folder/domain')
 @cli_decorators.debug
 def move(debug):
+    """Move a credential to another folder/domain"""
     set_debug_log_level(debug)
     click.secho('TODO :-/', fg='yellow')

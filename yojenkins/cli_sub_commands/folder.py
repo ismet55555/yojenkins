@@ -14,6 +14,7 @@ from yojenkins.cli.cli_utility import set_debug_log_level
 @cli_decorators.profile
 @click.argument('folder', nargs=1, type=str, required=True)
 def info(debug, pretty, yaml, xml, toml, profile, folder):
+    """Folder information"""
     set_debug_log_level(debug)
     cli_folder.info(pretty, yaml, xml, toml, profile, folder)
 
@@ -34,6 +35,7 @@ def info(debug, pretty, yaml, xml, toml, profile, folder):
               help='Search entire folder path name')
 @cli_decorators.list
 def search(debug, pretty, yaml, xml, toml, profile, search_pattern, search_folder, depth, fullname, list):
+    """Search folders by REGEX pattern"""
     set_debug_log_level(debug)
     cli_folder.search(pretty, yaml, xml, toml, profile, search_pattern, search_folder, depth, fullname, list)
 
@@ -45,6 +47,7 @@ def search(debug, pretty, yaml, xml, toml, profile, search_pattern, search_folde
 @click.argument('folder', nargs=1, type=str, required=True)
 @cli_decorators.list
 def subfolders(debug, pretty, yaml, xml, toml, profile, folder, list):
+    """List all subfolders in folder"""
     set_debug_log_level(debug)
     cli_folder.subfolders(pretty, yaml, xml, toml, profile, folder, list)
 
@@ -56,6 +59,7 @@ def subfolders(debug, pretty, yaml, xml, toml, profile, folder, list):
 @click.argument('folder', nargs=1, type=str, required=True)
 @cli_decorators.list
 def jobs(debug, pretty, yaml, xml, toml, profile, folder, list):
+    """List all jobs in folder"""
     set_debug_log_level(debug)
     cli_folder.jobs(pretty, yaml, xml, toml, profile, folder, list)
 
@@ -67,6 +71,7 @@ def jobs(debug, pretty, yaml, xml, toml, profile, folder, list):
 @click.argument('folder', nargs=1, type=str, required=True)
 @cli_decorators.list
 def views(debug, pretty, yaml, xml, toml, profile, folder, list):
+    """List all views in folder"""
     set_debug_log_level(debug)
     cli_folder.views(pretty, yaml, xml, toml, profile, folder, list)
 
@@ -78,6 +83,7 @@ def views(debug, pretty, yaml, xml, toml, profile, folder, list):
 @click.argument('folder', nargs=1, type=str, required=True)
 @cli_decorators.list
 def items(debug, pretty, yaml, xml, toml, profile, folder, list):
+    """List all items in folder"""
     set_debug_log_level(debug)
     cli_folder.items(pretty, yaml, xml, toml, profile, folder, list)
 
@@ -87,6 +93,7 @@ def items(debug, pretty, yaml, xml, toml, profile, folder, list):
 @cli_decorators.profile
 @click.argument('folder', nargs=1, type=str, required=True)
 def browser(debug, profile, folder):
+    """Open folder in web browser"""
     set_debug_log_level(debug)
     cli_folder.browser(profile, folder)
 
@@ -108,6 +115,7 @@ def browser(debug, profile, folder):
               required=False,
               help='File/Filepath to write configurations to')
 def config(debug, pretty, yaml, xml, toml, json, profile, folder, filepath):
+    """Get folder configuration"""
     set_debug_log_level(debug)
     cli_folder.config(pretty, yaml, xml, toml, json, profile, folder, filepath)
 
@@ -134,6 +142,7 @@ def config(debug, pretty, yaml, xml, toml, json, profile, folder, filepath):
               is_flag=True,
               help='The specified file is in JSON format')
 def create(debug, profile, name, folder, type, config_file, config_is_json):
+    """Create an item [folder, view, job]"""
     set_debug_log_level(debug)
     cli_folder.create(profile, name, folder, type, config_file, config_is_json)
 
@@ -145,6 +154,7 @@ def create(debug, profile, name, folder, type, config_file, config_is_json):
 @click.argument('original', nargs=1, type=str, required=True)
 @click.argument('new', nargs=1, type=str, required=True)
 def copy(debug, profile, folder, original, new):
+    """Copy an existing item"""
     set_debug_log_level(debug)
     cli_folder.copy(profile, folder, original, new)
 
@@ -154,5 +164,6 @@ def copy(debug, profile, folder, original, new):
 @cli_decorators.profile
 @click.argument('folder', nargs=1, type=str, required=True)
 def delete(debug, profile, folder):
+    """Delete folder or view"""
     set_debug_log_level(debug)
     cli_folder.delete(profile, folder)

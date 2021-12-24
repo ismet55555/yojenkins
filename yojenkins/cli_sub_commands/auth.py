@@ -15,6 +15,7 @@ from yojenkins.cli.cli_utility import set_debug_log_level
 @cli_decorators.debug
 @click.option('--token', type=str, required=False, is_flag=False, help='Authentication token used for setup profile')
 def configure(debug, token):
+    """Configure authentication"""
     set_debug_log_level(debug)
     cli_auth.configure(token)
 
@@ -23,6 +24,7 @@ def configure(debug, token):
 @cli_decorators.debug
 @cli_decorators.profile
 def token(debug, profile):
+    """Generate authentication API token"""
     set_debug_log_level(debug)
     cli_auth.token(profile)
 
@@ -31,6 +33,7 @@ def token(debug, profile):
 @cli_decorators.debug
 @cli_decorators.format_output
 def show(debug, pretty, yaml, xml, toml):
+    """Show the local credentials profiles"""
     set_debug_log_level(debug)
     cli_auth.show(pretty, yaml, xml, toml)
 
@@ -39,6 +42,7 @@ def show(debug, pretty, yaml, xml, toml):
 @cli_decorators.debug
 @cli_decorators.profile
 def verify(debug, profile):
+    """Check if credentials can authenticate"""
     set_debug_log_level(debug)
     cli_auth.verify(profile)
 
@@ -46,6 +50,7 @@ def verify(debug, profile):
 @auth.command(short_help='\tWipe all credentials for this device')
 @cli_decorators.debug
 def wipe(debug):
+    """Wipe all credentials for this device"""
     set_debug_log_level(debug)
     click.secho('TODO :-/', fg='yellow')
 
@@ -55,5 +60,6 @@ def wipe(debug):
 @cli_decorators.format_output
 @cli_decorators.profile
 def user(debug, pretty, yaml, xml, toml, profile):
+    """Show current user information"""
     set_debug_log_level(debug)
     cli_auth.user(pretty, yaml, xml, toml, profile)

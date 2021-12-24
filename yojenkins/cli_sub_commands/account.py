@@ -25,6 +25,7 @@ def list(debug, pretty, yaml, xml, toml, list, profile):
 @cli_decorators.profile
 @click.argument('user-id', nargs=1, type=str, required=True)
 def info(debug, pretty, yaml, xml, toml, profile, user_id):
+    """Get user information"""
     set_debug_log_level(debug)
     cli_account.info(pretty, yaml, xml, toml, profile, user_id)
 
@@ -53,6 +54,7 @@ def create(debug, profile, user_id, password, is_admin, email, description):
 @cli_decorators.profile
 @click.argument('user-id', nargs=1, type=str, required=True)
 def delete(debug, profile, user_id):
+    """Delete a user account"""
     set_debug_log_level(debug)
     cli_account.delete(profile, user_id)
 
@@ -67,6 +69,7 @@ def delete(debug, profile, user_id):
               help='Add or remove permission action')
 @click.option('--permission-id', type=str, required=True, help='ID(s) of permission (comma separated)')
 def permission(debug, profile, user_id, action, permission_id):
+    """"Add or remove user permission"""
     set_debug_log_level(debug)
     cli_account.permission(profile, user_id, action, permission_id)
 
@@ -77,6 +80,7 @@ def permission(debug, profile, user_id, action, permission_id):
 @cli_decorators.list
 @cli_decorators.profile
 def permission_list(debug, pretty, yaml, xml, toml, list, profile):
+    """List all available permissions"""
     set_debug_log_level(debug)
     cli_account.permission_list(pretty, yaml, xml, toml, list, profile)
 
@@ -85,5 +89,6 @@ def permission_list(debug, pretty, yaml, xml, toml, list, profile):
 @cli_decorators.debug
 @cli_decorators.profile
 def password_reset(debug, profile):
+    """Reset a user password"""
     set_debug_log_level(debug)
     click.secho('TODO :-/', fg='yellow')

@@ -11,6 +11,7 @@ from yojenkins.cli.cli_utility import set_debug_log_level
 @tools.command(short_help='\tOpen browser to the documentation')
 @cli_decorators.debug
 def docs(debug):
+    """Open browser to the documentation"""
     set_debug_log_level(debug)
     click.secho('TODO :-/', fg='yellow')
 
@@ -53,6 +54,7 @@ def feature_request(debug):
 @click.option('--profile', type=str, required=False, is_flag=False, help='Filter by profile name')
 @click.option('--clear', type=bool, required=False, default=False, is_flag=True, help='Clear the history file')
 def history(debug, profile, clear):
+    """Show detailed command usage history"""
     set_debug_log_level(debug)
     cli_tools.history(profile, clear)
 
