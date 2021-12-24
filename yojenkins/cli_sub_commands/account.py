@@ -14,6 +14,7 @@ from yojenkins.cli.cli_utility import set_debug_log_level
 @cli_decorators.list
 @cli_decorators.profile
 def list(debug, pretty, yaml, xml, toml, list, profile):
+    """List all users"""
     set_debug_log_level(debug)
     cli_account.list(pretty, yaml, xml, toml, list, profile)
 
@@ -42,6 +43,7 @@ def info(debug, pretty, yaml, xml, toml, profile, user_id):
 @click.option('--email', type=str, required=False, help='User email address')
 @click.option('--description', type=str, required=False, help='User description')
 def create(debug, profile, user_id, password, is_admin, email, description):
+    """Create a user account"""
     set_debug_log_level(debug)
     cli_account.create(profile, user_id, password, is_admin, email, description)
 

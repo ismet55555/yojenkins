@@ -92,7 +92,7 @@ cls=HelpColorsGroup,
         'password-reset': 'black',
         })
 def account():
-    """Account Management"""
+    """Account/User Management"""
     pass
 from yojenkins.cli_sub_commands import account
 
@@ -169,14 +169,5 @@ from yojenkins.cli_sub_commands import tools
 ##############################################################################
 ##############################################################################
 if __name__ == "__main__":
-    """Main entry point to the entire program
-
-    Details: This file and this function will be called when running the CLI command
-
-    Args:
-        None
-
-    Returns:
-        None
-    """
+    """Main entry point to the entire program"""
     main()
