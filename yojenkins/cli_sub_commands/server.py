@@ -13,6 +13,7 @@ from yojenkins.cli.cli_utility import set_debug_log_level
 @cli_decorators.format_output
 @cli_decorators.profile
 def info(debug, pretty, yaml, toml, xml, profile):
+    """Server information"""
     set_debug_log_level(debug)
     cli_server.info(pretty, yaml, xml, toml, profile)
 
@@ -23,6 +24,7 @@ def info(debug, pretty, yaml, toml, xml, profile):
 @cli_decorators.profile
 @cli_decorators.list
 def people(debug, pretty, yaml, xml, toml, profile, list):
+    """Show all people/users on server"""
     set_debug_log_level(debug)
     cli_server.people(pretty, yaml, xml, toml, profile, list)
 
@@ -33,6 +35,7 @@ def people(debug, pretty, yaml, xml, toml, profile, list):
 @cli_decorators.profile
 @cli_decorators.list
 def queue(debug, pretty, yaml, xml, toml, profile, list):
+    """Show current job build queues on server"""
     set_debug_log_level(debug)
     cli_server.queue(pretty, yaml, xml, toml, profile, list)
     # NOTE: Maybe move to "job"?
@@ -44,6 +47,7 @@ def queue(debug, pretty, yaml, xml, toml, profile, list):
 @cli_decorators.profile
 @cli_decorators.list
 def plugins(debug, pretty, yaml, xml, toml, profile, list):
+    """Show plugin information"""
     set_debug_log_level(debug)
     cli_server.plugins(pretty, yaml, xml, toml, profile, list)
 
@@ -52,6 +56,7 @@ def plugins(debug, pretty, yaml, xml, toml, profile, list):
 @cli_decorators.debug
 @cli_decorators.profile
 def browser(debug, profile):
+    """Open server home page in web browser"""
     set_debug_log_level(debug)
     cli_server.browser(profile)
 
@@ -61,6 +66,7 @@ def browser(debug, profile):
 @cli_decorators.profile
 @click.option('--timeout', type=int, default=10, required=False, is_flag=False, help='Request timeout value')
 def reachable(debug, profile, timeout):
+    """Check if server is reachable"""
     set_debug_log_level(debug)
     cli_server.reachable(profile, timeout)
 
@@ -215,6 +221,7 @@ def server_deploy(debug, config_file, plugins_file, protocol_schema, host, port,
               help='Also remove the Docker image used for current server')
 @cli_decorators.debug
 def server_teardown(debug, remove_volume, remove_image):
+    """Remove a local development server"""
     set_debug_log_level(debug)
     cli_server.server_teardown(remove_volume, remove_image)
 

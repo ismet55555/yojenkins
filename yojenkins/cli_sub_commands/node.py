@@ -15,6 +15,7 @@ from yojenkins.cli.cli_utility import set_debug_log_level
 @click.argument('name', nargs=1, type=str, required=True)
 @click.option('-d', '--depth', type=int, default=0, required=False, help='Search depth from root directory')
 def info(debug, pretty, yaml, xml, toml, profile, name, depth):
+    """Node information"""
     set_debug_log_level(debug)
     cli_node.info(pretty, yaml, xml, toml, profile, name, depth)
 
@@ -24,6 +25,7 @@ def info(debug, pretty, yaml, xml, toml, profile, name, depth):
 @cli_decorators.profile
 @click.argument('name', nargs=1, type=str, required=True)
 def status(debug, profile, name):
+    """Node status"""
     set_debug_log_level(debug)
     click.secho('TODO :-/', fg='yellow')
 
@@ -35,6 +37,7 @@ def status(debug, profile, name):
 @cli_decorators.list
 @click.option('-d', '--depth', type=int, default=0, required=False, help='Search depth from root directory')
 def list(debug, profile, pretty, yaml, xml, toml, list, depth):
+    """List all nodes"""
     set_debug_log_level(debug)
     cli_node.list(pretty, yaml, xml, toml, list, profile, depth)
 
@@ -42,6 +45,7 @@ def list(debug, profile, pretty, yaml, xml, toml, list, depth):
 @node.command(short_help='\tPrepare a remote machine to become a node')
 @cli_decorators.debug
 def prepare(debug):
+    """Prepare a remote machine to become a node"""
     set_debug_log_level(debug)
     cli_node.prepare()
 
@@ -131,6 +135,7 @@ def create_permanent(debug, profile, **kwargs):
 @node.command(short_help='\tSetup a local or remote ephemeral/as-needed node')
 @cli_decorators.debug
 def create_ephemeral(debug):
+    """Setup a local or remote ephemeral/as-needed node"""
     set_debug_log_level(debug)
     click.secho('TODO :-/', fg='yellow')
 
@@ -140,6 +145,7 @@ def create_ephemeral(debug):
 @cli_decorators.profile
 @click.argument('name', nargs=1, type=str, required=True)
 def delete(debug, profile, name):
+    """Delete a node"""
     set_debug_log_level(debug)
     cli_node.delete(profile, name)
 
@@ -150,6 +156,7 @@ def delete(debug, profile, name):
 @click.argument('name', nargs=1, type=str, required=True)
 @click.option('--message', type=str, required=False, help='Message for disabling node')
 def disable(debug, profile, name, message):
+    """Disable a node"""
     set_debug_log_level(debug)
     cli_node.disable(profile, name, message)
 
@@ -160,6 +167,7 @@ def disable(debug, profile, name, message):
 @click.argument('name', nargs=1, type=str, required=True)
 @click.option('--message', type=str, required=False, help='Message for enabling node')
 def enable(debug, profile, name, message):
+    """Enable a node"""
     set_debug_log_level(debug)
     cli_node.enable(profile, name, message)
 
@@ -181,6 +189,7 @@ def enable(debug, profile, name, message):
               required=False,
               help='File/Filepath to write configurations to')
 def config(debug, pretty, yaml, xml, toml, json, profile, name, filepath):
+    """Get node configuration"""
     set_debug_log_level(debug)
     cli_node.config(pretty, yaml, xml, toml, json, profile, name, filepath)
 
@@ -201,6 +210,7 @@ def config(debug, pretty, yaml, xml, toml, json, profile, name, filepath):
               is_flag=True,
               help='The specified file is in JSON format')
 def reconfig(debug, profile, name, config_file, config_is_json):
+    """Reconfigure the node"""
     set_debug_log_level(debug)
     cli_node.reconfig(profile, name, config_file, config_is_json)
 
@@ -209,5 +219,6 @@ def reconfig(debug, profile, name, config_file, config_is_json):
 @cli_decorators.debug
 @cli_decorators.profile
 def logs(debug, profile):
+    """Node logs"""
     set_debug_log_level(debug)
     click.secho('TODO :-/', fg='yellow')

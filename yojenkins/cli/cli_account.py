@@ -1,7 +1,6 @@
 """Account Menu CLI Entrypoints"""
 
 import logging
-import sys
 
 import click
 
