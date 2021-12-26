@@ -11,15 +11,18 @@ python_version = "3"
 
 [dev-packages]
 bump2version = "*"
+macholib = {version = "*", platform_system = "== 'Darwin'"}
+myst_parser = "*"
 pre-commit = "*"
 pyinstaller = "*"
 pylint = "*"
 pytest = "*"
 setuptools = "*"
+sphinx = "*"
+sphinx_rtd_theme = "*"
 twine = "*"
 wheel = "*"
 yapf = "*"
-macholib = {version = "*", platform_system = "== 'Darwin'"}
 yojenkins = {editable = true, path = "."}
 
 [packages]
