@@ -38,5 +38,8 @@ With `yojenkins` you can manage:
 - **Other tools and functions:** *Run groovy scripts remotely, run custom REST calls, setup a shared library, view command usage history, and more*
 
 !!! caution "Remember"
-    *This project is in **alpha** release phase. Please report any issues, odd behavior, or suggestions. Read more about the [release cycle](https://en.wikipedia.org/wiki/Software_release_life_cycle).*
+    This project is in **alpha** release phase. Please report any issues, odd behavior, or suggestions. 
+    Read more about the [release cycle](https://en.wikipedia.org/wiki/Software_release_life_cycle).
     See [Bug Reports](#bug-reports) and [Feature Requests](#feature-requests)
+    
+    This does not mean that this project is not usable. It just means that the project is still in development.
