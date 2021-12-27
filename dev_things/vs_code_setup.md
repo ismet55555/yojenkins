@@ -1,6 +1,6 @@
 # Visual Studio Code Setup
 
-Here included are some general suggestions for setting up your VS Code envirnoment in order
+Here included are some general suggestions for setting up your VS Code environment in order
 to operate and contribute on this project. *Note that these are mare suggestions, everyone tends
 to have their own tools and ways of doing things.*
 

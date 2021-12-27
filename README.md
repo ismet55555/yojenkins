@@ -51,7 +51,7 @@ With `yojenkins` you can manage:
 
 
 
-**NOTE:** *This project is in **pre-alpha** release phase. Please report any issues, odd behavior, or suggestions. Read more about the [release cycle](https://en.wikipedia.org/wiki/Software_release_life_cycle).*
+**NOTE:** *This project is in **alpha** release phase. Please report any issues, odd behavior, or suggestions. Read more about the [release cycle](https://en.wikipedia.org/wiki/Software_release_life_cycle).*
 See [Bug Reports](#bug-reports) and [Feature Requests](#feature-requests)
 
 <!-- &nbsp; -->

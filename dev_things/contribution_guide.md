@@ -40,9 +40,7 @@ Also, note that as of now there are no sufficient tests setup (ie. pytest, unite
     - `python3 -m pip install --upgrade pip setuptools virtualenv pipenv`
 
 5. Install pipenv with development environment
-    - `pipenv install --deploy --three --dev`
-      -  `--python 3.X` - If needed, specify the exact python version to use
-      -  `--editable .` - This is already included in `Pipenv` and will allow to actively run the project with the most recent changes
+    - `pipenv sync --three --dev`
 
 6. Check that all packages are installed
     - `pipenv graph`
@@ -69,7 +67,7 @@ Also, note that as of now there are no sufficient tests setup (ie. pytest, unite
 
 5. `git` add and commit as you like, adding good and useful commit messages
 
-6. Once all changes and interations are complete, increment and tag the build version
+6. Once all changes and integrations are complete, increment and tag the build version
     - `bumpversion patch`
 
 6. Push changes to your development branch
