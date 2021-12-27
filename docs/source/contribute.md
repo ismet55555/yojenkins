@@ -17,6 +17,16 @@ sections on this page.
 
 ---
 
+## Roadmap
+
+!!! note
+    The roadmap is currently in flux and is yet to be refined
+
+Please see the project `TODO` and `FIXME` projects on GitHub
+
+- [**TODO**](https://github.com/ismet55555/yojenkins/projects/1) - Any currently outstanding tasks
+- [**FIXME**](https://github.com/ismet55555/yojenkins/projects/2) - Any known issues
+
 ## Forking and Locally Cloning Project
 
 The purpose of forking this project GitHub repository is to create a local copy of the project,
@@ -151,8 +161,8 @@ The workflow for running `pre-commit` checks is typically as follows:
 
 ## Unit Testing
 
-Currently, there are no unit tests. This is a big tech debt of this project and caused mainly by
-the we mainly focused on the development of `yojenkins` and its various features.
+Currently, there are no unit tests. This big tech debt is mainly caused by
+the the focus so far being on the development of `yojenkins` and its various features.
 
 However, the outline of a unit test framework is in place. The directory `tests` holds the outline
 of a [`pytest`](https://docs.pytest.org/) framework.
@@ -236,6 +246,7 @@ encourage even beginner level developers to hopefully contribute to this project
 - **Better TOML** - TOML Language Support
 - **YAML** - YAML Language Support
 - **XML** - XML Language Support
+- **Markdown Preview Enhancements** - Live Markdown File Preview
 - **Git Graph** - Clear view of git history
 - **GitLens** - All kinds of useful git tools
 - **Pylance** - Code assistance for Python
@@ -252,10 +263,10 @@ VS Code setting can be changed by editing the settings JSON file.
 
 !!! caution "Note"
     When adding or removing JSON settings, do not forget to add commas and quotes
-    appropriately as other settings are formatted in the JSON.
+    appropriately as all the other settings are formatted in the JSON.
 
 - **User Settings**
-    - Settings applied glabally to the user
+    - Settings applied globally to the user
     - To edit: `Ctrl + Shift + P` type: `Preferences: Open Settings (JSON)`
 - **Workspace Settings**
     - Settings applied for a current workspace or project
@@ -284,7 +295,7 @@ VS Code setting can be changed by editing the settings JSON file.
 
 - Add a Vertical Line at Line Length / Column Position
 ```json
-    "editor.rulers": [120],
+    "editor.rulers": [100],
 ```
 
 

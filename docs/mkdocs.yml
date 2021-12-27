@@ -26,11 +26,15 @@ copyright: Copyright 2022 Ismet Handzic - GNU General Public License v3.0
 
 # Settings
 docs_dir: source
+edit_uri: edit/master/docs/source/
 markdown_extensions:
     - toc:
         permalink: True
     - admonition
-theme: readthedocs
+theme:
+    name: readthedocs
+    nav_style: dark
+    prev_next_buttons_location: bottom
 
 # Navigation Bar
 nav:

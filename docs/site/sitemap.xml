@@ -16,6 +16,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://yojenkins.com/docker_install/</loc>
+         <lastmod>2021-12-27</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://yojenkins.com/feature_request/</loc>
          <lastmod>2021-12-27</lastmod>
          <changefreq>daily</changefreq>

@@ -4,6 +4,57 @@
 
 ---
 
+
+## Menu Overview
+
+TODO
+
+
+## Authentication
+
+- Show the order of how it looks for authentication
+
+
+
+## Output Formatting
+
+TODO
+
+
+
+## Live Monitoring
+
+TODO
+
+
+
+## Tools
+
+TODO
+
+
+### Command History
+
+TODO
+
+### Generic REST Server Requests
+
+TODO
+
+
+### Run Groovy Script on Server
+
+TODO
+
+
+### Setup Jenkins Shared Library
+
+TODO
+
+
+
+
+
 !!! tip "Remember"
     For help on any `yojenkins` command and sub-command, use the `--help` option
 
@@ -15,22 +66,27 @@
 ## Local Jenkins Server Setup Using Docker
 
 `yojenkins` offers an easy way to quickly set up a local Jenkins server within a Docker container.
-This containerized server is set up and ready to go to tinker with `yojenkins`.
+This containerized server is set up and ready to go to use to test `yojenkins`.
 
 !!! warning "Warning"
-    The locally containerized server set up using `server-deploy` is for development, training, or
-    testing purposes only. **Do not** use this server for production use.
+    The locally containerized server set up using `server-deploy` is for development, training,
+    demonstration, or testing purposes only. **Do not use this server for production use.**
 
 !!! note "Note"
-    You must have Docker installed and running.
-    See [Docker installation guide](dev_things/docker.md) on how to install Docker.
+    For the locally containerized server to work, you must have Docker installed and running.
+    See [Docker installation guide](docker_install.md) on how to install Docker.
 
 
-Run the following `yojenkins` command to set up a local and containerized Jenkins server:
+### Deploying the Local Jenkins Server
+
+Run the following `yojenkins` command to set up a local and containerized Jenkins server.
 
 ```bash
 yojenkins server server-deploy
 ```
+
+If this is the very first time running this command, it will take a minute or two to complete.
+Any subsequent time will be faster since the base image has already been downloaded
 
 Note that this command can be run without any specified options or arguments. All default
 options should work out of the box. However, you can use the `--help` option to see all available

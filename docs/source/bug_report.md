@@ -11,14 +11,13 @@ Please report bugs and odd behaviors with:
 - Online at [GitHub Issues](https://github.com/ismet55555/yojenkins/issues/new?assignees=&labels=&template=bug_report.md&title=)
 - `yojenkins tools bug-report`
 
-If possible, please include the command that caused the issue.
-You can do this by running the command with the `--debug` option.
 
-## `--debug` Output
+## Include `--debug` Output
 
 If possible, when reporting a bug, please include the command that caused
 the issue in debug mode. You can do this by running the command
-with the `--debug` option.
+with the `--debug` option. This will allow for clearer communication of what was going on
+and a somewhat easier time resolving the issue.
 
 For example, below is the output of a failed `yojenkins` command in debug mode.
 
@@ -80,3 +79,8 @@ Possible solutions:
    - Fix yo network connection to server
    - Check if the server container or container engine is up and running
 ```
+
+
+!!! danger
+    The `--debug` option is designed such that it will not expose any sensitive information, however
+    please make sure that you censor any shown information that you do not want appear in public!

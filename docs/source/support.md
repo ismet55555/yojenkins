@@ -13,8 +13,8 @@
 
 As of now, your financial sponsorship is important to me because it gives me the affirmation to
 keep pushing code into the public view. Although these sponsorships probably will not make me a
-ton of money or let me quit my day job any time soon, they will give me that additional
-motivation and drive to contribute to the open source community!
+ton of money or let me quit my day job any time soon, it will give me the additional
+motivation and drive to contribute to the open source community.
 
 
 
@@ -34,13 +34,13 @@ The following methods are available to financially support this project:
 
 Depending on the size of the donation, you or your company are able to get the following:
 
-- **TODO: Add a list of what you get back**
+- **TODO: Add a list of what you get back, a table**
 
 
 ### What Will Happen to Your Money?
 
-As of now, with your sponsorship, I will probably buy more tea and various snacks, or just
-financially sponsor someone else's project that I believe is worth sponsoring.
+As of now, with your sponsorship, I will probably buy more tea and various snacks. Or I will just
+sponsor someone else's project that I believe is worth sponsoring.
 
 
 
@@ -49,9 +49,9 @@ financially sponsor someone else's project that I believe is worth sponsoring.
 Typically, getting any kind of project out there and somewhat popular is a challenge these days.
 It would be pretty awesome if you could help me out by spreading the word about `yojenkins`.
 This not only helps me to keep the project alive, but also helps me find out how people
-use it and what they would like to see in the future.
+use it and what they would like to see in the future of `yojenkins`.
 
 Spread the word about `yojenkins` though social media, blogs, and other channels.
-This includes **Twitter, Facebook, LinkedIn, Medium, Reddit, or any other social media**
+This includes **Twitter, Facebook, LinkedIn, Medium, Reddit, or any other public or private social media**
 
-Simply link the `yojenkins` GitHub repository to a post.
+Simply link the `yojenkins` GitHub repository to a social media post.

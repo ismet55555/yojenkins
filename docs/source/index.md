@@ -1,16 +1,8 @@
 # Welcome to `yojenkins` Documentation
 
-- [Quick Start](quick_start.md)
-- [Installation](installation.md)
-- [Jenkins Plugin Requirements](requirements.md)
-- [Usage](usage.md)
-- [Bug Report](bug_report.md)
-- [Feature Request](feature_request.md)
-- [Contribute to This Project!](contribute.md)
-- [Support This Project!](support.md)
-- [License](license.md)
-
----
+<p align="center">
+<img src="logo_final.png" alt="drawing" width="150"/>
+</p>
 
 `yojenkins` is a cross-platform command line interface (CLI) tool to monitor,
 manage, and have fun with a Jenkins server. It makes it possible to interact
@@ -38,8 +30,21 @@ With `yojenkins` you can manage:
 - **Other tools and functions:** *Run groovy scripts remotely, run custom REST calls, setup a shared library, view command usage history, and more*
 
 !!! caution "Remember"
-    This project is in **alpha** release phase. Please report any issues, odd behavior, or suggestions. 
+    This project is in **alpha** release phase. Please report any issues, odd behavior, or suggestions.
     Read more about the [release cycle](https://en.wikipedia.org/wiki/Software_release_life_cycle).
     See [Bug Reports](#bug-reports) and [Feature Requests](#feature-requests)
-    
+
     This does not mean that this project is not usable. It just means that the project is still in development.
+
+
+<h3>Site Content</h3>
+
+- [Quick Start](quick_start.md)
+- [Installation](installation.md)
+- [Jenkins Plugin Requirements](requirements.md)
+- [Usage](usage.md)
+- [Bug Report](bug_report.md)
+- [Feature Request](feature_request.md)
+- [Contribute to This Project!](contribute.md)
+- [Support This Project!](support.md)
+- [License](license.md)
