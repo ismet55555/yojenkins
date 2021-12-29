@@ -1,6 +1,6 @@
 # Contribute to This Project
 
-This project is an on-going effort, slowly adding various features and improvements.
+`yojenkins` is a Python project that is an on-going effort, slowly adding various features and improvements.
 If you would like to contribute, please fork the project, make your changes,
 and submit a pull request.
 
@@ -22,7 +22,7 @@ sections on this page.
 !!! note
     The roadmap is currently in flux and is yet to be refined
 
-Please see the project `TODO` and `FIXME` projects on GitHub
+Please see the `TODO` and `FIXME` kanban board for this projects on GitHub
 
 - [**TODO**](https://github.com/ismet55555/yojenkins/projects/1) - Any currently outstanding tasks
 - [**FIXME**](https://github.com/ismet55555/yojenkins/projects/2) - Any known issues
@@ -30,9 +30,9 @@ Please see the project `TODO` and `FIXME` projects on GitHub
 ## Forking and Locally Cloning Project
 
 The purpose of forking this project GitHub repository is to create a local copy of the project,
-make changes to it, and submit a pull request into the original repository.
+make changes to it, and submit a pull request of your work into the original repository.
 
-Here is a guide by GitHub on how to fork and clone a project in order to work on it locally.
+Here is a guide by GitHub on how to fork and clone a project:
 
 - [Fork and Clone a GitHub Repository](https://docs.github.com/en/get-started/quickstart/fork-a-repo)
 
@@ -51,7 +51,7 @@ root directory of the project.
     | Ubuntu            | `sudo apt update && apt-get install -y python3-dev python3-pip libasound2-dev` |
     | CentOS            | `sudo yum update && yum install -y python3-devel gcc alsa-lib-devel`           |
 
-2.  Ensure Python is installed and has compatible version
+2.  Ensure Python is installed and is a compatible version for this project
     - `python --version`
     - If it is not, install it: [Guide](https://realpython.com/installing-python/)
 3.  Ensure that `pip` is installed
@@ -59,18 +59,29 @@ root directory of the project.
     - If it is not, install it: [Guide](https://pip.pypa.io/en/stable/installation/)
 4.  Upgrade tooling and install `pipenv`
     - `python -m pip install --upgrade pip setuptools wheel virtualenv pipenv`
-5. Install pipenv with development environment
+5. With `pipenv`, set up the development virtual environment
     - `pipenv sync --three --dev`
-6. Get into the virtual environment
+6. Get into (activate) the virtual environment
     - `pipenv shell`
-7. Test if `yojenkins` starts up
+7. Test if `yojenkins` starts up without any errors
     - `yojenkins --help`
 
 
 
 ## Making Changes
 
-1. Create a branch form the `main` branch
+!!! tip "`git`"
+    This project uses the ["trunk-based"](https://www.atlassian.com/continuous-delivery/continuous-integration/trunk-based-development) 
+    `git` version control workflow. Each time you make a change, you should create a new branch 
+    and push your changes to the `main` branch.
+
+    These days you do not have to be a `git` terminal master in order to get going with a `git`
+    source controlled project. Depending on your preferences, there are many visual UI-based `git`
+    clients such as [GitHub Desktop](https://desktop.github.com/),
+    [SourceTree](https://www.sourcetreeapp.com/), or even through the Visual Studio Code IDE.
+
+
+1. Create a new `git` branch form the `main` branch
     - `git checkout main`
     - `git pull`
     - `git checkout -b <YOUR NEW GIT BRANCH NAME>`
@@ -93,11 +104,6 @@ root directory of the project.
 10. On GitHub, open a new pull request into the original repository
 
 
-!!! tip "`git`"
-    These days you do not have to be a `git` terminal master in order to get going with a `git`
-    source controlled project. Depending on your preferences, there are many visual UI-based `git`
-    clients such as [GitHub Desktop](https://desktop.github.com/),
-    [SourceTree](https://www.sourcetreeapp.com/), or even through the Visual Studio Code IDE.
 
 
 
