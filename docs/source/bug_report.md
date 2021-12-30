@@ -34,7 +34,7 @@ yojenkins server info --debug
 
 [  TIME  ] [ MS ] [FILENAME              :  LN] MESSAGE
 ---------------------------------------------------------------------------
-[18:49:09] [505 ] [cli_utility.py          :  64] Tool version: 0.0.53
+[18:49:09] [505 ] [cli_utility.py          :  64] Tool version: 0.0.00
 [18:49:09] [506 ] [cli_utility.py          :  76] System information:
 [18:49:09] [506 ] [cli_utility.py          :  77]     - System:    Linux
 [18:49:09] [506 ] [cli_utility.py          :  78]     - Release:   5.11.0-43-generic

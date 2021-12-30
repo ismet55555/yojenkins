@@ -43,6 +43,7 @@ nav:
     - Installation: installation.md
     - Jenkins Plugin Requirements: requirements.md
     - Usage: usage.md
+    - CLI Outline: cli_outline.md
     - Bug Report: bug_report.md
     - Feature Request: feature_request.md
     - Contribute to This Project!: contribute.md

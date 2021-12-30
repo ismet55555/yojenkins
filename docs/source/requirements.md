@@ -14,4 +14,4 @@ In order to check if a Jenkins plugin is installed, or to install a plugin, you 
 
 - In the Jenkins web user interface, go to
     - **Manage Jenkins > Manage Plugins > Installed OR Available**
-- `yojenkins server plugins --pretty`
+- `yojenkins server plugins --pretty --list`

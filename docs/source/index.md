@@ -29,10 +29,12 @@ With `yojenkins` you can manage:
 - **Steps:** *Get info*
 - **Other tools and functions:** *Run groovy scripts remotely, run custom REST calls, setup a shared library, view command usage history, and more*
 
+See the CLI command outline for `yojenkins`: [CLI Outline](cli_outline.md)
+
 !!! caution "Remember"
     This project is in **alpha** release phase. Please report any issues, odd behavior, or suggestions.
     Read more about the [release cycle](https://en.wikipedia.org/wiki/Software_release_life_cycle).
-    See [Bug Reports](#bug-reports) and [Feature Requests](#feature-requests)
+    See [Bug Reports](bug_report.md) and [Feature Requests](feature_request.md)
 
     This does not mean that this project is not usable. It just means that the project is still in development.
 
@@ -43,6 +45,7 @@ With `yojenkins` you can manage:
 - [Installation](installation.md)
 - [Jenkins Plugin Requirements](requirements.md)
 - [Usage](usage.md)
+- [CLI Outline](cli_outline.md)
 - [Bug Report](bug_report.md)
 - [Feature Request](feature_request.md)
 - [Contribute to This Project!](contribute.md)
