@@ -77,19 +77,24 @@ def failures_out(messages: list) -> None:
 def load_contents_from_local_file(file_type: str, local_file_path: str) -> Dict:
     """Loading a local file contents
 
+    ### TODO: Add default option to load file as plain text
+
     Parameters:
         file_type (str)       : Type of file to be loaded ie. 'yaml', 'toml', 'json'
         local_file_path (str) : Path to a local TOML file to be loaded
     Returns:
         file_contents (dict) : The contents of file
     """
-    # TODO: Add default option to load file as plain text
 
     file_type = file_type.lower()
 
     # Check if file exists
     if not os.path.isfile(local_file_path):
         fail_out(f'Failed to find file: {local_file_path}')
+
+    # Check if file is completely empty
+    if os.stat(local_file_path).st_size == 0:
+        return {}
 
     logger.debug(f"Loading specified local .{file_type} file: '{local_file_path}' ...")
     try:
@@ -99,7 +104,7 @@ def load_contents_from_local_file(file_type: str, local_file_path: str) -> Dict:
             elif file_type == 'toml':
                 file_contents = toml.load(open_file)
             elif file_type == 'json':
-                file_contents = json.load(open_file)
+                file_contents = json.loads(open_file.read())
             else:
                 logger.debug(f"Unknown file type passed: '{file_type}'")
                 raise ValueError(f"Unknown file type passed: '{file_type}'")
@@ -112,7 +117,7 @@ def load_contents_from_local_file(file_type: str, local_file_path: str) -> Dict:
 def load_contents_from_remote_file_url(file_type: str, remote_file_url: str, allow_redirects: bool = True) -> Dict:
     """Loading a remote yaml file contents over HTTP
 
-    # FIXME: Make it able to load toml, json, and yaml file types
+    ### FIXME: Make it able to load toml, json, and yaml file types
 
     Args:
         file_type (str)       : Type of file to be loaded ie. 'yaml', 'toml', 'json'

@@ -5,11 +5,34 @@
 ---
 
 
-## Menu Overview and Navigation
+## CLI Basics
+
+As with other command line interface (CLI) tools, the format of a typical `yojenkins` CLI 
+interaction looks like this:
+
+```text
+yojenkins <command> <subcommand> [options] [ARGUMENTS]
+```
+
+Here `[optoins]` are flags that do not have to be specified. For example, `--yaml` is a common
+option. `[ARGUMENTS]` are documneted as uppder case and must be specified for the command.
+For example, `yojenkins folder info [OPTIONS] FOLDER`, where folder name/URL are required.
+
+To look up any command and sub-command help documentation, supplement the command with `--help`.
+For example, `yojenkins auth configure --help`
+
+!!! tip
+    To troubleshoot any issues or to see what `yojenkins` is doing behind the scenes, use the `--debug` option
+
+
+
+## Menu Overview
 
 The following is the main menu displayed when running `yojenkins --help`. 
 
 ```txt
+❯ yojenkins --help
+
                         YOJENKINS (Version: 0.0.00)
 
   yojenkins is a tool that is focused on interfacing with a Jenkins server from
@@ -47,6 +70,8 @@ For example, `yojenkins server` will display the server sub-menu.
 
 
 ```txt
+❯ yojenkins server --help
+
 Usage: yojenkins server [OPTIONS] COMMAND [ARGS]...
 
   Server Management
@@ -72,10 +97,15 @@ In turn, the sub-menu commands can be accessed by entering `yojenkins server` fo
 sub-menu command name. For example, `yojenkins server browser` will open the Jenkins server 
 home page in the browser.
 
+!!! note
+    Some commands may be greyed out. These commands are not yet implemented.
+
 Of course you can view the help menu for the sub-menu's commands by adding `--help`.
 For example, `yojenkins server browser --help` will display the help menu for the `browser`
 
 ```txt
+❯ yojenkins server browser --help
+
 Usage: yojenkins server browser [OPTIONS]
 
   Open server home page in web browser
@@ -85,6 +115,7 @@ Options:
   --profile TEXT  Authentication profile for command
   --help          Show this message and exit.
 ```
+
 
 
 ## Authentication
@@ -265,19 +296,132 @@ If none of the above are satisfied, `yojenkins` will prompt for Jenkins server c
 
 ## General Operation
 
-TODO
+Piping into other commands like `>`, `grep`, `jq`, `less`, `curl`, etc. is supported.
+
+```text
+yojenkins <command> <subcommand> [options] [ARGUMETNS]
+```
+
+!!! tip
+    For help on any `yojenkins` command and sub-command, use the `--help` option
+
 
 
 
 ## Output Formatting
 
-TODO
+Often times you will want to see the output of a command in a different format. 
+For example, you may want to see the output of a `yojenkins server info` command in a different 
+format than the default.
 
+The following output formats are supported:
+
+- JSON
+- YAML
+- TOML
+- XML
+
+Any output with any format can be supplemented with `--pretty` to make the output more readable.
+
+Here are some examples of how different output formats looks like using the `yojenkins account list` command:
+
+**Default**
+```text
+❯ yojenkins account list
+[{"id": "admin", "me": true, "fullName": "admin", "description": "", "absoluteUrl": "http://localhost:8080/user/admin", "userFolder": {"directory": true, "file": false, "freeSpace": 18083065856, "invalid": false, "canonicalPath": "/var/jenkins_home/users/admin_6787401061636913615", "usableSpace": 16512360448, "hidden": false, "totalSpace": 30525820928, "path": "/var/jenkins_home/users/admin_6787401061636913615", "name": "admin_6787401061636913615", "prefixLength": 1, "absolute": true, "absolutePath": "/var/jenkins_home/users/admin_6787401061636913615", "parent": "/var/jenkins_home/users"}, "isAdmin": true, "isManager": true, "isSystemRead": true, "canRead": true, "canWrite": true, "canUpdate": true, "canDelete": true, "canConfigure": true, "authorities": [], "lastGrantedAuthoritiesChanged": "Mon Nov 15 14:19:08 UTC 2021"}]
+```
+
+**Pretty Formatting**
+```text
+❯ yojenkins account list --pretty
+
+[
+    {
+        "absoluteUrl": "http://localhost:8080/user/admin",
+        "authorities": [],
+        --- SNIP ---
+        "lastGrantedAuthoritiesChanged": "Mon Nov 15 14:19:08 UTC 2021",
+        "me": true,
+        "userFolder": {
+            "absolute": true,
+            "absolutePath": "/var/jenkins_home/users/admin_6787401061636913615",
+            --- SNIP ---
+            "totalSpace": 30525820928,
+            "usableSpace": 16512339968
+        }
+    }
+]
+```
+
+**YAML**
+```text
+❯ yojenkins account list --yaml
+
+- absoluteUrl: http://localhost:8080/user/admin
+  authorities: []
+  --- SNIP ---
+  lastGrantedAuthoritiesChanged: Mon Nov 15 14:19:08 UTC 2021
+  me: true
+  userFolder:
+    absolute: true
+    absolutePath: /var/jenkins_home/users/admin_6787401061636913615
+    --- SNIP ---
+    totalSpace: 30525820928
+    usableSpace: 16620826624
+```
+
+**TOML**
+```text
+❯ yojenkins account list --toml
+
+[[item]]
+id = "admin"
+me = true
+--- SNIP ---
+authorities = []
+lastGrantedAuthoritiesChanged = "Mon Nov 15 14:19:08 UTC 2021"
+
+[item.userFolder]
+directory = true
+file = false
+freeSpace = 18191482880
+--- SNIP ---
+absolutePath = "/var/jenkins_home/users/admin_6787401061636913615"
+parent = "/var/jenkins_home/users"
+```
+
+**XML**
+```text
+❯ yojenkins account list --xml --pretty
+
+<?xml version="1.0" ?>
+<None>
+        <item>
+                <id>admin</id>
+                <me>True</me>
+                <fullName>admin</fullName>
+                <description/>
+                <absoluteUrl>http://localhost:8080/user/admin</absoluteUrl>
+                <userFolder>
+                        <directory>True</directory>
+                        --- SNIP ---
+                        <absolutePath>/var/jenkins_home/users/admin_6787401061636913615</absolutePath>
+                        <parent>/var/jenkins_home/users</parent>
+                </userFolder>
+                <isAdmin>True</isAdmin>
+                --- SNIP ---
+                <authorities/>
+                <lastGrantedAuthoritiesChanged>Mon Nov 15 14:19:08 UTC 2021</lastGrantedAuthoritiesChanged>
+        </item>
+</None>
+```
 
 
 ## Live Monitoring
 
-TODO
+Sometimes you would like to keep a watch on a Job, monitoring the status of its builds, or a
+specific Build, monitoring its steps or status. `yojenkins` makes this possible with a CLI-based
+user interface for job and build monitoring.
 
 ### Job Monitor
 
@@ -291,36 +435,112 @@ TODO
 
 ## Tools
 
-TODO
+### Command History
 
+By default, each time you run a `yojenkins` command, that command is logged to the `~/.yojenkins/history` file.
+If the file does not exist, it will be created.
 
-### Working with Command History
+This file is essentially a JSON file which holds the following meta data for each command:
 
-TODO
+1. The profile used for the command
+2. `yojenkins` path
+3. Command arguments
+4. Timestamp
+5. Formatted datatime
+6. The version of the `yojenkins` used to run the command
+
+To show the history of commands, run `yojenkins tools history`. To only show the history of a 
+specific profile, run `yojenkins tools history --profile <PROFILE NAME>`.
+
+Here is a sample output of the `yojenkins tools history` command:
+
+```text
+❯ yojenkins tools history
+
+[default] [Tuesday, December 28, 2021 10:34:58] [v0.0.53] - yojenkins server info --debug
+[default] [Tuesday, December 28, 2021 10:35:54] [v0.0.53] - yojenkins account list
+[default] [Tuesday, December 28, 2021 10:36:15] [v0.0.53] - yojenkins credential get-template user-pass --json --pretty
+[demo-profile] [Tuesday, December 28, 2021 10:38:45] [v0.0.53] - yojenkins account list
+[demo-profile] [Tuesday, December 28, 2021 10:39:05] [v0.0.53] - yojenkins server info
+```
+
+Clearing the entire `yojenkins` history file, run `yojenkins tools history --clear`.
+
 
 ### Generic REST Server Requests
 
-TODO
+Sometimes `yojenkins` does not support a specific request to the server. For example, if there is
+a new or complex REST request you may want to use, you can use the `yojenkins tools rest-request` command
+
+The convenience of this command is that it will automatically use your authentication profile to
+make the request. It will know to use the host, username, and password from your authentication profile.
+
+For example, given the following authentication profile:
+
+```toml
+[default]
+jenkins_server_url = "https://cool-company.jenkins.com"
+username = "id236"
+api_token = "11fb9cb61d34FAKE73f82763cf8879c79a"
+active = true
+```
+
+The command `yojenkins tools rest-request "me/api/json"` will make a `GET` request to the Jenkins 
+server at `http://localhost:8080/me/api/json` using the username and API token from the 
+authentication profile.
+
+This command supports the following options:
+
+- `--request-type` - Type of REST request. Default is `GET`.
+- `--raw` - If set, the response will be printed as raw text. The response will not be parsed as JSON.
+- `--clean-html` - If set, the response will be cleaned of HTML tags. This is useful if the response is in HTML format and you only want the content.
+
 
 
 ### Run Groovy Script on Server
 
-TODO
+Often times you want to run a Groovy script on the Jenkins server. The `yojenkins tools run-script` 
+command allows you to do just that.
 
+This may be useful for Jenkins administrative tasks or simply running Groovy test scripts and tutorials. 
+
+You can specify the Groovy script by using one of the following options:
+
+1. `--text <SCRIPT TEXT>`
+    - The Groovy script is specified as a string within the command.
+    - *Example:* `yojenkins tools run-script --text 'println("Hello fun world")'`
+2. `--file <SCRIPT FILE PATH>`
+    - The Groovy script is specified as a file path.
+    - *Example:* `yojenkins tools run-script --file /path/to/script.groovy`
+
+!!! attention
+    In order to run a Groovy script, you must have the appropriate permissions on the Jenkins server
+    for the user account you are using.
 
 ### Setup Jenkins Shared Library
 
-TODO
+Jenkins allows users to share Groovy code libraries between jobs and pipelines. This is useful 
+in that projects and pipelines will often share the same code. For example, a piece of 
+code used to report test results may be used in more than one pipeline without copy-pasting 
+it into each pipeline. [Shared libraries](https://www.jenkins.io/doc/book/pipeline/shared-libraries/) 
+are a way to share code between projects and pipelines.
 
+!!! danger
+    Jenkins sharable libraries available to any Pipeline jobs running on this system. These libraries will 
+    be fully trusted, meaning they run code without “sandbox” restrictions and may use @Grab.
+    So be careful what code is being added to a Jenkins shared library.
 
+`yojenkins` provides a command to setup a shared library using the following command:
 
+```text
+yojenkins tools shared-lib-setup
+```
 
+This command provides options to specify shared library setup options such as the git repository
+in which the shared library is stored, git branch name, and if the shared library is loaded
+implicitly.
 
-!!! tip "Remember"
-    For help on any `yojenkins` command and sub-command, use the `--help` option
-
-!!! tip "Remember"
-    To troubleshoot any issues or to see what `yojenkins` is doing behind the scenes, use the `--debug` option
+*As of now, the only git repository that is supported by `yojenkins` is GitHub.*
 
 
 
