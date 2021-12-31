@@ -29,12 +29,14 @@ yojenkins
     |
     |
     |-- build       Manage builds
-    |     |--- configure  Configure authentication
-    |     |--- show       Show the local credentials profiles
-    |     |--- token      Generate authentication API token
-    |     |--- user       Show current user information
-    |     |--- verify     Check if credentials can authenticate
-    |     |--- wipe       Wipe all credentials for this device
+    |     |--- abort    Abort build
+    |     |--- browser  Open build in web browser
+    |     |--- delete   Delete build
+    |     |--- info     Build information
+    |     |--- logs     Get build logs
+    |     |--- monitor  Start monitor UI
+    |     |--- stages   Get build stages
+    |     |--- status   Build status text/label
     |
     |
     |-- credential  Manage credentials
@@ -87,7 +89,7 @@ yojenkins
     |-- node        Manage nodes
     |     |--- config            Get node configuration
     |     |--- create-ephemeral  Setup a local or remote ephemeral/as-needed node
-    |     |--- create-permanent  Setup a local or remote persistant node
+    |     |--- create-permanent  Setup a local or remote persistent node
     |     |--- delete            Delete a node
     |     |--- disable           Disable a node
     |     |--- enable            Enable a node
@@ -131,5 +133,5 @@ yojenkins
           |--- history           Show detailed command usage history
           |--- rest-request      Send a generic Rest request to server
           |--- run-script        Run Groovy script on server, return result
-          |--- shared-lib-setup  Set up a Jenkins shared library 
+          |--- shared-lib-setup  Set up a Jenkins shared library
 ```

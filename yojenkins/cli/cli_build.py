@@ -97,7 +97,10 @@ def status(profile: str, job: str, build_number: int, build_url: str, latest: bo
         data = yj_obj.build.status_text(build_url=build_url, job_name=job, build_number=build_number, latest=latest)
 
     # Color for output
-    if data.upper() in Status.UNKNOWN.value:
+    if data in Status.NONE.value:
+        data = "NONE"
+        output_fg = 'black'
+    elif data.upper() in Status.UNKNOWN.value:
         output_fg = 'black'
     elif data.upper() in Status.QUEUED.value:
         output_fg = 'yellow'

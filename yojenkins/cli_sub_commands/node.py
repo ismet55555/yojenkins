@@ -50,7 +50,7 @@ def prepare(debug):
     cli_node.prepare()
 
 
-@node.command(short_help='\tSetup a local or remote persistant node')
+@node.command(short_help='\tSetup a local or remote persistent node')
 @cli_decorators.debug
 @cli_decorators.profile
 @click.argument('name', nargs=1, type=str, required=True)

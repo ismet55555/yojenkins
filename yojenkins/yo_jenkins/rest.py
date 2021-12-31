@@ -249,6 +249,10 @@ class Rest:
         if response.status_code in [401, 403, 405]:
             logger.debug('PERMISSION DENIED - Request denied due to insufficient privileges')
 
+        # Check conflict
+        if response.status_code in [409]:
+            logger.debug('CONFLICT - Request failed due to conflict. Possible duplicate entry')
+
         # If a head request, only return headers
         if request_type.lower() == 'head':
             return {}, response.headers, response.ok

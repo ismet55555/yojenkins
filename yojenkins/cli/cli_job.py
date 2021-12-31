@@ -228,20 +228,17 @@ def config(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_
     """
     yj_obj = cu.config_yo_jenkins(profile)
     if cu.is_full_url(job):
-        data, write_success = yj_obj.job.config(filepath=filepath,
-                                                job_url=job,
-                                                opt_json=opt_json,
-                                                opt_yaml=opt_yaml,
-                                                opt_toml=opt_toml)
+        data = yj_obj.job.config(filepath=filepath,
+                                 job_url=job,
+                                 opt_json=opt_json,
+                                 opt_yaml=opt_yaml,
+                                 opt_toml=opt_toml)
     else:
-        data, write_success = yj_obj.job.config(filepath=filepath,
-                                                job_name=job,
-                                                opt_json=opt_json,
-                                                opt_yaml=opt_yaml,
-                                                opt_toml=opt_toml)
-    if not write_success:
-        click.secho('failed to write to file', fg='bright_red', bold=True)
-        sys.exit(1)
+        data = yj_obj.job.config(filepath=filepath,
+                                 job_name=job,
+                                 opt_json=opt_json,
+                                 opt_yaml=opt_yaml,
+                                 opt_toml=opt_toml)
 
     # Converting XML to dict
     # data = json.loads(json.dumps(xmltodict.parse(data)))
