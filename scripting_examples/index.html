@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="Ismet Handzic">
+  <link rel="canonical" href="https://yojenkins.com/scripting_examples/">
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Scripting Examples - yojenkins</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Scripting Examples";
+    var mkdocs_page_input_path = "scripting_examples.md";
+    var mkdocs_page_url = "/scripting_examples/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> yojenkins</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../quick_start/">Quick Start</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../requirements/">Jenkins Plugin Requirements</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../usage/">Usage</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../cli_outline/">CLI Outline</a>
+                    </li>
+                </ul>
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Scripting Examples</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#example-1-create-job-wait-for-build-search-logs">Example 1 - Create job, wait for build, search logs</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#example-2-create-folder-job-wait-for-build-and-delete">Example 2 - Create folder, job, wait for build, and delete</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#example-3-search-for-job-on-two-servers-delete-if-found">Example 3 - Search for job on two servers, delete if found</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#example-4-creating-a-user">Example 4 - Creating a User</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#example-5-creating-a-credential">Example 5 - Creating a Credential</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#example-6-add-a-permission-to-all-users">Example 6 - Add a Permission to All Users</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#example-7-find-a-user-with-a-specific-permission">Example 7 - Find a User with a Specific Permission</a>
+    </li>
+    </ul>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../bug_report/">Bug Report</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../feature_request/">Feature Request</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../contribute/">Contribute to This Project!</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../support/">Support this Project!</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../license/">License</a>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">yojenkins</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Scripting Examples</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/ismet55555/yojenkins/edit/master/docs/source/scripting_examples.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="scripting-examples">Scripting Examples<a class="headerlink" href="#scripting-examples" title="Permanent link">&para;</a></h1>
+<div class="toc">
+<ul>
+<li><a href="#scripting-examples">Scripting Examples</a><ul>
+<li><a href="#example-1-create-job-wait-for-build-search-logs">Example 1 - Create job, wait for build, search logs</a></li>
+<li><a href="#example-2-create-folder-job-wait-for-build-and-delete">Example 2 - Create folder, job, wait for build, and delete</a></li>
+<li><a href="#example-3-search-for-job-on-two-servers-delete-if-found">Example 3 - Search for job on two servers, delete if found</a></li>
+<li><a href="#example-4-creating-a-user">Example 4 - Creating a User</a></li>
+<li><a href="#example-5-creating-a-credential">Example 5 - Creating a Credential</a></li>
+<li><a href="#example-6-add-a-permission-to-all-users">Example 6 - Add a Permission to All Users</a></li>
+<li><a href="#example-7-find-a-user-with-a-specific-permission">Example 7 - Find a User with a Specific Permission</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For clarity, all of the following script examples are for simplified use cases.
+More advanced use cases may require additional logic and error handling.</p>
+</div>
+<h2 id="example-1-create-job-wait-for-build-search-logs">Example 1 - Create job, wait for build, search logs<a class="headerlink" href="#example-1-create-job-wait-for-build-search-logs" title="Permanent link">&para;</a></h2>
+<p>Here we use a <code>bash</code> script with <code>yojenkins</code> to do the following:</p>
+<ul>
+<li>Create a new job using a predefined JSON configuration file</li>
+<li>Start a new build for the job</li>
+<li>Wait 12 seconds for the build to start and finish</li>
+<li>Search the build log for the string "Hello beautiful world!"</li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Within the job configuration XML definition, notice how variable usage is escaped with <code>\</code>
+to avoid variable interpretation.
+Here specifically, using <code>$VARIABLE</code> instead of <code>\$VARIABLE</code> would cause the variable to be
+interpreted as a local variable name and not as a string.</p>
+</div>
+<p><strong>Code</strong></p>
+<pre><code class="language-bash">#!/bin/bash
+
+JOB_NAME=&quot;Example Job&quot;
+SEARCH_TEXT=&quot;Hello world&quot;
+
+# Define the Job configuration
+cat &gt; EXAMPLE_JOB_CONFIG.xml &lt;&lt; EOF
+&lt;?xml version='1.1' encoding='UTF-8'?&gt;
+&lt;project&gt;
+    &lt;scm class=&quot;hudson.scm.NullSCM&quot; /&gt;
+    &lt;builders&gt;
+        &lt;hudson.tasks.Shell&gt;
+            &lt;command&gt;
+
+for VARIABLE in &quot;yall&quot; &quot;people&quot; &quot;world&quot;
+do
+echo &quot;Hello \$VARIABLE&quot;
+done
+
+            &lt;/command&gt;
+            &lt;configuredLocalRules /&gt;
+        &lt;/hudson.tasks.Shell&gt;
+    &lt;/builders&gt;
+&lt;/project&gt;
+EOF
+
+echo
+echo &quot;Creating '$JOB_NAME' job in Jenkins root folder ...&quot;
+yojenkins job create \
+    --config-file EXAMPLE_JOB_CONFIG.xml  \
+    &quot;$JOB_NAME&quot; .
+
+echo
+echo &quot;Building '$JOB_NAME' job ...&quot;
+yojenkins job build &quot;$JOB_NAME&quot;
+
+echo
+echo &quot;Waiting 12 seconds for job to build and complete ...&quot;
+sleep 12
+
+echo
+echo &quot;Checking build logs for substring '$SEARCH_TEXT' ...&quot;
+BUILD_LOGS=$(yojenkins build logs &quot;$JOB_NAME&quot; --latest)
+
+if [[ &quot;$BUILD_LOGS&quot; == *&quot;$SEARCH_TEXT&quot;* ]]; then
+    echo &quot;Successfully found text '$SEARCH_TEXT' in build logs&quot;
+else
+    echo &quot;Failed to find text '$SEARCH_TEXT' in build logs&quot;
+    exit 1
+fi
+</code></pre>
+<p><strong>Output</strong></p>
+<pre><code class="language-text">Creating 'Example Job' job in Jenkins root folder ...
+success
+
+Building 'Example Job' job ...
+success. queue number: 131
+
+Waiting 12 seconds for job to build and complete ...
+
+Checking build logs for substring 'Hello world' ...
+Successfully found text 'Hello world'!
+</code></pre>
+<h2 id="example-2-create-folder-job-wait-for-build-and-delete">Example 2 - Create folder, job, wait for build, and delete<a class="headerlink" href="#example-2-create-folder-job-wait-for-build-and-delete" title="Permanent link">&para;</a></h2>
+<p>The following <code>bash</code> script uses <code>yojenkins</code> to do the following:</p>
+<ol>
+<li>Create a new folder named <code>Test Folder</code></li>
+<li>Create a new job named <code>Test Job</code> inside <code>Test Folder</code></li>
+<li>Start a new build for job <code>Test Job</code></li>
+<li>Wait for the build to leave the queue and start running</li>
+<li>Wait for the job to finish</li>
+</ol>
+<p><strong>Code</strong></p>
+<pre><code class="language-bash">#!/bin/bash
+
+echo
+echo 'Creating &quot;Test Folder&quot; folder ...'
+yojenkins folder create --type folder &quot;Test Folder&quot; .
+
+echo
+echo 'Creating &quot;Test Job&quot; job in &quot;Test Folder&quot; folder ...'
+yojenkins job create &quot;Test Job&quot; &quot;Test Folder&quot;
+
+echo
+echo 'Building &quot;Test Job&quot; job ...'
+next_build_number=$(yojenkins job next &quot;Test Folder/Test Job&quot;)
+yojenkins job build &quot;Test Folder/Test Job&quot;
+
+echo
+echo 'Waiting for the &quot;Test Job&quot; Job to leave the queue and start running ...'
+while [ true ]; do
+    last_build_number=$(yojenkins job last &quot;Test Folder/Test Job&quot;)
+    difference=$((last_build_number - next_build_number))
+    if [ $difference == 0 ]; then
+        echo
+        break
+    fi
+    echo -n '.'
+    sleep 1
+done
+echo &quot;'Test Job' build $last_build_number has started running&quot;
+
+echo
+echo &quot;Waiting for job 'Test Job', build $last_build_number to finish ...&quot;
+build_number=$(yojenkins job last &quot;Test Folder/Test Job&quot;)
+SUCCESS=&quot;&quot;
+while [ &quot;$SUCCESS&quot; != &quot;SUCCESS&quot; ]; do
+    SUCCESS=$(yojenkins build status &quot;Test Folder/Test Job&quot; --number $last_build_number)
+    echo -n '.'
+    sleep 1
+done
+echo
+echo &quot;Finished job 'Test Job', build $build_number, with SUCCESS status&quot;
+
+echo
+echo &quot;Deleting 'Test Job' job and 'Test Folder' folder ...&quot;
+yojenkins job delete &quot;Test Folder/Test Job&quot;
+yojenkins folder delete &quot;Test Folder&quot;
+</code></pre>
+<p><strong>Output</strong></p>
+<pre><code class="language-text">Creating &quot;Test Folder&quot; folder ...
+success
+
+Creating &quot;Test Job&quot; job in &quot;Test Folder&quot; folder ...
+success
+
+Building &quot;Test Job&quot; job ...
+success. queue number: 133
+
+Waiting for the &quot;Test Job&quot; Job to leave the queue and start running ...
+.....
+'Test Job' build 1 has started running
+
+Waiting for job 'Test Job', build 1 to finish ...
+.
+Finished job 'Test Job', build 1, with SUCCESS status
+
+Deleting 'Test Job' job and 'Test Folder' folder ...
+success
+success
+</code></pre>
+<h2 id="example-3-search-for-job-on-two-servers-delete-if-found">Example 3 - Search for job on two servers, delete if found<a class="headerlink" href="#example-3-search-for-job-on-two-servers-delete-if-found" title="Permanent link">&para;</a></h2>
+<p>The following <code>bash</code> script uses <code>yojenkins</code> to search all jobs on two different Jenkins server.
+If it is found, delete it.</p>
+<p><strong>Code</strong></p>
+<pre><code class="language-bash">TODO
+</code></pre>
+<p><strong>Output</strong></p>
+<pre><code class="language-text">TODO
+</code></pre>
+<h2 id="example-4-creating-a-user">Example 4 - Creating a User<a class="headerlink" href="#example-4-creating-a-user" title="Permanent link">&para;</a></h2>
+<p>This <code>bash</code> script uses <code>yojenkins</code> to set up a new user account and assign them
+the right permissions.</p>
+<p><strong>Code</strong></p>
+<pre><code class="language-bash">TODO
+</code></pre>
+<p><strong>Output</strong></p>
+<pre><code class="language-text">TODO
+</code></pre>
+<h2 id="example-5-creating-a-credential">Example 5 - Creating a Credential<a class="headerlink" href="#example-5-creating-a-credential" title="Permanent link">&para;</a></h2>
+<p>This <code>bash</code> script uses <code>yojenkins</code> to create a new user/passoword credential. It generates a
+configuration file template, assigns template variables, and then creates the new credential.</p>
+<p><strong>Code</strong></p>
+<pre><code class="language-bash">#!/bin/bash
+
+# Define varaibles to be plugged into the credntial template
+CRED_SCOPE_DOMAIN=&quot;global&quot;
+CRED_ID=&quot;area-51-access&quot;
+CRED_DESCRIPTION=&quot;Credential used as an example&quot;
+CRED_USERNAME=&quot;area-51-user&quot;
+CRED_PASSWORD=&quot;T0P_sEcReT&quot;
+CRED_USERNAME_AS_SECRET=false
+
+# Generate the credential template
+CRED_CONFIG_TEMPLATE=$(yojenkins credential get-template user-pass --filepath example-cred-config.xml)
+
+# Interpolate (Plug in) the variables into the template
+CRED_CONFIG=&quot;$(eval &quot;echo -e \&quot;`&lt;example-cred-config.xml`\&quot;&quot;)&quot;
+
+# Save it back to file
+echo &quot;$CRED_CONFIG&quot; &gt; example-cred-config.xml
+
+# Create the credential using the interpolated file
+yojenkins credential create example-cred-config.xml
+echo &quot;Successfully created credential '$CRED_ID'&quot;
+</code></pre>
+<p><strong>Output</strong></p>
+<pre><code class="language-text">Successfully created credential 'area-51-access'
+</code></pre>
+<h2 id="example-6-add-a-permission-to-all-users">Example 6 - Add a Permission to All Users<a class="headerlink" href="#example-6-add-a-permission-to-all-users" title="Permanent link">&para;</a></h2>
+<p><strong>Code</strong></p>
+<pre><code class="language-bash">TODO
+</code></pre>
+<p><strong>Output</strong></p>
+<pre><code class="language-text">TODO
+</code></pre>
+<h2 id="example-7-find-a-user-with-a-specific-permission">Example 7 - Find a User with a Specific Permission<a class="headerlink" href="#example-7-find-a-user-with-a-specific-permission" title="Permanent link">&para;</a></h2>
+<p><strong>Code</strong></p>
+<pre><code class="language-bash">TODO
+</code></pre>
+<p><strong>Output</strong></p>
+<pre><code class="language-text">TODO
+</code></pre>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../bug_report/" class="btn btn-neutral float-right" title="Bug Report">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../cli_outline/" class="btn btn-neutral" title="CLI Outline"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+      <p>Copyright 2021 - 2022 Ismet Handžić - GNU General Public License v3.0</p>
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/ismet55555/yojenkins/" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../cli_outline/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../bug_report/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

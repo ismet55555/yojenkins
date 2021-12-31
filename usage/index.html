@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="Ismet Handzic">
+  <link rel="canonical" href="https://yojenkins.com/usage/">
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Usage - yojenkins</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Usage";
+    var mkdocs_page_input_path = "usage.md";
+    var mkdocs_page_url = "/usage/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> yojenkins</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../quick_start/">Quick Start</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../requirements/">Jenkins Plugin Requirements</a>
+                    </li>
+                </ul>
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Usage</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#cli-basics">CLI Basics</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#menu-overview">Menu Overview</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#authentication">Authentication</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#authentication-profiles">Authentication Profiles</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#configuring-a-profile">Configuring a Profile</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#run-yojenkins-auth-configure-recommended">Run yojenkins auth configure (Recommended)</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#manually-edit-the-yojenkinscredentials-file-directly">Manually edit the ~/.yojenkins/credentials file directly</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#requesting-and-storing-api-tokens">Requesting and Storing API Tokens</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#order-of-precedence-specifying-profiles">Order of Precedence Specifying Profiles</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#output-formatting">Output Formatting</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#live-monitoring">Live Monitoring</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#job-monitor">Job Monitor</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#build-monitor">Build Monitor</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#tools">Tools</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#command-history">Command History</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#generic-rest-server-requests">Generic REST Server Requests</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#run-groovy-script-on-server">Run Groovy Script on Server</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#setup-jenkins-shared-library">Setup Jenkins Shared Library</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#local-jenkins-server-setup-using-docker">Local Jenkins Server Setup Using Docker</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#deploying-the-local-jenkins-server">Deploying the Local Jenkins Server</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#tearing-down-the-local-jenkins-server">Tearing Down the Local Jenkins Server</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../cli_outline/">CLI Outline</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../scripting_examples/">Scripting Examples</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../bug_report/">Bug Report</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../feature_request/">Feature Request</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../contribute/">Contribute to This Project!</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../support/">Support this Project!</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../license/">License</a>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">yojenkins</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Usage</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/ismet55555/yojenkins/edit/master/docs/source/usage.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h1>
+<div class="toc">
+<ul>
+<li><a href="#usage">Usage</a><ul>
+<li><a href="#cli-basics">CLI Basics</a></li>
+<li><a href="#menu-overview">Menu Overview</a></li>
+<li><a href="#authentication">Authentication</a><ul>
+<li><a href="#authentication-profiles">Authentication Profiles</a></li>
+<li><a href="#configuring-a-profile">Configuring a Profile</a><ul>
+<li><a href="#run-yojenkins-auth-configure-recommended">Run yojenkins auth configure (Recommended)</a></li>
+<li><a href="#manually-edit-the-yojenkinscredentials-file-directly">Manually edit the ~/.yojenkins/credentials file directly</a></li>
+</ul>
+</li>
+<li><a href="#requesting-and-storing-api-tokens">Requesting and Storing API Tokens</a></li>
+<li><a href="#order-of-precedence-specifying-profiles">Order of Precedence Specifying Profiles</a></li>
+</ul>
+</li>
+<li><a href="#output-formatting">Output Formatting</a></li>
+<li><a href="#live-monitoring">Live Monitoring</a><ul>
+<li><a href="#job-monitor">Job Monitor</a></li>
+<li><a href="#build-monitor">Build Monitor</a></li>
+</ul>
+</li>
+<li><a href="#tools">Tools</a><ul>
+<li><a href="#command-history">Command History</a></li>
+<li><a href="#generic-rest-server-requests">Generic REST Server Requests</a></li>
+<li><a href="#run-groovy-script-on-server">Run Groovy Script on Server</a></li>
+<li><a href="#setup-jenkins-shared-library">Setup Jenkins Shared Library</a></li>
+</ul>
+</li>
+<li><a href="#local-jenkins-server-setup-using-docker">Local Jenkins Server Setup Using Docker</a><ul>
+<li><a href="#deploying-the-local-jenkins-server">Deploying the Local Jenkins Server</a></li>
+<li><a href="#tearing-down-the-local-jenkins-server">Tearing Down the Local Jenkins Server</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<hr />
+<h2 id="cli-basics">CLI Basics<a class="headerlink" href="#cli-basics" title="Permanent link">&para;</a></h2>
+<p>As with other command line interface (CLI) tools, the format of a typical <code>yojenkins</code> CLI 
+interaction looks like this:</p>
+<pre><code class="language-text">yojenkins &lt;command&gt; &lt;subcommand&gt; [options] [ARGUMENTS]
+</code></pre>
+<p>Here <code>[optoins]</code> are flags that do not have to be specified. For example, <code>--yaml</code> is a common
+option. <code>[ARGUMENTS]</code> are documneted as uppder case and must be specified for the command.
+For example, <code>yojenkins folder info [OPTIONS] FOLDER</code>, where folder name/URL are required.</p>
+<p>To look up any command and sub-command help documentation, supplement the command with <code>--help</code>.
+For example, <code>yojenkins auth configure --help</code></p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>To troubleshoot any issues or to see what <code>yojenkins</code> is doing behind the scenes, use the <code>--debug</code> option</p>
+</div>
+<h2 id="menu-overview">Menu Overview<a class="headerlink" href="#menu-overview" title="Permanent link">&para;</a></h2>
+<p>The following is the main menu displayed when running <code>yojenkins --help</code>. </p>
+<pre><code class="language-txt">❯ yojenkins --help
+
+                        YOJENKINS (Version: 0.0.00)
+
+  yojenkins is a tool that is focused on interfacing with a Jenkins server from
+  the comfort of the beloved command line.  This tool can also be used as a
+  middleware utility, generating and passing Jenkins information or automating
+  tasks.
+
+  QUICK START:
+
+    1. Configure yo profile:  yojenkins auth configure
+    2. Add yo API token:      yojenkins auth token --profile &lt;PROFILE NAME&gt;
+    3. Verify yo creds:       yojenkins auth verify
+    4. Explore yojenkins
+
+Options:
+  -v, --version  Show the version
+  --help         Show this message and exit.
+
+Commands:
+  account     Manage user accounts
+  auth        Manage authentication and profiles
+  build       Manage builds
+  credential  Manage credentials
+  folder      Manage folders
+  job         Manage jobs
+  node        Manage nodes
+  server      Manage server
+  stage       Manage build stages
+  step        Manage stage steps
+  tools       Tools and more
+</code></pre>
+<p>The sub-menus can be accessed by entering <code>yojenkins</code> followed by the sub-menu name. 
+For example, <code>yojenkins server</code> will display the server sub-menu.</p>
+<pre><code class="language-txt">❯ yojenkins server --help
+
+Usage: yojenkins server [OPTIONS] COMMAND [ARGS]...
+
+  Server Management
+
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  browser          Open server home page in web browser
+  info             Server information
+  people           Show all people/users on server
+  plugins          Show plugin information
+  queue            Show current job build queues on server
+  quiet            Server quite mode enable/disable
+  reachable        Check if server is reachable
+  restart          Restart the server
+  server-deploy    Create a local development server using Docker
+  server-teardown  Remove a local development server
+  shutdown         Shut down the server
+</code></pre>
+<p>In turn, the sub-menu commands can be accessed by entering <code>yojenkins server</code> followed by the 
+sub-menu command name. For example, <code>yojenkins server browser</code> will open the Jenkins server 
+home page in the browser.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Some commands may be greyed out. These commands are not yet implemented.</p>
+</div>
+<p>Of course you can view the help menu for the sub-menu's commands by adding <code>--help</code>.
+For example, <code>yojenkins server browser --help</code> will display the help menu for the <code>browser</code></p>
+<pre><code class="language-txt">❯ yojenkins server browser --help
+
+Usage: yojenkins server browser [OPTIONS]
+
+  Open server home page in web browser
+
+Options:
+  --debug         Enable debug level log messages
+  --profile TEXT  Authentication profile for command
+  --help          Show this message and exit.
+</code></pre>
+<h2 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h2>
+<p>Effortless authentication is something that <code>yojenkins</code> can do for you. That is, once you have 
+authentication profiles set up, it is not something you have to think about much while using <code>yojenkins</code>.</p>
+<h3 id="authentication-profiles">Authentication Profiles<a class="headerlink" href="#authentication-profiles" title="Permanent link">&para;</a></h3>
+<p><code>yojenkins</code> has the ability to store and manage authentication profiles. That is, you are able to
+store and manage different authentication credentials and use them to authenticate with the Jenkins 
+server as you need them, without having to enter them each time you need to interact with each 
+Jenkins server.</p>
+<p>Different authentication profiles can be used for different Jenkins servers. For example, you can
+have a profile for your local development server and a profile for your production Jenkins server.</p>
+<p>You can also have different authentication profiles for different Jenkins user accounts. For example,
+you may have a profile for an Jenkins administrator and a profile for a regular user.</p>
+<p>Authentication profiles are stored in your local <code>~/.yojenkins</code> directory inside the <code>credentials</code>
+file. The <code>credentials</code> file is a TOML file that contains a list of authentication profiles.
+Remember that the <code>~</code> is a shorthand for the user's home directory.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Authentication profiles work very similar to that of AWS CLI, storing credentials locally inside
+the <code>~/.aws/credentials</code> file.</p>
+</div>
+<p>The <code>~/.yojenkins</code> directory and the <code>credentials</code> file can be manually created, however, <code>yojenkins</code>
+will create these files for you if they do not exist.</p>
+<p>An example of the contents of the <code>credentials</code> file looks like this:</p>
+<pre><code class="language-toml">[default]
+jenkins_server_url = &quot;https://cool-company.jenkins.com&quot;
+username = &quot;id236&quot;
+api_token = &quot;11fb9cb61d34edfe73f82763cf8879c79a&quot;
+active = true
+
+[test-server]
+jenkins_server_url = &quot;http://localhost:8080&quot;
+username = &quot;admin&quot;
+api_token = &quot;55fg9cb61d34edfe83f82763cf8879c70v&quot;
+active = true
+</code></pre>
+<p>Note the different profile names in the <code>credentials</code> file. The first profile is <code>default</code>.
+This is the profile that is used when no other profile is specified. If available, the <code>default</code> profile is
+automatically activated when the <code>yojenkins</code> command is run.</p>
+<p>The profile sections are as follows:</p>
+<ul>
+<li><code>jenkins_server_url</code>: The full URL of the Jenkins server's home page.</li>
+<li><code>username</code>: The username of the Jenkins user account.</li>
+<li><code>api_token</code>: The API token of the Jenkins user account. This can be fetched through the Jenkins 
+server UI, or through <code>yojenkins</code></li>
+<li><code>active</code>: Whether the profile can be used or not. This can be useful if you want to temporarily disable
+a profile and ensure that you don't accidentally use it.</li>
+</ul>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>The <code>api_token</code> can be the account password, however it is <strong>highly recommended</strong> that you use 
+an API token. You do not want to store a Jenkins account password in plain text.</p>
+</div>
+<h3 id="configuring-a-profile">Configuring a Profile<a class="headerlink" href="#configuring-a-profile" title="Permanent link">&para;</a></h3>
+<p>To use an authentication profile you need to first create a profile. For example, to create a profile
+for your local development server, you can do one of the following two methods.</p>
+<h4 id="run-yojenkins-auth-configure-recommended">Run <code>yojenkins auth configure</code> <em>(Recommended)</em><a class="headerlink" href="#run-yojenkins-auth-configure-recommended" title="Permanent link">&para;</a></h4>
+<p>Running this command will prompt you for the required information, The prompt will look something 
+like the following:</p>
+<pre><code class="language-txt">❯ yojenkins auth configure
+
+Credentials profile file found in current user home directory: 
+/home/user/.yojenkins/credentials
+Adding a new profile to the current credentials profile file ...
+Please enter the following information to add a profile:
+
+[ OPTIONAL ] Enter PROFILE NAME (default):  demo-profile
+[ REQUIRED ] Enter Jenkins SERVER BASE URL:  http://demo.jenkins.com
+[ REQUIRED ] Enter USERNAME:  demo_user
+[ OPTIONAL ] Enter API TOKEN:
+
+Successfully configured credentials file
+</code></pre>
+<p>You can leave the API token blank since you can use <code>yojenkins</code> to add the API token later.</p>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>The profile name is optional because if you do not enter anything for this item, the profile
+will be named <code>default</code> and overwrite any existing <code>default</code> profile with the same name.</p>
+</div>
+<h4 id="manually-edit-the-yojenkinscredentials-file-directly">Manually edit the <code>~/.yojenkins/credentials</code> file directly<a class="headerlink" href="#manually-edit-the-yojenkinscredentials-file-directly" title="Permanent link">&para;</a></h4>
+<p>Alternatively, you can manually edit the <code>~/.yojenkins/credentials</code> file directly. The file is in
+TOML file format. Each profile will have the following information structure:</p>
+<pre><code class="language-toml">[demo-profile]
+jenkins_server_url = &quot;http://demo.jenkins.com&quot;
+username = &quot;demo_user&quot;
+api_token = &quot;&quot;
+active = true
+</code></pre>
+<p>The <code>active</code> field is used to determine whether the profile can be used or not. If you want to
+temporarily disable a profile, you can set the <code>active</code> field to <code>false</code>.</p>
+<p>You can leave the API token blank since you can use <code>yojenkins</code> to add the API token later.</p>
+<h3 id="requesting-and-storing-api-tokens">Requesting and Storing API Tokens<a class="headerlink" href="#requesting-and-storing-api-tokens" title="Permanent link">&para;</a></h3>
+<p><code>yojenkins</code> is able to request an API token from the Jenkins server to use for subsequent authentication 
+requests.</p>
+<p>To simply generate and display the API token, you can run the following command. Note that <code>yojenkins</code>
+does not reference a profile, so it will ask a few question to be able to generate the API token.</p>
+<pre><code class="language-txt">❯ yojenkins auth token
+
+Enter desired API TOKEN NAME: demo-test
+Enter Jenkins SERVER BASE URL: http://localhost:8080/
+Enter Jenkins server USERNAME: admin
+Enter &quot;admin&quot; PASSWORD: 
+
+55d8c325c876fake58d61274d41744bc0d
+</code></pre>
+<p>More conveniently, you can generate an API token using the information stored in a authentication 
+profile and subsequently store the new API token inside an existing authentication profile. 
+The following command will request a new API token from the server and store it within the 
+<code>default</code> under the <code>api_token</code> key.</p>
+<pre><code class="language-txt">❯ yojenkins auth token --profile default
+
+Enter &quot;admin&quot; PASSWORD: 
+
+success
+</code></pre>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>You can also manually fetch the API token form the Jenkins UI:</p>
+<ol>
+<li>Click on your username in the top right corner of the Jenkins UI</li>
+<li>Click on the <em>"Configure"</em> button in the menu on the right</li>
+<li>In the <em>"API Token"</em> section, click <em>"Add new Token"</em></li>
+<li>Copy the generated API token and paste it into the <code>api_token</code> field 
+in the <code>~/.yojenkins/credentials</code> file</li>
+</ol>
+</div>
+<h3 id="order-of-precedence-specifying-profiles">Order of Precedence Specifying Profiles<a class="headerlink" href="#order-of-precedence-specifying-profiles" title="Permanent link">&para;</a></h3>
+<p>Each time <code>yojenkins</code> is run, it will look for a way to determine which authentication profile to use. 
+The order of precedence of looking for a profile specifier is as follows:</p>
+<ol>
+<li><code>--profile</code> command argument<ul>
+<li>The <code>--profile</code> command argument specifies the profile name, the profile specified by the argument will be used.</li>
+<li><em>Example:</em> <code>yojenkins server info --profile my-profile</code></li>
+</ul>
+</li>
+<li>Environment variable <code>YOJENKINS_PROFILE</code><ul>
+<li><em>Example:</em> <code>export YOJENKINS_PROFILE=my-profile</code></li>
+</ul>
+</li>
+<li>"default" profile in the <code>~/.yojenkins/credentials</code> file</li>
+<li>First active profile in the <code>~/.yojenkins/credentials</code> file</li>
+</ol>
+<p>If none of the above are satisfied, <code>yojenkins</code> will prompt for Jenkins server credentials.</p>
+<h2 id="output-formatting">Output Formatting<a class="headerlink" href="#output-formatting" title="Permanent link">&para;</a></h2>
+<p>Often times you will want to see the output of a command in a different format. 
+For example, you may want to see the output of a <code>yojenkins server info</code> command in a different 
+format than the default.</p>
+<p>The following output formats are supported:</p>
+<ul>
+<li>JSON</li>
+<li>YAML</li>
+<li>TOML</li>
+<li>XML</li>
+</ul>
+<p>Any output with any format can be supplemented with <code>--pretty</code> to make the output more readable.</p>
+<p>Here are some examples of how different output formats looks like using the <code>yojenkins account list</code> command:</p>
+<p><strong>Default</strong></p>
+<pre><code class="language-text">❯ yojenkins account list
+[{&quot;id&quot;: &quot;admin&quot;, &quot;me&quot;: true, &quot;fullName&quot;: &quot;admin&quot;, &quot;description&quot;: &quot;&quot;, &quot;absoluteUrl&quot;: &quot;http://localhost:8080/user/admin&quot;, &quot;userFolder&quot;: {&quot;directory&quot;: true, &quot;file&quot;: false, &quot;freeSpace&quot;: 18083065856, &quot;invalid&quot;: false, &quot;canonicalPath&quot;: &quot;/var/jenkins_home/users/admin_6787401061636913615&quot;, &quot;usableSpace&quot;: 16512360448, &quot;hidden&quot;: false, &quot;totalSpace&quot;: 30525820928, &quot;path&quot;: &quot;/var/jenkins_home/users/admin_6787401061636913615&quot;, &quot;name&quot;: &quot;admin_6787401061636913615&quot;, &quot;prefixLength&quot;: 1, &quot;absolute&quot;: true, &quot;absolutePath&quot;: &quot;/var/jenkins_home/users/admin_6787401061636913615&quot;, &quot;parent&quot;: &quot;/var/jenkins_home/users&quot;}, &quot;isAdmin&quot;: true, &quot;isManager&quot;: true, &quot;isSystemRead&quot;: true, &quot;canRead&quot;: true, &quot;canWrite&quot;: true, &quot;canUpdate&quot;: true, &quot;canDelete&quot;: true, &quot;canConfigure&quot;: true, &quot;authorities&quot;: [], &quot;lastGrantedAuthoritiesChanged&quot;: &quot;Mon Nov 15 14:19:08 UTC 2021&quot;}]
+</code></pre>
+<p><strong>Pretty Formatting</strong></p>
+<pre><code class="language-text">❯ yojenkins account list --pretty
+
+[
+    {
+        &quot;absoluteUrl&quot;: &quot;http://localhost:8080/user/admin&quot;,
+        &quot;authorities&quot;: [],
+        --- SNIP ---
+        &quot;lastGrantedAuthoritiesChanged&quot;: &quot;Mon Nov 15 14:19:08 UTC 2021&quot;,
+        &quot;me&quot;: true,
+        &quot;userFolder&quot;: {
+            &quot;absolute&quot;: true,
+            &quot;absolutePath&quot;: &quot;/var/jenkins_home/users/admin_6787401061636913615&quot;,
+            --- SNIP ---
+            &quot;totalSpace&quot;: 30525820928,
+            &quot;usableSpace&quot;: 16512339968
+        }
+    }
+]
+</code></pre>
+<p><strong>YAML</strong></p>
+<pre><code class="language-text">❯ yojenkins account list --yaml
+
+- absoluteUrl: http://localhost:8080/user/admin
+  authorities: []
+  --- SNIP ---
+  lastGrantedAuthoritiesChanged: Mon Nov 15 14:19:08 UTC 2021
+  me: true
+  userFolder:
+    absolute: true
+    absolutePath: /var/jenkins_home/users/admin_6787401061636913615
+    --- SNIP ---
+    totalSpace: 30525820928
+    usableSpace: 16620826624
+</code></pre>
+<p><strong>TOML</strong></p>
+<pre><code class="language-text">❯ yojenkins account list --toml
+
+[[item]]
+id = &quot;admin&quot;
+me = true
+--- SNIP ---
+authorities = []
+lastGrantedAuthoritiesChanged = &quot;Mon Nov 15 14:19:08 UTC 2021&quot;
+
+[item.userFolder]
+directory = true
+file = false
+freeSpace = 18191482880
+--- SNIP ---
+absolutePath = &quot;/var/jenkins_home/users/admin_6787401061636913615&quot;
+parent = &quot;/var/jenkins_home/users&quot;
+</code></pre>
+<p><strong>XML</strong></p>
+<pre><code class="language-text">❯ yojenkins account list --xml --pretty
+
+&lt;?xml version=&quot;1.0&quot; ?&gt;
+&lt;None&gt;
+        &lt;item&gt;
+                &lt;id&gt;admin&lt;/id&gt;
+                &lt;me&gt;True&lt;/me&gt;
+                &lt;fullName&gt;admin&lt;/fullName&gt;
+                &lt;description/&gt;
+                &lt;absoluteUrl&gt;http://localhost:8080/user/admin&lt;/absoluteUrl&gt;
+                &lt;userFolder&gt;
+                        &lt;directory&gt;True&lt;/directory&gt;
+                        --- SNIP ---
+                        &lt;absolutePath&gt;/var/jenkins_home/users/admin_6787401061636913615&lt;/absolutePath&gt;
+                        &lt;parent&gt;/var/jenkins_home/users&lt;/parent&gt;
+                &lt;/userFolder&gt;
+                &lt;isAdmin&gt;True&lt;/isAdmin&gt;
+                --- SNIP ---
+                &lt;authorities/&gt;
+                &lt;lastGrantedAuthoritiesChanged&gt;Mon Nov 15 14:19:08 UTC 2021&lt;/lastGrantedAuthoritiesChanged&gt;
+        &lt;/item&gt;
+&lt;/None&gt;
+</code></pre>
+<h2 id="live-monitoring">Live Monitoring<a class="headerlink" href="#live-monitoring" title="Permanent link">&para;</a></h2>
+<p>Sometimes you would like to keep a watch on a Job, monitoring the status of its builds, or a
+specific Build, monitoring its steps or status. <code>yojenkins</code> makes this possible with a CLI-based
+user interface for job and build monitoring.</p>
+<h3 id="job-monitor">Job Monitor<a class="headerlink" href="#job-monitor" title="Permanent link">&para;</a></h3>
+<p>TODO</p>
+<h3 id="build-monitor">Build Monitor<a class="headerlink" href="#build-monitor" title="Permanent link">&para;</a></h3>
+<p>TODO</p>
+<h2 id="tools">Tools<a class="headerlink" href="#tools" title="Permanent link">&para;</a></h2>
+<h3 id="command-history">Command History<a class="headerlink" href="#command-history" title="Permanent link">&para;</a></h3>
+<p>By default, each time you run a <code>yojenkins</code> command, that command is logged to the <code>~/.yojenkins/history</code> file.
+If the file does not exist, it will be created.</p>
+<p>This file is essentially a JSON file which holds the following meta data for each command:</p>
+<ol>
+<li>The profile used for the command</li>
+<li><code>yojenkins</code> path</li>
+<li>Command arguments</li>
+<li>Timestamp</li>
+<li>Formatted datatime</li>
+<li>The version of the <code>yojenkins</code> used to run the command</li>
+</ol>
+<p>To show the history of commands, run <code>yojenkins tools history</code>. To only show the history of a 
+specific profile, run <code>yojenkins tools history --profile &lt;PROFILE NAME&gt;</code>.</p>
+<p>Here is a sample output of the <code>yojenkins tools history</code> command:</p>
+<pre><code class="language-text">❯ yojenkins tools history
+
+[default] [Tuesday, December 28, 2021 10:34:58] [v0.0.00] - yojenkins server info --debug
+[default] [Tuesday, December 28, 2021 10:35:54] [v0.0.00] - yojenkins account list
+[default] [Tuesday, December 28, 2021 10:36:15] [v0.0.00] - yojenkins credential get-template user-pass --json --pretty
+[demo-profile] [Tuesday, December 28, 2021 10:38:45] [v0.0.00] - yojenkins account list
+[demo-profile] [Tuesday, December 28, 2021 10:39:05] [v0.0.00] - yojenkins server info
+</code></pre>
+<p>Clearing the entire <code>yojenkins</code> history file, run <code>yojenkins tools history --clear</code>.</p>
+<h3 id="generic-rest-server-requests">Generic REST Server Requests<a class="headerlink" href="#generic-rest-server-requests" title="Permanent link">&para;</a></h3>
+<p>Sometimes <code>yojenkins</code> does not support a specific request to the server. For example, if there is
+a new or complex REST request you may want to use, you can use the <code>yojenkins tools rest-request</code> command</p>
+<p>The convenience of this command is that it will automatically use your authentication profile to
+make the request. It will know to use the host, username, and password from your authentication profile.</p>
+<p>For example, given the following authentication profile:</p>
+<pre><code class="language-toml">[default]
+jenkins_server_url = &quot;https://cool-company.jenkins.com&quot;
+username = &quot;id236&quot;
+api_token = &quot;11fb9cb61d34FAKE73f82763cf8879c79a&quot;
+active = true
+</code></pre>
+<p>The command <code>yojenkins tools rest-request "me/api/json"</code> will make a <code>GET</code> request to the Jenkins 
+server at <code>http://localhost:8080/me/api/json</code> using the username and API token from the 
+authentication profile.</p>
+<p>This command supports the following options:</p>
+<ul>
+<li><code>--request-type</code> - Type of REST request. Default is <code>GET</code>.</li>
+<li><code>--raw</code> - If set, the response will be printed as raw text. The response will not be parsed as JSON.</li>
+<li><code>--clean-html</code> - If set, the response will be cleaned of HTML tags. This is useful if the response is in HTML format and you only want the content.</li>
+</ul>
+<h3 id="run-groovy-script-on-server">Run Groovy Script on Server<a class="headerlink" href="#run-groovy-script-on-server" title="Permanent link">&para;</a></h3>
+<p>Often times you want to run a Groovy script on the Jenkins server. The <code>yojenkins tools run-script</code> 
+command allows you to do just that.</p>
+<p>This may be useful for Jenkins administrative tasks or simply running Groovy test scripts and tutorials. </p>
+<p>You can specify the Groovy script by using one of the following options:</p>
+<ol>
+<li><code>--text &lt;SCRIPT TEXT&gt;</code><ul>
+<li>The Groovy script is specified as a string within the command.</li>
+<li><em>Example:</em> <code>yojenkins tools run-script --text 'println("Hello fun world")'</code></li>
+</ul>
+</li>
+<li><code>--file &lt;SCRIPT FILE PATH&gt;</code><ul>
+<li>The Groovy script is specified as a file path.</li>
+<li><em>Example:</em> <code>yojenkins tools run-script --file /path/to/script.groovy</code></li>
+</ul>
+</li>
+</ol>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>In order to run a Groovy script, you must have the appropriate permissions on the Jenkins server
+for the user account you are using.</p>
+</div>
+<h3 id="setup-jenkins-shared-library">Setup Jenkins Shared Library<a class="headerlink" href="#setup-jenkins-shared-library" title="Permanent link">&para;</a></h3>
+<p>Jenkins allows users to share Groovy code libraries between jobs and pipelines. This is useful 
+in that projects and pipelines will often share the same code. For example, a piece of 
+code used to report test results may be used in more than one pipeline without copy-pasting 
+it into each pipeline. <a href="https://www.jenkins.io/doc/book/pipeline/shared-libraries/">Shared libraries</a> 
+are a way to share code between projects and pipelines.</p>
+<div class="admonition danger">
+<p class="admonition-title">Danger</p>
+<p>Jenkins sharable libraries available to any Pipeline jobs running on this system. These libraries will 
+be fully trusted, meaning they run code without “sandbox” restrictions and may use @Grab.
+So be careful what code is being added to a Jenkins shared library.</p>
+</div>
+<p><code>yojenkins</code> provides a command to setup a shared library using the following command:</p>
+<pre><code class="language-text">yojenkins tools shared-lib-setup
+</code></pre>
+<p>This command provides options to specify shared library setup options such as the git repository
+in which the shared library is stored, git branch name, and if the shared library is loaded
+implicitly.</p>
+<p><em>As of now, the only git repository that is supported by <code>yojenkins</code> is GitHub.</em></p>
+<h2 id="local-jenkins-server-setup-using-docker">Local Jenkins Server Setup Using Docker<a class="headerlink" href="#local-jenkins-server-setup-using-docker" title="Permanent link">&para;</a></h2>
+<p><code>yojenkins</code> offers an easy way to quickly set up a local Jenkins server within a Docker container.
+This containerized server is set up and ready to go to use to test <code>yojenkins</code>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The locally containerized server set up using <code>server-deploy</code> is for development, training,
+demonstration, or testing purposes only. <strong>Do not use this server for any production environments.</strong></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For the locally containerized server to work, you must have Docker installed and running.
+See <a href="../docker_install/">Docker installation guide</a> on how to install Docker.</p>
+</div>
+<h3 id="deploying-the-local-jenkins-server">Deploying the Local Jenkins Server<a class="headerlink" href="#deploying-the-local-jenkins-server" title="Permanent link">&para;</a></h3>
+<p>Run the following <code>yojenkins</code> command to set up a local and containerized Jenkins server.</p>
+<pre><code class="language-bash">yojenkins server server-deploy
+</code></pre>
+<p>If this is the very first time running this command, it will take a minute or two to complete.
+Any subsequent time will be faster since the base image has already been downloaded. 
+This initial lag is due to the Docker image being downloaded and built.</p>
+<p>Note that this command can be run without any specified options or arguments. All default
+options should work out of the box. However, you can use the <code>--help</code> option to see all available
+options in order to change any defaults.</p>
+<p>Here are some examples of how to use the <code>server-deploy</code> command:</p>
+<ul>
+<li>Use the Blue Ocean Jenkins Docker base image<ul>
+<li><code>yojenkins server server-deploy --image-base jenkinsci/blueocean</code></li>
+</ul>
+</li>
+<li>Change the default username and password<ul>
+<li><code>yojenkins server server-deploy --admin-user ismet --password Abc123</code></li>
+</ul>
+</li>
+<li>Use a different Jenkins configuration as code file<ul>
+<li><code>yojenkins server server-deploy --config-file /path/to/config_as_code.yaml</code></li>
+</ul>
+</li>
+<li>Use a custom list of plugins to create a Jenkins server<ul>
+<li><code>yojenkins server server-deploy --plugins-file /path/to/plugins.txt</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="tearing-down-the-local-jenkins-server">Tearing Down the Local Jenkins Server<a class="headerlink" href="#tearing-down-the-local-jenkins-server" title="Permanent link">&para;</a></h3>
+<p>In order to tear down the local and containerized Jenkins server, run the following <code>yojenkins</code> command:</p>
+<pre><code class="language-bash">yojenkins server server-teardown
+</code></pre>
+<p>Behind the scenes <code>yojenkins</code> holds a log file which outlines any active deployments, its image used,
+container created, volume created, etc. When you run <code>server-teardown</code> it will remove the server deployment that 
+was logged and the log file itself.</p>
+<p>If there are any issues tearing down a running <code>yojenkins</code> deployed server, you can always
+use <code>docker</code> to manually remove the stop and remove the server container.</p>
+<pre><code class="language-text">docker container ls
+docker kill &lt;CONTAINER ID&gt;
+docker container rm &lt;CONTAINER ID&gt;
+</code></pre>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../cli_outline/" class="btn btn-neutral float-right" title="CLI Outline">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../requirements/" class="btn btn-neutral" title="Jenkins Plugin Requirements"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+      <p>Copyright 2021 - 2022 Ismet Handžić - GNU General Public License v3.0</p>
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/ismet55555/yojenkins/" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../requirements/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../cli_outline/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

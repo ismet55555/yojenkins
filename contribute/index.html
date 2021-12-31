@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="Ismet Handzic">
+  <link rel="canonical" href="https://yojenkins.com/contribute/">
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Contribute to This Project! - yojenkins</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Contribute to This Project!";
+    var mkdocs_page_input_path = "contribute.md";
+    var mkdocs_page_url = "/contribute/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> yojenkins</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../quick_start/">Quick Start</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../requirements/">Jenkins Plugin Requirements</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../usage/">Usage</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../cli_outline/">CLI Outline</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../scripting_examples/">Scripting Examples</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../bug_report/">Bug Report</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../feature_request/">Feature Request</a>
+                    </li>
+                </ul>
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Contribute to This Project!</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#roadmap">Roadmap</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#forking-and-locally-cloning-project">Forking and Locally Cloning Project</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#environment-setup">Environment Setup</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#making-changes">Making Changes</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#adding-new-dependencies">Adding New Dependencies</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#formatting-and-linting">Formatting and Linting</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#unit-testing">Unit Testing</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#documentation">Documentation</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#layout">Layout</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#live-server-for-preview">Live Server for Preview</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#building-the-documentation">Building the Documentation</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#visual-studio-code-setup-optional">Visual Studio Code Setup (Optional)</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#extensions">Extensions</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#vs-code-settings">VS Code Settings</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#changing-settings">Changing Settings</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#settings-to-change">Settings to Change</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#contributors">Contributors</a>
+    </li>
+    </ul>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../support/">Support this Project!</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../license/">License</a>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">yojenkins</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Contribute to This Project!</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/ismet55555/yojenkins/edit/master/docs/source/contribute.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="contribute-to-this-project">Contribute to This Project<a class="headerlink" href="#contribute-to-this-project" title="Permanent link">&para;</a></h1>
+<p><code>yojenkins</code> is a Python project that is an on-going effort, slowly adding various features and improvements.
+If you would like to contribute, please fork the project, make your changes,
+and submit a pull request.</p>
+<div class="admonition tip">
+<p class="admonition-title">Big Thank You</p>
+<p><strong>Any help, ideas, or user testing is much appreciated!</strong></p>
+</div>
+<p>There is definitely work to be done. If you spot an issue you are able to fix,
+or if you are eying a open issue or feature request, feel free to submit some code.</p>
+<p>For guides and information on how to get started and help out, check out the various
+sections on this page.</p>
+<div class="toc">
+<ul>
+<li><a href="#contribute-to-this-project">Contribute to This Project</a><ul>
+<li><a href="#roadmap">Roadmap</a></li>
+<li><a href="#forking-and-locally-cloning-project">Forking and Locally Cloning Project</a></li>
+<li><a href="#environment-setup">Environment Setup</a></li>
+<li><a href="#making-changes">Making Changes</a></li>
+<li><a href="#adding-new-dependencies">Adding New Dependencies</a></li>
+<li><a href="#formatting-and-linting">Formatting and Linting</a></li>
+<li><a href="#unit-testing">Unit Testing</a></li>
+<li><a href="#documentation">Documentation</a><ul>
+<li><a href="#layout">Layout</a></li>
+<li><a href="#live-server-for-preview">Live Server for Preview</a></li>
+<li><a href="#building-the-documentation">Building the Documentation</a></li>
+</ul>
+</li>
+<li><a href="#visual-studio-code-setup-optional">Visual Studio Code Setup (Optional)</a><ul>
+<li><a href="#extensions">Extensions</a></li>
+<li><a href="#vs-code-settings">VS Code Settings</a><ul>
+<li><a href="#changing-settings">Changing Settings</a></li>
+<li><a href="#settings-to-change">Settings to Change</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#contributors">Contributors</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<hr />
+<h2 id="roadmap">Roadmap<a class="headerlink" href="#roadmap" title="Permanent link">&para;</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The roadmap is currently in flux and is yet to be refined</p>
+</div>
+<p>Please see the <code>TODO</code> and <code>FIXME</code> kanban board for this projects on GitHub</p>
+<ul>
+<li><a href="https://github.com/ismet55555/yojenkins/projects/1"><strong>TODO</strong></a> - Any currently outstanding tasks</li>
+<li><a href="https://github.com/ismet55555/yojenkins/projects/2"><strong>FIXME</strong></a> - Any known issues</li>
+</ul>
+<h2 id="forking-and-locally-cloning-project">Forking and Locally Cloning Project<a class="headerlink" href="#forking-and-locally-cloning-project" title="Permanent link">&para;</a></h2>
+<p>The purpose of forking this project GitHub repository is to create a local copy of the project,
+make changes to it, and submit a pull request of your work into the original repository.</p>
+<p>Here is a guide by GitHub on how to fork and clone a project:</p>
+<ul>
+<li><a href="https://docs.github.com/en/get-started/quickstart/fork-a-repo">Fork and Clone a GitHub Repository</a></li>
+</ul>
+<h2 id="environment-setup">Environment Setup<a class="headerlink" href="#environment-setup" title="Permanent link">&para;</a></h2>
+<p>The following steps assume that you have successfully cloned the project and are in the
+root directory of the project.</p>
+<ol>
+<li>
+<p>Add the system dependencies, if applicable</p>
+<table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MacOS and Windows</td>
+<td>Not needed</td>
+</tr>
+<tr>
+<td>Ubuntu</td>
+<td><code>sudo apt update &amp;&amp; apt-get install -y python3-dev python3-pip libasound2-dev</code></td>
+</tr>
+<tr>
+<td>CentOS</td>
+<td><code>sudo yum update &amp;&amp; yum install -y python3-devel gcc alsa-lib-devel</code></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>Ensure Python is installed and is a compatible version for this project</p>
+<ul>
+<li><code>python --version</code></li>
+<li>If it is not, install it: <a href="https://realpython.com/installing-python/">Guide</a></li>
+</ul>
+</li>
+<li>Ensure that <code>pip</code> is installed<ul>
+<li><code>pip --version</code></li>
+<li>If it is not, install it: <a href="https://pip.pypa.io/en/stable/installation/">Guide</a></li>
+</ul>
+</li>
+<li>Upgrade tooling and install <code>pipenv</code><ul>
+<li><code>python -m pip install --upgrade pip setuptools wheel virtualenv pipenv</code></li>
+</ul>
+</li>
+<li>With <code>pipenv</code>, set up the development virtual environment<ul>
+<li><code>pipenv sync --three --dev</code></li>
+</ul>
+</li>
+<li>Get into (activate) the virtual environment<ul>
+<li><code>pipenv shell</code></li>
+</ul>
+</li>
+<li>Test if <code>yojenkins</code> starts up without any errors<ul>
+<li><code>yojenkins --help</code></li>
+</ul>
+</li>
+</ol>
+<h2 id="making-changes">Making Changes<a class="headerlink" href="#making-changes" title="Permanent link">&para;</a></h2>
+<div class="admonition tip">
+<p class="admonition-title"><code>git</code></p>
+<p>This project uses the <a href="https://www.atlassian.com/continuous-delivery/continuous-integration/trunk-based-development">"trunk-based"</a> 
+<code>git</code> version control workflow. Each time you make a change, you should create a new branch 
+and push your changes to the <code>main</code> branch.</p>
+<p>These days you do not have to be a <code>git</code> terminal master in order to get going with a <code>git</code>
+source controlled project. Depending on your preferences, there are many visual UI-based <code>git</code>
+clients such as <a href="https://desktop.github.com/">GitHub Desktop</a>,
+<a href="https://www.sourcetreeapp.com/">SourceTree</a>, or even through the Visual Studio Code IDE.</p>
+</div>
+<ol>
+<li>Create a new <code>git</code> branch form the <code>main</code> branch<ul>
+<li><code>git checkout main</code></li>
+<li><code>git pull</code></li>
+<li><code>git checkout -b &lt;YOUR NEW GIT BRANCH NAME&gt;</code></li>
+</ul>
+</li>
+<li>Activate/Enter the virtual environment<ul>
+<li><code>pipenv shell</code></li>
+</ul>
+</li>
+<li><em>Make your changes to the project</em></li>
+<li>Run the changes<ul>
+<li><code>yojenkins</code> - This works because the current package is marked as editable in <code>Pipfile</code></li>
+<li><code>python yojenkins/__main__py</code> - This is effectively what is run when running <code>yojenkins</code></li>
+</ul>
+</li>
+<li>Stage the changes<ul>
+<li><code>git add .</code></li>
+</ul>
+</li>
+<li>Run <code>pre-commit</code> (See section below)<ul>
+<li><code>pre-commit run</code></li>
+</ul>
+</li>
+<li>Stage and commit the changes<ul>
+<li><code>git commit -m "&lt;YOUR GIT COMMIT MESSAGE&gt;"</code></li>
+</ul>
+</li>
+<li>Once all your changes and commits are complete, increment and tag the build version of <code>yojenkins</code><ul>
+<li><code>bumpversion patch</code></li>
+</ul>
+</li>
+<li>Push changes to your development branch<ul>
+<li><code>git push origin &lt;YOUR NEW GIT BRANCH NAME&gt;</code></li>
+</ul>
+</li>
+<li>On GitHub, open a new pull request into the original repository</li>
+</ol>
+<h2 id="adding-new-dependencies">Adding New Dependencies<a class="headerlink" href="#adding-new-dependencies" title="Permanent link">&para;</a></h2>
+<p>Sometimes a new Python dependency is required for the project. In these cases, you can add dependencies
+as follows:</p>
+<ol>
+<li>Add the dependency to <code>Pipfile</code></li>
+<li>Lock the dependency in <code>Pipfile.lock</code><ul>
+<li><code>pipenv lock --clear</code></li>
+</ul>
+</li>
+<li>Update <code>requirements.txt</code> with the new dependency and its version<ul>
+<li>Typically you can find it inside <code>Pipfile.lock</code></li>
+</ul>
+</li>
+</ol>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>Some dependencies are exclusive to a specific Operating system (ie. Windows).
+Make sure to specify these appropriately as seen with other dependencies.</p>
+</div>
+<h2 id="formatting-and-linting">Formatting and Linting<a class="headerlink" href="#formatting-and-linting" title="Permanent link">&para;</a></h2>
+<p>Both, formatting and linting are standardized and automated using <a href="https://pre-commit.com/"><code>pre-commit</code></a>.
+<code>pre-commit</code> is a tool that runs a set of predefined tasks and checks on your code when you
+run <code>git commit</code>.</p>
+<p>This projects holds a <code>.pre-commit-config.yaml</code> file, which dictates which tasks are run.
+Currently, this file outlines the following tasks and checks:</p>
+<ol>
+<li>Remove any trailing whitespace</li>
+<li>Fix end of the file with a newline</li>
+<li>Check if Python docstrings are listed first</li>
+<li>Check JSON file formatting</li>
+<li>Check YAML file formatting</li>
+<li>Check TOML file formatting</li>
+<li>Check if tests have the right naming</li>
+<li>Python Code Formatting (yapf)</li>
+<li>Python Imports Sorting (isort)</li>
+<li>Python Code Linting (pylint)</li>
+</ol>
+<p>You can manually run these checks by running <code>pre-commit run</code>, or you can add the <code>pre-commit</code>
+command to your <code>.git/hooks/pre-commit</code> file by running <code>pre-commit install</code>. This adding a
+git hook is a good way to make sure your code is formatted and linted before you commit.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code>pre-commit</code> will only run on files that have been staged. However, if you want to run
+<code>pre-commit</code> on the entire project, you can run <code>pre-commit run --all-files</code></p>
+</div>
+<div class="admonition caution">
+<p class="admonition-title">Note</p>
+<p>Make sure you have the project's virtual environment activated before running the checks.</p>
+</div>
+<p>The workflow for running <code>pre-commit</code> checks is typically as follows:</p>
+<ol>
+<li>Make and finish up code changes</li>
+<li>Stage the changes with <code>git add .</code></li>
+<li>Run <code>pre-commit run</code></li>
+<li>Stage any changes made by <code>pre-commit</code></li>
+<li>Commit the staged changes with <code>git commit</code></li>
+</ol>
+<h2 id="unit-testing">Unit Testing<a class="headerlink" href="#unit-testing" title="Permanent link">&para;</a></h2>
+<p>Currently, there are no unit tests. This big tech debt is mainly caused by
+the the focus so far being on the development of <code>yojenkins</code> and its various features.</p>
+<p>However, the outline of a unit test framework is in place. The directory <code>tests</code> holds the outline
+of a <a href="https://docs.pytest.org/"><code>pytest</code></a> framework.</p>
+<p>Adding unit tests to the various functions, classes, methods, and the CLI tool as a whole is
+deeply needed.</p>
+<h2 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h2>
+<p>This project uses <code>mkdocs</code> to generate documentation. <code>mkdocs</code> is a static site generator that is
+used to generate documentation for this project. To learn more about <code>mkdocs</code>, check out its
+<a href="https://www.mkdocs.org/">documentation</a>.</p>
+<h3 id="layout">Layout<a class="headerlink" href="#layout" title="Permanent link">&para;</a></h3>
+<p>In this project, all work related to documentation is inside the <code>docs</code> directory as follows:</p>
+<pre><code class="language-text">docs/
+    |-- site/
+    |-- source/
+          |-- index.md
+          |-- contributing.md
+          |-- &lt;etc&gt;
+    |-- mkdocs.yml
+</code></pre>
+<p><code>site/</code> is the directory where the documentation will be generated.
+Anything inside this directory is not touched by anyone directly.</p>
+<p><code>source/</code> is the directory where the documentation source files are located.
+This directory holds all the files that will be edited and used to generate the documentation.</p>
+<p><code>mkdocs.yml</code> is the configuration file for <code>mkdocs</code>. Most content inside this file is
+fairly constant except the <code>nav</code> section, which may changes if a new site is added.</p>
+<h3 id="live-server-for-preview">Live Server for Preview<a class="headerlink" href="#live-server-for-preview" title="Permanent link">&para;</a></h3>
+<p>While editing and working with the documentation, you may want to preview the documentation
+in real time as you change it. <code>mkdocs</code> offers a live server feature that will automatically
+rebuild the documentation when you save a file.</p>
+<p>In order to start this live server</p>
+<ol>
+<li>Open a terminal and navigate to the <code>docs</code> directory.</li>
+<li>Inside <code>docs</code>, run the following command: <code>mkdocs serve</code></li>
+<li>Open a browser and navigate to http://127.0.0.1:8000 to actively view your changes</li>
+</ol>
+<h3 id="building-the-documentation">Building the Documentation<a class="headerlink" href="#building-the-documentation" title="Permanent link">&para;</a></h3>
+<p>The documentation is built using <code>mkdocs</code>, whcih will use the <code>source</code> directory and
+the <code>mkdocs.yml</code> configuration file.</p>
+<ol>
+<li>Open a terminal and navigate to the <code>docs</code> directory.</li>
+<li>Inside <code>docs</code>, run the following command: <code>mkdocs build</code></li>
+<li>Watch out for any warnings or errors that may need to be fixed.</li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Currently the documentation is build manullly using the <code>mkdocs</code> command. However, future plans
+adding this task to GitHub Actions to automate the build process.</p>
+</div>
+<h2 id="visual-studio-code-setup-optional">Visual Studio Code Setup (Optional)<a class="headerlink" href="#visual-studio-code-setup-optional" title="Permanent link">&para;</a></h2>
+<p>Here included are some general suggestions for setting up your VS Code environment in order
+to operate and contribute on this project. The main reason for including this section is to
+encourage even beginner level developers to hopefully contribute to this project.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This entire section is a mare suggestions. Developers can be picky about their tools and
+everyone tends to have their own ways of doing things</p>
+</div>
+<h3 id="extensions">Extensions<a class="headerlink" href="#extensions" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Python</strong> - General Python Language Support</li>
+<li><strong>Better TOML</strong> - TOML Language Support</li>
+<li><strong>YAML</strong> - YAML Language Support</li>
+<li><strong>XML</strong> - XML Language Support</li>
+<li><strong>Markdown Preview Enhancements</strong> - Live Markdown File Preview</li>
+<li><strong>Git Graph</strong> - Clear view of git history</li>
+<li><strong>GitLens</strong> - All kinds of useful git tools</li>
+<li><strong>Pylance</strong> - Code assistance for Python</li>
+<li><strong>Visual Studio IntelliCode</strong> - Code assistance for Visual Studio</li>
+<li><strong>Path Intellisense</strong> - Auto-complete for paths in code</li>
+<li><strong>Docker</strong> - Manage docker containers within VS Code</li>
+</ul>
+<h3 id="vs-code-settings">VS Code Settings<a class="headerlink" href="#vs-code-settings" title="Permanent link">&para;</a></h3>
+<h4 id="changing-settings">Changing Settings<a class="headerlink" href="#changing-settings" title="Permanent link">&para;</a></h4>
+<p>VS Code setting can be changed by editing the settings JSON file.</p>
+<div class="admonition caution">
+<p class="admonition-title">Note</p>
+<p>When adding or removing JSON settings, do not forget to add commas and quotes
+appropriately as all the other settings are formatted in the JSON.</p>
+</div>
+<ul>
+<li><strong>User Settings</strong><ul>
+<li>Settings applied globally to the user</li>
+<li>To edit: <code>Ctrl + Shift + P</code> type: <code>Preferences: Open Settings (JSON)</code></li>
+</ul>
+</li>
+<li><strong>Workspace Settings</strong><ul>
+<li>Settings applied for a current workspace or project</li>
+<li>To edit: <code>Ctrl + Shift + P</code> type: <code>Preferences: Open Workspace Settings (JSON)</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="settings-to-change">Settings to Change<a class="headerlink" href="#settings-to-change" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Show <code>.git</code> directory in the file tree</li>
+</ul>
+<pre><code class="language-json">    &quot;files.exclude&quot;: {
+        &quot;**/.git&quot;: false
+    }
+</code></pre>
+<ul>
+<li>Increase terminal scroll back history</li>
+</ul>
+<pre><code class="language-json">    &quot;terminal.integrated.scrollback&quot;: 5000,
+</code></pre>
+<ul>
+<li>Increase the visibility of scroll bars</li>
+</ul>
+<pre><code class="language-json">    &quot;editor.scrollbar.verticalScrollbarSize&quot;: 30,
+    &quot;editor.scrollbar.horizontal&quot;: &quot;visible&quot;,
+    &quot;editor.scrollbar.horizontalScrollbarSize&quot;: 30,
+</code></pre>
+<ul>
+<li>Add a Vertical Line at Line Length / Column Position</li>
+</ul>
+<pre><code class="language-json">    &quot;editor.rulers&quot;: [100],
+</code></pre>
+<h2 id="contributors">Contributors<a class="headerlink" href="#contributors" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Ismet Handžić</strong>: GitHub: <a href="https://github.com/ismet55555">@ismet55555</a></li>
+</ul>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../support/" class="btn btn-neutral float-right" title="Support this Project!">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../feature_request/" class="btn btn-neutral" title="Feature Request"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+      <p>Copyright 2021 - 2022 Ismet Handžić - GNU General Public License v3.0</p>
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/ismet55555/yojenkins/" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../feature_request/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../support/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
