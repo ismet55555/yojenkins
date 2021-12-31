@@ -293,6 +293,8 @@ class Auth:
             print2('WARNING: Adding provided API token to this profile', bold=True)
             print2('')
             profiles[profile_name]['api_token'] = api_token
+        print('')
+
         profiles[profile_name]['active'] = True
 
         return self._update_profiles(profiles=profiles)

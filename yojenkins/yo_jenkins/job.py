@@ -244,6 +244,9 @@ class Job():
             # If the job info is not passed, request it from server
             job_info = self.info(job_name=job_name, job_url=job_url)
 
+        if not job_info.get('lastBuild'):
+            return 0
+
         if 'lastBuild' not in job_info:
             fail_out('Failed to get last build number from job. "lastBuild" key missing in job information')
         if 'number' not in job_info['lastBuild']:
@@ -746,10 +749,12 @@ class Job():
         headers = {'Content-Type': 'application/xml; charset=utf-8'}
         _, _, success = self.rest.request(f'{folder_url.strip("/")}/{endpoint}',
                                           'post',
-                                          data=job_config.encode('utf-8'),
+                                          data=job_config,
                                           headers=headers,
                                           is_endpoint=False)
-        logger.debug(f'Successfully created item "{name}"' if success else f'Failed to create item "{name}"')
+        if not success:
+            fail_out(f'Failed to create job "{name}"')
+        logger.debug(f'Successfully created job "{name}"')
 
         try:
             if 'open_file' in locals():

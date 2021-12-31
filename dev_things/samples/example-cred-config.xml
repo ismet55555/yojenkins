@@ -1,0 +1,8 @@
+<com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl>
+    <scope>global</scope>
+    <id>area-51-access</id>
+    <description>Credential used as an example</description>
+    <username>area-51-user</username>
+    <password>T0P_sEcReT</password>
+    <usernameSecret>false</usernameSecret>
+</com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl>

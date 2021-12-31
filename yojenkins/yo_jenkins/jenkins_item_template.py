@@ -19,7 +19,7 @@ class JenkinsItemTemplate(Enum):
     <description>${CRED_DESCRIPTION}</description>
     <username>${CRED_USERNAME}</username>
     <password>${CRED_PASSWORD}</password>
-    <usernameSecret>${CRED_USERNAME_SECRET}</usernameSecret>
+    <usernameSecret>${CRED_USERNAME_AS_SECRET}</usernameSecret>
 </com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl>''',
         "secret-text":
             '''
@@ -36,7 +36,7 @@ class JenkinsItemTemplate(Enum):
     <id>${CRED_ID}</id>
     <description>${CRED_DESCRIPTION}</description>
     <username>${CRED_USERNAME}</username>
-    <usernameSecret>${CRED_USERNAME_SECRET}</usernameSecret>
+    <usernameSecret>${CRED_USERNAME_AS_SECRET}</usernameSecret>
     <privateKeySource class="com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey$DirectEntryPrivateKeySource">
         <privateKey>${CRED_PRIVATE_KEY}</privateKey>
     </privateKeySource>
