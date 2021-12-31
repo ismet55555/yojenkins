@@ -129,7 +129,7 @@ See [Bug Reports](#bug-reports) and [Feature Requests](#feature-requests)
 Each top level command has its sub-commands. For example, `yojenkins server` has sub-command `info`. To see the sub-commands of a top level command, or to see the options of any command, use the `--help` option.
 
 ```txt
-                        YOJENKINS (Version: 0.0.53)
+                        YOJENKINS (Version: 0.0.54)
 
   yojenkins is a tool that is focused on interfacing with a Jenkins server from
   the comfort of the beloved command line.  This tool can also be used as a
