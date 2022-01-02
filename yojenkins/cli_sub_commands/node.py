@@ -30,7 +30,7 @@ def status(debug, profile, name):
     click.secho('TODO :-/', fg='yellow')
 
 
-@node.command(short_help='\tList all all nodes')
+@node.command(short_help='\tList all nodes')
 @cli_decorators.debug
 @cli_decorators.profile
 @cli_decorators.format_output
@@ -107,7 +107,7 @@ def create_permanent(debug, profile, **kwargs):
     or physical machine, connecting with SSH. The target system must have the following:
 
     \b
-    - A working SSH server installed, running, and accessible form main server
+    - A working SSH server installed, running, and accessible from main server
     - Java installed
 
     This command only sets the node up, but it does not monitor to see if the agent

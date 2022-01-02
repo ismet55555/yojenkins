@@ -15,8 +15,8 @@ CRED_USERNAME="area-51-user"
 CRED_PASSWORD="T0P_sEcReT"
 CRED_USERNAME_AS_SECRET=false
 
-# Generate the credential template
-CRED_CONFIG_TEMPLATE=$(yojenkins credential get-template user-pass --filepath example-cred-config.xml)
+# Generate the credential template and save to file
+yojenkins credential get-template user-pass --filepath example-cred-config.xml
 
 # Interpolate (Plug in) the variables into the template
 CRED_CONFIG="$(eval "echo -e \"`<example-cred-config.xml`\"")"

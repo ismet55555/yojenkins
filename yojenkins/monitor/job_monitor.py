@@ -31,7 +31,7 @@ class JobMonitor(Monitor):
         Returns:
             None
         """
-        # Get attributes form super (parent) class
+        # Get attributes from super (parent) class
         super().__init__()
 
         self.rest = rest

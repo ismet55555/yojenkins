@@ -94,7 +94,7 @@ yojenkins
     |     |--- disable           Disable a node
     |     |--- enable            Enable a node
     |     |--- info              Node information
-    |     |--- list              List all all nodes
+    |     |--- list              List all nodes
     |     |--- logs              Node logs
     |     |--- prepare           Prepare a remote machine to become a node
     |     |--- reconfig          Reconfigure the node

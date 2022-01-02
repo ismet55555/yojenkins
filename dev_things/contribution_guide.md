@@ -52,7 +52,7 @@ Also, note that as of now there are no sufficient tests setup (ie. pytest, unite
 
 
 ## Running and Iterating Changes
-1. Create a branch form the `main` branch
+1. Create a branch from the `main` branch
     - `git pull`
     - `git checkout -b <YOUR BRANCH NAME>`
 

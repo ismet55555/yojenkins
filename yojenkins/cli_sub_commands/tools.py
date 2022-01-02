@@ -78,7 +78,7 @@ def history(debug, profile, clear):
               help='Clean any HTML tags from return')
 def rest_request(debug, profile, request_text, request_type, raw, clean_html):
     """Use this command to send Rest calls to the server.
-    The request will be send with the proper authentication form your profile.
+    The request will be send with the proper authentication from your profile.
     This can be useful if yojenkins does not have the functionality you need.
 
     EXAMPLE:

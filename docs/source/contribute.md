@@ -71,8 +71,8 @@ root directory of the project.
 ## Making Changes
 
 !!! tip "`git`"
-    This project uses the ["trunk-based"](https://www.atlassian.com/continuous-delivery/continuous-integration/trunk-based-development) 
-    `git` version control workflow. Each time you make a change, you should create a new branch 
+    This project uses the ["trunk-based"](https://www.atlassian.com/continuous-delivery/continuous-integration/trunk-based-development)
+    `git` version control workflow. Each time you make a change, you should create a new branch
     and push your changes to the `main` branch.
 
     These days you do not have to be a `git` terminal master in order to get going with a `git`
@@ -81,27 +81,29 @@ root directory of the project.
     [SourceTree](https://www.sourcetreeapp.com/), or even through the Visual Studio Code IDE.
 
 
-1. Create a new `git` branch form the `main` branch
+1. Create a new `git` branch from the `main` branch
     - `git checkout main`
     - `git pull`
     - `git checkout -b <YOUR NEW GIT BRANCH NAME>`
-2. Activate/Enter the virtual environment
+2. Update your virtual environment
+    - `pipenv sync --three --dev`
+3. Activate/Enter the virtual environment
     - `pipenv shell`
-3. *Make your changes to the project*
-4. Run the changes
+4. **Make your changes to the project ...**
+5. Run the changes
     - `yojenkins` - This works because the current package is marked as editable in `Pipfile`
     - `python yojenkins/__main__py` - This is effectively what is run when running `yojenkins`
-5. Stage the changes
+6. Stage the changes
     - `git add .`
-6. Run `pre-commit` (See section below)
+7. Run `pre-commit` (See section below)
     - `pre-commit run`
-7. Stage and commit the changes
+8. Stage and commit the changes
     - `git commit -m "<YOUR GIT COMMIT MESSAGE>"`
-8. Once all your changes and commits are complete, increment and tag the build version of `yojenkins`
+9. Once all your changes and commits are complete, increment and tag the build version of `yojenkins`
     - `bumpversion patch`
-9. Push changes to your development branch
+10. Push changes to your development branch
     - `git push origin <YOUR NEW GIT BRANCH NAME>`
-10. On GitHub, open a new pull request into the original repository
+11. On GitHub, open a new pull request into the original repository
 
 
 
@@ -112,11 +114,11 @@ root directory of the project.
 Sometimes a new Python dependency is required for the project. In these cases, you can add dependencies
 as follows:
 
-1. Add the dependency to `Pipfile`
-2. Lock the dependency in `Pipfile.lock`
+1. Add the dependency to the `Pipfile`
+2. Lock the dependency, updating the `Pipfile.lock`
     - `pipenv lock --clear`
 3. Update `requirements.txt` with the new dependency and its version
-    - Typically you can find it inside `Pipfile.lock`
+    - Typically you can search it inside `Pipfile.lock`
 
 !!! caution
     Some dependencies are exclusive to a specific Operating system (ie. Windows).

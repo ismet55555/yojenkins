@@ -41,7 +41,7 @@ yojenkins credential template \
 
 #### Create
 - Have a blank credential template to fill in using f-string, like the node thing
-- Should I convert form JSON to XML, or accept json as is? Maybe test it to see if it can be parsed?
+- Should I convert from JSON to XML, or accept json as is? Maybe test it to see if it can be parsed?
 - For not maybe only have a configuration file setting?
     - Def need a little smoother way than this ...
 ```

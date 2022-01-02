@@ -114,7 +114,7 @@ def history(profile: str, clear: bool) -> None:
     Returns:
         None
     """
-    # Load contents form history file
+    # Load contents from history file
     history_file_path = os.path.join(os.path.join(Path.home(), cu.CONFIG_DIR_NAME), cu.HISTORY_FILE_NAME)
     contents = load_contents_from_local_file('json', history_file_path)
     if not contents:
@@ -222,7 +222,7 @@ def run_script(profile: str, script_text: str, script_filepath: str, output_file
         script_text = script_text.strip().replace('  ', ' ')
         script = script_text
     elif script_filepath:
-        logger.debug(f'Loading specified script form file: {script_filepath} ...')
+        logger.debug(f'Loading specified script from file: {script_filepath} ...')
         try:
             with open(os.path.join(script_filepath), 'r') as open_file:
                 script = open_file.read()

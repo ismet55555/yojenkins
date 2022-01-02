@@ -167,4 +167,4 @@ config.yml
 config.yaml
 
 # Documentation build files
-docs/site/*
+docs/site/**
