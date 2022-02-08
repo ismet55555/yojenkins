@@ -4,13 +4,13 @@ click-help-colors==0.9.1
 click==8.0.3
 coloredlogs==15.0.1
 docker==5.0.3
-json2xml==3.9.0
+json2xml
 python-jenkins==1.8.0.0a0
-pywin32==227; platform_system == "Windows"  # docker package needs 227!
-pypiwin32==223; platform_system == "Windows"
+pywin32; platform_system == "Windows"  # docker package needs 227!
+pypiwin32; platform_system == "Windows"
 PyYAML==6.0
 requests-futures==1.0.0
 simpleaudio==1.0.4; sys_platform != "win32"
 toml==0.10.2
-windows-curses==2.3.0; sys_platform == "win32"
+windows-curses; sys_platform == "win32"
 xmltodict

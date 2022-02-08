@@ -35,7 +35,7 @@ pyyaml = "*"
 requests_futures = "*"
 simpleaudio = {version = "*", platform_system = "!= 'Windows'"}
 toml = "*"
-windows-curses = {version = "2.3.0", markers = "sys_platform == 'win32' or platform_system == 'Windows' or os_name =='nt'"}
+windows-curses = {version = "*", markers = "sys_platform == 'win32' or platform_system == 'Windows' or os_name =='nt'"}
 pywin32 = {version = "*", markers = "sys_platform == 'win32' or platform_system == 'Windows' or os_name =='nt'"}
 pypiwin32 = {version = "*", markers = "sys_platform == 'win32' or platform_system == 'Windows' or os_name =='nt'"}
 xmltodict = "*"
