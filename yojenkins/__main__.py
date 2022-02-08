@@ -155,11 +155,7 @@ from yojenkins.cli_sub_commands import step
 
 
 # -----------------------------------------------------------------------------
-@main.group(short_help='\tTools and more',
-    cls=HelpColorsGroup,
-    help_options_custom_colors={
-        'docs': 'black'
-        })
+@main.group(short_help='\tTools and more')
 def tools():
     """Utility And More"""
     pass

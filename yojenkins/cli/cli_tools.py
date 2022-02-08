@@ -24,6 +24,28 @@ logger = logging.getLogger()
 
 BUG_REPORT_URL = "https://github.com/ismet55555/yojenkins/issues/new?assignees=&labels=&template=bug_report.md&title="
 FEATURE_REQUEST_URL = "https://github.com/ismet55555/yojenkins/issues/new?assignees=&labels=&template=feature_request.md&title="
+DOCS_URL = "https://www.yojenkins.com/"
+
+
+@log_to_history
+def documentation() -> None:
+    """TODO Docstring
+
+    Details: TODO
+
+    Args:
+        TODO
+
+    Returns:
+        TODO
+    """
+    logger.debug(f'Opening documentation in web browser: "{DOCS_URL}" ...')
+    success = browser_open(url=DOCS_URL)
+    if success:
+        logger.debug('Successfully opened in web browser')
+    else:
+        logger.debug('Failed to open in web browser')
+    return success
 
 
 @log_to_history

@@ -8,12 +8,12 @@ from yojenkins.cli import cli_decorators, cli_tools
 from yojenkins.cli.cli_utility import set_debug_log_level
 
 
-@tools.command(short_help='\tOpen browser to the documentation')
+@tools.command(short_help='\tOpen browser to the documentation page')
 @cli_decorators.debug
 def docs(debug):
     """Open browser to the documentation"""
     set_debug_log_level(debug)
-    click.secho('TODO :-/', fg='yellow')
+    cli_tools.documentation()
 
 
 # @tools.command(short_help='\tUpgrade yojenkins')
