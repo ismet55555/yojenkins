@@ -180,9 +180,17 @@ class Account():
             fail_out(f'Failed to list all available permissions. {error}')
 
         # Get a list of only permission ids
-        permission_list_id = [permission["id"] for permission in permission_list if "id" in permission]
+        permission_list_ids = [permission["id"] for permission in permission_list if "id" in permission]
+
+        # Capitalize last part of permission ID and remove "GENERIC" sub-string
+        # Example: "hudson.security.Permission.GenericRead" becomes "hudson.security.Permission.READ"
+        permission_list_ids_capital = []
+        for permission_list_id in permission_list_ids:
+            items = permission_list_id.split('.')
+            items[-1] = items[-1].upper().replace("GENERIC", "")
+            permission_list_ids_capital.append('.'.join(items))
 
         logger.debug(f'Number of permission found: {len(permission_list)}')
-        logger.debug(f'Found the following permission ids: {permission_list_id}')
+        logger.debug(f'Found the following permission ids: {permission_list_ids}')
 
-        return permission_list, permission_list_id
+        return permission_list, permission_list_ids_capital
