@@ -8,12 +8,12 @@ from yojenkins.cli import cli_decorators, cli_tools
 from yojenkins.cli.cli_utility import set_debug_log_level
 
 
-@tools.command(short_help='\tOpen browser to the documentation')
+@tools.command(short_help='\tOpen browser to the documentation page')
 @cli_decorators.debug
 def docs(debug):
     """Open browser to the documentation"""
     set_debug_log_level(debug)
-    click.secho('TODO :-/', fg='yellow')
+    cli_tools.documentation()
 
 
 # @tools.command(short_help='\tUpgrade yojenkins')
@@ -78,7 +78,7 @@ def history(debug, profile, clear):
               help='Clean any HTML tags from return')
 def rest_request(debug, profile, request_text, request_type, raw, clean_html):
     """Use this command to send Rest calls to the server.
-    The request will be send with the proper authentication form your profile.
+    The request will be send with the proper authentication from your profile.
     This can be useful if yojenkins does not have the functionality you need.
 
     EXAMPLE:

@@ -165,3 +165,6 @@ config.json
 config.toml
 config.yml
 config.yaml
+
+# Documentation build files
+docs/site/**

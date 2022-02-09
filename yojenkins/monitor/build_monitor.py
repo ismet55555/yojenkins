@@ -5,7 +5,7 @@ import logging
 import os
 import sys
 import threading
-# from pprint import pprint
+#  from pprint import pprint
 from time import perf_counter, sleep, time
 
 from yojenkins.monitor.monitor import Monitor
@@ -33,7 +33,7 @@ class BuildMonitor(Monitor):
         Returns:
             None
         """
-        # Get attributes form super (parent) class
+        # Get attributes from super (parent) class
         super().__init__()
 
         self.rest = rest
@@ -514,6 +514,14 @@ class BuildMonitor(Monitor):
         # Set the monitoring thread flag up
         self.all_threads_enabled = True
         self.build_stages_thread_interval = monitor_interval
+
+        # Check if this is a staged build
+        logger.debug(f'Checking if build is a staged build ...')
+        request_url = f"{build_url.strip('/')}/wfapi/describe"
+        return_content, _, return_success = self.rest.request(request_url, 'get', is_endpoint=False)
+        if not return_success or not return_content:
+            logger.debug('Failed to get build stages. This may not be a staged build')
+            return
 
         # Loop until flags disable it
         while self.all_threads_enabled:

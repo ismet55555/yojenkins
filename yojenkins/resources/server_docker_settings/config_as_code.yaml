@@ -24,7 +24,8 @@
 ##############################################################################
 
 jenkins:
-  systemMessage: "ATTENTION: This Jenkins server is for development and testing only!\n
+  systemMessage: "ATTENTION: This Jenkins server is for development, training, demo, or testing only!\n
+      Please do not use it for production purposes.\n
       This server was set up by YOJENKINS\n
       Enjoy responsibly!\n\n"
   numExecutors: 4

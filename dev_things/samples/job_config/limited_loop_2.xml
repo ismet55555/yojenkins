@@ -15,7 +15,7 @@
     <hudson.tasks.Shell>
       <command>#!/bin/bash
 
-secondsTotal=15
+secondsTotal=360
 endTimeSeconds=$(( $(date +%s) + secondsTotal ))
 
 while [ $(date +%s) -lt $endTimeSeconds ];

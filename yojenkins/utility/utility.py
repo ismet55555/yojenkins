@@ -253,12 +253,12 @@ def is_list_items_in_dict(list_items: list, dict_to_check: dict) -> int:
 
 
 def iter_data_empty_item_stripper(iter_data):
-    """Removes any empty data form a nested or un-nested iter item
+    """Removes any empty data from a nested or un-nested iter item
 
     Details: https://stackoverflow.com/a/27974027/11294572
 
     Args:
-        iter_data : data in the form of iterable (ie. list, dict, set, etc)
+        iter_data : data in the from of iterable (ie. list, dict, set, etc)
 
     Returns:
         Iterable item without any blank/empty items
@@ -552,7 +552,7 @@ def item_subitem_list(item_info: Dict,
 
 def to_seconds(time_quantity: int, time_unit_text: str) -> int:
     """
-    Get the number of seconds form the time quantity and time unit type.
+    Get the number of seconds from the time quantity and time unit type.
     Examples:
         - 45 min -> 2700 seconds
         - 2 days -> 432000 seconds
@@ -658,7 +658,7 @@ def remove_special_char(text: str, special_chars: str = '@!#$%^&*<>?/\|~:') -> s
     """
     regex = re.compile('[' + special_chars + ']')
     text_new = re.sub(regex, '', text)
-    logger.debug(f'Removed special characters "{special_chars}" form string')
+    logger.debug(f'Removed special characters "{special_chars}" from string')
     return text_new
 
 

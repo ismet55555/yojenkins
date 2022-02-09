@@ -6,6 +6,8 @@ Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
 Everyone is permitted to copy and distribute verbatim copies
 of this license document, but changing it is not allowed.
 
+Also a complete [history of this licence](https://en.wikipedia.org/wiki/GNU_General_Public_License).
+
 [TOC]
 
 ## Preamble

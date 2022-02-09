@@ -32,15 +32,25 @@ The following methods are available to financially support this project:
 
 ### What Do I Get Back?
 
-Depending on the size of the donation, you or your company are able to get the following:
+Depending on the size of the donation, you or your company are able to get the following. Note that
+these tiers are the same as the tiers on the [GitHub Sponsorship Page](https://github.com/sponsors/ismet55555?frequency=recurring&sponsor=ismet55555).
+The donations on [Buy Me Coffee](https://buymeacoffee.com/ismet55555) are one-time relatively lower payments
 
-- **TODO: Add a list of what you get back, a table**
 
+### What Will Happen to My Money?
 
-### What Will Happen to Your Money?
+That would depend on how much money gets sponsored overall.
 
-As of now, with your sponsorship, I will probably buy more tea and various snacks. Or I will just
-sponsor someone else's project that I believe is worth sponsoring.
+- **Overall sponsorship under $100/month:** I will probably buy personal items that 
+makes development more comfortable. This includes things like tea, various snacks, hardware upgrades, 
+hosting costs, etc.
+
+- **Overall sponsorship over $100/month:** I will pay it forward and sponsor someone 
+else's project that I believe is worth sponsoring.
+
+- **Overall sponsorship over $500/month:** ... hmm...well, I'm not really sure this project will get there.
+But if it does, I will have to re-think and update my sponsorship strategy.
+
 
 
 

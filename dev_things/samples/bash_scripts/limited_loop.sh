@@ -1,6 +1,6 @@
 #!/bin/bash
 
-secondsTotal=120
+secondsTotal=360
 endTimeSeconds=$(( $(date +%s) + secondsTotal ))
 
 while [ $(date +%s) -lt $endTimeSeconds ];

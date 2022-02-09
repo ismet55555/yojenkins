@@ -69,7 +69,22 @@ def delete(debug, profile, user_id):
               help='Add or remove permission action')
 @click.option('--permission-id', type=str, required=True, help='ID(s) of permission (comma separated)')
 def permission(debug, profile, user_id, action, permission_id):
-    """"Add or remove user permission"""
+    """
+    Add or remove user permission
+
+    \b
+    IMPORTANT:
+      - Permission IDs must have correct capitalization or naming!
+      - If permission is not found, read class docs, or try variation.
+
+    \b
+    EXAMPLES:
+      - Will not work/match:  hudson.model.View.Create
+      - Will work/match:      hudson.model.View.CREATE
+    \b
+      - Will not work/match:  hudson.security.Permission.GenericCreate
+      - Will work/match:      hudson.security.Permission.CREATE
+    """
     set_debug_log_level(debug)
     cli_account.permission(profile, user_id, action, permission_id)
 
@@ -80,7 +95,21 @@ def permission(debug, profile, user_id, action, permission_id):
 @cli_decorators.list
 @cli_decorators.profile
 def permission_list(debug, pretty, yaml, xml, toml, list, profile):
-    """List all available permissions"""
+    """List all available permissions
+
+    \b
+    IMPORTANT:
+      - Permission IDs may not have correct capitalization!
+      - If permission is not found, read class docs, or try variation.
+
+    \b
+    EXAMPLE:
+      - Not Correct:  hudson.model.View.Create
+      - Correct:      hudson.model.View.CREATE
+    \b
+      - Will not work/match:  hudson.security.Permission.GenericCreate
+      - Will work/match:      hudson.security.Permission.CREATE
+    """
     set_debug_log_level(debug)
     cli_account.permission_list(pretty, yaml, xml, toml, list, profile)
 

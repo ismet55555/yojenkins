@@ -107,7 +107,7 @@
 - List steps - DONE
 - Download logs - DONE
 - List checkpoint (/checkpoints) - LATER
-- Restart form checkpoint (1/restart - post) - LATER
+- Restart from checkpoint (1/restart - post) - LATER
 
 
 ## Step

@@ -278,6 +278,6 @@ class Rest:
             else:
                 return_content = response.text
         else:
-            logger.debug(f'No content received form {request_type.upper()} request: {request_url}')
+            logger.debug(f'No content received from {request_type.upper()} request: {request_url}')
 
         return return_content, response.headers, True

@@ -65,7 +65,7 @@ class Stage():
                                                                         latest)
         logger.debug(f'Stages found: {build_stage_name_list}')
 
-        # Formate stage name form user input
+        # Formate stage name from user input
         logger.debug(f'Formatting stage name "{stage_name}": Lower case, strip spaces')
         stage_name = stage_name.lower().strip()
 

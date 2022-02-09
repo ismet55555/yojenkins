@@ -3,7 +3,7 @@
 Below is a complete outline of the `yojenkins` CLI command structure.
 
 !!! note
-    As of Version: **0.0.54**
+    As of Version: **0.0.55**
 
 
 ```text
@@ -94,7 +94,7 @@ yojenkins
     |     |--- disable           Disable a node
     |     |--- enable            Enable a node
     |     |--- info              Node information
-    |     |--- list              List all all nodes
+    |     |--- list              List all nodes
     |     |--- logs              Node logs
     |     |--- prepare           Prepare a remote machine to become a node
     |     |--- reconfig          Reconfigure the node

@@ -24,7 +24,7 @@ class FolderMonitor(Monitor):
         Returns:
             None
         """
-        # Get attributes form super (parent) class
+        # Get attributes from super (parent) class
         super().__init__()
 
         pass
