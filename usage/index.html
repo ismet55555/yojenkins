@@ -225,7 +225,7 @@
 </div>
 <hr />
 <h2 id="cli-basics">CLI Basics<a class="headerlink" href="#cli-basics" title="Permanent link">&para;</a></h2>
-<p>As with other command line interface (CLI) tools, the format of a typical <code>yojenkins</code> CLI 
+<p>As with other command line interface (CLI) tools, the format of a typical <code>yojenkins</code> CLI
 interaction looks like this:</p>
 <pre><code class="language-text">yojenkins &lt;command&gt; &lt;subcommand&gt; [options] [ARGUMENTS]
 </code></pre>
@@ -239,7 +239,7 @@ For example, <code>yojenkins auth configure --help</code></p>
 <p>To troubleshoot any issues or to see what <code>yojenkins</code> is doing behind the scenes, use the <code>--debug</code> option</p>
 </div>
 <h2 id="menu-overview">Menu Overview<a class="headerlink" href="#menu-overview" title="Permanent link">&para;</a></h2>
-<p>The following is the main menu displayed when running <code>yojenkins --help</code>. </p>
+<p>The following is the main menu displayed when running <code>yojenkins --help</code>.</p>
 <pre><code class="language-txt">❯ yojenkins --help
 
                         YOJENKINS (Version: 0.0.00)
@@ -273,7 +273,7 @@ Commands:
   step        Manage stage steps
   tools       Tools and more
 </code></pre>
-<p>The sub-menus can be accessed by entering <code>yojenkins</code> followed by the sub-menu name. 
+<p>The sub-menus can be accessed by entering <code>yojenkins</code> followed by the sub-menu name.
 For example, <code>yojenkins server</code> will display the server sub-menu.</p>
 <pre><code class="language-txt">❯ yojenkins server --help
 
@@ -297,8 +297,8 @@ Commands:
   server-teardown  Remove a local development server
   shutdown         Shut down the server
 </code></pre>
-<p>In turn, the sub-menu commands can be accessed by entering <code>yojenkins server</code> followed by the 
-sub-menu command name. For example, <code>yojenkins server browser</code> will open the Jenkins server 
+<p>In turn, the sub-menu commands can be accessed by entering <code>yojenkins server</code> followed by the
+sub-menu command name. For example, <code>yojenkins server browser</code> will open the Jenkins server
 home page in the browser.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -318,12 +318,12 @@ Options:
   --help          Show this message and exit.
 </code></pre>
 <h2 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h2>
-<p>Effortless authentication is something that <code>yojenkins</code> can do for you. That is, once you have 
+<p>Effortless authentication is something that <code>yojenkins</code> can do for you. That is, once you have
 authentication profiles set up, it is not something you have to think about much while using <code>yojenkins</code>.</p>
 <h3 id="authentication-profiles">Authentication Profiles<a class="headerlink" href="#authentication-profiles" title="Permanent link">&para;</a></h3>
 <p><code>yojenkins</code> has the ability to store and manage authentication profiles. That is, you are able to
-store and manage different authentication credentials and use them to authenticate with the Jenkins 
-server as you need them, without having to enter them each time you need to interact with each 
+store and manage different authentication credentials and use them to authenticate with the Jenkins
+server as you need them, without having to enter them each time you need to interact with each
 Jenkins server.</p>
 <p>Different authentication profiles can be used for different Jenkins servers. For example, you can
 have a profile for your local development server and a profile for your production Jenkins server.</p>
@@ -359,25 +359,25 @@ automatically activated when the <code>yojenkins</code> command is run.</p>
 <ul>
 <li><code>jenkins_server_url</code>: The full URL of the Jenkins server's home page.</li>
 <li><code>username</code>: The username of the Jenkins user account.</li>
-<li><code>api_token</code>: The API token of the Jenkins user account. This can be fetched through the Jenkins 
+<li><code>api_token</code>: The API token of the Jenkins user account. This can be fetched through the Jenkins
 server UI, or through <code>yojenkins</code></li>
 <li><code>active</code>: Whether the profile can be used or not. This can be useful if you want to temporarily disable
 a profile and ensure that you don't accidentally use it.</li>
 </ul>
 <div class="admonition caution">
 <p class="admonition-title">Caution</p>
-<p>The <code>api_token</code> can be the account password, however it is <strong>highly recommended</strong> that you use 
+<p>The <code>api_token</code> can be the account password, however it is <strong>highly recommended</strong> that you use
 an API token. You do not want to store a Jenkins account password in plain text.</p>
 </div>
 <h3 id="configuring-a-profile">Configuring a Profile<a class="headerlink" href="#configuring-a-profile" title="Permanent link">&para;</a></h3>
 <p>To use an authentication profile you need to first create a profile. For example, to create a profile
 for your local development server, you can do one of the following two methods.</p>
 <h4 id="run-yojenkins-auth-configure-recommended">Run <code>yojenkins auth configure</code> <em>(Recommended)</em><a class="headerlink" href="#run-yojenkins-auth-configure-recommended" title="Permanent link">&para;</a></h4>
-<p>Running this command will prompt you for the required information, The prompt will look something 
+<p>Running this command will prompt you for the required information, The prompt will look something
 like the following:</p>
 <pre><code class="language-txt">❯ yojenkins auth configure
 
-Credentials profile file found in current user home directory: 
+Credentials profile file found in current user home directory:
 /home/user/.yojenkins/credentials
 Adding a new profile to the current credentials profile file ...
 Please enter the following information to add a profile:
@@ -408,7 +408,7 @@ active = true
 temporarily disable a profile, you can set the <code>active</code> field to <code>false</code>.</p>
 <p>You can leave the API token blank since you can use <code>yojenkins</code> to add the API token later.</p>
 <h3 id="requesting-and-storing-api-tokens">Requesting and Storing API Tokens<a class="headerlink" href="#requesting-and-storing-api-tokens" title="Permanent link">&para;</a></h3>
-<p><code>yojenkins</code> is able to request an API token from the Jenkins server to use for subsequent authentication 
+<p><code>yojenkins</code> is able to request an API token from the Jenkins server to use for subsequent authentication
 requests.</p>
 <p>To simply generate and display the API token, you can run the following command. Note that <code>yojenkins</code>
 does not reference a profile, so it will ask a few question to be able to generate the API token.</p>
@@ -417,33 +417,33 @@ does not reference a profile, so it will ask a few question to be able to genera
 Enter desired API TOKEN NAME: demo-test
 Enter Jenkins SERVER BASE URL: http://localhost:8080/
 Enter Jenkins server USERNAME: admin
-Enter &quot;admin&quot; PASSWORD: 
+Enter &quot;admin&quot; PASSWORD:
 
 55d8c325c876fake58d61274d41744bc0d
 </code></pre>
-<p>More conveniently, you can generate an API token using the information stored in a authentication 
-profile and subsequently store the new API token inside an existing authentication profile. 
-The following command will request a new API token from the server and store it within the 
+<p>More conveniently, you can generate an API token using the information stored in a authentication
+profile and subsequently store the new API token inside an existing authentication profile.
+The following command will request a new API token from the server and store it within the
 <code>default</code> under the <code>api_token</code> key.</p>
 <pre><code class="language-txt">❯ yojenkins auth token --profile default
 
-Enter &quot;admin&quot; PASSWORD: 
+Enter &quot;admin&quot; PASSWORD:
 
 success
 </code></pre>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p>You can also manually fetch the API token form the Jenkins UI:</p>
+<p>You can also manually fetch the API token from the Jenkins UI:</p>
 <ol>
 <li>Click on your username in the top right corner of the Jenkins UI</li>
 <li>Click on the <em>"Configure"</em> button in the menu on the right</li>
 <li>In the <em>"API Token"</em> section, click <em>"Add new Token"</em></li>
-<li>Copy the generated API token and paste it into the <code>api_token</code> field 
+<li>Copy the generated API token and paste it into the <code>api_token</code> field
 in the <code>~/.yojenkins/credentials</code> file</li>
 </ol>
 </div>
 <h3 id="order-of-precedence-specifying-profiles">Order of Precedence Specifying Profiles<a class="headerlink" href="#order-of-precedence-specifying-profiles" title="Permanent link">&para;</a></h3>
-<p>Each time <code>yojenkins</code> is run, it will look for a way to determine which authentication profile to use. 
+<p>Each time <code>yojenkins</code> is run, it will look for a way to determine which authentication profile to use.
 The order of precedence of looking for a profile specifier is as follows:</p>
 <ol>
 <li><code>--profile</code> command argument<ul>
@@ -460,8 +460,8 @@ The order of precedence of looking for a profile specifier is as follows:</p>
 </ol>
 <p>If none of the above are satisfied, <code>yojenkins</code> will prompt for Jenkins server credentials.</p>
 <h2 id="output-formatting">Output Formatting<a class="headerlink" href="#output-formatting" title="Permanent link">&para;</a></h2>
-<p>Often times you will want to see the output of a command in a different format. 
-For example, you may want to see the output of a <code>yojenkins server info</code> command in a different 
+<p>Often times you will want to see the output of a command in a different format.
+For example, you may want to see the output of a <code>yojenkins server info</code> command in a different
 format than the default.</p>
 <p>The following output formats are supported:</p>
 <ul>
@@ -574,7 +574,7 @@ If the file does not exist, it will be created.</p>
 <li>Formatted datatime</li>
 <li>The version of the <code>yojenkins</code> used to run the command</li>
 </ol>
-<p>To show the history of commands, run <code>yojenkins tools history</code>. To only show the history of a 
+<p>To show the history of commands, run <code>yojenkins tools history</code>. To only show the history of a
 specific profile, run <code>yojenkins tools history --profile &lt;PROFILE NAME&gt;</code>.</p>
 <p>Here is a sample output of the <code>yojenkins tools history</code> command:</p>
 <pre><code class="language-text">❯ yojenkins tools history
@@ -598,8 +598,8 @@ username = &quot;id236&quot;
 api_token = &quot;11fb9cb61d34FAKE73f82763cf8879c79a&quot;
 active = true
 </code></pre>
-<p>The command <code>yojenkins tools rest-request "me/api/json"</code> will make a <code>GET</code> request to the Jenkins 
-server at <code>http://localhost:8080/me/api/json</code> using the username and API token from the 
+<p>The command <code>yojenkins tools rest-request "me/api/json"</code> will make a <code>GET</code> request to the Jenkins
+server at <code>http://localhost:8080/me/api/json</code> using the username and API token from the
 authentication profile.</p>
 <p>This command supports the following options:</p>
 <ul>
@@ -608,9 +608,9 @@ authentication profile.</p>
 <li><code>--clean-html</code> - If set, the response will be cleaned of HTML tags. This is useful if the response is in HTML format and you only want the content.</li>
 </ul>
 <h3 id="run-groovy-script-on-server">Run Groovy Script on Server<a class="headerlink" href="#run-groovy-script-on-server" title="Permanent link">&para;</a></h3>
-<p>Often times you want to run a Groovy script on the Jenkins server. The <code>yojenkins tools run-script</code> 
+<p>Often times you want to run a Groovy script on the Jenkins server. The <code>yojenkins tools run-script</code>
 command allows you to do just that.</p>
-<p>This may be useful for Jenkins administrative tasks or simply running Groovy test scripts and tutorials. </p>
+<p>This may be useful for Jenkins administrative tasks or simply running Groovy test scripts and tutorials.</p>
 <p>You can specify the Groovy script by using one of the following options:</p>
 <ol>
 <li><code>--text &lt;SCRIPT TEXT&gt;</code><ul>
@@ -630,14 +630,14 @@ command allows you to do just that.</p>
 for the user account you are using.</p>
 </div>
 <h3 id="setup-jenkins-shared-library">Setup Jenkins Shared Library<a class="headerlink" href="#setup-jenkins-shared-library" title="Permanent link">&para;</a></h3>
-<p>Jenkins allows users to share Groovy code libraries between jobs and pipelines. This is useful 
-in that projects and pipelines will often share the same code. For example, a piece of 
-code used to report test results may be used in more than one pipeline without copy-pasting 
-it into each pipeline. <a href="https://www.jenkins.io/doc/book/pipeline/shared-libraries/">Shared libraries</a> 
+<p>Jenkins allows users to share Groovy code libraries between jobs and pipelines. This is useful
+in that projects and pipelines will often share the same code. For example, a piece of
+code used to report test results may be used in more than one pipeline without copy-pasting
+it into each pipeline. <a href="https://www.jenkins.io/doc/book/pipeline/shared-libraries/">Shared libraries</a>
 are a way to share code between projects and pipelines.</p>
 <div class="admonition danger">
 <p class="admonition-title">Danger</p>
-<p>Jenkins sharable libraries available to any Pipeline jobs running on this system. These libraries will 
+<p>Jenkins sharable libraries available to any Pipeline jobs running on this system. These libraries will
 be fully trusted, meaning they run code without “sandbox” restrictions and may use @Grab.
 So be careful what code is being added to a Jenkins shared library.</p>
 </div>
@@ -666,7 +666,7 @@ See <a href="../docker_install/">Docker installation guide</a> on how to install
 <pre><code class="language-bash">yojenkins server server-deploy
 </code></pre>
 <p>If this is the very first time running this command, it will take a minute or two to complete.
-Any subsequent time will be faster since the base image has already been downloaded. 
+Any subsequent time will be faster since the base image has already been downloaded.
 This initial lag is due to the Docker image being downloaded and built.</p>
 <p>Note that this command can be run without any specified options or arguments. All default
 options should work out of the box. However, you can use the <code>--help</code> option to see all available
@@ -695,7 +695,7 @@ options in order to change any defaults.</p>
 <pre><code class="language-bash">yojenkins server server-teardown
 </code></pre>
 <p>Behind the scenes <code>yojenkins</code> holds a log file which outlines any active deployments, its image used,
-container created, volume created, etc. When you run <code>server-teardown</code> it will remove the server deployment that 
+container created, volume created, etc. When you run <code>server-teardown</code> it will remove the server deployment that
 was logged and the log file itself.</p>
 <p>If there are any issues tearing down a running <code>yojenkins</code> deployed server, you can always
 use <code>docker</code> to manually remove the stop and remove the server container.</p>

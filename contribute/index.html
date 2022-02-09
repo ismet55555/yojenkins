@@ -293,8 +293,8 @@ root directory of the project.</p>
 <h2 id="making-changes">Making Changes<a class="headerlink" href="#making-changes" title="Permanent link">&para;</a></h2>
 <div class="admonition tip">
 <p class="admonition-title"><code>git</code></p>
-<p>This project uses the <a href="https://www.atlassian.com/continuous-delivery/continuous-integration/trunk-based-development">"trunk-based"</a> 
-<code>git</code> version control workflow. Each time you make a change, you should create a new branch 
+<p>This project uses the <a href="https://www.atlassian.com/continuous-delivery/continuous-integration/trunk-based-development">"trunk-based"</a>
+<code>git</code> version control workflow. Each time you make a change, you should create a new branch
 and push your changes to the <code>main</code> branch.</p>
 <p>These days you do not have to be a <code>git</code> terminal master in order to get going with a <code>git</code>
 source controlled project. Depending on your preferences, there are many visual UI-based <code>git</code>
@@ -302,17 +302,21 @@ clients such as <a href="https://desktop.github.com/">GitHub Desktop</a>,
 <a href="https://www.sourcetreeapp.com/">SourceTree</a>, or even through the Visual Studio Code IDE.</p>
 </div>
 <ol>
-<li>Create a new <code>git</code> branch form the <code>main</code> branch<ul>
+<li>Create a new <code>git</code> branch from the <code>main</code> branch<ul>
 <li><code>git checkout main</code></li>
 <li><code>git pull</code></li>
 <li><code>git checkout -b &lt;YOUR NEW GIT BRANCH NAME&gt;</code></li>
+</ul>
+</li>
+<li>Update your virtual environment<ul>
+<li><code>pipenv sync --three --dev</code></li>
 </ul>
 </li>
 <li>Activate/Enter the virtual environment<ul>
 <li><code>pipenv shell</code></li>
 </ul>
 </li>
-<li><em>Make your changes to the project</em></li>
+<li><strong>Make your changes to the project ...</strong></li>
 <li>Run the changes<ul>
 <li><code>yojenkins</code> - This works because the current package is marked as editable in <code>Pipfile</code></li>
 <li><code>python yojenkins/__main__py</code> - This is effectively what is run when running <code>yojenkins</code></li>
@@ -344,13 +348,13 @@ clients such as <a href="https://desktop.github.com/">GitHub Desktop</a>,
 <p>Sometimes a new Python dependency is required for the project. In these cases, you can add dependencies
 as follows:</p>
 <ol>
-<li>Add the dependency to <code>Pipfile</code></li>
-<li>Lock the dependency in <code>Pipfile.lock</code><ul>
+<li>Add the dependency to the <code>Pipfile</code></li>
+<li>Lock the dependency, updating the <code>Pipfile.lock</code><ul>
 <li><code>pipenv lock --clear</code></li>
 </ul>
 </li>
 <li>Update <code>requirements.txt</code> with the new dependency and its version<ul>
-<li>Typically you can find it inside <code>Pipfile.lock</code></li>
+<li>Typically you can search it inside <code>Pipfile.lock</code></li>
 </ul>
 </li>
 </ol>

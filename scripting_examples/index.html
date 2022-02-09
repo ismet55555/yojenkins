@@ -326,6 +326,12 @@ success
 <h2 id="example-3-search-for-job-on-two-servers-delete-if-found">Example 3 - Search for job on two servers, delete if found<a class="headerlink" href="#example-3-search-for-job-on-two-servers-delete-if-found" title="Permanent link">&para;</a></h2>
 <p>The following <code>bash</code> script uses <code>yojenkins</code> to search all jobs on two different Jenkins server.
 If it is found, delete it.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This example assumes that you have two different profiles listed in your
+<code>~/.yojenkins/credentials</code> file with two different Jenkins servers for each profile.
+We are going to assume the profile names are <code>jenkins-1</code> and <code>jenkins-2</code>.</p>
+</div>
 <p><strong>Code</strong></p>
 <pre><code class="language-bash">TODO
 </code></pre>
@@ -355,8 +361,8 @@ CRED_USERNAME=&quot;area-51-user&quot;
 CRED_PASSWORD=&quot;T0P_sEcReT&quot;
 CRED_USERNAME_AS_SECRET=false
 
-# Generate the credential template
-CRED_CONFIG_TEMPLATE=$(yojenkins credential get-template user-pass --filepath example-cred-config.xml)
+# Generate the credential template and save to file
+yojenkins credential get-template user-pass --filepath example-cred-config.xml
 
 # Interpolate (Plug in) the variables into the template
 CRED_CONFIG=&quot;$(eval &quot;echo -e \&quot;`&lt;example-cred-config.xml`\&quot;&quot;)&quot;
