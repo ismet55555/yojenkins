@@ -35,12 +35,9 @@ This tool is able to be integrated into a script as middleware in order to autom
 
 **`yojenkins` will liberate you and your browser from the Jenkins Web UI**
 
-!!! hint For all information and documentation, please visit [yojenkins.com](https://yojenkins.com)
-
-
 With **`yojenkins`** you can manage:
 
-- **Authentication**: *Authentication structure similar to AWS CLI*
+- **Authentication**: *Authentication structure similar to AWS API*
 - **Server**: *Create, shutdown, view queue, and more*
 - **User accounts**: *Create, delete, add/remove permission, and more*
 - **Nodes/agents:** *Create, delete, shut down server, and more*
@@ -52,31 +49,20 @@ With **`yojenkins`** you can manage:
 - **Steps:** *Get info*
 - **Other tools and functions:** *Run groovy scripts remotely, run custom REST calls, setup a shared library, view command usage history, and more*
 
+## :blue_book: Documentation
 
-!!! note
-    This project is in release phase **alpha**. Please report any issues, odd behavior, or suggestions.
-    Read more about the [release cycle](https://en.wikipedia.org/wiki/Software_release_life_cycle).
-    See [Bug Reports](https://www.yojenkins.com/bug_report/) and [Feature Requests](https://www.yojenkins.com/feature_request/)
-
-    This does not mean that this project is not usable. It just means that the project is still in development.
-
-# Overview
-
-- [Documentation Home](https://yojenkins.com)
-- [Quick Start](https://www.yojenkins.com/quick_start/)
-- [Installation](https://www.yojenkins.com/installation/)
-- [Jenkins Plugin Requirements](https://www.yojenkins.com/requirements/)
-- [Usage](https://www.yojenkins.com/usage/)
-- [CLI Outline](https://www.yojenkins.com/cli_outline/)
-- [Scripting Examples](https://www.yojenkins.com/scripting_examples/)
-- [Bug Report](https://www.yojenkins.com/bug_report/)
-- [Feature Request](https://www.yojenkins.com/feature_request/)
-- [Contribute to This Project!](https://www.yojenkins.com/contribute/)
-- [Support This Project!](https://www.yojenkins.com/support/)
-- [License](license.md)
+For all information and documentation, please visit [yojenkins.com](https://yojenkins.com)
 
 
-## Help this Project!
+## :ballot_box_with_check: Project Status
+
+This project is in release phase **alpha**. Please report any issues, odd behavior, or suggestions.
+This does not mean that this project is not usable. It just means that the project is still in development.
+  - Read more about the [release cycle](https://en.wikipedia.org/wiki/Software_release_life_cycle).
+  - See [Bug Reports](https://www.yojenkins.com/bug_report/) and [Feature Requests](https://www.yojenkins.com/feature_request/)
+
+
+## :heartbeat: Help this Project!
 
 This is a very young project and I am always looking for help in any way. If you like this project, please consider helping.
 

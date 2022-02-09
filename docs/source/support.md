@@ -34,7 +34,7 @@ The following methods are available to financially support this project:
 
 Depending on the size of the donation, you or your company are able to get the following. Note that
 these tiers are the same as the tiers on the [GitHub Sponsorship Page](https://github.com/sponsors/ismet55555?frequency=recurring&sponsor=ismet55555).
-The donations on [Buy Me Coffee](https://buymeacoffee.com/ismet55555) are basically one-time relatively lower payments
+The donations on [Buy Me Coffee](https://buymeacoffee.com/ismet55555) are one-time relatively lower payments
 
 
 ### What Will Happen to My Money?

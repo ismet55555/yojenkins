@@ -225,7 +225,7 @@ In order to start this live server
 
 ### Building the Documentation
 
-The documentation is built using `mkdocs`, whcih will use the `source` directory and
+The documentation is built using `mkdocs`, which will use the `source` directory and
 the `mkdocs.yml` configuration file.
 
 1. Open a terminal and navigate to the `docs` directory.
@@ -236,7 +236,13 @@ the `mkdocs.yml` configuration file.
     Currently the documentation is build manullly using the `mkdocs` command. However, future plans
     adding this task to GitHub Actions to automate the build process.
 
+### Deploying The Documentation to GitHub Pages
 
+Deploying to GitHub Pages is a separate process where `mkdocs` will generate the documentation on
+its own branch in the `yojenkins` repository under branch name `gh-pages`.
+
+1. Open a terminal and navigate to the `docs` directory.
+2. Inside `docs`, run the following command: `mkdocs gh-deploy`
 
 ## Visual Studio Code Setup (Optional)
 
