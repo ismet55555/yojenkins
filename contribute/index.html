@@ -107,6 +107,8 @@
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#building-the-documentation">Building the Documentation</a>
     </li>
+    <li class="toctree-l3"><a class="reference internal" href="#deploying-the-documentation-to-github-pages">Deploying The Documentation to GitHub Pages</a>
+    </li>
         </ul>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#visual-studio-code-setup-optional">Visual Studio Code Setup (Optional)</a>
@@ -198,6 +200,7 @@ sections on this page.</p>
 <li><a href="#layout">Layout</a></li>
 <li><a href="#live-server-for-preview">Live Server for Preview</a></li>
 <li><a href="#building-the-documentation">Building the Documentation</a></li>
+<li><a href="#deploying-the-documentation-to-github-pages">Deploying The Documentation to GitHub Pages</a></li>
 </ul>
 </li>
 <li><a href="#visual-studio-code-setup-optional">Visual Studio Code Setup (Optional)</a><ul>
@@ -439,7 +442,7 @@ rebuild the documentation when you save a file.</p>
 <li>Open a browser and navigate to http://127.0.0.1:8000 to actively view your changes</li>
 </ol>
 <h3 id="building-the-documentation">Building the Documentation<a class="headerlink" href="#building-the-documentation" title="Permanent link">&para;</a></h3>
-<p>The documentation is built using <code>mkdocs</code>, whcih will use the <code>source</code> directory and
+<p>The documentation is built using <code>mkdocs</code>, which will use the <code>source</code> directory and
 the <code>mkdocs.yml</code> configuration file.</p>
 <ol>
 <li>Open a terminal and navigate to the <code>docs</code> directory.</li>
@@ -448,9 +451,16 @@ the <code>mkdocs.yml</code> configuration file.</p>
 </ol>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Currently the documentation is build manullly using the <code>mkdocs</code> command. However, future plans
+<p>Currently the documentation is build manually using the <code>mkdocs</code> command. However, future plans
 adding this task to GitHub Actions to automate the build process.</p>
 </div>
+<h3 id="deploying-the-documentation-to-github-pages">Deploying The Documentation to GitHub Pages<a class="headerlink" href="#deploying-the-documentation-to-github-pages" title="Permanent link">&para;</a></h3>
+<p>Deploying to GitHub Pages is a separate process where <code>mkdocs</code> will generate the documentation on
+its own branch in the <code>yojenkins</code> repository under branch name <code>gh-pages</code>.</p>
+<ol>
+<li>Open a terminal and navigate to the <code>docs</code> directory.</li>
+<li>Inside <code>docs</code>, run the following command: <code>mkdocs gh-deploy --site-dir site --verbose --config-file mkdocs.yml</code></li>
+</ol>
 <h2 id="visual-studio-code-setup-optional">Visual Studio Code Setup (Optional)<a class="headerlink" href="#visual-studio-code-setup-optional" title="Permanent link">&para;</a></h2>
 <p>Here included are some general suggestions for setting up your VS Code environment in order
 to operate and contribute on this project. The main reason for including this section is to

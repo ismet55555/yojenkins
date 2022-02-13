@@ -83,10 +83,6 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#example-5-creating-a-credential">Example 5 - Creating a Credential</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#example-6-add-a-permission-to-all-users">Example 6 - Add a Permission to All Users</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#example-7-find-a-user-with-a-specific-permission">Example 7 - Find a User with a Specific Permission</a>
-    </li>
     </ul>
                     </li>
                 </ul>
@@ -155,8 +151,6 @@
 <li><a href="#example-3-search-for-job-on-two-servers-delete-if-found">Example 3 - Search for job on two servers, delete if found</a></li>
 <li><a href="#example-4-creating-a-user">Example 4 - Creating a User</a></li>
 <li><a href="#example-5-creating-a-credential">Example 5 - Creating a Credential</a></li>
-<li><a href="#example-6-add-a-permission-to-all-users">Example 6 - Add a Permission to All Users</a></li>
-<li><a href="#example-7-find-a-user-with-a-specific-permission">Example 7 - Find a User with a Specific Permission</a></li>
 </ul>
 </li>
 </ul>
@@ -342,10 +336,32 @@ We are going to assume the profile names are <code>jenkins-1</code> and <code>je
 <p>This <code>bash</code> script uses <code>yojenkins</code> to set up a new user account and assign them
 the right permissions.</p>
 <p><strong>Code</strong></p>
-<pre><code class="language-bash">TODO
+<pre><code class="language-bash">#!/bin/bash
+
+set -e
+
+USER_ID=&quot;example_user_1&quot;
+USER_PASSWORD=&quot;54321&quot;    # &lt;-- Simple password for demo only 
+USER_PERMISSIONS=(
+    'hudson.model.Item.CREATE'
+    'hudson.model.Item.DELETE'
+)
+
+echo
+echo &quot;Creating new user '$USER_ID' ...&quot;
+yojenkins account create $USER_ID $USER_PASSWORD
+
+joined_permission_list=$(IFS=,; printf '%s' &quot;${USER_PERMISSIONS[*]}&quot;)
+echo
+echo &quot;Adding the following user permissions: $joined_permission_list&quot;
+yojenkins account permission --action add --permission-id $joined_permission_list $USER_ID
 </code></pre>
 <p><strong>Output</strong></p>
-<pre><code class="language-text">TODO
+<pre><code class="language-text">Creating new user 'example_user_1' ...
+success
+
+Adding the following user permissions: hudson.model.Item.CREATE,hudson.model.Item.DELETE
+success
 </code></pre>
 <h2 id="example-5-creating-a-credential">Example 5 - Creating a Credential<a class="headerlink" href="#example-5-creating-a-credential" title="Permanent link">&para;</a></h2>
 <p>This <code>bash</code> script uses <code>yojenkins</code> to create a new user/passoword credential. It generates a
@@ -376,20 +392,6 @@ echo &quot;Successfully created credential '$CRED_ID'&quot;
 </code></pre>
 <p><strong>Output</strong></p>
 <pre><code class="language-text">Successfully created credential 'area-51-access'
-</code></pre>
-<h2 id="example-6-add-a-permission-to-all-users">Example 6 - Add a Permission to All Users<a class="headerlink" href="#example-6-add-a-permission-to-all-users" title="Permanent link">&para;</a></h2>
-<p><strong>Code</strong></p>
-<pre><code class="language-bash">TODO
-</code></pre>
-<p><strong>Output</strong></p>
-<pre><code class="language-text">TODO
-</code></pre>
-<h2 id="example-7-find-a-user-with-a-specific-permission">Example 7 - Find a User with a Specific Permission<a class="headerlink" href="#example-7-find-a-user-with-a-specific-permission" title="Permanent link">&para;</a></h2>
-<p><strong>Code</strong></p>
-<pre><code class="language-bash">TODO
-</code></pre>
-<p><strong>Output</strong></p>
-<pre><code class="language-text">TODO
 </code></pre>
               
             </div>
