@@ -1013,3 +1013,23 @@ def run_groovy_script(script_filepath: str, json_return: bool, rest: object,
             return {}, False, 'Failed to parse response to JSON format'
 
     return script_result, True, ''
+
+
+def get_item_action(item_info: dict, class_type: str) -> List[dict]:
+    """Get the item's actions for a specific action class type
+
+    Args:
+        item_info: The item info dictionary (ie. job info, build info, etc.)
+        class_type: The class type of the item
+
+    Returns:
+        List of matched actions for the item
+    """
+    logger.debug(f'Getting actions for item coresponding to class type "{class_type}" ...')
+    actions_info = []
+    for action in item_info['actions']:
+        if action:
+            if action['_class'] == class_type:
+                actions_info.append(action)
+
+    return actions_info

@@ -763,3 +763,45 @@ class Job():
             pass
 
         return success
+
+    def parameters(self, job_name: str = '', job_url: str = '') -> Tuple[list, list]:
+        """TODO Docstring
+
+        Args:
+            TODO
+
+        Returns:
+            TODO
+        """
+        # Get the job information
+        job_info = self.info(job_name=job_name, job_url=job_url)
+
+        logger.debug(f'Getting build parameters for job: "{job_name}" ...')
+
+        # Check if item has any parameter actions
+        parameter_actions = utility.get_item_action(job_info, 'hudson.model.ParametersDefinitionProperty')
+        if not parameter_actions:
+            fail_out('This job does not have any build parameters')
+
+        # Get the parameter definitions
+        parameters = parameter_actions[0]['parameterDefinitions']
+
+        # List of parameter items
+        parameters_list = []
+        for parameter in parameters:
+            # Default value of parameter
+            default_value = parameter['defaultParameterValue']['value']
+            default_value_str = ''
+            if not default_value:
+                if parameter['defaultParameterValue']['_class'] == 'hudson.model.BooleanParameterValue':
+                    default_value_str = f" (default: False)"
+            else:
+                default_value_str = f" (default: {default_value})"
+
+            # Description of parameter
+            parameter_description = parameter['description'] if parameter['description'] else 'N/A'
+
+            item = f'{parameter["type"]} - {parameter["name"]} - {parameter_description}{default_value_str}'
+            parameters_list.append(item)
+
+        return parameters, parameters_list

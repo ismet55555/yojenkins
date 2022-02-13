@@ -560,10 +560,16 @@ class Build():
             build_url = build_info['url']
 
         logger.debug(f'Getting build parameters for: "{build_url}" ...')
-        if 'parameters' not in build_info['actions'][0]:
-            fail_out('This build does not have any parameters')
 
-        parameters = build_info['actions'][0]['parameters']
+        # Check if item has any parameter actions
+        parameter_actions = utility.get_item_action(build_info, 'hudson.model.ParametersAction')
+        if not parameter_actions:
+            fail_out('This build does not have any build parameters')
+
+        # Get the parameter definitions
+        parameters = parameter_actions[0]['parameters']
+
+        # List of parameter items
         parameters_list = [
             f'{parameter["_class"].split(".")[-1]} - {parameter["name"]} - {parameter["value"]}'
             for parameter in parameters
