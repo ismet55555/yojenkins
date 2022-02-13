@@ -233,7 +233,7 @@ the `mkdocs.yml` configuration file.
 3. Watch out for any warnings or errors that may need to be fixed.
 
 !!! note "Note"
-    Currently the documentation is build manullly using the `mkdocs` command. However, future plans
+    Currently the documentation is build manually using the `mkdocs` command. However, future plans
     adding this task to GitHub Actions to automate the build process.
 
 ### Deploying The Documentation to GitHub Pages
@@ -242,7 +242,7 @@ Deploying to GitHub Pages is a separate process where `mkdocs` will generate the
 its own branch in the `yojenkins` repository under branch name `gh-pages`.
 
 1. Open a terminal and navigate to the `docs` directory.
-2. Inside `docs`, run the following command: `mkdocs gh-deploy`
+2. Inside `docs`, run the following command: `mkdocs gh-deploy --site-dir site --verbose --config-file mkdocs.yml`
 
 ## Visual Studio Code Setup (Optional)
 

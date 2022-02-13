@@ -204,12 +204,34 @@ the right permissions.
 
 **Code**
 ```bash
-TODO
+#!/bin/bash
+
+set -e
+
+USER_ID="example_user_1"
+USER_PASSWORD="54321"    # <-- Simple password for demo only 
+USER_PERMISSIONS=(
+    'hudson.model.Item.CREATE'
+    'hudson.model.Item.DELETE'
+)
+
+echo
+echo "Creating new user '$USER_ID' ..."
+yojenkins account create $USER_ID $USER_PASSWORD
+
+joined_permission_list=$(IFS=,; printf '%s' "${USER_PERMISSIONS[*]}")
+echo
+echo "Adding the following user permissions: $joined_permission_list"
+yojenkins account permission --action add --permission-id $joined_permission_list $USER_ID
 ```
 
 **Output**
 ```text
-TODO
+Creating new user 'example_user_1' ...
+success
+
+Adding the following user permissions: hudson.model.Item.CREATE,hudson.model.Item.DELETE
+success
 ```
 
 
@@ -247,30 +269,4 @@ echo "Successfully created credential '$CRED_ID'"
 **Output**
 ```text
 Successfully created credential 'area-51-access'
-```
-
-
-## Example 6 - Add a Permission to All Users
-
-**Code**
-```bash
-TODO
-```
-
-**Output**
-```text
-TODO
-```
-
-
-## Example 7 - Find a User with a Specific Permission
-
-**Code**
-```bash
-TODO
-```
-
-**Output**
-```text
-TODO
 ```
