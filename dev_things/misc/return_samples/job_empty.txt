@@ -1,0 +1,86 @@
+{
+  "_class": "hudson.model.FreeStyleProject",
+  "actions": [
+    {
+      "_class": "org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"
+    },
+    {
+      "_class": "com.cloudbees.plugins.credentials.ViewCredentialsAction"
+    }
+  ],
+  "description": "",
+  "displayName": "my_empty_job",
+  "fullDisplayName": "my_empty_job",
+  "fullName": "my_empty_job",
+  "name": "my_empty_job",
+  "url": "http://localhost:8080/job/my_empty_job/",
+  "buildable": true,
+  "builds": [
+    {
+      "_class": "hudson.model.FreeStyleBuild",
+      "number": 3,
+      "url": "http://localhost:8080/job/my_empty_job/3/"
+    },
+    {
+      "_class": "hudson.model.FreeStyleBuild",
+      "number": 2,
+      "url": "http://localhost:8080/job/my_empty_job/2/"
+    },
+    {
+      "_class": "hudson.model.FreeStyleBuild",
+      "number": 1,
+      "url": "http://localhost:8080/job/my_empty_job/1/"
+    }
+  ],
+  "color": "blue",
+  "firstBuild": {
+    "_class": "hudson.model.FreeStyleBuild",
+    "number": 1,
+    "url": "http://localhost:8080/job/my_empty_job/1/"
+  },
+  "healthReport": [
+    {
+      "description": "Build stability: No recent builds failed.",
+      "iconClassName": "icon-health-80plus",
+      "iconUrl": "health-80plus.png",
+      "score": 100
+    }
+  ],
+  "inQueue": false,
+  "keepDependencies": false,
+  "lastBuild": {
+    "_class": "hudson.model.FreeStyleBuild",
+    "number": 3,
+    "url": "http://localhost:8080/job/my_empty_job/3/"
+  },
+  "lastCompletedBuild": {
+    "_class": "hudson.model.FreeStyleBuild",
+    "number": 3,
+    "url": "http://localhost:8080/job/my_empty_job/3/"
+  },
+  "lastStableBuild": {
+    "_class": "hudson.model.FreeStyleBuild",
+    "number": 3,
+    "url": "http://localhost:8080/job/my_empty_job/3/"
+  },
+  "lastSuccessfulBuild": {
+    "_class": "hudson.model.FreeStyleBuild",
+    "number": 3,
+    "url": "http://localhost:8080/job/my_empty_job/3/"
+  },
+  "nextBuildNumber": 4,
+  "property": [],
+  "concurrentBuild": false,
+  "disabled": false,
+  "downstreamProjects": [],
+  "scm": {
+    "_class": "hudson.scm.NullSCM"
+  },
+  "upstreamProjects": [],
+  "jobUrl": "http://localhost:8080/job/",
+  "jobFullName": "",
+  "folderUrl": "http://localhost:8080/",
+  "folderFullName": "Base Folder",
+  "serverURL": "http://localhost:8080",
+  "serverDomain": "localhost:8080"
+}

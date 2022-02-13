@@ -165,5 +165,23 @@ def monitor(ctx, debug, profile, job, number, url, latest, sound):
         click.echo(ctx.get_help())
 
 
-# TODO:
-#   - Build test report
+@build.command(short_help='\tGet build parameters')
+@cli_decorators.debug
+@cli_decorators.format_output
+@cli_decorators.profile
+@cli_decorators.list
+@click.argument('job', nargs=1, type=str, required=False)
+@click.option('-n', '--number', type=int, required=False, help='Build number')
+@click.option('-u', '--url', type=str, required=False, help='Build URL (No job info needed)')
+@click.option('--latest', type=str, required=False, is_flag=True, help='Latest build (Replaces --number)')
+@click.pass_context
+def parameters(ctx, debug, pretty, yaml, xml, toml, profile, list, job, number, url, latest):
+    """Get build parameters
+
+    Build parameters are the parameters that were used to start the build.
+    """
+    set_debug_log_level(debug)
+    if job or url:
+        cli_build.parameters(pretty, yaml, xml, toml, profile, list, job, number, url, latest)
+    else:
+        click.echo(ctx.get_help())
