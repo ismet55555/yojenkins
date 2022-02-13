@@ -322,3 +322,42 @@ def monitor(profile: str, job: str, build_number: int, build_url: str, latest: b
         yj_obj.build.monitor(build_url=build_url, job_url=job, build_number=build_number, latest=latest, sound=sound)
     else:
         yj_obj.build.monitor(build_url=build_url, job_name=job, build_number=build_number, latest=latest, sound=sound)
+
+
+@log_to_history
+def parameters(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, opt_list: bool, job: str,
+               build_number: int, build_url: str, latest: bool) -> None:
+    """Get build parameters
+
+    Args:
+        profile: The profile/account to use
+        opt_list: Option to list all stages without details
+        job: The job name under which the build is located
+        build_number: The build number
+        build_url: The build URL
+        latest: Option to get the latest build
+
+    Returns:
+        None
+    """
+    if job and not build_number and not latest:
+        click.echo(
+            click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
+                        fg='bright_red',
+                        bold=True))
+        sys.exit(1)
+
+    yj_obj = cu.config_yo_jenkins(profile)
+
+    if _verify_build_url_get_job_format(build_url=build_url, job=job):
+        data, data_list = yj_obj.build.parameters(build_url=build_url,
+                                                  job_url=job,
+                                                  build_number=build_number,
+                                                  latest=latest)
+    else:
+        data, data_list = yj_obj.build.parameters(build_url=build_url,
+                                                  job_name=job,
+                                                  build_number=build_number,
+                                                  latest=latest)
+    data = data_list if opt_list else data
+    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)

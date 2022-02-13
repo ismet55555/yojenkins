@@ -176,34 +176,33 @@ class Build():
                                latest=latest)
 
         # If nothing is returned, check if job is queued on server
-        if not build_info:
-            logger.debug('The specified build was not found in job')
-            logger.debug('Looking for build in the server build queue ...')
-            if build_url:
-                job_url = utility.build_url_to_other_url(build_url)
-            elif job_name:
-                pass
-            elif job_url:
-                pass
-            else:
-                fail_out('Failed to find build status text. Specify build url, job name, or job url')
-            logger.debug(f'Job name: {job_name}')
+        logger.debug('The specified build was not found in job')
+        logger.debug('Looking for build in the server build queue ...')
+        if build_url:
+            job_url = utility.build_url_to_other_url(build_url)
+        elif job_name:
+            pass
+        elif job_url:
+            pass
+        else:
+            fail_out('Failed to find build status text. Specify build url, job name, or job url')
+        logger.debug(f'Job name: {job_name}')
 
-            # Requesting all queue and searching queue (NOTE: Could use Server object)
-            logger.debug(f'Requesting all build queue items ...')
-            queue_all = self.rest.request('queue/api/json', 'get')[0]
-            logger.debug(f"Number of queued items found: {len(queue_all['items'])}")
-            queue_matches = utility.queue_find(queue_all, job_name=job_name, job_url=job_url)
-            if not queue_matches:
-                fail_out('Failed to find running or queued builds')
-            queue_info = queue_matches[0]
+        # Requesting all queue and searching queue (NOTE: Could use Server object)
+        logger.debug(f'Requesting all build queue items ...')
+        queue_all = self.rest.request('queue/api/json', 'get')[0]
+        logger.debug(f"Number of queued items found: {len(queue_all['items'])}")
+        queue_matches = utility.queue_find(queue_all, job_name=job_name, job_url=job_url)
+        if not queue_matches:
+            fail_out('Failed to find running or queued builds')
+        queue_info = queue_matches[0]
 
-            if not queue_info:
-                logger.debug('Build for job NOT found in queue')
-                return BuildStatus.NOT_FOUND.value
-            else:
-                logger.debug(f'Build for job found in queue. Queue number {queue_info["id"]}')
-                return BuildStatus.QUEUED.value
+        if not queue_info:
+            logger.debug('Build for job NOT found in queue')
+            return BuildStatus.NOT_FOUND.value
+        else:
+            logger.debug(f'Build for job found in queue. Queue number {queue_info["id"]}')
+            return BuildStatus.QUEUED.value
 
         # FIXME: resultText is returned in build info. Maybe move queue check to build_info??
 
@@ -234,7 +233,7 @@ class Build():
             logger.debug(f'Build URL passed: {build_url}')
             url = build_url
         else:
-            logger.debug('NO build URL passed. Getting build information ...')
+            logger.debug('No build URL passed. Getting build information ...')
             # Get build info request
             build_info = self.info(build_url, job_name, job_url, build_number, latest)
             url = build_info['url']
@@ -268,7 +267,7 @@ class Build():
             logger.debug(f'Build URL passed: {build_url}')
             url = build_url
         else:
-            logger.debug('NO build URL passed. Getting build information ...')
+            logger.debug('No build URL passed. Getting build information ...')
             # Get build info request
             build_info = self.info(build_url, job_name, job_url, build_number, latest)
             url = build_info['url']
@@ -300,7 +299,7 @@ class Build():
 
         # TODO: Pass a list of build numbers
         if not build_url:
-            logger.debug('NO build URL passed. Getting build information ...')
+            logger.debug('No build URL passed. Getting build information ...')
             # Get build info request
             build_info = self.info(build_url, job_name, job_url, build_number, latest)
             build_url = build_info['url']
@@ -382,7 +381,7 @@ class Build():
             logger.debug(f'Build URL passed: {build_url}')
             url = build_url
         else:
-            logger.debug('NO build URL passed. Getting build information through job ...')
+            logger.debug('No build URL passed. Getting build information through job ...')
             # Get build info request
             build_info = self.info(job_name=job_name, job_url=job_url, build_number=build_number, latest=latest)
             url = build_info['url']
@@ -469,7 +468,7 @@ class Build():
 
                             print2(diff_text)
                         else:
-                            logger.debug('NO content length difference')
+                            logger.debug('No content length difference')
                 except KeyboardInterrupt:
                     logger.debug('Keyboard Interrupt (CTRL-C) by user. Stopping log following ...')
         return True
@@ -493,7 +492,7 @@ class Build():
             logger.debug(f'Build URL passed: {build_url}')
             build_url = build_url.strip('/')
         else:
-            logger.debug('NO build URL passed. Getting build information ...')
+            logger.debug('No build URL passed. Getting build information ...')
             build_info = self.info(build_url, job_name, job_url, build_number, latest)
             build_url = build_info['url']
 
@@ -527,7 +526,7 @@ class Build():
                 fail_out(f'Failed to find build. The build may not exist: {build_url}')
             url = build_url
         else:
-            logger.debug('NO build URL passed. Getting build information ...')
+            logger.debug('No build URL passed. Getting build information ...')
             build_info = self.info(build_url, job_name, job_url, build_number, latest)
             url = build_info['url']
 
@@ -538,3 +537,42 @@ class Build():
         logger.debug('Successfully started build monitor')
 
         return success
+
+    def parameters(self,
+                   build_url: str = '',
+                   job_name: str = '',
+                   job_url: str = '',
+                   build_number: int = None,
+                   latest: bool = False) -> Tuple[list, list]:
+        """TODO Docstring
+
+        Args:
+            TODO
+
+        Returns:
+            TODO
+        """
+        # TODO: Pass a list of build numbers
+        if not build_url:
+            logger.debug('No build URL passed. Getting build information ...')
+            # Get build info request
+            build_info = self.info(build_url, job_name, job_url, build_number, latest)
+            build_url = build_info['url']
+
+        logger.debug(f'Getting build parameters for: "{build_url}" ...')
+
+        # Check if item has any parameter actions
+        parameter_actions = utility.get_item_action(build_info, 'hudson.model.ParametersAction')
+        if not parameter_actions:
+            fail_out('This build does not have any build parameters')
+
+        # Get the parameter definitions
+        parameters = parameter_actions[0]['parameters']
+
+        # List of parameter items
+        parameters_list = [
+            f'{parameter["_class"].split(".")[-1]} - {parameter["name"]} - {parameter["value"]}'
+            for parameter in parameters
+        ]
+
+        return parameters, parameters_list

@@ -247,3 +247,18 @@ def create(debug, profile, name, folder, config_file, config_is_json):
     """Create a job"""
     set_debug_log_level(debug)
     cli_job.create(profile, name, folder, config_file, config_is_json)
+
+
+@job.command(short_help='\tGet job parameters')
+@cli_decorators.debug
+@cli_decorators.format_output
+@cli_decorators.profile
+@click.argument('job', nargs=1, type=str, required=False)
+@cli_decorators.list
+def parameters(debug, pretty, yaml, xml, toml, profile, job, list):
+    """Get job's build parameters
+
+    Build parameters are the parameters to be used when building a job.
+    """
+    set_debug_log_level(debug)
+    cli_job.parameters(pretty, yaml, xml, toml, profile, job, list)

@@ -371,3 +371,23 @@ def create(profile: str, name: str, folder: str, config_file: str, config_is_jso
     else:
         data = yj_obj.job.create(name=name, folder_name=folder, config_file=config_file, config_is_json=config_is_json)
     click.secho('success', fg='bright_green', bold=True)
+
+
+@log_to_history
+def parameters(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, job: str,
+               opt_list: bool) -> None:
+    """TODO Docstring
+
+    Args:
+        TODO
+
+    Returns:
+        None
+    """
+    yj_obj = cu.config_yo_jenkins(profile)
+    if cu.is_full_url(job):
+        data, data_list = yj_obj.job.parameters(job_url=job)
+    else:
+        data, data_list = yj_obj.job.parameters(job_name=job)
+    data = data_list if opt_list else data
+    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
