@@ -9,7 +9,6 @@ from getpass import getpass
 from pathlib import Path
 from typing import Any, Dict, Tuple
 
-import click
 import toml
 from jenkins import Jenkins as JenkinsSDK
 
@@ -24,6 +23,9 @@ logger = logging.getLogger()
 CONFIG_DIR_NAME = '.yojenkins'
 CREDS_FILE_NAME = 'credentials'
 PROFILE_ENV_VAR = 'YOJENKINS_PROFILE'
+
+REQUIRED_PROFILE_KEYS = ['jenkins_server_url', 'username']
+ALLOWED_PROFILE_KEYS = ['jenkins_server_url', 'username', 'api_token', 'active']
 
 
 class Auth:
@@ -178,12 +180,12 @@ class Auth:
         # Check if the credential config file exists
         file_exists, file_path = self._detect_creds_file()
         if not file_exists:
-            fail_out(f'Credential configuration ')
+            fail_out('Credential configuration ')
 
         # Load the current cred config file
         profiles = utility.load_contents_from_local_file("toml", file_path)
         if not profiles:
-            return
+            return ''
 
         # Check if the profile exists
         if profile_name not in profiles:
@@ -218,14 +220,14 @@ class Auth:
 
         return api_token
 
-    def configure(self, api_token: str = '') -> bool:
+    def configure(self, auth_file: str = '') -> bool:
         """Configure/add a new credentials profile
 
         Details: This method will prompt the user with a series of questions
                  to add a new profile to the credentials profile file
 
         Args:
-            api_token : (Optional) Server API token to be added to the new profile
+            auth_file : (Optional) Path to the the authentication setup JSON file
 
         Returns:
             This is a description of what is returned.
@@ -250,12 +252,7 @@ class Auth:
             profiles = utility.load_contents_from_local_file("toml", file_path)
             logger.debug(f'Currently listed profile names: {", ".join(list(profiles.keys()))}')
 
-            # Adding the profile
-            print2('')
             print2(f'Credentials profile file found in current user home directory: {file_path}')
-            print2('Adding a new profile to the current credentials profile file ...')
-            print2('Please enter the following information to add a profile:')
-            print2('')
         else:
             creds_file_abs_path = os.path.join(config_dir_abs_path, CREDS_FILE_NAME)
 
@@ -265,37 +262,89 @@ class Auth:
             # Create new profile from scratch
             profiles = {}
 
-            print2('')
             print2(f'Credentials profile file ({CREDS_FILE_NAME}) NOT found in configuration directory')
-            print2(f'Creating a new credentials profile file: {creds_file_abs_path} ...')
+            print2(f'Creating a new credentials file: {creds_file_abs_path} ...')
+
+        # Check if user passed authentication info file
+        if auth_file:
+            # Load the authentication setup JSON file
+            setup_info = utility.load_contents_from_local_file("json", auth_file)
+            if not setup_info:
+                fail_out(f'Failed to load authentication setup JSON info file: {auth_file}')
+
+            print2(f'Adding {len(setup_info)} authentication profile(s) specified in file "{auth_file}" ...')
+
+            # Check each provided authentication setup profile
+            # FIXME: Implement JSON Schema validation !!!!
+            for index, (setup_profile_name, setup_profile_info) in enumerate(setup_info.items()):
+                print2('')
+                print2(f'[{index + 1} of {len(setup_info)}] Adding profile: {setup_profile_name} ...')
+
+                failed_to_add = False
+
+                # Check allowed keys
+                keys_to_remove = []
+                for key in setup_profile_info.keys():
+                    if key not in ALLOWED_PROFILE_KEYS:
+                        logger.debug(f'  - Invalid key:  {key} - IGNORING')
+                        keys_to_remove.append(key)
+                [setup_profile_info.pop(key, None) for key in keys_to_remove]
+
+                # Check required keys to setup a new profile
+                for required_key in REQUIRED_PROFILE_KEYS:
+                    if required_key not in setup_profile_info.keys():
+                        print2(f'  - Required key: {required_key} - NOT FOUND', color='red')
+                        print2(f'Failed to add authentication profile: {setup_profile_name}', color='red')
+                        failed_to_add = True
+                    else:
+                        logger.debug(f'  - Required key: {required_key} - FOUND')
+
+                        # Check if required key value is not empty
+                        if not setup_profile_info[required_key]:
+                            print2(f'  - Required key: {required_key} - EMPTY VALUE', color='red')
+                            failed_to_add = True
+                        else:
+                            logger.debug(f'  - Required key: {required_key} - HAS VALUE')
+
+                if failed_to_add:
+                    print2(f'Failed to add authentication profile: {setup_profile_name}', color='red')
+                    continue
+
+                # Check if the profile already exists
+                if setup_profile_name in profiles:
+                    print2(f'  - Profile "{setup_profile_name}" already exists in the credentials file. Replacing ...',
+                           color="yellow")
+
+                # If API token is not there, add a blank for it
+                if 'api_token' not in setup_profile_info:
+                    setup_profile_info['api_token'] = ''
+
+                # Set to active if not specified
+                if 'active' not in setup_profile_info:
+                    setup_profile_info['active'] = True
+
+                # Add to profiles to add
+                profiles[setup_profile_name] = setup_profile_info
+        else:
+            # Prompting user for details
             print2('Please enter the following information to create your first profile entry:')
             print2('')
+            profile_name = input(TextStyle.BOLD + TextStyle.YELLOW + '[ OPTIONAL ] Enter PROFILE NAME (default):  ' +
+                                 TextStyle.NORMAL)
+            profile_name = 'default' if not profile_name else profile_name
+            if profile_name in profiles:
+                print2('')
+                print2(f'WARNING : You are about to overwrite the current profile "{profile_name}"')
+                print2('')
+            profiles[profile_name] = {}
+            profiles[profile_name]['jenkins_server_url'] = input(TextStyle.BOLD + TextStyle.YELLOW +
+                                                                 '[ REQUIRED ] Enter Jenkins SERVER BASE URL:  ' +
+                                                                 TextStyle.NORMAL)
+            profiles[profile_name]['username'] = input(TextStyle.BOLD + TextStyle.YELLOW +
+                                                       '[ REQUIRED ] Enter USERNAME:  ' + TextStyle.NORMAL)
 
-        # Prompting user for details
-        profile_name = input(TextStyle.BOLD + TextStyle.YELLOW + '[ OPTIONAL ] Enter PROFILE NAME (default):  ' +
-                             TextStyle.NORMAL)
-        profile_name = 'default' if not profile_name else profile_name
-        if profile_name in profiles:
-            print2('')
-            print2(f'WARNING : You are about to overwrite the current profile "{profile_name}"')
-            print2('')
-        profiles[profile_name] = {}
-        profiles[profile_name]['jenkins_server_url'] = input(TextStyle.BOLD + TextStyle.YELLOW +
-                                                             '[ REQUIRED ] Enter Jenkins SERVER BASE URL:  ' +
-                                                             TextStyle.NORMAL)
-        profiles[profile_name]['username'] = input(TextStyle.BOLD + TextStyle.YELLOW +
-                                                   '[ REQUIRED ] Enter USERNAME:  ' + TextStyle.NORMAL)
-        if not api_token:
-            profiles[profile_name]['api_token'] = input(TextStyle.BOLD + TextStyle.YELLOW +
-                                                        '[ OPTIONAL ] Enter API TOKEN:  ' + TextStyle.NORMAL)
-        else:
-            print2('')
-            print2('WARNING: Adding provided API token to this profile', bold=True)
-            print2('')
-            profiles[profile_name]['api_token'] = api_token
-        print('')
-
-        profiles[profile_name]['active'] = True
+            # If set up manually, set as active by default
+            profiles[profile_name]['active'] = True
 
         return self._update_profiles(profiles=profiles)
 
