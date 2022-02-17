@@ -2,6 +2,6 @@
 
 __title__ = 'yojenkins'
 __summary__ = "A CLI tool to interface with Jenkins server"
-__version__ = "0.0.55"
+__version__ = "0.0.56"
 __author__ = "Ismet Handzic"
 __copyright__ = "Copyright 2022 %s" % __author__
