@@ -53,6 +53,7 @@ venv.bak/
 # Other
 dev_things/
 test/
+docs/
 
 # Specific files
 setup.py

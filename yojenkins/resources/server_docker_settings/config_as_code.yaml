@@ -1,0 +1,53 @@
+# -*- mode: yaml -*-
+# vim: set filetype=yaml
+---
+
+##############################################################################
+# Configuration as Code Jenkins Settings
+#
+# Based on this article:
+#   - https://www.digitalocean.com/community/tutorials/how-to-automate-jenkins-setup-with-docker-and-jenkins-configuration-as-code
+#
+# See more details here:
+#   - https://github.com/jenkinsci/configuration-as-code-plugin
+#
+##############################################################################
+#
+# NOTES:
+#   - Fine-grained user auth strategy: https://plugins.jenkins.io/matrix-auth/
+#   - More Jenkins user auth strategies:
+#       -https://www.jenkins.io/doc/developer/extensions/jenkins-core/#authorizationstrategy
+#
+# TODO: Include webhook relay and/or generic webhook plugin
+#       https://github.com/jdstamp/ccmb-jenkins
+#
+##############################################################################
+
+jenkins:
+  systemMessage: "ATTENTION: This Jenkins server is for development, training, demo, or testing only!\n
+      Please do not use it for production purposes.\n
+      This server was set up by YOJENKINS\n
+      Enjoy responsibly!\n\n"
+  numExecutors: 4
+  scmCheckoutRetryCount: 2
+  mode: NORMAL
+
+  securityRealm:
+    local:  # Use basic user authentication
+      allowsSignup: false  # Prevent anonymous users from creating an account through the web interface
+      users:
+       - id: ${JENKINS_ADMIN_ID}
+         password: ${JENKINS_ADMIN_PASSWORD}
+
+  authorizationStrategy:
+    globalMatrix:  # Global server permissions
+      permissions:
+        - "Overall/Administer:${JENKINS_ADMIN_ID}" # Admin permissions to user
+        - "Overall/Read:authenticated"             # All other authenticated users
+
+  remotingSecurity:  # Control what things agent has access to and can do
+    enabled: true
+
+unclassified:
+  location:  # Jenkins URL path
+    url: ${PROTOCOL_SCHEMA}://${JENKINS_HOSTNAME}:${JENKINS_PORT}/

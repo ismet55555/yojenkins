@@ -1,11 +1,8 @@
-
-
 import requests
 from requests.auth import HTTPBasicAuth
 from pprint import pprint
 import json
 from datetime import datetime, timedelta
-
 
 # NOTE:
 #   Job -> Build -> Stage -> Step
@@ -14,10 +11,7 @@ username = "USERNAME"
 password = ""
 jenkins_server_url = 'base_url'
 
-
 # NOTE: make utility for requests, error checking and all
-
-
 
 # Get Build information
 job_url = f"{jenkins_server_url}/job/doggy/job/money-movement/job/mf-status-tracker/job/master/"
@@ -32,17 +26,14 @@ if request_return.status_code == 404:
 try:
     build_return_content = request_return.json()
     pprint(build_return_content)
-except Exception as e:
-    print(f"Failed to parse request return. Possible HTML content. Exception: {e})")
+except Exception as error:
+    print(f"Failed to parse request return. Possible HTML content. Exception: {error})")
     exit()
-
 
 # pprint(build_return_content)
 # input()
 
 print('\n\n')
-
-
 
 # Get stage information
 for stage in build_return_content['stages']:
@@ -61,7 +52,6 @@ for stage in build_return_content['stages']:
     # pprint(stage)
     # input()
 
-
     # Get step information
     for step in stage_return_content['stageFlowNodes']:
         if 'parameterDescription' in step:
@@ -72,8 +62,8 @@ for stage in build_return_content['stages']:
         # pprint(step)
         # input()
 
-    start_datetime = datetime.fromtimestamp(stage["startTimeMillis"]/1000.0).strftime("%A, %B %d, %Y %I:%M:%S")
-    duration = str(timedelta(seconds=stage["durationMillis"]/1000.0))
+    start_datetime = datetime.fromtimestamp(stage["startTimeMillis"] / 1000.0).strftime("%A, %B %d, %Y %I:%M:%S")
+    duration = str(timedelta(seconds=stage["durationMillis"] / 1000.0))
 
     # NOTE: Stage does not have 'endTimeMillis'
 
@@ -86,13 +76,11 @@ for stage in build_return_content['stages']:
     pprint(stage)
     input()
 
-
-
-
-
-start_datetime = datetime.fromtimestamp(build_return_content["startTimeMillis"]/1000.0).strftime("%A, %B %d, %Y %I:%M:%S")
-end_datetime = datetime.fromtimestamp(build_return_content["endTimeMillis"]/1000.0).strftime("%A, %B %d, %Y %I:%M:%S")
-duration = str(timedelta(seconds=build_return_content["durationMillis"]/1000.0))
+start_datetime = datetime.fromtimestamp(build_return_content["startTimeMillis"] /
+                                        1000.0).strftime("%A, %B %d, %Y %I:%M:%S")
+end_datetime = datetime.fromtimestamp(build_return_content["endTimeMillis"] /
+                                      1000.0).strftime("%A, %B %d, %Y %I:%M:%S")
+duration = str(timedelta(seconds=build_return_content["durationMillis"] / 1000.0))
 
 print('-------------------------------------------')
 print(f'BUILD START:     {start_datetime}')
@@ -100,4 +88,3 @@ print(f'BUILD END:       {end_datetime}')
 print(f'BUILD DURATION:  {duration}')
 print(f'BUILD STATUS:    {build_return_content["status"]}')
 print('-------------------------------------------')
-

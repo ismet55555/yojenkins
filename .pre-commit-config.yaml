@@ -1,0 +1,72 @@
+# -*- mode: yaml -*-
+# vim: set filetype=yaml
+---
+
+##############################################################################
+#
+# pre-commit will run the predefined tasks at each commit
+# To set up pre-commit on your development machine run the following
+# This following command will enable a git commit hook: .git/hooks/pre-commit
+#
+#   pre-commit install
+#
+# To simply run the pre-commit without installing it
+#
+#   pre-commit run
+#
+##############################################################################
+
+repos:
+  - repo: meta
+    hooks:
+    -   id: check-hooks-apply
+    -   id: check-useless-excludes
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.0.1
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-docstring-first
+      - id: check-json
+      - id: check-yaml
+      - id: check-toml
+      - id: name-tests-test
+
+
+  - repo: https://github.com/pre-commit/mirrors-yapf
+    rev: v0.31.0
+    hooks:
+      - id: yapf
+        name: Python Code Formatting (yapf)
+        language: python
+        types: [python]
+        args: ["--style=.style.yapf", "--parallel", "--in-place"]
+        verbose: true
+
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.9.3
+    hooks:
+      - id: isort
+        name: Python Imports Sorting (isort)
+        language: python
+        language_version: python3
+        types_or: [python]
+        verbose: true
+
+  # - repo: https://github.com/PyCQA/bandit
+  #   rev: 1.7.0
+  #   hooks:
+  #     - id: bandit
+  #       verbose: true
+  #       name: Python Code Security Scan (bandit)
+  # FIXME: File and test exclusion not working in pyproject.toml
+
+  - repo: https://github.com/PyCQA/pylint
+    rev: pylint-2.6.0
+    hooks:
+      - id: pylint
+        name: Python Code Linting (pylint)
+        args: ["--rcfile=.pylintrc", "--fail-under=8.0"]
+        language: python
+        verbose: false

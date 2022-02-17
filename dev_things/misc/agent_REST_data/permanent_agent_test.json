@@ -1,0 +1,38 @@
+{
+    "type": "hudson.slaves.DumbSlave",
+    "name": "test agent 1",
+    "nodeDescription": "DESC",
+    "numExecutors": "1",
+    "remoteFS": "/HOME/JENKINS",
+    "labelString": "LABEL",
+    "mode": "NORMAL",
+    "nodeProperties": {
+        "stapler-class-bag": "true"
+    },
+    "retentionStrategy": {
+        "stapler-class": "hudson.slaves.RetentionStrategy$Always"
+    },
+    "launcher": {
+        "stapler-class": "hudson.plugins.sshslaves.SSHLauncher",
+        "$class": "hudson.plugins.sshslaves.SSHLauncher",
+        "host": "9.9.9.9",
+        "includeUser": "false",
+        "credentialsId": "15ad1f93-dc24-4f71-b92b-18ae9b13b1d0",
+        "": "2",
+        "sshHostKeyVerificationStrategy": {
+            "requireInitialManualTrust": false,
+            "stapler-class": "hudson.plugins.sshslaves.verifiers.ManuallyTrustedKeyVerificationStrategy",
+            "$class": "hudson.plugins.sshslaves.verifiers.ManuallyTrustedKeyVerificationStrategy"
+        },
+        "port": "22",
+        "javaPath": "/usr/bin/java",
+        "jvmOptions": "",
+        "prefixStartSlaveCmd": "",
+        "suffixStartSlaveCmd": "",
+        "launchTimeoutSeconds": "60",
+        "maxNumRetries": "10",
+        "retryWaitTime": "15",
+        "tcpNoDelay": true,
+        "workDir": ""
+    }
+}

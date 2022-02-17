@@ -6,14 +6,23 @@ name = "pypi"
 url = "https://pypi.org/simple"
 verify_ssl = true
 
+[requires]
+python_version = "3"
+
 [dev-packages]
 bump2version = "*"
+macholib = {version = "*", platform_system = "== 'Darwin'"}
+myst_parser = "*"
+pre-commit = "*"
+pyinstaller = "*"
 pylint = "*"
+pytest = "*"
 setuptools = "*"
+mkdocs = "*"
 twine = "*"
 wheel = "*"
 yapf = "*"
-yo-jenkins = {editable = true, path = "."}
+yojenkins = {editable = true, path = "."}
 
 [packages]
 click = "*"
@@ -26,7 +35,10 @@ pyyaml = "*"
 requests_futures = "*"
 simpleaudio = {version = "*", platform_system = "!= 'Windows'"}
 toml = "*"
-windows-curses = {version = "2.2.0", platform_system = "== 'Windows'"}
+windows-curses = {version = "*", markers = "sys_platform == 'win32' or platform_system == 'Windows' or os_name =='nt'"}
+pywin32 = {version = "*", markers = "sys_platform == 'win32' or platform_system == 'Windows' or os_name =='nt'"}
+pypiwin32 = {version = "*", markers = "sys_platform == 'win32' or platform_system == 'Windows' or os_name =='nt'"}
+xmltodict = "*"
 
 [pipenv]
 allow_prereleases = true

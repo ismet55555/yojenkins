@@ -1,0 +1,68 @@
+{
+  "_class": "hudson.model.FreeStyleBuild",
+  "actions": [
+    {
+      "_class": "hudson.model.ParametersAction",
+      "parameters": [
+        {
+          "_class": "hudson.model.BooleanParameterValue",
+          "name": "MY_BOOL_VAR",
+          "value": true
+        },
+        {
+          "_class": "hudson.model.StringParameterValue",
+          "name": "MY_STRING_VAR",
+          "value": "user entered value"
+        }
+      ]
+    },
+    {
+      "_class": "hudson.model.CauseAction",
+      "causes": [
+        {
+          "_class": "hudson.model.Cause$UserIdCause",
+          "shortDescription": "Started by user admin",
+          "userId": "admin",
+          "userName": "admin"
+        }
+      ]
+    },
+    {
+      "_class": "org.jenkinsci.plugins.displayurlapi.actions.RunDisplayAction"
+    }
+  ],
+  "artifacts": [],
+  "building": false,
+  "displayName": "#1",
+  "duration": 35,
+  "estimatedDuration": 35,
+  "fullDisplayName": "job_with_params #1",
+  "id": "1",
+  "keepLog": false,
+  "number": 1,
+  "queueId": 4,
+  "result": "SUCCESS",
+  "timestamp": 1644775287305,
+  "url": "http://localhost:8080/job/job_with_params/1/",
+  "builtOn": "N/A",
+  "changeSet": {
+    "_class": "hudson.scm.EmptyChangeLogSet",
+    "items": []
+  },
+  "culprits": [],
+  "startDatetime": "Sunday, February 13, 2022 01:01:27",
+  "estimatedDurationFormatted": "0:00:00.035",
+  "resultText": "SUCCESS",
+  "durationFormatted": "0:00:00.035",
+  "endDatetime": "Sunday, February 13, 2022 01:01:27",
+  "elapsedFormatted": "0:00:00.035",
+  "fullName": "job_with_params/1",
+  "jobUrl": "http://localhost:8080/job/job_with_params/",
+  "jobFullName": "job_with_params",
+  "jobName": "job_with_params",
+  "folderUrl": "http://localhost:8080/",
+  "folderFullName": "Base Folder",
+  "folderName": "",
+  "serverURL": "http://localhost:8080",
+  "serverDomain": "localhost:8080"
+}

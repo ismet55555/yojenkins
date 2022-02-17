@@ -1,0 +1,129 @@
+{
+  "_class": "hudson.model.FreeStyleProject",
+  "actions": [
+    {
+      "_class": "hudson.model.ParametersDefinitionProperty",
+      "parameterDefinitions": [
+        {
+          "_class": "hudson.model.BooleanParameterDefinition",
+          "defaultParameterValue": {
+            "_class": "hudson.model.BooleanParameterValue",
+            "value": false
+          },
+          "description": "A boolean variable (TRUE or FALSE)",
+          "name": "MY_BOOL_VAR",
+          "type": "BooleanParameterDefinition"
+        },
+        {
+          "_class": "hudson.model.StringParameterDefinition",
+          "defaultParameterValue": {
+            "_class": "hudson.model.StringParameterValue",
+            "value": ""
+          },
+          "description": "A string variable",
+          "name": "MY_STRING_VAR",
+          "type": "StringParameterDefinition"
+        }
+      ]
+    },
+    {
+      "_class": "org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"
+    },
+    {
+      "_class": "com.cloudbees.plugins.credentials.ViewCredentialsAction"
+    }
+  ],
+  "description": "",
+  "displayName": "job_with_params",
+  "fullDisplayName": "job_with_params",
+  "fullName": "job_with_params",
+  "name": "job_with_params",
+  "url": "http://localhost:8080/job/job_with_params/",
+  "buildable": true,
+  "builds": [
+    {
+      "_class": "hudson.model.FreeStyleBuild",
+      "number": 1,
+      "url": "http://localhost:8080/job/job_with_params/1/"
+    }
+  ],
+  "color": "blue",
+  "firstBuild": {
+    "_class": "hudson.model.FreeStyleBuild",
+    "number": 1,
+    "url": "http://localhost:8080/job/job_with_params/1/"
+  },
+  "healthReport": [
+    {
+      "description": "Build stability: No recent builds failed.",
+      "iconClassName": "icon-health-80plus",
+      "iconUrl": "health-80plus.png",
+      "score": 100
+    }
+  ],
+  "inQueue": false,
+  "keepDependencies": false,
+  "lastBuild": {
+    "_class": "hudson.model.FreeStyleBuild",
+    "number": 1,
+    "url": "http://localhost:8080/job/job_with_params/1/"
+  },
+  "lastCompletedBuild": {
+    "_class": "hudson.model.FreeStyleBuild",
+    "number": 1,
+    "url": "http://localhost:8080/job/job_with_params/1/"
+  },
+  "lastStableBuild": {
+    "_class": "hudson.model.FreeStyleBuild",
+    "number": 1,
+    "url": "http://localhost:8080/job/job_with_params/1/"
+  },
+  "lastSuccessfulBuild": {
+    "_class": "hudson.model.FreeStyleBuild",
+    "number": 1,
+    "url": "http://localhost:8080/job/job_with_params/1/"
+  },
+  "nextBuildNumber": 2,
+  "property": [
+    {
+      "_class": "hudson.model.ParametersDefinitionProperty",
+      "parameterDefinitions": [
+        {
+          "_class": "hudson.model.BooleanParameterDefinition",
+          "defaultParameterValue": {
+            "_class": "hudson.model.BooleanParameterValue",
+            "name": "MY_BOOL_VAR",
+            "value": false
+          },
+          "description": "A boolean variable (TRUE or FALSE)",
+          "name": "MY_BOOL_VAR",
+          "type": "BooleanParameterDefinition"
+        },
+        {
+          "_class": "hudson.model.StringParameterDefinition",
+          "defaultParameterValue": {
+            "_class": "hudson.model.StringParameterValue",
+            "name": "MY_STRING_VAR",
+            "value": ""
+          },
+          "description": "A string variable",
+          "name": "MY_STRING_VAR",
+          "type": "StringParameterDefinition"
+        }
+      ]
+    }
+  ],
+  "concurrentBuild": false,
+  "disabled": false,
+  "downstreamProjects": [],
+  "scm": {
+    "_class": "hudson.scm.NullSCM"
+  },
+  "upstreamProjects": [],
+  "jobUrl": "http://localhost:8080/job/",
+  "jobFullName": "",
+  "folderUrl": "http://localhost:8080/",
+  "folderFullName": "Base Folder",
+  "serverURL": "http://localhost:8080",
+  "serverDomain": "localhost:8080"
+}

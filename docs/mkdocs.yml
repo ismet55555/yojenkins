@@ -1,0 +1,57 @@
+# -*- mode: yaml -*-
+# vim: set filetype=yaml
+---
+
+##############################################################################
+#
+# This document dictates how "mkdocs" compiles documentation
+# More configurations:
+#    - https://www.mkdocs.org/user-guide/configuration/#configuration
+#
+# mkdocs usage:
+#       mkdocs serve - Start the live-reloading docs server.
+#       mkdocs build - Build the documentation site.
+#       mkdocs -h - Print help message and exit.
+#
+##############################################################################
+
+# Meta
+site_name: yojenkins
+site_description: A CLI tool to interface with Jenkins
+site_url: https://yojenkins.com/
+site_author: Ismet Handzic
+repo_url: https://github.com/ismet55555/yojenkins
+repo_name: GitHub
+copyright: Copyright 2021 - 2022 Ismet Handžić - GNU General Public License v3.0
+
+# Settings
+docs_dir: source
+edit_uri: edit/master/docs/source/
+markdown_extensions:
+    - toc:
+        permalink: True
+    - admonition
+
+theme:
+    name: readthedocs
+    nav_style: dark
+    prev_next_buttons_location: bottom
+    features:
+        - content.code.annotate
+
+# Navigation Bar
+nav:
+    - Home: index.md
+    - Quick Start: quick_start.md
+    - Installation: installation.md
+    - Jenkins Plugin Requirements: requirements.md
+    - Usage: usage.md
+    - CLI Outline: cli_outline.md
+    - Scripting Examples: scripting_examples.md
+    - Bug Report: bug_report.md
+    - Feature Request: feature_request.md
+    - Contribute to This Project!: contribute.md
+    - Support this Project!: support.md
+    - License: license.md
+
+# "attention", "caution", "danger", "error", "hint", "important", "note", "tip", "warning", "admonition"

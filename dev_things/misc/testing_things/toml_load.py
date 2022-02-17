@@ -12,4 +12,3 @@ with open(sys.argv[1], 'r') as f:
 print(toml.dumps(toml_file))
 
 pprint(toml_file)
-

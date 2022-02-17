@@ -1,19 +1,18 @@
-#!/usr/bin/env python3
+"""Installation/Packaging Definition for Python Project"""
 
 import os
 import sys
-from pprint import pprint
 
 import setuptools
 
 # Package version number (Updated via bump2version tool)
-__version__ = "0.0.43"
+__version__ = "0.0.56"
 
 def check_py_version():
     """Check the python version"""
     if sys.version_info < (3, 7):
         print('Your Python version ({}.{}) is not supported'.format(sys.version_info.major, sys.version_info.minor))
-        print('Must have Python version 3.7 or higher')
+        print('You must have Python version 3.7 or higher to run this program')
         if sys.version_info.major < 3:
             print('You may have used "python" where you needed to use "python3"?')
         sys.exit(1)
@@ -35,8 +34,8 @@ def get_pipfile_requirements():
 
     # Loading Pipfile
     try:
-        with open ('Pipfile', 'r') as fh:
-            pipfile = fh.read()
+        with open ('Pipfile', 'r') as open_file:
+            pipfile = open_file.read()
         pipfile_toml = loads(pipfile)
     except FileNotFoundError:
         return []
@@ -49,16 +48,16 @@ def get_pipfile_requirements():
 
     # Parsing Pipfile
     packages = []
-    for p, v in required_packages:
-        version = v
-        if not isinstance(v, str):  # Check for a dict
+    for package_name, ver in required_packages:
+        version = ver
+        if not isinstance(ver, str):  # Check for a dict
             version_parts = []
-            if 'version' in v:
-                version_parts.append(v['version'] if v['version'] != '*' else "")
-            if 'platform_system' in v:
-                version_parts.append(f"platform_system {v['platform_system']}")
+            if 'version' in ver:
+                version_parts.append(ver['version'] if ver['version'] != '*' else "")
+            if 'platform_system' in ver:
+                version_parts.append(f"platform_system {ver['platform_system']}")
             version = '; '.join(version_parts)
-        packages.append(p if version == "*" else f"{p}{version}")
+        packages.append(package_name if version == "*" else f"{package_name}{version}")
     return packages
 
 def read(fname):
@@ -67,14 +66,14 @@ def read(fname):
 
 
 setuptools.setup(
-    name="yo-jenkins",
+    name="yojenkins",
     version=__version__,
     author="Ismet Handzic",
     author_email="ismet.handzic@gmail.com",
     maintainer="Ismet Handzic",
     description="A CLI tool to manage and have fun with Jenkins server",
     keywords="jenkins monitor manage job build fun",
-    url="https://github.com/ismet55555/yo-jenkins",
+    url="https://github.com/ismet55555/yojenkins",
     packages=setuptools.find_packages(),
     install_requires=get_requirements(),
     include_package_data=True,
@@ -82,14 +81,14 @@ setuptools.setup(
     long_description_content_type='text/markdown',
     python_requires='>=3.7',
     setup_requires=['wheel'],
-    py_modules=["yo_jenkins"],
+    py_modules=["yojenkins"],
     entry_points={
         "console_scripts": [
-                "yo-jenkins = yo_jenkins.__main__:main"
+                "yojenkins = yojenkins.__main__:main"
             ]
         },
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 3 - Alpha',
         'License :: OSI Approved :: Apache Software License',
         'Natural Language :: English',
         'Intended Audience :: System Administrators',

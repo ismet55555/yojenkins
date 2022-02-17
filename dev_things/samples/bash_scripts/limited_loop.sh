@@ -1,10 +1,10 @@
 #!/bin/bash
 
-secondsTotal=120
+secondsTotal=360
 endTimeSeconds=$(( $(date +%s) + secondsTotal ))
 
 while [ $(date +%s) -lt $endTimeSeconds ];
-do 
+do
     currentTimeSeconds=$(date +%s)
     currentTimeFormatted=$(date +"%T")
     endTimeFormatted=$(date -d@$endTimeSeconds -u +%T)

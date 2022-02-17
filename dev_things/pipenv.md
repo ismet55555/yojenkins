@@ -5,7 +5,7 @@ While it can be used for building of this project, a separate process is needed 
 
 The process and theory around `pipenv` is similar to other package managers such as RubyGems, npm, etc.  Essentially, it aims to constraint all dependencies and versions such that the resulting environment is consistent throughout installations.
 
-Learn more: 
+Learn more:
   - https://pipenv.pypa.io
   - https://realpython.com/pipenv-guide/
   - https://pipenv.pypa.io/en/latest/cli/
@@ -28,7 +28,7 @@ The `Pipfile` will yield a `Pipfile.lock`
 - `pip install pipenv`
 
 
-## Creating Environments 
+## Creating Environments
 ### Development
   - `pipenv install --skip-lock --three --dev --editable .`
     - `--skip-lock` - Ignore the `Pipfile.lock` and install from the `Pipfile`. In addition, do not write out a Pipfile.lock reflecting changes to the Pipfile.
@@ -74,4 +74,3 @@ The `Pipfile` will yield a `Pipfile.lock`
 - `pipenv update --outdated` - List out-of-date dependencies
 
 - `pipenv --rm` - Removing the pipenv virtual environment
-
