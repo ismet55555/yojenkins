@@ -17,6 +17,7 @@ from yojenkins.utility.utility import (
     html_clean,
     load_contents_from_local_file,
     print2,
+    template_apply,
 )
 
 # Getting the logger reference
@@ -283,10 +284,10 @@ def run_script(profile: str, script_text: str, script_filepath: str, output_file
 def shell_script(profile: str, script_text: str, script_filepath: str, output_filepath: str, shell: str) -> None:
     """TODO
 
-    Details: TODO: 
+    Details: TODO:
 
     Args:
-        TODO 
+        TODO
 
     Returns:
         None
@@ -320,8 +321,6 @@ def shell_script(profile: str, script_text: str, script_filepath: str, output_fi
         shell_type = 'cmd.exe'
         terminate_after = '/c'
 
-
-
     # FIXME: Groovy \n works, however in python it does not....
     # Groovy Script that works:
     # String script = '''ls -la\npwd\ncd home\nls -la\n'''.toString()
@@ -331,20 +330,13 @@ def shell_script(profile: str, script_text: str, script_filepath: str, output_fi
     # ProcessBuilder yo = new ProcessBuilder("${shell_type}","${terminate_shell}", "${script}")
     # println yo.redirectErrorStream(true).start().text
 
-
     from pprint import pprint
     pprint(script, width=90)
 
     print('---------')
 
-
     # Apply variables into string template
-    kwargs = {
-        'shell_type': shell_type,
-        'terminate_after': terminate_after,
-        'script': script
-    }
-
+    kwargs = {'shell_type': shell_type, 'terminate_after': terminate_after, 'script': script}
 
     string_template = '''String script2 = "${script}".toString();
     ProcessBuilder process = new ProcessBuilder("${shell_type}", "${terminate_after}", "${script2}");
@@ -356,7 +348,7 @@ def shell_script(profile: str, script_text: str, script_filepath: str, output_fi
     print('\n\n-----------\n\n')
 
     # Send the request to the server
-    content, _, success = jy_obj.REST.request(target='scriptText',
+    content, _, success = jy_obj.rest.request(target='scriptText',
                                               request_type='post',
                                               data={'script': script},
                                               json_content=False)

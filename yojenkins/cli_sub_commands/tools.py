@@ -207,4 +207,3 @@ def shell_script(ctx, debug, profile, text, file, output, shell):
         cli_tools.shell_script(profile, text, file, output, shell)
     else:
         click.echo(ctx.get_help())
-
