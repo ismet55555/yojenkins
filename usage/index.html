@@ -79,6 +79,8 @@
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#manually-edit-the-yojenkinscredentials-file-directly">Manually edit the ~/.yojenkins/credentials file directly</a>
     </li>
+    <li class="toctree-l4"><a class="reference internal" href="#using-a-json-file">Using a JSON file</a>
+    </li>
         </ul>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#requesting-and-storing-api-tokens">Requesting and Storing API Tokens</a>
@@ -195,6 +197,7 @@
 <li><a href="#configuring-a-profile">Configuring a Profile</a><ul>
 <li><a href="#run-yojenkins-auth-configure-recommended">Run yojenkins auth configure (Recommended)</a></li>
 <li><a href="#manually-edit-the-yojenkinscredentials-file-directly">Manually edit the ~/.yojenkins/credentials file directly</a></li>
+<li><a href="#using-a-json-file">Using a JSON file</a></li>
 </ul>
 </li>
 <li><a href="#requesting-and-storing-api-tokens">Requesting and Storing API Tokens</a></li>
@@ -318,10 +321,10 @@ Options:
   --help          Show this message and exit.
 </code></pre>
 <h2 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h2>
-<p>Effortless authentication is something that <code>yojenkins</code> can do for you. That is, once you have
+<p>Effortless authentication is something that <code>yojenkins</code> can do for you. Once you have
 authentication profiles set up, it is not something you have to think about much while using <code>yojenkins</code>.</p>
 <h3 id="authentication-profiles">Authentication Profiles<a class="headerlink" href="#authentication-profiles" title="Permanent link">&para;</a></h3>
-<p><code>yojenkins</code> has the ability to store and manage authentication profiles. That is, you are able to
+<p><code>yojenkins</code> has the ability to store and manage authentication profiles. You are able to
 store and manage different authentication credentials and use them to authenticate with the Jenkins
 server as you need them, without having to enter them each time you need to interact with each
 Jenkins server.</p>
@@ -360,7 +363,8 @@ automatically activated when the <code>yojenkins</code> command is run.</p>
 <li><code>jenkins_server_url</code>: The full URL of the Jenkins server's home page.</li>
 <li><code>username</code>: The username of the Jenkins user account.</li>
 <li><code>api_token</code>: The API token of the Jenkins user account. This can be fetched through the Jenkins
-server UI, or through <code>yojenkins</code></li>
+server UI, or through <code>yojenkins</code>. If this has no value assigned to it, you will be prompted to
+enter your password or API token at each command.</li>
 <li><code>active</code>: Whether the profile can be used or not. This can be useful if you want to temporarily disable
 a profile and ensure that you don't accidentally use it.</li>
 </ul>
@@ -396,7 +400,7 @@ Successfully configured credentials file
 will be named <code>default</code> and overwrite any existing <code>default</code> profile with the same name.</p>
 </div>
 <h4 id="manually-edit-the-yojenkinscredentials-file-directly">Manually edit the <code>~/.yojenkins/credentials</code> file directly<a class="headerlink" href="#manually-edit-the-yojenkinscredentials-file-directly" title="Permanent link">&para;</a></h4>
-<p>Alternatively, you can manually edit the <code>~/.yojenkins/credentials</code> file directly. The file is in
+<p>You can manually edit the <code>~/.yojenkins/credentials</code> file directly. The file is in
 TOML file format. Each profile will have the following information structure:</p>
 <pre><code class="language-toml">[demo-profile]
 jenkins_server_url = &quot;http://demo.jenkins.com&quot;
@@ -407,6 +411,30 @@ active = true
 <p>The <code>active</code> field is used to determine whether the profile can be used or not. If you want to
 temporarily disable a profile, you can set the <code>active</code> field to <code>false</code>.</p>
 <p>You can leave the API token blank since you can use <code>yojenkins</code> to add the API token later.</p>
+<h4 id="using-a-json-file">Using a JSON file<a class="headerlink" href="#using-a-json-file" title="Permanent link">&para;</a></h4>
+<p>If you need to configure profiles without terminal prompts or manually adding tokens to the
+credentials file, you can use a predefined JSON file to configure profiles. This method allows 
+you to simultaneously configure multiple profiles at once.</p>
+<p>The predefined JSON file can be specified with the <code>--auth-file</code> option.</p>
+<p>The following is an example of the JSON file used to set up two authentication profiles:</p>
+<pre><code class="language-json">{
+    &quot;server_1&quot;: {
+        &quot;active&quot;: true,
+        &quot;api_token&quot;: &quot;11fb9cb61d34edfe73f82763cf8879c79a&quot;,
+        &quot;jenkins_server_url&quot;: &quot;https://server_1.jenkins.com&quot;,
+        &quot;username&quot;: &quot;my_user_id_1&quot;
+    },
+    &quot;server_2&quot;: {
+        &quot;active&quot;: true,
+        &quot;api_token&quot;: &quot;48fb9cb61d34edfe73f82763cf8879u79y&quot;,
+        &quot;jenkins_server_url&quot;: &quot;https://server_2.jenkins.com&quot;,
+        &quot;username&quot;: &quot;my_user_id_2&quot;
+    }
+}
+</code></pre>
+<p>These profiles would then be configured with</p>
+<pre><code class="language-bash">yojenkins auth configure --auth-file my_auth_file.json 
+</code></pre>
 <h3 id="requesting-and-storing-api-tokens">Requesting and Storing API Tokens<a class="headerlink" href="#requesting-and-storing-api-tokens" title="Permanent link">&para;</a></h3>
 <p><code>yojenkins</code> is able to request an API token from the Jenkins server to use for subsequent authentication
 requests.</p>
@@ -465,10 +493,10 @@ For example, you may want to see the output of a <code>yojenkins server info</co
 format than the default.</p>
 <p>The following output formats are supported:</p>
 <ul>
-<li>JSON</li>
-<li>YAML</li>
-<li>TOML</li>
-<li>XML</li>
+<li><a href="https://www.json.org/json-en.html">JSON</a></li>
+<li><a href="https://yaml.org/">YAML</a></li>
+<li><a href="https://toml.io/en/">TOML</a></li>
+<li><a href="https://www.w3.org/XML/">XML</a></li>
 </ul>
 <p>Any output with any format can be supplemented with <code>--pretty</code> to make the output more readable.</p>
 <p>Here are some examples of how different output formats looks like using the <code>yojenkins account list</code> command:</p>
@@ -558,9 +586,19 @@ parent = &quot;/var/jenkins_home/users&quot;
 specific Build, monitoring its steps or status. <code>yojenkins</code> makes this possible with a CLI-based
 user interface for job and build monitoring.</p>
 <h3 id="job-monitor">Job Monitor<a class="headerlink" href="#job-monitor" title="Permanent link">&para;</a></h3>
-<p>TODO</p>
+<p><code>yojenkins</code> offers a CLI based user interface for monitoring jobs. The job monitor will display
+the status of all past and current build of the job.</p>
+<p>In addition, the job monitors offers some job actions that can be activated via shortcut keys.</p>
+<p><em>TODO: Complete this section</em></p>
+<pre><code class="language-bash">yojenkins job monitor &lt;JOB&gt;
+</code></pre>
 <h3 id="build-monitor">Build Monitor<a class="headerlink" href="#build-monitor" title="Permanent link">&para;</a></h3>
-<p>TODO</p>
+<p><code>yojenkins</code> offers a CLI based user interface for monitoring individual builds. This build monitor
+will display some basic information about the build, including build status.</p>
+<p>In addition, the build monitor offers some build actions that can be activated via shortcut keys.</p>
+<p><em>TODO: Complete this section</em></p>
+<pre><code class="language-bash">yojenkins build monitor &lt;JOB&gt; --latest --sound
+</code></pre>
 <h2 id="tools">Tools<a class="headerlink" href="#tools" title="Permanent link">&para;</a></h2>
 <h3 id="command-history">Command History<a class="headerlink" href="#command-history" title="Permanent link">&para;</a></h3>
 <p>By default, each time you run a <code>yojenkins</code> command, that command is logged to the <code>~/.yojenkins/history</code> file.
