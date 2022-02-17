@@ -445,11 +445,29 @@ user interface for job and build monitoring.
 
 ### Job Monitor
 
-TODO
+`yojenkins` offers a CLI based user interface for monitoring jobs. The job monitor will display
+the status of all past and current build of the job.
+
+In addition, the job monitors offers some job actions that can be activated via shortcut keys.
+
+*TODO: Complete this section*
+
+```bash
+yojenkins job monitor <JOB>
+```
 
 ### Build Monitor
 
-TODO
+`yojenkins` offers a CLI based user interface for monitoring individual builds. This build monitor
+will display some basic information about the build, including build status.
+
+In addition, the build monitor offers some build actions that can be activated via shortcut keys.
+
+*TODO: Complete this section*
+
+```bash
+yojenkins build monitor <JOB> --latest --sound
+```
 
 
 
