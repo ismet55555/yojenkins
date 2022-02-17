@@ -14,8 +14,6 @@ to have their own tools and ways of doing things.*
 - TOML Language Support
 - YAML
 - XML
-- reStructuredText
-- Bracket Pair Colorizer 2
 
 ### **git**
 - Git Graph
