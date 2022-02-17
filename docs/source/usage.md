@@ -120,12 +120,12 @@ Options:
 
 ## Authentication
 
-Effortless authentication is something that `yojenkins` can do for you. That is, once you have
+Effortless authentication is something that `yojenkins` can do for you. Once you have
 authentication profiles set up, it is not something you have to think about much while using `yojenkins`.
 
 ### Authentication Profiles
 
-`yojenkins` has the ability to store and manage authentication profiles. That is, you are able to
+`yojenkins` has the ability to store and manage authentication profiles. You are able to
 store and manage different authentication credentials and use them to authenticate with the Jenkins
 server as you need them, without having to enter them each time you need to interact with each
 Jenkins server.
@@ -172,7 +172,8 @@ The profile sections are as follows:
 - `jenkins_server_url`: The full URL of the Jenkins server's home page.
 - `username`: The username of the Jenkins user account.
 - `api_token`: The API token of the Jenkins user account. This can be fetched through the Jenkins
-server UI, or through `yojenkins`
+server UI, or through `yojenkins`. If this has no value assigned to it, you will be prompted to
+enter your password or API token at each command.
 - `active`: Whether the profile can be used or not. This can be useful if you want to temporarily disable
 a profile and ensure that you don't accidentally use it.
 
@@ -215,7 +216,7 @@ You can leave the API token blank since you can use `yojenkins` to add the API t
 
 #### Manually edit the `~/.yojenkins/credentials` file directly
 
-Alternatively, you can manually edit the `~/.yojenkins/credentials` file directly. The file is in
+You can manually edit the `~/.yojenkins/credentials` file directly. The file is in
 TOML file format. Each profile will have the following information structure:
 
 ```toml
@@ -231,6 +232,39 @@ temporarily disable a profile, you can set the `active` field to `false`.
 
 You can leave the API token blank since you can use `yojenkins` to add the API token later.
 
+
+#### Using a JSON file
+
+If you need to configure profiles without terminal prompts or manually adding tokens to the
+credentials file, you can use a predefined JSON file to configure profiles. This method allows 
+you to simultaneously configure multiple profiles at once.
+
+The predefined JSON file can be specified with the `--auth-file` option.
+
+The following is an example of the JSON file used to set up two authentication profiles:
+
+```json
+{
+    "server_1": {
+        "active": true,
+        "api_token": "11fb9cb61d34edfe73f82763cf8879c79a",
+        "jenkins_server_url": "https://server_1.jenkins.com",
+        "username": "my_user_id_1"
+    },
+    "server_2": {
+        "active": true,
+        "api_token": "48fb9cb61d34edfe73f82763cf8879u79y",
+        "jenkins_server_url": "https://server_2.jenkins.com",
+        "username": "my_user_id_2"
+    }
+}
+```
+
+These profiles would then be configured with
+
+```bash
+yojenkins auth configure --auth-file my_auth_file.json 
+```
 
 
 ### Requesting and Storing API Tokens
@@ -302,10 +336,10 @@ format than the default.
 
 The following output formats are supported:
 
-- JSON
-- YAML
-- TOML
-- XML
+- [JSON](https://www.json.org/json-en.html)
+- [YAML](https://yaml.org/)
+- [TOML](https://toml.io/en/)
+- [XML](https://www.w3.org/XML/)
 
 Any output with any format can be supplemented with `--pretty` to make the output more readable.
 
@@ -411,11 +445,29 @@ user interface for job and build monitoring.
 
 ### Job Monitor
 
-TODO
+`yojenkins` offers a CLI based user interface for monitoring jobs. The job monitor will display
+the status of all past and current build of the job.
+
+In addition, the job monitors offers some job actions that can be activated via shortcut keys.
+
+*TODO: Complete this section*
+
+```bash
+yojenkins job monitor <JOB>
+```
 
 ### Build Monitor
 
-TODO
+`yojenkins` offers a CLI based user interface for monitoring individual builds. This build monitor
+will display some basic information about the build, including build status.
+
+In addition, the build monitor offers some build actions that can be activated via shortcut keys.
+
+*TODO: Complete this section*
+
+```bash
+yojenkins build monitor <JOB> --latest --sound
+```
 
 
 

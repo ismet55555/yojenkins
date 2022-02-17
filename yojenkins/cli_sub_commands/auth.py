@@ -13,18 +13,43 @@ from yojenkins.cli.cli_utility import set_debug_log_level
               cls=HelpColorsCommand,
               help_options_custom_colors={'--token': 'black'})
 @cli_decorators.debug
-@click.option('--token', type=str, required=False, is_flag=False, help='Authentication token used for setup profile')
-def configure(debug, token):
-    """Configure authentication"""
+@click.option('--auth-file',
+              type=click.Path(file_okay=True, dir_okay=False),
+              required=False,
+              is_flag=False,
+              help='JSON file containing one or more authentication info')
+def configure(debug, auth_file):
+    """Configure authentication
+
+    This command will setup authentication profile(s). Note that this
+    commnad can be used manually via terminal prompts, or via a JSON
+    file containing one or more authentication info.
+
+    Example --auth-file file, with single profile setup
+
+    \b
+    {
+        "<PROFILE NAME>": {
+            "active": <true|false>,
+            "api_token": "<API TOKEN>",
+            "jenkins_server_url": "<SERVER BASE URL>",
+            "username": "<USERNAME ID>"
+        }
+    }
+    """
     set_debug_log_level(debug)
-    cli_auth.configure(token)
+    cli_auth.configure(auth_file)
 
 
 @auth.command(short_help='\tGenerate authentication API token')
 @cli_decorators.debug
 @cli_decorators.profile
 def token(debug, profile):
-    """Generate authentication API token"""
+    """Generate authentication API token
+
+    NOTE: To generate an API token and automatically add it to the
+    an existing authentication profile, use the --profile option.
+    """
     set_debug_log_level(debug)
     cli_auth.token(profile)
 

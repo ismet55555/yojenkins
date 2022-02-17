@@ -175,7 +175,7 @@ success
 success
 ```
 
-## Example 3 - Search for job on two servers, delete if found
+## Example 3 - Search for a job on two servers, delete if found
 
 The following `bash` script uses `yojenkins` to search all jobs on two different Jenkins server.
 If it is found, delete it.

@@ -14,16 +14,16 @@ logger = logging.getLogger()
 
 
 @log_to_history
-def configure(api_token: str) -> None:
+def configure(auth_file: str) -> None:
     """Configure authentication
 
     Args:
-        api_token: API token to use for profile setup
+        auth_file: (Optional) Path to the the authentication setup JSON file
 
     Returns:
         None
     """
-    Auth().configure(api_token=api_token)
+    Auth().configure(auth_file=auth_file)
     click.secho('Successfully configured credentials file', fg='bright_green', bold=True)
 
 
