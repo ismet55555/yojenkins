@@ -41,11 +41,11 @@ The donations on [Buy Me Coffee](https://buymeacoffee.com/ismet55555) are one-ti
 
 That would depend on how much money gets sponsored overall.
 
-- **Overall sponsorship under $100/month:** I will probably buy personal items that 
-makes development more comfortable. This includes things like tea, various snacks, hardware upgrades, 
+- **Overall sponsorship under $100/month:** I will probably buy personal items that
+makes development more comfortable. This includes things like tea, various snacks, hardware upgrades,
 hosting costs, etc.
 
-- **Overall sponsorship over $100/month:** I will pay it forward and sponsor someone 
+- **Overall sponsorship over $100/month:** I will pay it forward and sponsor someone
 else's project that I believe is worth sponsoring.
 
 - **Overall sponsorship over $500/month:** ... hmm...well, I'm not really sure this project will get there.

@@ -44,14 +44,18 @@ def configure(debug, auth_file):
 @auth.command(short_help='\tGenerate authentication API token')
 @cli_decorators.debug
 @cli_decorators.profile
-def token(debug, profile):
+@click.option('--token-name', type=str, required=False, help='Name of the generated API token')
+@click.option('--server-base-url', type=str, required=False, help='Server base URL address')
+@click.option('--username', type=str, required=False, help='Account username')
+@click.option('--password', type=str, required=False, help='Account password')
+def token(debug, profile, token_name, server_base_url, username, password):
     """Generate authentication API token
 
     NOTE: To generate an API token and automatically add it to the
     an existing authentication profile, use the --profile option.
     """
     set_debug_log_level(debug)
-    cli_auth.token(profile)
+    cli_auth.token(profile, token_name, server_base_url, username, password)
 
 
 @auth.command(short_help='\tShow the local credentials profiles')
