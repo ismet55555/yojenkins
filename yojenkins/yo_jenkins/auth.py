@@ -96,7 +96,7 @@ class Auth:
                        token_name: str = '',
                        server_base_url: str = '',
                        username: str = '',
-                       password: str = '') -> str:  # nosec
+                       password: str = '') -> str:
         """Generate a Jenkins server API token with the specified server/username
 
         Args:
@@ -137,7 +137,8 @@ class Auth:
                                                             auth=(username, password),
                                                             new_session=True)
         if not success:
-            fail_out('Failed to generate API token. Crumb issuer failed')
+            fail_out('Failed to generate API token. Crumb issuer failed. '
+                     'Check server base URL, username, or password.')
         crumb_value = re.sub(re.compile('<.*?>|Jenkins-Crumb'), '', request_return_text)
         logger.debug(f'Request crumb value: {crumb_value}')
 

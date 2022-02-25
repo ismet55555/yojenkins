@@ -28,11 +28,15 @@ def configure(auth_file: str) -> None:
 
 
 @log_to_history
-def token(profile: str) -> None:
+def token(profile: str, token_name: str, server_base_url: str, username: str, password: str) -> None:
     """Generate authentication API token
 
     Args:
         profile: The profile/account to use
+        token_name: Name of the generated token
+        server_base_url: Server base URL address
+        username: Account username
+        password: User password to use to generate API token
 
     Returns:
         None
@@ -44,7 +48,10 @@ def token(profile: str) -> None:
         data = auth.profile_add_new_token(profile_name=profile)
     else:
         # Simply display the new API Token
-        data = auth.generate_token()
+        data = auth.generate_token(token_name=token_name,
+                                   server_base_url=server_base_url,
+                                   username=username,
+                                   password=password)
     if profile:
         click.secho('success', fg='bright_green', bold=True)
     else:
