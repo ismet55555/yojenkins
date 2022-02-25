@@ -48,7 +48,10 @@ def token(profile: str, token_name: str, server_base_url: str, username: str, pa
         data = auth.profile_add_new_token(profile_name=profile)
     else:
         # Simply display the new API Token
-        data = auth.generate_token(token_name=token_name, server_base_url=server_base_url, username=username, password=password)
+        data = auth.generate_token(token_name=token_name,
+                                   server_base_url=server_base_url,
+                                   username=username,
+                                   password=password)
     if profile:
         click.secho('success', fg='bright_green', bold=True)
     else:

@@ -236,7 +236,7 @@ You can leave the API token blank since you can use `yojenkins` to add the API t
 #### Using a JSON file
 
 If you need to configure profiles without terminal prompts or manually adding tokens to the
-credentials file, you can use a predefined JSON file to configure profiles. This method allows 
+credentials file, you can use a predefined JSON file to configure profiles. This method allows
 you to simultaneously configure multiple profiles at once.
 
 The predefined JSON file can be specified with the `--auth-file` option.
@@ -263,7 +263,7 @@ The following is an example of the JSON file used to set up two authentication p
 These profiles would then be configured with
 
 ```bash
-yojenkins auth configure --auth-file my_auth_file.json 
+yojenkins auth configure --auth-file my_auth_file.json
 ```
 
 
