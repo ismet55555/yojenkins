@@ -1,5 +1,10 @@
-<p align="center"><img width="120
-" alt="portfolio_view" src="https://raw.githubusercontent.com/ismet55555/yojenkins/main/docs/source/logo_final.png"></p>
+<p align="center">
+  <img width="120" alt="portfolio_view" src="https://raw.githubusercontent.com/ismet55555/yojenkins/main/docs/source/logo_final.png">
+</p>
+
+<p align="center">
+  <img width="120" alt="overview_video" src="https://www.youtube.com/watch?v=w1p-eMzKuLE/0.jpg">
+</p>
 
 <h1 align="center">yojenkins</h1>
 
