@@ -1,5 +1,6 @@
-<p align="center"><img width="120
-" alt="portfolio_view" src="https://raw.githubusercontent.com/ismet55555/yojenkins/main/docs/source/logo_final.png"></p>
+<p align="center">
+  <img width="120" alt="portfolio_view" src="https://raw.githubusercontent.com/ismet55555/yojenkins/main/docs/source/logo_final.png">
+</p>
 
 <h1 align="center">yojenkins</h1>
 
@@ -49,9 +50,19 @@ With **`yojenkins`** you can manage:
 - **Steps:** *Get info*
 - **Other tools and functions:** *Run groovy scripts remotely, run custom REST calls, setup a shared library, view command usage history, and more*
 
+
 ## :blue_book: Documentation
 
 For all information and documentation, please visit [yojenkins.com](https://yojenkins.com)
+
+
+## :movie_camera: Overview Video
+
+This video presents an overview of `yojenkins`, while demonstrating a few basic funcitonalities and workflow.
+
+<a target="_blank" rel="noopener noreferrer" href="https://youtu.be/w1p-eMzKuLE">
+  <img width="35%" alt="overview_video" style="border:2px solid black;" src="https://img.youtube.com/vi/w1p-eMzKuLE/hqdefault.jpg">
+</a>
 
 
 ## :ballot_box_with_check: Project Status
