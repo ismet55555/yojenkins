@@ -8,7 +8,7 @@ that may not be accounted for during development and testing.
 
 Please report bugs and odd behaviors with:
 
-- Online at [GitHub Issues](https://github.com/ismet55555/yojenkins/issues/new?assignees=&labels=&template=bug_report.md&title=)
+- Online at [GitHub Issues](https://github.com/ismet55555/yojenkins/issues/new?assignees=ismet55555&labels=bug%2Ctriage&template=bug_report.yml&title=%5BBug%5D%3A+)
 - `yojenkins tools bug-report`
 
 
