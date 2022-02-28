@@ -44,29 +44,32 @@ body:
   - type: input
     id: version
     attributes:
-      label: Software version
+      label: Version of `yojenkins` 
       description: Enter the version you were using
-      placeholder: "Example: 0.0.45"
+      placeholder: "Example: 0.0.57"
     validations:
       required: true
 
   - type: dropdown
     id: jenkins-server-type
     attributes:
-      label: Where was yojenkins run in relation to the Jenkins server?
+      label: Where was `yojenkins` run in relation to the Jenkins server?
       options:
         - Locally
         - Remotely
+        - Both
+        - I don't know
     validations:
       required: true
 
   - type: dropdown
     id: jenkins-containerized
     attributes:
-      label: Is the Jenkins server containerized?
+      label: Was the Jenkins server containerized?
       options:
         - "Yes"
         - "No"
+        - "I don't know"
     validations:
       required: true
 
@@ -79,15 +82,18 @@ body:
         - label: macOS
         - label: Windows
         - label: Linux
+        - label: Other
+        - label: I don't know
 
   - type: dropdown
     id: day-check
     attributes:
       label: How is your day going?
       options:
-        - Amazing
+        - Amazing!
         - Pretty good
         - Not bad
+        - Meh
         - Terrible
         - Ugh, don't remind me
     validations:
