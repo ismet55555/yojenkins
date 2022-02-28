@@ -2,67 +2,67 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://yojenkins.com/</loc>
-         <lastmod>2022-02-26</lastmod>
+         <lastmod>2022-02-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://yojenkins.com/bug_report/</loc>
-         <lastmod>2022-02-26</lastmod>
+         <lastmod>2022-02-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://yojenkins.com/cli_outline/</loc>
-         <lastmod>2022-02-26</lastmod>
+         <lastmod>2022-02-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://yojenkins.com/contribute/</loc>
-         <lastmod>2022-02-26</lastmod>
+         <lastmod>2022-02-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://yojenkins.com/docker_install/</loc>
-         <lastmod>2022-02-26</lastmod>
+         <lastmod>2022-02-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://yojenkins.com/feature_request/</loc>
-         <lastmod>2022-02-26</lastmod>
+         <lastmod>2022-02-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://yojenkins.com/installation/</loc>
-         <lastmod>2022-02-26</lastmod>
+         <lastmod>2022-02-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://yojenkins.com/license/</loc>
-         <lastmod>2022-02-26</lastmod>
+         <lastmod>2022-02-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://yojenkins.com/quick_start/</loc>
-         <lastmod>2022-02-26</lastmod>
+         <lastmod>2022-02-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://yojenkins.com/requirements/</loc>
-         <lastmod>2022-02-26</lastmod>
+         <lastmod>2022-02-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://yojenkins.com/scripting_examples/</loc>
-         <lastmod>2022-02-26</lastmod>
+         <lastmod>2022-02-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://yojenkins.com/support/</loc>
-         <lastmod>2022-02-26</lastmod>
+         <lastmod>2022-02-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://yojenkins.com/usage/</loc>
-         <lastmod>2022-02-26</lastmod>
+         <lastmod>2022-02-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
