@@ -3,6 +3,7 @@
 import logging
 import os
 import platform
+import shutil
 from datetime import datetime
 
 if platform.system() != "Windows":
@@ -15,7 +16,7 @@ from typing import Any, Dict, Tuple
 import docker
 from docker.errors import DockerException
 
-from yojenkins.utility.utility import get_resource_path
+from yojenkins.utility.utility import fail_out, get_resource_path, print2
 
 # Getting the logger reference
 logger = logging.getLogger()
@@ -32,6 +33,7 @@ class DockerJenkinsServer():
                  port: int = 8080,
                  image_fullname: str = 'yojenkins-jenkins:latest',
                  image_base: str = 'jenkins/jenkins',
+                 extra_setup_script: str = '',
                  image_rebuild: bool = False,
                  new_volume: bool = False,
                  new_volume_name: str = 'yojenkins-jenkins',
@@ -88,6 +90,26 @@ class DockerJenkinsServer():
         self.volumes_mounts = []
         self.new_volume = new_volume
 
+        # Extra/Custom Setup Script File
+        self.extra_setup_script = extra_setup_script
+        if extra_setup_script:
+            logger.debug("Extra setup script for image build provided")
+            logger.debug(f'Copying extra setup script to Docker context directory ...')
+            source_path = os.path.abspath(extra_setup_script)
+            target_path = os.path.join(self.image_dockerfile_dir, 'extra_setup_script.sh')
+        else:
+            logger.debug("Extra setup script for image build NOT provided")
+            logger.debug(f'Copying empty dummy script as extra setup script ...')
+            source_path = os.path.join(self.image_dockerfile_dir, 'dummy.sh')
+            target_path = os.path.join(self.image_dockerfile_dir, 'extra_setup_script.sh')
+        logger.debug(f'    - Source: {source_path}')
+        logger.debug(f'    - Target: {target_path}')
+        try:
+            shutil.copy2(source_path, target_path)
+        except (IOError, PermissionError) as error:
+            fail_out(f'Failed to copy "{source_path}" to "{target_path}". Exception: {error}')
+
+        # Output all attributes
         logger.debug(f'Jenkins server build attributes:')
         for key, value in vars(self).items():
             if key in ['image_build_args', 'docker_client', 'container_env_vars']:
@@ -204,16 +226,41 @@ class DockerJenkinsServer():
         """
         start_time = perf_counter()
         logger.debug(f'Building image: {self.image_fullname} ...')
-        logger.debug(f'Dockerfile directory: {self.image_dockerfile_dir}')
+        logger.debug(f'Dockerfile context directory: {self.image_dockerfile_dir}')
         try:
-            self.docker_client.images.build(path=self.image_dockerfile_dir,
-                                            tag=self.image_fullname,
-                                            rm=True,
-                                            buildargs=self.image_build_args,
-                                            quiet=False,
-                                            forcerm=True)
+            _, build_logs = self.docker_client.images.build(path=self.image_dockerfile_dir,
+                                                            tag=self.image_fullname,
+                                                            rm=True,
+                                                            buildargs=self.image_build_args,
+                                                            quiet=False,
+                                                            forcerm=True)
+            logger.debug('Docker image build logs:')
+            for chunk in build_logs:
+                if 'stream' in chunk:
+                    for line in chunk['stream'].splitlines():
+                        logger.debug(f"    {line}")
         except DockerException as error:
-            logger.debug(f'Failed to build image: {self.image_fullname}. Exception: {error}')
+            print2(f'Failed to build image: {self.image_fullname}. Exception: {error}', bold=True, color="red")
+            if ": 1" in str(error):
+                print2('   Error Code 1   : Operation not permitted', bold=True, color="red")
+                print2('   Possible Reason: General error script', bold=True, color="red")
+            elif ": 127" in str(error):
+                print2('   Error Code 127 : Shell command not found', bold=True, color="red")
+                print2('   Possible Reason: Unknown command, misspelling, or end of line sequence (CRLF/LF)',
+                       bold=True,
+                       color="red")
+            elif ": 2" in str(error):
+                print2('   Error Code 2   : No such file exists', bold=True, color="red")
+                print2('   Possible Reason: Missing script or command references missing file', bold=True, color="red")
+            elif ": 126" in str(error):
+                print2('   Error Code 126 : Permission Issue', bold=True, color="red")
+                print2('   Possible Reason: Script or command does not have sufficient privileges',
+                       bold=True,
+                       color="red")
+            else:
+                print2('   Please see error code: https://www.thegeekstuff.com/2010/10/linux-error-codes/',
+                       bold=True,
+                       color="red")
             return ''
         logger.debug(
             f'Successfully build image: {self.image_fullname} (Elapsed time: {perf_counter() - start_time:.3f}s)')
