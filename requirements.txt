@@ -1,7 +1,7 @@
 # This file for setup.py run
 
 click-help-colors==0.9.1
-click==8.0.3
+click==8.0.4
 coloredlogs==15.0.1
 docker==5.0.3
 json2xml

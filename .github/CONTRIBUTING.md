@@ -1,3 +1,3 @@
-## The following people have donated some of their time and effort to this project
+## Contribution Instructions
 
-    - Ismet Handzic (Ismet.Handzic@gmail.com)
+For detailed contribution instructions, see the [yojenkins contributing guide](https://www.yojenkins.com/contribute/).

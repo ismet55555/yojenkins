@@ -23,8 +23,8 @@ from yojenkins.utility.utility import (
 # Getting the logger reference
 logger = logging.getLogger()
 
-BUG_REPORT_URL = "https://github.com/ismet55555/yojenkins/issues/new?assignees=&labels=&template=bug_report.md&title="
-FEATURE_REQUEST_URL = "https://github.com/ismet55555/yojenkins/issues/new?assignees=&labels=&template=feature_request.md&title="
+BUG_REPORT_URL = "https://github.com/ismet55555/yojenkins/issues/new?assignees=ismet55555&labels=bug%2Ctriage&template=bug_report.yml&title=%5BBug%5D%3A+"
+FEATURE_REQUEST_URL = "https://github.com/ismet55555/yojenkins/issues/new?assignees=ismet55555&labels=feature-request&template=feature_request.yml&title=%5BFeature-Request%5D%3A+"
 DOCS_URL = "https://www.yojenkins.com/"
 
 

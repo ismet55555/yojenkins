@@ -150,6 +150,11 @@ def shutdown(debug, profile, force):
               type=str,
               required=False,
               help='Base Jenkins server image')
+@click.option('--extra-setup-script',
+              default='',
+              type=click.Path(file_okay=True, dir_okay=False),
+              required=False,
+              help='Local path of additional setup shell script to be executed at image build')
 @click.option('--image-rebuild',
               default=False,
               type=bool,
@@ -190,18 +195,32 @@ def shutdown(debug, profile, force):
               type=str,
               required=False,
               help='Set password for admin account [default: password]')
-def server_deploy(debug, config_file, plugins_file, protocol_schema, host, port, image_base, image_rebuild, new_volume,
-                  new_volume_name, bind_mount_dir, container_name, registry, admin_user, password):
-    """ATTENTION: The resulting Jenkins server is for development and testing purposes only. Enjoy responsibly.
+def server_deploy(debug, config_file, plugins_file, protocol_schema, host, port, image_base, extra_setup_script,
+                  image_rebuild, new_volume, new_volume_name, bind_mount_dir, container_name, registry, admin_user,
+                  password):
+    """Create a local development server using Docker
 
-    NOTE: Docker must be installed for this command to function
+    \b
+    ATTENTION:
+        - The resulting Jenkins server is for development and testing purposes only. Enjoy responsibly.
 
-    BTW: All options have default values and command can be run without any specified options
+    \b
+    NOTES:
+        - Docker must be installed for this command to function
+        - All options have default values and command can be run without any specified options
+
+    \b
+    EXAMPLES:
+        - yojenkins server server-deploy
+        - yojenkins server server-deploy --admin-user user_1 --password 123456
+        - yojenkins server server-deploy --image-base jenkinsci/blueocean
+        - yojenkins server server-deploy --plugins-file my_plugins.txt
+        - yojenkins server server-deploy --extra_setup_script /home/ismet/project/setup.sh
     """
     set_debug_log_level(debug)
-    cli_server.server_deploy(config_file, plugins_file, protocol_schema, host, port, image_base, image_rebuild,
-                             new_volume, new_volume_name, bind_mount_dir, container_name, registry, admin_user,
-                             password)
+    cli_server.server_deploy(config_file, plugins_file, protocol_schema, host, port, image_base, extra_setup_script,
+                             image_rebuild, new_volume, new_volume_name, bind_mount_dir, container_name, registry,
+                             admin_user, password)
 
 
 @server.command(short_help='\tRemove a local development server')

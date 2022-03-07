@@ -1,5 +1,5 @@
 name: Feature Request
-description: Suggest an idea for this project
+description: Suggest an idea or feature for this project
 title: "[Feature-Request]: "
 labels: ["feature-request"]
 assignees:
@@ -23,7 +23,7 @@ body:
   - type: textarea
     id: alternatives
     attributes:
-      label: Describe alternatives you've considered
+      label: Describe alternatives/workarounds you have considered
       description: A clear and concise description of any alternative solutions or features you've considered
     validations:
       required: true
@@ -37,15 +37,18 @@ body:
         - label: macOS
         - label: Windows
         - label: Linux
+        - label: Other
+        - label: I don't know
 
   - type: dropdown
     id: day-check
     attributes:
       label: How is your day going?
       options:
-        - Amazing
+        - Amazing!
         - Pretty good
         - Not bad
+        - Meh
         - Terrible
         - Ugh, don't remind me
     validations:
