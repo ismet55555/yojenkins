@@ -177,8 +177,8 @@ def shutdown(profile: str, force: bool):
 
 @log_to_history
 def server_deploy(config_file: str, plugins_file: str, protocol_schema: str, host: str, port: int, image_base: str,
-                  image_rebuild: bool, new_volume: bool, new_volume_name: str, bind_mount_dir: str,
-                  container_name: str, registry: str, admin_user: str, password: str) -> None:
+                  extra_setup_script: str, image_rebuild: bool, new_volume: bool, new_volume_name: str,
+                  bind_mount_dir: str, container_name: str, registry: str, admin_user: str, password: str) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -200,6 +200,7 @@ def server_deploy(config_file: str, plugins_file: str, protocol_schema: str, hos
                               host=host,
                               port=port,
                               image_base=image_base,
+                              extra_setup_script=extra_setup_script,
                               image_rebuild=image_rebuild,
                               new_volume=new_volume,
                               new_volume_name=new_volume_name,
@@ -277,7 +278,7 @@ def server_teardown(remove_volume: bool, remove_image: bool):
     # Filter out named volumes only
     volumes_named_only = [list(l.values())[0] for l in deployed["volumes"] if 'named' in l]
 
-    # Creat object
+    # Create object
     djs = DockerJenkinsServer(image_fullname=deployed['image'],
                               new_volume_name=volumes_named_only[0],
                               container_name=deployed['container'])

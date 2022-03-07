@@ -13,7 +13,12 @@ logging.getLogger("dicttoxml").setLevel(logging.ERROR)
 logging.getLogger("urllib3").setLevel(logging.WARNING)
 
 # Setting up log file handler
-file_handler = RotatingFileHandler(filename='yojenkins.log', mode='a', maxBytes=5000000, backupCount=0, delay=True)
+file_handler = RotatingFileHandler(filename='yojenkins.log',
+                                   mode='a',
+                                   maxBytes=5000000,
+                                   backupCount=0,
+                                   delay=True,
+                                   encoding="utf-8")
 
 # Also include any sys.stdout in logs
 stdout_handler = logging.StreamHandler(sys.stdout)
@@ -24,7 +29,11 @@ stdout_handler = logging.StreamHandler(sys.stdout)
 LOG_FORMAT = '[%(asctime)s] [%(relativeCreated)-4d] [%(filename)-24s:%(lineno)4s] %(message)s'
 
 # Basic Configurations
-logging.basicConfig(level=logging.INFO, format=LOG_FORMAT, datefmt='%H:%M:%S', handlers=[file_handler, stdout_handler])
+logging.basicConfig(level=logging.INFO,
+                    format=LOG_FORMAT,
+                    datefmt='%H:%M:%S',
+                    handlers=[file_handler, stdout_handler],
+                    encoding='utf-8')
 
 # Applying color to the output logs
 coloredlogs.install(fmt=LOG_FORMAT, datefmt='%H:%M:%S')

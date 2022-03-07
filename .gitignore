@@ -159,6 +159,9 @@ cython_debug/
 # Temp last server deployment information file
 last_deploy_info.json
 
+# Temp extra setup script for image
+extra_setup_script.sh
+
 # Configuration files
 config.xml
 config.json
