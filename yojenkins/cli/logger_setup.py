@@ -29,11 +29,7 @@ stdout_handler = logging.StreamHandler(sys.stdout)
 LOG_FORMAT = '[%(asctime)s] [%(relativeCreated)-4d] [%(filename)-24s:%(lineno)4s] %(message)s'
 
 # Basic Configurations
-logging.basicConfig(level=logging.INFO,
-                    format=LOG_FORMAT,
-                    datefmt='%H:%M:%S',
-                    handlers=[file_handler, stdout_handler],
-                    encoding='utf-8')
+logging.basicConfig(level=logging.INFO, format=LOG_FORMAT, datefmt='%H:%M:%S', handlers=[file_handler, stdout_handler])
 
 # Applying color to the output logs
 coloredlogs.install(fmt=LOG_FORMAT, datefmt='%H:%M:%S')
