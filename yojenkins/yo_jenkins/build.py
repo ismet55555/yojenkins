@@ -4,7 +4,7 @@ import logging
 import os
 from datetime import datetime, timedelta
 from itertools import islice
-from time import sleep
+from time import sleep, time
 from typing import Dict, List, Tuple
 
 import requests
@@ -120,8 +120,8 @@ class Build():
                     build_info['resultText'] = BuildStatus.RUNNING.value
                     build_info['durationFormatted'] = None
                     build_info['endDatetime'] = None
-                    build_info['elapsedFormatted'] = str(
-                        timedelta(seconds=((datetime.utcnow().timestamp()) - build_info['timestamp'] / 1000)))[:-3]
+                    build_info['elapsedFormatted'] = str(timedelta(seconds=(time() -
+                                                                            build_info['timestamp'] / 1000)))[:-3]
 
             else:
                 build_info['resultText'] = BuildStatus.UNKNOWN.value
