@@ -226,9 +226,10 @@ def log_to_history(decorated_function) -> Callable:
         history_file_path = os.path.join(os.path.join(Path.home(), CONFIG_DIR_NAME), HISTORY_FILE_NAME)
         if not os.path.isfile(history_file_path):
             logger.debug(f'Failed to find command history file: "{history_file_path}"')
-            logger.debug('Creating command history file ...')
+            logger.debug('Creating blank command history file ...')
             try:
-                open(history_file_path, 'w').close()
+                with open(history_file_path, 'w') as open_file:
+                    json.dump({}, open_file)
             except Exception as error:
                 logger.debug(f'Failed to create new command history file: {error}')
 
