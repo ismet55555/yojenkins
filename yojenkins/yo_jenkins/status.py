@@ -4,7 +4,7 @@ from enum import Enum
 
 
 class Status(Enum):
-    """Enum of Jenkins statuses
+    """Enum of Jenkins statuses as described by Jenkins return
 
     Usage Examples:
         - `BuildStatus.RUNNING.value`
@@ -52,7 +52,7 @@ class StageStatus(Enum):
 
     Usage Examples:  `StageStatus.RUNNING.value`
     """
-    RUNNING = Status.RUNNING.value[1]
+    RUNNING = Status.RUNNING.value[1]  # <-- Note 1
     SUCCESS = Status.SUCCESS.value[0]
     FAILURE = Status.FAILURE.value[0]
     QUEUED = Status.QUEUED.value[0]
@@ -66,7 +66,7 @@ class StageStatus(Enum):
 
 
 class Color(Enum):
-    """Enum of Jenkins status color
+    """Enum of Jenkins status color name
 
     Usage Examples:  `Color.RUNNING.value`
     """
@@ -86,9 +86,9 @@ class Color(Enum):
 
 
 class Sound(Enum):
-    """Enum of Jenkins status sound filename
+    """Enum of local sound filename matching Jenkins status
 
-    Usage Examples:  `Color.RUNNING.value`
+    Usage Examples:  `Sound.RUNNING.value`
     """
     ITEMS = {
         'RUNNING': '',
@@ -96,8 +96,8 @@ class Sound(Enum):
         'FAILURE': 'negative_ui_ping_chime_mallet_like_error.wav',
         'QUEUED': '',
         'ABORTED': 'negative_ui_ping_chime_mallet_like.wav',
-        'UNSTABLE': '',
-        'PAUSED_INPUT': '',
+        'UNSTABLE': 'negative_notification_mallet_wooden_short_alert.wav',
+        'PAUSED_INPUT': 'positive_alert_mallet_wood_simple_musical_003.wav',
         'NOT_FOUND': '',
         'NOT_RUN': '',
         'NONE': '',
