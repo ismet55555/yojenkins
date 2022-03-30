@@ -66,7 +66,7 @@ class Monitor:
         self.server_interaction = False
 
     def __del__(self):
-        """ TODO """
+        """Object destructor. Called at object end of life"""
         # Just in case turn off all threads
         self.all_threads_off()
 
@@ -80,6 +80,7 @@ class Monitor:
 
         Args:
             halfdely (bool): If True, refresh specified 1/10th of second, else refresh 25.5 seconds
+
         Returns:
             None
         """
@@ -105,6 +106,7 @@ class Monitor:
 
         Args:
             scr (obj): Handle for curses terminal screen handle
+
         Returns:
             None
         """
@@ -153,9 +155,10 @@ class Monitor:
         Given a status text, get the color for the status
 
         Args:
-            scr (obj): Handle for curses terminal screen handle
+            status_text: The name of the status
+
         Returns:
-            None
+            Color name of the status
         """
         for status_item in Status:
             if status_text.strip().upper() in status_item.value:
@@ -164,13 +167,13 @@ class Monitor:
 
     def status_to_sound(self, status_text: str) -> str:
         """
-        Given a status sound, get the sound for the status
+        Given a status sound, get the audio file name for the status
 
         Args:
-            scr (obj): Handle for curses terminal screen handle
+            status_text: The name of the status
 
         Returns:
-            None
+            Name of the audio file
         """
         for status_item in Status:
             if status_text.strip().upper() in status_item.value:
@@ -182,13 +185,17 @@ class Monitor:
     ###########################################################################
 
     def __thread_play_sound(self, sound_filepath: str) -> None:
-        """TODO Docstring
+        """Independent thread that plays a audio file for user notification
+
+        Details:
+            - For windows, uses winsound
+            - For any other platform, uses simpleaudio
 
         Args:
-            TODO
+            sound_filepath: Path to audio file
 
         Returns:
-            TODO
+            None
         """
         logger.debug(f'Thread starting - Play sound - (ID: {threading.get_ident()} - Sound: {sound_filepath}s) ...')
 
@@ -217,13 +224,13 @@ class Monitor:
         logger.debug(f'Thread stopped - Play sound - (ID: {threading.get_ident()})')
 
     def play_sound_thread_on(self, sound_filepath: str) -> bool:
-        """TODO Docstring
+        """Start the independent thread to play a audio file
 
         Args:
-            TODO
+            sound_filepath: Path to audio file
 
         Returns:
-            TODO
+            True if successful, else False
         """
         logger.debug(f'Playing sound file "{sound_filepath}" ...')
         try:
@@ -231,6 +238,7 @@ class Monitor:
         except Exception as error:
             logger.error(
                 f'Failed to start play sound thread for "{sound_filepath}". Exception: {error}. Type: {type(error)}')
+            return False
 
         return True
 
@@ -239,13 +247,13 @@ class Monitor:
     ###########################################################################
 
     def __thread_server_status(self, monitor_interval: float) -> None:
-        """TODO Docstring
+        """Independent thread that checks the Jenkins server status every time interval
 
         Args:
-            TODO
+            monitor_interval: Number of seconds between server status checks
 
         Returns:
-            TODO
+            None
         """
         logger.debug(
             f'Thread starting - Server Status - (ID: {threading.get_ident()} - Refresh Interval: {monitor_interval}s) ...'
@@ -273,19 +281,20 @@ class Monitor:
         logger.debug(f'Thread stopped - Server Status - (ID: {threading.get_ident()})')
 
     def server_status_thread_on(self, monitor_interval: float = 10.0) -> bool:
-        """TODO Docstring
+        """Start the independent thread to monitor the server status
 
         Args:
-            TODO
+            monitor_interval: Number of seconds between server status checks
 
         Returns:
-            TODO
+            True if successful, else False
         """
         logger.debug(f'Starting thread for server status ...')
         try:
             threading.Thread(target=self.__thread_server_status, args=(monitor_interval, ), daemon=False).start()
         except Exception as error:
             logger.error(f'Failed to start server status monitoring thread. Exception: {error}. Type: {type(error)}')
+            return False
 
         return True
 
@@ -294,13 +303,13 @@ class Monitor:
     ###########################################################################
 
     def all_threads_off(self) -> bool:
-        """TODO Docstring
+        """Stop all independent threads running in the background
 
         Args:
-            TODO
+            None
 
         Returns:
-            TODO
+            True
         """
         # logger.debug(f'Stopping all monitor threads ...')
 
@@ -310,13 +319,13 @@ class Monitor:
         return True
 
     def all_threads_pause(self) -> bool:
-        """TODO Docstring
+        """Pause all independent threads running the background
 
         Args:
-            TODO
+            None
 
         Returns:
-            TODO
+            True
         """
         logger.debug('Pausing all monitor threads ...')
 
