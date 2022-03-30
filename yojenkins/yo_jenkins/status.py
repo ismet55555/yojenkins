@@ -88,6 +88,9 @@ class Color(Enum):
 class Sound(Enum):
     """Enum of local sound filename matching Jenkins status
 
+    Details:
+        - Sound source: https://www.zapsplat.com/
+
     Usage Examples:  `Sound.RUNNING.value`
     """
     ITEMS = {

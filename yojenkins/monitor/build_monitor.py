@@ -10,7 +10,7 @@ from time import perf_counter, sleep, time
 
 from yojenkins.monitor.monitor import Monitor
 from yojenkins.utility.utility import get_resource_path
-from yojenkins.yo_jenkins.status import StageStatus, Status
+from yojenkins.yo_jenkins.status import Color, StageStatus, Status
 
 from . import monitor_utility as mu
 
@@ -195,7 +195,7 @@ class BuildMonitor(Monitor):
                                           self.color['normal'] | self.decor['bold'])
                 y_row += 1
 
-                # Play a sound on status change
+                # Play a sound on job status change
                 if sound:
                     mu.draw_text(scr,
                                  '( fx )',
@@ -254,7 +254,7 @@ class BuildMonitor(Monitor):
 
             ########################################################################################
 
-            # TODO: Add QUEUED status for build
+            # TODO: Add QUEUED status for build status
 
             # STAGES SECTION
             if self.build_stages_data:
@@ -320,16 +320,19 @@ class BuildMonitor(Monitor):
             border_color = 'grey-dark'
             if 'resultText' in self.build_info_data:
                 if self.build_info_data['resultText'] in Status.SUCCESS.value:
-                    border_color = 'green'
+                    border_color = Color.ITEMS.value['SUCCESS']
                 elif self.build_info_data['resultText'] in Status.FAILURE.value:
-                    border_color = 'red'
+                    border_color = Color.ITEMS.value['FAILURE']
                 elif self.build_info_data['resultText'] in Status.ABORTED.value:
-                    border_color = 'magenta'
+                    border_color = Color.ITEMS.value['ABORTED']
+                elif self.build_info_data['resultText'] in Status.UNSTABLE.value:
+                    border_color = Color.ITEMS.value['UNSTABLE']
+
             mu.draw_screen_border(scr, self.color[border_color])
 
             ########################################################################################
 
-            # Indicate server interaction
+            # Indicate server interaction with icon
             if self.server_interaction:
                 mu.draw_text(scr,
                              '(R)',
@@ -359,7 +362,7 @@ class BuildMonitor(Monitor):
             else:
                 halfdelay_normal = True
 
-            # Sound notification on/off (Toggle)
+            # Sound effect notification on/off (Toggle)
             if sound_notify_msg_show:
                 sound_notify_msg_show = False
                 sound_notify_msg_time = time()
@@ -446,10 +449,11 @@ class BuildMonitor(Monitor):
         Curses wrapper function for drawing main menu on screen
 
         Args:
-            view_option: TODO
+            build_url: Server URL of the build
+            sound: If True, monitor is started with sound option on
+
         Returns:
-            menu option (str)  : Selection menu option user selected (ie. quit)
-            successfull (bool) : True if no error, else False
+            True, if successful, else False
         """
         # Disable any console output logging
         mu.logging_console(enabled=False)
@@ -463,7 +467,16 @@ class BuildMonitor(Monitor):
     ###########################  BUILD INFO  ##################################
 
     def __thread_build_info(self, build_url: str, monitor_interval: float) -> None:
-        """ TODO """
+        """
+        Independent thread which polls build information
+
+        Args:
+            build_url: Server URL of the build
+            monitor_interval: Seconds between polling build URL
+
+        Returns:
+            None
+        """
         logger.debug(
             f'Thread starting - Build info - (ID: {threading.get_ident()} - Refresh Interval: {monitor_interval}s) ...'
         )
@@ -489,7 +502,16 @@ class BuildMonitor(Monitor):
         logger.debug(f'Thread stopped - Build info - (ID: {threading.get_ident()})')
 
     def __build_info_thread_on(self, build_url: str = '', monitor_interval: float = 7.0) -> bool:
-        """ TODO """
+        """
+        Trigger to start independent thread that polls build information
+
+        Args:
+            build_url: Server URL of the build
+            monitor_interval: Seconds between polling build URL
+
+        Returns:
+            True if successful, else False
+        """
         logger.debug(f'Starting thread for build info for "{build_url}" ...')
         try:
             threading.Thread(target=self.__thread_build_info, args=(
@@ -506,7 +528,16 @@ class BuildMonitor(Monitor):
     ###########################  BUILD STAGES  ################################
 
     def __thread_build_stages(self, build_url: str, monitor_interval: float) -> None:
-        """ TODO """
+        """
+        Independent thread that polls build stages
+
+        Args:
+            build_url: Server URL of the build
+            monitor_interval: Seconds between polling build URL
+
+        Returns:
+            None
+        """
         logger.debug(
             f'Thread starting - Build Stages - (ID: {threading.get_ident()} - Refresh Interval: {monitor_interval}s) ...'
         )
@@ -540,7 +571,16 @@ class BuildMonitor(Monitor):
         logger.debug(f'Thread stopped - Build Stages - (ID: {threading.get_ident()})')
 
     def __build_stages_thread_on(self, build_url: str = '', monitor_interval: float = 9.0) -> bool:
-        '''TODO'''
+        """
+        Trigger to start independent thread that polls build stages
+
+        Args:
+            build_url: Server URL of the build
+            monitor_interval: Seconds between polling build URL
+
+        Returns:
+            True if successful, else False
+        """
         logger.debug(f'Starting thread for build stages for "{build_url}" ...')
         try:
             threading.Thread(target=self.__thread_build_stages, args=(
