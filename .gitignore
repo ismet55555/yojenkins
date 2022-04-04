@@ -147,6 +147,9 @@ cython_debug/
 # VSCode Code Counter Extension
 .VSCodeCounter
 
+# VIM session
+Session.vim
+
 # wily code analysis report
 *.html
 

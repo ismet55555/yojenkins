@@ -17,7 +17,7 @@ logger = logging.getLogger()
 
 
 class JobMonitor(Monitor):
-    """This class defines the BuildMonitor class and its function.
+    """This class defines the JobMonitor class and its function.
 
     The JobMonitor class enables active job monitoring
     """
@@ -347,10 +347,11 @@ class JobMonitor(Monitor):
         Curses wrapper function for drawing main menu on screen
 
         Args:
-            view_option: TODO
+            build_url: Server URL of the build
+            sound: If True, monitor is started with sound option on
+
         Returns:
-            menu option (str)  : Selection menu option user selected (ie. quit)
-            successfull (bool) : True if no error, else False
+            True, if successful, else False
         """
         # Disable any console output logging
         mu.logging_console(enabled=False)
@@ -364,13 +365,15 @@ class JobMonitor(Monitor):
     #############################  JOB INFO  ##################################
 
     def __thread_job_info(self, job_url: str, monitor_interval: float) -> None:
-        """TODO Docstring
+        """
+        Independent thread which polls job information
 
         Args:
-            TODO
+            job_url: Server URL of the job
+            monitor_interval: Seconds between polling job URL
 
         Returns:
-            TODO
+            None
         """
         logger.debug(
             f'Thread starting - Job info - (ID: {threading.get_ident()} - Refresh Interval: {monitor_interval}s) ...')
@@ -396,13 +399,15 @@ class JobMonitor(Monitor):
         logger.debug(f'Thread stopped - Job info - (ID: {threading.get_ident()})')
 
     def __job_info_thread_on(self, job_url: str = '', monitor_interval: float = 5.0) -> bool:
-        """TODO Docstring
+        """
+        Trigger to start independent thread that polls job information
 
         Args:
-            TODO
+            job_url: Server URL of the job
+            monitor_interval: Seconds between polling build URL
 
         Returns:
-            TODO
+            True if successful, else False
         """
         logger.debug(f'Starting thread for job info for "{job_url}" ...')
         try:
@@ -419,13 +424,15 @@ class JobMonitor(Monitor):
     ############################  BUILDS INFO  ################################
 
     def __thread_build_info(self, build_url: str, build_data_index: int) -> None:
-        """TODO Docstring
+        """
+        Independent thread which fetches build information
 
         Args:
-            TODO
+            build_url: Server URL of the build
+            build_data_index: Build index within the job info return
 
         Returns:
-            TODO
+            None
         """
         logger.debug(f'Thread starting - Build info (INDEX: {build_data_index}, ID: {threading.get_ident()}) ...')
         self.server_interaction = True
@@ -433,13 +440,14 @@ class JobMonitor(Monitor):
         logger.debug(f'Thread stopped - Build info (INDEX: {build_data_index}, ID: {threading.get_ident()})')
 
     def __thread_builds_data(self, monitor_interval: float) -> None:
-        """TODO Docstring
+        """
+        Independent thread which polls the build data for each build listed in job
 
         Args:
-            TODO
+            monitor_interval: Seconds between polling build URL
 
         Returns:
-            TODO
+            None
         """
         logger.debug(
             f'Thread starting - Builds data - (ID: {threading.get_ident()} - Refresh Interval: {monitor_interval}s) ...'
@@ -497,13 +505,14 @@ class JobMonitor(Monitor):
         logger.debug(f'Thread stopped - Builds data - (ID: {threading.get_ident()})')
 
     def __builds_data_thread_on(self, monitor_interval: float = 7.0) -> bool:
-        """TODO Docstring
+        """
+        Trigger to start independent thread that polls build information within job
 
         Args:
-            TODO
+            monitor_interval: Seconds between polling build data
 
         Returns:
-            TODO
+            True if successful, else False
         """
         logger.debug('Starting thread for job builds info ...')
         try:
