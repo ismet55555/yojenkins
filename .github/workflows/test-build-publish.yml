@@ -125,7 +125,7 @@ jobs:
       - name: Build a package wheel and tarball
         run: pipenv run python setup.py sdist bdist_wheel
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: pypi-distribution
           path: dist/
@@ -199,7 +199,7 @@ jobs:
         if: (matrix.os == 'windows-latest')
         run: mv dist/yojenkins*.exe dist/yojenkins-${{ steps.release.outputs.release_version_tag }}-windows-x86_64.exe
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: binary-${{ runner.os }}
           path: dist/
