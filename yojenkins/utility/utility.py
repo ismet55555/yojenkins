@@ -24,6 +24,7 @@ from yojenkins.yo_jenkins.jenkins_item_classes import JenkinsItemClasses
 
 logger = logging.getLogger()
 
+CONFIG_DIR_NAME = ".yojenkins"
 
 class TextStyle:
     """Text style definitions"""
@@ -1033,3 +1034,22 @@ def get_item_action(item_info: dict, class_type: str) -> List[dict]:
                 actions_info.append(action)
 
     return actions_info
+
+
+def create_new_history_file(file_path: str) -> None:
+    """
+    Create a new blank command history file.
+
+    :param file_path: full path to the history file
+    :type file_path: str
+    """
+    try:
+        # Creating configuration directory if it does not exist
+        config_dir_abs_path = os.path.join(Path.home(), CONFIG_DIR_NAME)
+        if not os.path.exists(config_dir_abs_path):
+            print2("Configuration directory does not exist. Creating it ...")
+            os.makedirs(config_dir_abs_path)
+        with open(file_path, "w") as open_file:
+            json.dump({}, open_file)
+    except Exception:
+        logger.exception("Failed to create new command history file")
