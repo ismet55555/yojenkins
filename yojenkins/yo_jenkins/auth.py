@@ -233,16 +233,6 @@ class Auth:
         Returns:
             This is a description of what is returned.
         """
-        # Creating configuration directory if it does not exist
-        config_dir_abs_path = os.path.join(Path.home(), CONFIG_DIR_NAME)
-        if not self._detect_config_dir()[0]:
-            logger.debug(f'Creating configuration directory in user home directory: {config_dir_abs_path}')
-            try:
-                os.makedirs(config_dir_abs_path)
-                logger.debug(f'Successfully created configuration directory: {config_dir_abs_path}')
-            except OSError as error:
-                fail_out(f'Failed to create user configuration directory "{config_dir_abs_path}": Exception:{error}')
-
         # Checking if credential config file exists
         file_exists, file_path = self._detect_creds_file()
         if file_exists:
