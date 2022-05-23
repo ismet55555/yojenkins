@@ -26,6 +26,7 @@ logger = logging.getLogger()
 
 CONFIG_DIR_NAME = ".yojenkins"
 
+
 class TextStyle:
     """Text style definitions"""
     HEADER = '\033[95m'
@@ -1037,11 +1038,13 @@ def get_item_action(item_info: dict, class_type: str) -> List[dict]:
 
 
 def create_new_history_file(file_path: str) -> None:
-    """
-    Create a new blank command history file.
+    """Create a new blank command history file.
 
-    :param file_path: full path to the history file
-    :type file_path: str
+    Args:
+        file_path: Full path to the history file
+
+    Returns:
+        None
     """
     try:
         # Creating configuration directory if it does not exist
@@ -1051,5 +1054,5 @@ def create_new_history_file(file_path: str) -> None:
             os.makedirs(config_dir_abs_path)
         with open(file_path, "w") as open_file:
             json.dump({}, open_file)
-    except Exception:
+    except FileExistsError:
         logger.exception("Failed to create new command history file")

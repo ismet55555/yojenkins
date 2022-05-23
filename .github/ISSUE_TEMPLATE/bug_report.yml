@@ -44,7 +44,7 @@ body:
   - type: input
     id: version
     attributes:
-      label: Version of `yojenkins` 
+      label: Version of `yojenkins`
       description: Enter the version you were using
       placeholder: "Example: 0.0.57"
     validations:
