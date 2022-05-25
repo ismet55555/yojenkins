@@ -1049,10 +1049,18 @@ def create_new_history_file(file_path: str) -> None:
     try:
         # Creating configuration directory if it does not exist
         config_dir_abs_path = os.path.join(Path.home(), CONFIG_DIR_NAME)
+
         if not os.path.exists(config_dir_abs_path):
-            print2("Configuration directory does not exist. Creating it ...")
+            logger.debug("Configuration directory does not exist. Creating it ...")
             os.makedirs(config_dir_abs_path)
+
+        if not os.path.exists(file_path):
+            logger.debug(f'Command history file NOT found: "{file_path}"')
+            logger.debug("Creating a new command history file ...")
         with open(file_path, "w") as open_file:
             json.dump({}, open_file)
-    except FileExistsError:
-        logger.exception("Failed to create new command history file")
+
+    except (FileNotFoundError, IOError, PermissionError) as error:
+        fail_out(f'Failed to create history file ({file_path}). Exception: {error}')
+    except Exception as error:
+        logger.exception(f"Failed to create new command history file. Exception: {error}")

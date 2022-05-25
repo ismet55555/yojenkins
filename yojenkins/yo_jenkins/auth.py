@@ -233,6 +233,8 @@ class Auth:
         Returns:
             This is a description of what is returned.
         """
+        config_dir_abs_path = os.path.join(Path.home(), CONFIG_DIR_NAME)
+
         # Checking if credential config file exists
         file_exists, file_path = self._detect_creds_file()
         if file_exists:
@@ -243,7 +245,7 @@ class Auth:
             profiles = utility.load_contents_from_local_file("toml", file_path)
             logger.debug(f'Currently listed profile names: {", ".join(list(profiles.keys()))}')
 
-            print2(f'Credentials profile file found in current user home directory: {file_path}')
+            logger.debug(f'Credentials profile file found in current user home directory: {file_path}')
         else:
             creds_file_abs_path = os.path.join(config_dir_abs_path, CREDS_FILE_NAME)
 
@@ -253,8 +255,8 @@ class Auth:
             # Create new profile from scratch
             profiles = {}
 
-            print2(f'Credentials profile file ({CREDS_FILE_NAME}) NOT found in configuration directory')
-            print2(f'Creating a new credentials file: {creds_file_abs_path} ...')
+            logger.debug(f'Credentials profile file NOT found: "{creds_file_abs_path}"')
+            logger.debug(f'Creating a new credentials file ...')
 
         # Check if user passed authentication info file
         if auth_file:
@@ -318,7 +320,8 @@ class Auth:
                 profiles[setup_profile_name] = setup_profile_info
         else:
             # Prompting user for details
-            print2('Please enter the following information to create your first profile entry:')
+            print2('Please enter the following information to create your first profile entry')
+            print2(f'This information will be stored in "{creds_file_abs_path}"')
             print2('')
             profile_name = input(TextStyle.BOLD + TextStyle.YELLOW + '[ OPTIONAL ] Enter PROFILE NAME (default):  ' +
                                  TextStyle.NORMAL)

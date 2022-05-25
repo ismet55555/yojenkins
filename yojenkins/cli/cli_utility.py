@@ -225,8 +225,6 @@ def log_to_history(decorated_function) -> Callable:
         # Check if history file exists
         history_file_path = os.path.join(os.path.join(Path.home(), CONFIG_DIR_NAME), HISTORY_FILE_NAME)
         if not os.path.isfile(history_file_path):
-            print2(f'Failed to find command history file: "{history_file_path}"')
-            print2('Creating blank command history file ...')
             create_new_history_file(history_file_path)
 
         # Load the history file content
