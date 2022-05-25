@@ -23,7 +23,7 @@ from yojenkins.yo_jenkins.auth import Auth
 from yojenkins.yo_jenkins.rest import Rest
 from yojenkins.yo_jenkins.yojenkins import YoJenkins
 
-from yojenkins.utility.utility import iter_data_empty_item_stripper, load_contents_from_local_file, am_i_inside_docker, am_i_bundled, print2  # isort:skip
+from yojenkins.utility.utility import iter_data_empty_item_stripper, load_contents_from_local_file, am_i_inside_docker, am_i_bundled, print2, create_new_history_file  # isort:skip
 
 # Getting the logger reference
 logger = logging.getLogger()
@@ -225,13 +225,7 @@ def log_to_history(decorated_function) -> Callable:
         # Check if history file exists
         history_file_path = os.path.join(os.path.join(Path.home(), CONFIG_DIR_NAME), HISTORY_FILE_NAME)
         if not os.path.isfile(history_file_path):
-            logger.debug(f'Failed to find command history file: "{history_file_path}"')
-            logger.debug('Creating blank command history file ...')
-            try:
-                with open(history_file_path, 'w') as open_file:
-                    json.dump({}, open_file)
-            except Exception as error:
-                logger.debug(f'Failed to create new command history file: {error}')
+            create_new_history_file(history_file_path)
 
         # Load the history file content
         file_contents = load_contents_from_local_file(COMMAND_HISTORY_FORMAT, history_file_path)
