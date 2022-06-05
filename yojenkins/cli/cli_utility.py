@@ -9,7 +9,7 @@ from datetime import datetime
 from inspect import getfullargspec
 from pathlib import Path
 from shlex import quote
-from typing import Callable
+from typing import Callable, Dict
 
 import click
 import toml
@@ -85,13 +85,15 @@ def platform_information() -> None:
 
 
 def config_yo_jenkins(profile: str) -> YoJenkins:
-    """TODO Docstring
+    """Initialize/Prepare YoJenkins object using the appropriate
+    authentication information
+
 
     Args:
-        TODO
+        profile: Name of the yojenkins authentication profile
 
     Returns:
-        TODO
+        Initialized YoJenkins object
     """
     auth = Auth(Rest())
 
@@ -108,17 +110,15 @@ def config_yo_jenkins(profile: str) -> YoJenkins:
     return YoJenkins(auth)
 
 
-def standard_out(data: dict,
+def standard_out(data: Dict,
                  opt_pretty: bool = False,
                  opt_yaml: bool = False,
                  opt_xml: bool = False,
                  opt_toml: bool = False) -> None:
-    """TODO Docstring
+    """Outputting the resulting data to the console.
+    This funciton handles a variety of output formats.
 
     Args:
-        TODO
-
-    Returns:
         TODO
     """
     # Strip away any empty items in the iterable data
@@ -213,13 +213,16 @@ def log_to_history(decorated_function) -> Callable:
 
     def wrapper(*args, **kwargs) -> None:
         # Get the profile name for the command
-        if arg_index >= 0:
+        if 'profile' in kwargs:
+            profile_name = kwargs['profile']
+        elif arg_index >= 0:
             profile_name = args[arg_index]
         else:
-            # NOTE: If no profile is used by the decorated function, use the default profile name
+            # If no profile is used by the decorated function, use the default profile name
             profile_name = DEFAULT_PROFILE_NAME
+
         if profile_name is None:
-            # NOTE: If function has profile argument, but none was passed, use the default profile name
+            # If function has profile argument, but none was passed, use the default profile name
             profile_name = DEFAULT_PROFILE_NAME
 
         # Check if history file exists

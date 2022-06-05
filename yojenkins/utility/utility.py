@@ -9,7 +9,7 @@ import sysconfig
 import webbrowser
 from pathlib import Path
 from string import Template
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Tuple, Set, Union
 from urllib.parse import urljoin, urlparse
 
 import requests
@@ -19,13 +19,20 @@ import yaml
 from click import echo, style
 from urllib3.util import parse_url
 
+from typing import Dict, Any
+
 from yojenkins import __version__
 from yojenkins.yo_jenkins.jenkins_item_classes import JenkinsItemClasses
 
 logger = logging.getLogger()
 
 CONFIG_DIR_NAME = ".yojenkins"
-
+KWARG_TRANSLATE_MAP = {
+    'pretty': 'opt_pretty',
+    'yaml': 'opt_yaml',
+    'xml': 'opt_xml',
+    'toml': 'opt_toml',
+}
 
 class TextStyle:
     """Text style definitions"""
@@ -39,6 +46,26 @@ class TextStyle:
     UNDERLINE = '\033[4m'
     NORMAL = '\033[0m'
 
+def translate_kwargs(original_kwargs: Dict[str, Any]) -> Dict[str, Any]:
+    """Rename the key names of the provided kwargs based on
+    a set of translation rules.
+
+    Details: This is primarirly used if kwarg keys are named like
+             a module or python native object.
+
+    Args:
+        original_kwargs: Key-value data to be updated
+
+    Returns:
+        Updated kwargs
+    """
+    new_kwargs = {}
+    for key, value in original_kwargs.items():
+        if key in list(KWARG_TRANSLATE_MAP.keys()):
+            new_kwargs[KWARG_TRANSLATE_MAP[key]] = value
+        else:
+            new_kwargs[key] = value
+    return new_kwargs
 
 def print2(message: str, bold: bool = False, color: str = 'reset') -> None:
     """Print a message to the console using click
@@ -238,7 +265,7 @@ def append_lines_to_file(filepath: str, lines_to_append: List[str], location: st
     return True
 
 
-def is_list_items_in_dict(list_items: list, dict_to_check: dict) -> int:
+def is_list_items_in_dict(list_items: list, dict_to_check: dict) -> Union[int, None]:
     """Return index of ANY matched item in the passed list
 
     Args:
@@ -254,7 +281,7 @@ def is_list_items_in_dict(list_items: list, dict_to_check: dict) -> int:
     return None
 
 
-def iter_data_empty_item_stripper(iter_data):
+def iter_data_empty_item_stripper(iter_data: Union[Dict, List, Set, Tuple]) -> Union[Dict, List, Set, Tuple]:
     """Removes any empty data from a nested or un-nested iter item
 
     Details: https://stackoverflow.com/a/27974027/11294572
