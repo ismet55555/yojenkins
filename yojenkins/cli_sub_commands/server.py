@@ -7,6 +7,7 @@ from yojenkins.__main__ import server
 from yojenkins.cli import cli_decorators, cli_server
 from yojenkins.cli.cli_utility import set_debug_log_level
 
+
 @server.command(short_help='\tServer information')
 @cli_decorators.debug
 @cli_decorators.format_output

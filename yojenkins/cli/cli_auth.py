@@ -12,6 +12,7 @@ from yojenkins.yo_jenkins import Auth, Rest
 # Getting the logger reference
 logger = logging.getLogger()
 
+
 @log_to_history
 def configure(auth_file: str) -> None:
     """Configure authentication
