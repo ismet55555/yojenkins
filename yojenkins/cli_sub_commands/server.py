@@ -12,10 +12,12 @@ from yojenkins.cli.cli_utility import set_debug_log_level
 @cli_decorators.debug
 @cli_decorators.format_output
 @cli_decorators.profile
-def info(debug, pretty, yaml, toml, xml, profile):
+#  def info(debug, pretty, yaml, toml, xml, profile, token):
+def info(debug, **kwargs):
     """Server information"""
     set_debug_log_level(debug)
-    cli_server.info(pretty, yaml, xml, toml, profile)
+    #  cli_server.info(pretty, yaml, xml, toml, profile, token)
+    cli_server.info(**kwargs)
 
 
 @server.command(short_help='\tShow all people/users on server')

@@ -74,7 +74,12 @@ def profile(decorated_function: Callable) -> Callable:
         Decorated function
     """
 
-    @click.option('--profile', type=str, required=False, is_flag=False, help='Authentication profile for command')
+    @click.option('--profile',
+                  type=str,
+                  required=False,
+                  is_flag=False,
+                  help='Authentication profile name or profile as JSON text')
+    #  @click.option('--token', type=str, required=False, is_flag=False, help='Authentication token to use')
     @functools.wraps(decorated_function)
     def wrapper(*args, **kwds):
         return decorated_function(*args, **kwds)

@@ -9,7 +9,7 @@ import sysconfig
 import webbrowser
 from pathlib import Path
 from string import Template
-from typing import Dict, List, Tuple, Union
+from typing import Any, Dict, List, Set, Tuple, Union
 from urllib.parse import urljoin, urlparse
 
 import requests
@@ -25,6 +25,12 @@ from yojenkins.yo_jenkins.jenkins_item_classes import JenkinsItemClasses
 logger = logging.getLogger()
 
 CONFIG_DIR_NAME = ".yojenkins"
+KWARG_TRANSLATE_MAP = {
+    'pretty': 'opt_pretty',
+    'yaml': 'opt_yaml',
+    'xml': 'opt_xml',
+    'toml': 'opt_toml',
+}
 
 
 class TextStyle:
@@ -38,6 +44,28 @@ class TextStyle:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
     NORMAL = '\033[0m'
+
+
+def translate_kwargs(original_kwargs: Dict[str, Any]) -> Dict[str, Any]:
+    """Rename the key names of the provided kwargs based on
+    a set of translation rules.
+
+    Details: This is primarirly used if kwarg keys are named like
+             a module or python native object.
+
+    Args:
+        original_kwargs: Key-value data to be updated
+
+    Returns:
+        Updated kwargs
+    """
+    new_kwargs = {}
+    for key, value in original_kwargs.items():
+        if key in list(KWARG_TRANSLATE_MAP.keys()):
+            new_kwargs[KWARG_TRANSLATE_MAP[key]] = value
+        else:
+            new_kwargs[key] = value
+    return new_kwargs
 
 
 def print2(message: str, bold: bool = False, color: str = 'reset') -> None:
@@ -87,7 +115,6 @@ def load_contents_from_local_file(file_type: str, local_file_path: str) -> Dict:
     Returns:
         file_contents (dict) : The contents of file
     """
-
     file_type = file_type.lower()
 
     # Check if file exists
@@ -108,12 +135,34 @@ def load_contents_from_local_file(file_type: str, local_file_path: str) -> Dict:
             elif file_type == 'json':
                 file_contents = json.loads(open_file.read())
             else:
-                logger.debug(f"Unknown file type passed: '{file_type}'")
                 raise ValueError(f"Unknown file type passed: '{file_type}'")
         logger.debug(f"Successfully loaded local .{file_type} file")
     except Exception as error:
         fail_out(f"Failed to load specified local .{file_type} file: '{local_file_path}'. Exception: {error}")
     return file_contents
+
+
+def load_contents_from_string(file_type: str, text: str) -> Dict:
+    """Loading a local file contents
+
+    Parameters:
+        file_type (str) : Type of file to be loaded ie. 'yaml', 'toml', 'json'
+        text (str)      : Text string to be loaded as specified filetype
+    Returns:
+        contents (dict) : The contents of file
+    """
+    file_type = file_type.lower()
+    logger.debug(f"Loading specified text string as filetype '{file_type}' ...")
+    if file_type == 'yaml':
+        contents = yaml.safe_load(text)
+    elif file_type == 'toml':
+        contents = toml.loads(text)
+    elif file_type == 'json':
+        contents = json.loads(text)
+    else:
+        raise ValueError(f'Unknown file type passed: "{file_type}"')
+    logger.debug(f'Successfully loaded specified "{file_type}" contents from text string')
+    return contents
 
 
 def load_contents_from_remote_file_url(file_type: str, remote_file_url: str, allow_redirects: bool = True) -> Dict:
@@ -238,7 +287,7 @@ def append_lines_to_file(filepath: str, lines_to_append: List[str], location: st
     return True
 
 
-def is_list_items_in_dict(list_items: list, dict_to_check: dict) -> int:
+def is_list_items_in_dict(list_items: list, dict_to_check: dict) -> Union[int, None]:
     """Return index of ANY matched item in the passed list
 
     Args:
@@ -254,7 +303,7 @@ def is_list_items_in_dict(list_items: list, dict_to_check: dict) -> int:
     return None
 
 
-def iter_data_empty_item_stripper(iter_data):
+def iter_data_empty_item_stripper(iter_data: Union[Dict, List, Set, Tuple]) -> Union[Dict, List, Set, Tuple]:
     """Removes any empty data from a nested or un-nested iter item
 
     Details: https://stackoverflow.com/a/27974027/11294572
