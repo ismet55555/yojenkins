@@ -10,12 +10,7 @@ import click
 from yojenkins.cli import cli_utility as cu
 from yojenkins.cli.cli_utility import log_to_history
 from yojenkins.docker_container import DockerJenkinsServer
-from yojenkins.utility.utility import (
-    fail_out,
-    failures_out,
-    print2,
-    translate_kwargs
-)
+from yojenkins.utility.utility import fail_out, failures_out, print2, translate_kwargs
 from yojenkins.yo_jenkins import Auth, YoJenkins
 
 # Getting the logger reference
@@ -26,7 +21,7 @@ CONFIG_DIR_NAME = '.yojenkins'
 
 
 @log_to_history
-def info(profile: str, token: str, **kwargs) -> None:
+def info(profile: str, **kwargs) -> None:
     """Get the server information
 
     Details: Targeting the server that is specified in the selected profile

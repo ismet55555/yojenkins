@@ -6,25 +6,6 @@ from typing import Callable
 import click
 
 
-def auth_options(decorated_function: Callable) -> Callable:
-    """click module options for authentication
-
-    Details: This function is a convenience function to use to add click options
-
-    Args:
-        decorated_function : Function that is decorated
-
-    Returns:
-        Decorated function
-    """
-    @click.option('--token', type=str, required=False, is_flag=False, help='Authentication token to use')
-    @functools.wraps(decorated_function)
-    def wrapper(*args, **kwds):
-        return decorated_function(*args, **kwds)
-
-    return wrapper
-
-
 def format_output(decorated_function: Callable) -> Callable:
     """click module options for formatting the output
 
@@ -92,8 +73,13 @@ def profile(decorated_function: Callable) -> Callable:
     Returns:
         Decorated function
     """
-    @click.option('--profile', type=str, required=False, is_flag=False, help='Authentication profile for command')
-    @click.option('--token', type=str, required=False, is_flag=False, help='Authentication token to use')
+
+    @click.option('--profile',
+                  type=str,
+                  required=False,
+                  is_flag=False,
+                  help='Authentication profile name or profile as JSON text')
+    #  @click.option('--token', type=str, required=False, is_flag=False, help='Authentication token to use')
     @functools.wraps(decorated_function)
     def wrapper(*args, **kwds):
         return decorated_function(*args, **kwds)

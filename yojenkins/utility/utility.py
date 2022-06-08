@@ -9,7 +9,7 @@ import sysconfig
 import webbrowser
 from pathlib import Path
 from string import Template
-from typing import Dict, List, Tuple, Set, Union
+from typing import Any, Dict, List, Set, Tuple, Union
 from urllib.parse import urljoin, urlparse
 
 import requests
@@ -18,8 +18,6 @@ import xmltodict
 import yaml
 from click import echo, style
 from urllib3.util import parse_url
-
-from typing import Dict, Any
 
 from yojenkins import __version__
 from yojenkins.yo_jenkins.jenkins_item_classes import JenkinsItemClasses
@@ -34,6 +32,7 @@ KWARG_TRANSLATE_MAP = {
     'toml': 'opt_toml',
 }
 
+
 class TextStyle:
     """Text style definitions"""
     HEADER = '\033[95m'
@@ -45,6 +44,7 @@ class TextStyle:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
     NORMAL = '\033[0m'
+
 
 def translate_kwargs(original_kwargs: Dict[str, Any]) -> Dict[str, Any]:
     """Rename the key names of the provided kwargs based on
@@ -66,6 +66,7 @@ def translate_kwargs(original_kwargs: Dict[str, Any]) -> Dict[str, Any]:
         else:
             new_kwargs[key] = value
     return new_kwargs
+
 
 def print2(message: str, bold: bool = False, color: str = 'reset') -> None:
     """Print a message to the console using click
@@ -114,7 +115,6 @@ def load_contents_from_local_file(file_type: str, local_file_path: str) -> Dict:
     Returns:
         file_contents (dict) : The contents of file
     """
-
     file_type = file_type.lower()
 
     # Check if file exists
@@ -135,12 +135,34 @@ def load_contents_from_local_file(file_type: str, local_file_path: str) -> Dict:
             elif file_type == 'json':
                 file_contents = json.loads(open_file.read())
             else:
-                logger.debug(f"Unknown file type passed: '{file_type}'")
                 raise ValueError(f"Unknown file type passed: '{file_type}'")
         logger.debug(f"Successfully loaded local .{file_type} file")
     except Exception as error:
         fail_out(f"Failed to load specified local .{file_type} file: '{local_file_path}'. Exception: {error}")
     return file_contents
+
+
+def load_contents_from_string(file_type: str, text: str) -> Dict:
+    """Loading a local file contents
+
+    Parameters:
+        file_type (str) : Type of file to be loaded ie. 'yaml', 'toml', 'json'
+        text (str)      : Text string to be loaded as specified filetype
+    Returns:
+        contents (dict) : The contents of file
+    """
+    file_type = file_type.lower()
+    logger.debug(f"Loading specified text string as filetype '{file_type}' ...")
+    if file_type == 'yaml':
+        contents = yaml.safe_load(text)
+    elif file_type == 'toml':
+        contents = toml.loads(text)
+    elif file_type == 'json':
+        contents = json.loads(text)
+    else:
+        raise ValueError(f'Unknown file type passed: "{file_type}"')
+    logger.debug(f'Successfully loaded specified "{file_type}" contents from text string')
+    return contents
 
 
 def load_contents_from_remote_file_url(file_type: str, remote_file_url: str, allow_redirects: bool = True) -> Dict:

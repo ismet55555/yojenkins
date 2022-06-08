@@ -1,11 +1,13 @@
 """Auth class definition"""
 
+import json
 import logging
 import os
 import re
 import sys
 from datetime import datetime
 from getpass import getpass
+from json.decoder import JSONDecodeError
 from pathlib import Path
 from typing import Any, Dict, Tuple
 
@@ -161,6 +163,7 @@ class Auth:
         if not success:
             fail_out('Failed to generate API token. Request failed')
 
+        generated_token = ''
         try:
             generated_token = request_return_content['data']['tokenValue']
             logger.debug(f'Successfully generated server API token "{token_name}"!')
@@ -386,7 +389,7 @@ class Auth:
             return False, ''
 
     def get_credentials(self, profile: str = '') -> Dict:
-        """Get the contents of the credentials profiles file
+        """Get the contents of the credentials profiles file.
 
         Details: The order (preference) of specified profile credentials to get are the following:
             - Passed `profile` argument
@@ -400,36 +403,64 @@ class Auth:
         Returns:
             The credential information of the specified credentials profile
         """
-        creds_file_abs_path = os.path.join(Path.home(), CONFIG_DIR_NAME, CREDS_FILE_NAME)
-        if not self._detect_creds_file()[0]:
-            # If no configuration file found, configure one
-            logger.debug('No credentials file found. Configuring one ...')
-            self.configure()
+        profile_is_option_text = False
+        try:
+            # Load profile from CLI option value
+            json.loads(profile)
+            logger.debug('Passed profile is a JSON format string via --profile')
+            profile_items_all = utility.load_contents_from_string('json', profile)
+            profile_is_option_text = True
+        except (JSONDecodeError, TypeError):
+            # Check to see if user meant to provide entire profile
+            # For security reasons do not show what user intendent to provide
+            if profile:
+                if profile.startswith('{'):
+                    fail_out('Specified profile option is not valid. Its value begins with '
+                             'a "{" symbol indicating user attempted to provide profile info '
+                             'via --profile option. Please check option input structure.')
+            creds_file_abs_path = os.path.join(Path.home(), CONFIG_DIR_NAME, CREDS_FILE_NAME)
 
-        # Loading configurations file
-        creds_info = utility.load_contents_from_local_file("toml", creds_file_abs_path)
-        if not creds_info:
-            fail_out(f'Failed to load credentials file: {creds_file_abs_path}')
+            # Check if credentials file existis on system
+            if not self._detect_creds_file()[0]:
+                # If no configuration file found, configure one
+                logger.debug('No credentials file found. Configuring one ...')
+                self.configure()
 
-        # Get the listed profiles
-        profile_items_all = creds_info
-        logger.debug(f'Number of listed profiles found: {len(profile_items_all)}')
+            # Loading configurations file
+            creds_info = utility.load_contents_from_local_file("toml", creds_file_abs_path)
+            if not creds_info:
+                fail_out(f'Failed to load credentials file: {creds_file_abs_path}')
+
+            # Get the listed profiles
+            profile_items_all = creds_info
+            logger.debug(f'Number of listed profiles found: {len(profile_items_all)}')
+
+        # TODO: Add JSON Schema validation for profile structure
 
         # Filter out the profiles that are misconfigured (missing keys)
         profile_items = {}
-        required_profile_items = ['jenkins_server_url', 'username']
-        logger.debug(
-            f'Ignoring profiles that do not have at least the following keys: {", ".join(required_profile_items)} ...')
-        for i, (profile_key, profile_values) in enumerate(profile_items_all.items()):
-            if all(item in list(profile_values.keys()) for item in required_profile_items):
-                logger.debug(f'    - Profile {i+1} of {len(profile_items_all)}: "{profile_key}" - OK')
-                profile_items[profile_key] = profile_values
+        logger.debug(f'Ignoring profiles that do not have at least the '
+                     f'following keys: {", ".join(REQUIRED_PROFILE_KEYS)} ...')
+        if profile_is_option_text:
+            if all(item in list(profile_items_all.keys()) for item in REQUIRED_PROFILE_KEYS):
+                profile_items["CLI_PROVIDED"] = profile_items_all
             else:
-                logger.debug(f'    - Profile {i+1} of {len(profile_items_all)}: "{profile_key}" - IGNORED')
+                logger.debug("Profile JSON object provided with text via --profile does not "
+                             f'contain the required information keys: {", ".join(REQUIRED_PROFILE_KEYS)}')
+        else:
+            for i, (profile_name, profile_values) in enumerate(profile_items_all.items()):
+                if not isinstance(profile_values, dict):
+                    fail_out('Failed to find specified profile as the correct '
+                             'key-value structure. Please check profile structure')
+                if all(item in list(profile_values.keys()) for item in REQUIRED_PROFILE_KEYS):
+                    logger.debug(f'    - Profile {i+1} of {len(profile_items_all)}: "{profile_name}" - OK')
+                    profile_items[profile_name] = profile_values
+                else:
+                    logger.debug(f'    - Profile {i+1} of {len(profile_items_all)}: "{profile_name}" - IGNORED')
         if not profile_items:
             failures_out([
-                'Failed to find any valid profiles in the configuration file',
-                f'A valid profile must have at least the follwing keys: {", ".join(required_profile_items)}'
+                'Failed to find any valid profiles in the provided credentials',
+                f'A valid profile must have at least the follwing keys: {", ".join(REQUIRED_PROFILE_KEYS)}'
             ])
 
         # Select the credential profile
@@ -437,20 +468,27 @@ class Auth:
 
         # PRIORITY 1 - Argument --profile
         if profile:
-            if profile in profile_items:
+            if profile_is_option_text:
+                profile = list(profile_items.keys())[0]
                 profile_selected = profile_items[profile]
                 profile_selected['profile'] = profile
-                logger.debug(f'Successfully matched specified --profile "{profile}"')
+                logger.debug('Successfully loaded entire profile provided through --profile')
             else:
-                fail_out(f'Failed to find the profile "{profile}" within all loaded '
-                         f'profiles: {", ".join(list(profile_items.keys()))}')
+                if profile in profile_items:
+                    profile_selected = profile_items[profile]
+                    profile_selected['profile'] = profile
+                    logger.debug(f'Successfully matched specified --profile "{profile}"')
+                else:
+                    fail_out(f'Failed to find the profile "{profile}" within all loaded '
+                             f'profiles: {", ".join(list(profile_items.keys()))}')
         else:
             logger.debug('Argument "--profile" was not specified')
 
         # PRIORITY 2 - Environmental Variable
         if not profile_selected:
             if PROFILE_ENV_VAR in os.environ:
-                profile = os.getenv(PROFILE_ENV_VAR)
+                env_var_value = os.getenv(PROFILE_ENV_VAR)
+                profile = env_var_value if env_var_value else ''
                 if profile in profile_items:
                     profile_selected = profile_items[profile]
                     profile_selected['profile'] = profile
@@ -469,6 +507,7 @@ class Auth:
                 profile_selected = profile_items[profile]
                 profile_selected['profile'] = profile
                 logger.debug('Successfully found "default" profile in the configuration file')
+
             else:
                 logger.debug('Default profile "default" not found')
 
@@ -543,7 +582,7 @@ class Auth:
         self.jenkins_username = self.jenkins_profile['username']
 
         # hidden_token = ''.join([ "*" for i in self.jenkins_api_token[:-6]]) + self.jenkins_api_token[-6:]
-        hidden_token = ''.join(["*" for i in self.jenkins_profile['api_token']])
+        hidden_token = ''.join(["*" for _ in self.jenkins_profile['api_token']])
         logger.debug(f'    - API Token:           {hidden_token}')
 
         # Creating Jenkins SDK object(Exception handling: jenkins.JenkinsException)
@@ -630,6 +669,7 @@ class Auth:
             True if successfully authenticated, else False
         """
         logger.debug('Verifying server authentication by requesting user information ...')
+        request_url = ''
         try:
             request_url = self.jenkins_profile['jenkins_server_url'].strip('/') + "/me/api/json"
         except KeyError:
