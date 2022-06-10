@@ -21,7 +21,7 @@ CONFIG_DIR_NAME = '.yojenkins'
 
 
 @log_to_history
-def info(profile: str, **kwargs) -> None:
+def info(profile: str, token: str, **kwargs) -> None:
     """Get the server information
 
     Details: Targeting the server that is specified in the selected profile
@@ -29,7 +29,7 @@ def info(profile: str, **kwargs) -> None:
     Args:
         TODO
     """
-    data = cu.config_yo_jenkins(profile).server.info()
+    data = cu.config_yo_jenkins(profile, token).server.info()
     cu.standard_out(data, **translate_kwargs(kwargs))
 
 

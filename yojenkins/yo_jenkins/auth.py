@@ -535,13 +535,14 @@ class Auth:
 
         return profile_selected
 
-    def create_auth(self, profile_info: dict = {}) -> bool:
+    def create_auth(self, profile_info: dict = {}, token: str = '') -> bool:
         """Authenticate with the Jenkins server
 
         Details: If not server API token in the profile used, ask for token/password
 
         Args:
             profile_info : (Optional) Credentials profile information
+            token:         API token as passed to override profile value
 
         Returns:
             True if successfully authenticated, else False
@@ -570,20 +571,23 @@ class Auth:
             )
             print2('')
 
-            # # Check length of the api_token
+            # NOTE: Below dead code is to potentially check length of the api_token
             # if len(self.jenkins_profile['api_token']) < 5:
             #     logger.debug(f'The entered API Token has a length of {len(self.jenkins_profile["api_token"])}, which is too short')
             #     return False
 
-            # FIXME: DO NOT pass the prompt text to standard out of command. As a result, piping the result WILL NOT work!
-
         # Load the token or password
-        self.jenkins_api_token = self.jenkins_profile['api_token']
+        if token:
+            #  logger.debug('API Token / Password loaded via --token CLI option')
+            self.jenkins_profile['api_token'] = token
+            self.jenkins_api_token = token
+            hidden_token = "Loaded via --token"
+        else:
+            self.jenkins_api_token = self.jenkins_profile['api_token']
+            hidden_token = ''.join(["*" for _ in self.jenkins_profile['api_token']])
+        logger.debug(f'    - API Token:           {hidden_token}')
         self.jenkins_username = self.jenkins_profile['username']
 
-        # hidden_token = ''.join([ "*" for i in self.jenkins_api_token[:-6]]) + self.jenkins_api_token[-6:]
-        hidden_token = ''.join(["*" for _ in self.jenkins_profile['api_token']])
-        logger.debug(f'    - API Token:           {hidden_token}')
 
         # Creating Jenkins SDK object(Exception handling: jenkins.JenkinsException)
         try:
