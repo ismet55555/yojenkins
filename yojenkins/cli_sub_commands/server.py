@@ -52,42 +52,43 @@ def queue(debug, **kwargs):
 @cli_decorators.format_output
 @cli_decorators.profile
 @cli_decorators.list
-def plugins(debug, pretty, yaml, xml, toml, profile, list):
+def plugins(debug, **kwargs):
     """Show plugin information"""
     set_debug_log_level(debug)
-    cli_server.plugins(pretty, yaml, xml, toml, profile, list)
+    cli_server.plugins(**translate_kwargs(kwargs))
 
 
 @server.command(short_help='\tOpen server home page in web browser')
 @cli_decorators.debug
 @cli_decorators.profile
-def browser(debug, profile):
+def browser(debug, **kwargs):
     """Open server home page in web browser"""
     set_debug_log_level(debug)
-    cli_server.browser(profile)
+    cli_server.browser(**translate_kwargs(kwargs))
 
 
 @server.command(short_help='\tCheck if server is reachable')
 @cli_decorators.debug
 @cli_decorators.profile
 @click.option('--timeout', type=int, default=10, required=False, is_flag=False, help='Request timeout value')
-def reachable(debug, profile, timeout):
+def reachable(debug, **kwargs):
     """Check if server is reachable"""
+    del kwargs['token']
     set_debug_log_level(debug)
-    cli_server.reachable(profile, timeout)
+    cli_server.reachable(**translate_kwargs(kwargs))
 
 
 @server.command(short_help='\tServer quite mode enable/disable')
 @cli_decorators.debug
 @cli_decorators.profile
 @click.option('--off', type=bool, default=False, required=False, is_flag=True, help='Undo quiet down mode')
-def quiet(debug, profile, off):
+def quiet(debug, **kwargs):
     """
     NOTE: A server with quiet mode enabled does not allow any new jobs to be build.
     This may be needed prior to server maintenance, restarts, or shutdowns
     """
     set_debug_log_level(debug)
-    cli_server.quiet(profile, off)
+    cli_server.quiet(**translate_kwargs(kwargs))
 
 
 @server.command(short_help='\tRestart the server')
@@ -99,13 +100,13 @@ def quiet(debug, profile, off):
               required=False,
               is_flag=True,
               help='Force restart. Without initial quiet mode.')
-def restart(debug, profile, force):
+def restart(debug, **kwargs):
     """
     NOTE: By default this will put Jenkins into the quiet mode, wait for existing builds to be completed, and then restart Jenkins.
     Use --force to skip quiet mode.
     """
     set_debug_log_level(debug)
-    cli_server.restart(profile, force)
+    cli_server.restart(**translate_kwargs(kwargs))
 
 
 @server.command(short_help='\tShut down the server')
@@ -117,14 +118,14 @@ def restart(debug, profile, force):
               required=False,
               is_flag=True,
               help='Force shutdown. Without initial quiet mode')
-def shutdown(debug, profile, force):
+def shutdown(debug, **kwargs):
     """
     NOTE: By default this will put Jenkins in a quiet mode, in preparation for a shutdown.
     In that mode Jenkins does not start any new builds.
     Use --force to skip quiet mode.
     """
     set_debug_log_level(debug)
-    cli_server.shutdown(profile, force)
+    cli_server.shutdown(**translate_kwargs(kwargs))
 
 
 @server.command(short_help='\tCreate a local development server using Docker')
@@ -201,9 +202,7 @@ def shutdown(debug, profile, force):
               type=str,
               required=False,
               help='Set password for admin account [default: password]')
-def server_deploy(debug, config_file, plugins_file, protocol_schema, host, port, image_base, extra_setup_script,
-                  image_rebuild, new_volume, new_volume_name, bind_mount_dir, container_name, registry, admin_user,
-                  password):
+def server_deploy(debug, **kwargs):
     """Create a local development server using Docker
 
     \b
@@ -224,10 +223,7 @@ def server_deploy(debug, config_file, plugins_file, protocol_schema, host, port,
         - yojenkins server server-deploy --extra_setup_script /home/ismet/project/setup.sh
     """
     set_debug_log_level(debug)
-    cli_server.server_deploy(config_file, plugins_file, protocol_schema, host, port, image_base, extra_setup_script,
-                             image_rebuild, new_volume, new_volume_name, bind_mount_dir, container_name, registry,
-                             admin_user, password)
-
+    cli_server.server_deploy(**translate_kwargs(kwargs))
 
 @server.command(short_help='\tRemove a local development server')
 @click.option('--remove-volume',
@@ -245,10 +241,10 @@ def server_deploy(debug, config_file, plugins_file, protocol_schema, host, port,
               is_flag=True,
               help='Also remove the Docker image used for current server')
 @cli_decorators.debug
-def server_teardown(debug, remove_volume, remove_image):
+def server_teardown(debug, **kwargs):
     """Remove a local development server"""
     set_debug_log_level(debug)
-    cli_server.server_teardown(remove_volume, remove_image)
+    cli_server.server_teardown(**translate_kwargs(kwargs))
 
 
 # @server.command(short_help='\tCheck if a locally deployed development server is running')
