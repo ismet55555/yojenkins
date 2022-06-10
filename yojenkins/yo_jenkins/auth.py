@@ -237,6 +237,7 @@ class Auth:
             This is a description of what is returned.
         """
         config_dir_abs_path = os.path.join(Path.home(), CONFIG_DIR_NAME)
+        creds_file_abs_path = os.path.join(config_dir_abs_path, CREDS_FILE_NAME)
 
         # Checking if credential config file exists
         file_exists, file_path = self._detect_creds_file()
@@ -250,8 +251,6 @@ class Auth:
 
             logger.debug(f'Credentials profile file found in current user home directory: {file_path}')
         else:
-            creds_file_abs_path = os.path.join(config_dir_abs_path, CREDS_FILE_NAME)
-
             logger.debug('Credentials file NOT found in current user configuration directory')
             logger.debug(f'Creating credentials file: {creds_file_abs_path} ...')
 
