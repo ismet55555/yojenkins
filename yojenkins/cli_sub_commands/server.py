@@ -7,6 +7,7 @@ from yojenkins.__main__ import server
 from yojenkins.cli import cli_decorators, cli_server
 from yojenkins.cli.cli_utility import set_debug_log_level
 
+from yojenkins.utility.utility import translate_kwargs
 
 @server.command(short_help='\tServer information')
 @cli_decorators.debug
@@ -17,7 +18,7 @@ def info(debug, **kwargs):
     """Server information"""
     set_debug_log_level(debug)
     #  cli_server.info(pretty, yaml, xml, toml, profile, token)
-    cli_server.info(**kwargs)
+    cli_server.info(**translate_kwargs(kwargs))
 
 
 @server.command(short_help='\tShow all people/users on server')
@@ -25,10 +26,11 @@ def info(debug, **kwargs):
 @cli_decorators.format_output
 @cli_decorators.profile
 @cli_decorators.list
-def people(debug, pretty, yaml, xml, toml, profile, list):
+#  def people(debug, pretty, yaml, xml, toml, profile, list):
+def people(debug, **kwargs):
     """Show all people/users on server"""
     set_debug_log_level(debug)
-    cli_server.people(pretty, yaml, xml, toml, profile, list)
+    cli_server.people(**translate_kwargs(kwargs))
 
 
 @server.command(short_help='\tShow current job build queues on server')
@@ -36,10 +38,12 @@ def people(debug, pretty, yaml, xml, toml, profile, list):
 @cli_decorators.format_output
 @cli_decorators.profile
 @cli_decorators.list
-def queue(debug, pretty, yaml, xml, toml, profile, list):
+#  def queue(debug, pretty, yaml, xml, toml, profile, list):
+def queue(debug, **kwargs):
     """Show current job build queues on server"""
     set_debug_log_level(debug)
-    cli_server.queue(pretty, yaml, xml, toml, profile, list)
+    #  cli_server.queue(pretty, yaml, xml, toml, profile, list)
+    cli_server.queue(**translate_kwargs(kwargs))
     # NOTE: Maybe move to "job"?
 
 

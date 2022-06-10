@@ -30,28 +30,25 @@ def info(profile: str, token: str, **kwargs) -> None:
         TODO
     """
     data = cu.config_yo_jenkins(profile, token).server.info()
-    cu.standard_out(data, **translate_kwargs(kwargs))
+    cu.standard_out(data, **kwargs)
 
 
 @log_to_history
-def people(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, opt_list: bool) -> None:
+def people(profile: str, token: str, opt_list: bool, **kwargs) -> None:
     """TODO Docstring
 
     Details: TODO
 
     Args:
         TODO
-
-    Returns:
-        TODO
     """
-    data, data_list = cu.config_yo_jenkins(profile).server.people()
+    data, data_list = cu.config_yo_jenkins(profile, token).server.people()
     data = data_list if opt_list else data
-    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
+    cu.standard_out(data, **kwargs)
 
 
 @log_to_history
-def queue(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, opt_list: bool) -> None:
+def queue(profile: str, token: str, opt_list: bool, **kwargs) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -62,12 +59,12 @@ def queue(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profi
     Returns:
         TODO
     """
-    yj_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile, token)
     if opt_list:
         data = yj_obj.server.queue_list()  # TODO: Combine with server_queue_list adding a list argument
     else:
         data = yj_obj.server.queue_info()
-    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
+    cu.standard_out(data, **kwargs)
 
 
 @log_to_history

@@ -9,7 +9,7 @@ from datetime import datetime
 from inspect import getfullargspec
 from pathlib import Path
 from shlex import quote
-from typing import Callable, Dict
+from typing import Callable, Dict, List, Union
 
 import click
 import toml
@@ -111,7 +111,7 @@ def config_yo_jenkins(profile: str, token: str) -> YoJenkins:
     return YoJenkins(auth)
 
 
-def standard_out(data: Dict,
+def standard_out(data: Union[Dict, List],
                  opt_pretty: bool = False,
                  opt_yaml: bool = False,
                  opt_xml: bool = False,

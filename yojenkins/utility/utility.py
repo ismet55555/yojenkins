@@ -30,6 +30,7 @@ KWARG_TRANSLATE_MAP = {
     'yaml': 'opt_yaml',
     'xml': 'opt_xml',
     'toml': 'opt_toml',
+    'list': 'opt_list'
 }
 
 

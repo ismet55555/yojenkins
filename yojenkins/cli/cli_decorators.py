@@ -56,8 +56,8 @@ def debug(decorated_function: Callable) -> Callable:
                   is_flag=True,
                   help='Enable debug level log messages')
     @functools.wraps(decorated_function)
-    def wrapper(*args, **kwds):
-        return decorated_function(*args, **kwds)
+    def wrapper(*args, **kwargs):
+        return decorated_function(*args, **kwargs)
 
     return wrapper
 
@@ -101,7 +101,7 @@ def list(decorated_function: Callable) -> Callable:
 
     @click.option('-l', '--list', type=bool, default=False, required=False, is_flag=True, help='Output as list')
     @functools.wraps(decorated_function)
-    def wrapper(*args, **kwds):
-        return decorated_function(*args, **kwds)
+    def wrapper(*args, **kwargs):
+        return decorated_function(*args, **kwargs)
 
     return wrapper
