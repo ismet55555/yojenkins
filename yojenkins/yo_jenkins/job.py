@@ -284,7 +284,7 @@ class Job():
 
     def build_number_exist(self,
                            build_number: int,
-                           job_info: dict,
+                           job_info: dict = {},
                            job_name: str = '',
                            job_url: str = '') -> Union[bool, None]:
         """TODO Docstring

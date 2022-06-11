@@ -16,35 +16,28 @@ logger = logging.getLogger()
 
 
 @log_to_history
-def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, job: str) -> None:
+def info(profile: str, token: str, job: str, **kwargs) -> None:
     """TODO Docstring
 
     Args:
         TODO
-
-    Returns:
-        None
     """
-    yj_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile, token)
     if cu.is_full_url(job):
         data = yj_obj.job.info(job_url=job)
     else:
         data = yj_obj.job.info(job_name=job)
-    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
+    cu.standard_out(data, **kwargs)
 
 
 @log_to_history
-def search(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, search_pattern: str,
-           search_folder: str, depth: int, fullname: bool, opt_list: bool) -> None:
+def search(profile: str, token: str, search_pattern: str, search_folder: str, depth: int, fullname: bool, opt_list: bool, **kwargs) -> None:
     """TODO Docstring
 
     Args:
         TODO
-
-    Returns:
-        None
     """
-    yj_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile, token)
     if cu.is_full_url(search_folder):
         data, data_list = yj_obj.job.search(search_pattern=search_pattern,
                                             folder_url=search_folder,
@@ -59,40 +52,33 @@ def search(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, prof
         print2("No folders found", color="yellow")
         sys.exit(1)
     data = data_list if opt_list else data
-    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
+    cu.standard_out(data, **kwargs)
 
 
 @log_to_history
-def build_list(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, job: str,
-               opt_list: bool) -> None:
+def build_list(profile: str, token: str, opt_list: bool, job: str, **kwargs) -> None:
     """TODO Docstring
 
     Args:
         TODO
-
-    Returns:
-        None
     """
-    yj_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile, token)
     if cu.is_full_url(job):
         data, data_list = yj_obj.job.build_list(job_url=job)
     else:
         data, data_list = yj_obj.job.build_list(job_name=job)
     data = data_list if opt_list else data
-    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
+    cu.standard_out(data, **kwargs)
 
 
 @log_to_history
-def build_next(profile: str, job: str) -> None:
+def build_next(profile: str, token: str, job: str) -> None:
     """TODO Docstring
 
     Args:
         TODO
-
-    Returns:
-        None
     """
-    yj_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile, token)
     if cu.is_full_url(job):
         data = yj_obj.job.build_next_number(job_url=job)
     else:
@@ -101,16 +87,13 @@ def build_next(profile: str, job: str) -> None:
 
 
 @log_to_history
-def build_last(profile: str, job: str) -> None:
+def build_last(profile: str, token: str, job: str) -> None:
     """TODO Docstring
 
     Args:
         TODO
-
-    Returns:
-        None
     """
-    yj_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile, token)
     if cu.is_full_url(job):
         data = yj_obj.job.build_last_number(job_url=job)
     else:
@@ -119,55 +102,49 @@ def build_last(profile: str, job: str) -> None:
 
 
 @log_to_history
-def build_set(profile: str, job: str, build_number: int) -> None:
+def build_set(profile: str, token: str, job: str, build_number: int) -> None:
     """TODO Docstring
 
     Args:
         TODO
-
-    Returns:
-        None
     """
-    yj_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile, token)
     if cu.is_full_url(job):
-        data = yj_obj.job.build_set_next_number(build_number=build_number, job_url=job)
+        yj_obj.job.build_set_next_number(build_number=build_number, job_url=job)
     else:
-        data = yj_obj.job.build_set_next_number(build_number=build_number, job_name=job)
+        yj_obj.job.build_set_next_number(build_number=build_number, job_name=job)
     click.secho(f'{build_number}', fg='bright_green', bold=True)
 
 
 @log_to_history
-def build_exist(profile: str, job: str, build_number: int) -> None:
+def build_exist(profile: str, token: str, job: str, build_number: int) -> None:
     """TODO Docstring
 
     Args:
         TODO
-
-    Returns:
-        None
     """
-    yj_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile, token)
     if cu.is_full_url(job):
-        data = yj_obj.job.build_number_exist(build_number=build_number, job_url=job)
+        data = yj_obj.job.build_number_exist(build_number, {}, job_url=job)
     else:
-        data = yj_obj.job.build_number_exist(build_number=build_number, job_name=job)
-    click.secho('true', fg='bright_green', bold=True)
+        data = yj_obj.job.build_number_exist(build_number, {}, job_name=job)
+    if data:
+        click.secho('true', fg='bright_green', bold=True)
+    else:
+        click.secho('false', fg='bright_red', bold=True)
 
 
 @log_to_history
-def build(profile: str, job: str, parameters: tuple) -> None:
+def build(profile: str, token: str, job: str, parameter: tuple) -> None:
     """TODO Docstring
 
     Args:
         TODO
-
-    Returns:
-        None
     """
-    yj_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile, token)
 
     # Convert a tuple of tuples to dict
-    parameters = dict(list(parameters))
+    parameters = dict(list(parameter))
 
     if cu.is_full_url(job):
         data = yj_obj.job.build_trigger(job_url=job, paramters=parameters)
@@ -177,17 +154,13 @@ def build(profile: str, job: str, parameters: tuple) -> None:
 
 
 @log_to_history
-def queue_check(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, job: str,
-                opt_id: bool) -> None:
+def queue_check(profile: str, token: str, job: str, opt_id: bool, **kwargs) -> None:
     """TODO Docstring
 
     Args:
         TODO
-
-    Returns:
-        None
     """
-    yj_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile, token)
     if cu.is_full_url(job):
         data, queue_id = yj_obj.job.in_queue_check(job_url=job)
     else:
@@ -195,20 +168,17 @@ def queue_check(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool,
     if opt_id:
         click.secho(f'{queue_id}', fg='bright_green', bold=True)
     else:
-        cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
+        cu.standard_out(data, **kwargs)
 
 
 @log_to_history
-def browser(profile: str, job: str) -> None:
+def browser(profile: str, token: str, job: str) -> None:
     """TODO Docstring
 
     Args:
         TODO
-
-    Returns:
-        None
     """
-    yj_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile, token)
     if cu.is_full_url(job):
         yj_obj.job.browser_open(job_url=job)
     else:
@@ -216,17 +186,14 @@ def browser(profile: str, job: str) -> None:
 
 
 @log_to_history
-def config(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_json: bool, profile: str, job: str,
+def config(profile: str, token: str, opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_json: bool, job: str,
            filepath: str) -> None:
     """TODO Docstring
 
     Args:
         TODO
-
-    Returns:
-        None
     """
-    yj_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile, token)
     if cu.is_full_url(job):
         data = yj_obj.job.config(filepath=filepath,
                                  job_url=job,
@@ -240,115 +207,95 @@ def config(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_
                                  opt_yaml=opt_yaml,
                                  opt_toml=opt_toml)
 
-    # Converting XML to dict
-    # data = json.loads(json.dumps(xmltodict.parse(data)))
-
+    # data = json.loads(json.dumps(xmltodict.parse(data)))  # Converting XML to dict
     opt_xml = not any([opt_json, opt_yaml, opt_toml])
     data = data if opt_xml else json.loads(json.dumps(xmltodict.parse(data)))
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
 @log_to_history
-def disable(profile: str, job: str) -> None:
+def disable(profile: str, token: str, job: str) -> None:
     """TODO Docstring
 
     Args:
         TODO
-
-    Returns:
-        None
     """
-    yj_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile, token)
     if cu.is_full_url(job):
-        data = yj_obj.job.disable(job_url=job)
+        yj_obj.job.disable(job_url=job)
     else:
-        data = yj_obj.job.disable(job_name=job)
+        yj_obj.job.disable(job_name=job)
     click.secho('success', fg='bright_green', bold=True)
 
 
 @log_to_history
-def enable(profile: str, job: str) -> None:
+def enable(profile: str, token: str, job: str) -> None:
     """TODO Docstring
 
     Args:
         TODO
-
-    Returns:
-        None
     """
-    yj_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile, token)
     if cu.is_full_url(job):
-        data = yj_obj.job.enable(job_url=job)
+        yj_obj.job.enable(job_url=job)
     else:
-        data = yj_obj.job.enable(job_name=job)
+        yj_obj.job.enable(job_name=job)
     click.secho('success', fg='bright_green', bold=True)
 
 
 @log_to_history
-def rename(profile: str, job: str, new_name: str) -> None:
+def rename(profile: str, token: str, job: str, name: str) -> None:
     """TODO Docstring
 
     Args:
         TODO
-
-    Returns:
-        None
     """
-    yj_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile, token)
     if cu.is_full_url(job):
-        data = yj_obj.job.rename(new_name=new_name, job_url=job)
+        yj_obj.job.rename(new_name=name, job_url=job)
     else:
-        data = yj_obj.job.rename(new_name=new_name, job_name=job)
+        yj_obj.job.rename(new_name=name, job_name=job)
     click.secho('success', fg='bright_green', bold=True)
 
 
 @log_to_history
-def delete(profile: str, job: str) -> None:
+def delete(profile: str, token: str, job: str) -> None:
     """TODO Docstring
 
     Args:
         TODO
-
-    Returns:
-        None
     """
-    yj_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile, token)
     if cu.is_full_url(job):
-        data = yj_obj.job.delete(job_url=job)
+        yj_obj.job.delete(job_url=job)
     else:
-        data = yj_obj.job.delete(job_name=job)
+        yj_obj.job.delete(job_name=job)
     click.secho('success', fg='bright_green', bold=True)
 
 
 @log_to_history
-def wipe(profile: str, job: str) -> None:
+def wipe(profile: str, token: str, job: str) -> None:
     """TODO Docstring
 
     Args:
         TODO
-
-    Returns:
-        None
     """
-    yj_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile, token)
     if cu.is_full_url(job):
-        data = yj_obj.job.wipe_workspace(job_url=job)
+        yj_obj.job.wipe_workspace(job_url=job)
     else:
-        data = yj_obj.job.wipe_workspace(job_name=job)
+        yj_obj.job.wipe_workspace(job_name=job)
     click.secho('success', fg='bright_green', bold=True)
 
 
 @log_to_history
-def monitor(profile: str, job: str, sound: bool) -> None:
+def monitor(profile: str, token: str, job: str, sound: bool) -> None:
     """TODO Docstring
 
     Args:
         TODO
-
-    Returns:
-        None
     """
-    yj_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile, token)
     if cu.is_full_url(job):
         yj_obj.job.monitor(job_url=job, sound=sound)
     else:
@@ -356,38 +303,31 @@ def monitor(profile: str, job: str, sound: bool) -> None:
 
 
 @log_to_history
-def create(profile: str, name: str, folder: str, config_file: str, config_is_json: bool) -> None:
+def create(profile: str, token: str, name: str, folder: str, config_file: str, config_is_json: bool) -> None:
     """TODO Docstring
 
     Args:
         TODO
-
-    Returns:
-        None
     """
-    yj_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile, token)
     if cu.is_full_url(folder):
-        data = yj_obj.job.create(name=name, folder_url=folder, config_file=config_file, config_is_json=config_is_json)
+        yj_obj.job.create(name=name, folder_url=folder, config_file=config_file, config_is_json=config_is_json)
     else:
-        data = yj_obj.job.create(name=name, folder_name=folder, config_file=config_file, config_is_json=config_is_json)
+        yj_obj.job.create(name=name, folder_name=folder, config_file=config_file, config_is_json=config_is_json)
     click.secho('success', fg='bright_green', bold=True)
 
 
 @log_to_history
-def parameters(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, job: str,
-               opt_list: bool) -> None:
+def parameters(profile: str, token: str, job: str, opt_list: bool, **kwargs) -> None:
     """TODO Docstring
 
     Args:
         TODO
-
-    Returns:
-        None
     """
-    yj_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile, token)
     if cu.is_full_url(job):
         data, data_list = yj_obj.job.parameters(job_url=job)
     else:
         data, data_list = yj_obj.job.parameters(job_name=job)
     data = data_list if opt_list else data
-    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
+    cu.standard_out(data, **kwargs)

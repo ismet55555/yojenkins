@@ -7,16 +7,17 @@ from yojenkins.__main__ import job
 from yojenkins.cli import cli_decorators, cli_job
 from yojenkins.cli.cli_utility import set_debug_log_level
 
+from yojenkins.utility.utility import translate_kwargs
 
 @job.command(short_help='\tJob information')
 @cli_decorators.debug
 @cli_decorators.format_output
 @cli_decorators.profile
 @click.argument('job', nargs=1, type=str, required=True)
-def info(debug, pretty, yaml, xml, toml, profile, job):
+def info(debug, **kwargs):
     """Job information"""
     set_debug_log_level(debug)
-    cli_job.info(pretty, yaml, xml, toml, profile, job)
+    cli_job.info(**translate_kwargs(kwargs))
 
 
 @job.command(short_help='\tSearch jobs by REGEX pattern')
@@ -34,10 +35,10 @@ def info(debug, pretty, yaml, xml, toml, profile, job):
               is_flag=True,
               help='Search entire job path name')
 @cli_decorators.list
-def search(debug, pretty, yaml, xml, toml, profile, search_pattern, search_folder, depth, fullname, list):
+def search(debug, **kwargs):
     """Search jobs by REGEX pattern"""
     set_debug_log_level(debug)
-    cli_job.search(pretty, yaml, xml, toml, profile, search_pattern, search_folder, depth, fullname, list)
+    cli_job.search(**translate_kwargs(kwargs))
 
 
 @job.command(short_help='\tList all builds for job')
@@ -46,30 +47,30 @@ def search(debug, pretty, yaml, xml, toml, profile, search_pattern, search_folde
 @cli_decorators.profile
 @click.argument('job', nargs=1, type=str, required=True)
 @cli_decorators.list
-def list(debug, pretty, yaml, xml, toml, profile, job, list):
+def list(debug, **kwargs):
     """List all builds for job"""
     set_debug_log_level(debug)
-    cli_job.build_list(pretty, yaml, xml, toml, profile, job, list)
+    cli_job.build_list(**translate_kwargs(kwargs))
 
 
 @job.command(short_help='\tGet next build number')
 @cli_decorators.debug
 @cli_decorators.profile
 @click.argument('job', nargs=1, type=str, required=True)
-def next(debug, profile, job):
+def next(debug, **kwargs):
     """Get next build number"""
     set_debug_log_level(debug)
-    cli_job.build_next(profile, job)
+    cli_job.build_next(**translate_kwargs(kwargs))
 
 
 @job.command(short_help='\tGet previous build number')
 @cli_decorators.debug
 @cli_decorators.profile
 @click.argument('job', nargs=1, type=str, required=True)
-def last(debug, profile, job):
+def last(debug, **kwargs):
     """Get previous build number"""
     set_debug_log_level(debug)
-    cli_job.build_last(profile, job)
+    cli_job.build_last(**translate_kwargs(kwargs))
 
 
 @job.command(short_help='\tSet the next build number')
@@ -77,10 +78,10 @@ def last(debug, profile, job):
 @cli_decorators.profile
 @click.argument('job', nargs=1, type=str, required=True)
 @click.argument('build_number', nargs=1, type=int, required=True)
-def set(debug, profile, job, build_number):
+def set(debug, **kwargs):
     """Set the next build number"""
     set_debug_log_level(debug)
-    cli_job.build_set(profile, job, build_number)
+    cli_job.build_set(**translate_kwargs(kwargs))
 
 
 @job.command(short_help='\tCheck if build number exists')
@@ -88,10 +89,10 @@ def set(debug, profile, job, build_number):
 @cli_decorators.profile
 @click.argument('job', nargs=1, type=str, required=True)
 @click.argument('build_number', nargs=1, type=int, required=True)
-def build_exist(debug, profile, job, build_number):
+def build_exist(debug, **kwargs):
     """Check if build number exists"""
     set_debug_log_level(debug)
-    cli_job.build_exist(profile, job, build_number)
+    cli_job.build_exist(**translate_kwargs(kwargs))
 
 
 @job.command(short_help='\tBuild a job')
@@ -104,10 +105,10 @@ def build_exist(debug, profile, job, build_number):
               multiple=True,
               required=False,
               help='Specify key-value parameter. Can use multiple times. Use once per parameter')
-def build(debug, profile, job, parameter):
+def build(debug, **kwargs):
     """Build a job"""
     set_debug_log_level(debug)
-    cli_job.build(profile, job, parameter)
+    cli_job.build(**translate_kwargs(kwargs))
 
 
 @job.command(short_help='\tCheck if this job is in queue')
@@ -116,20 +117,20 @@ def build(debug, profile, job, parameter):
 @cli_decorators.profile
 @click.argument('job', nargs=1, type=str, required=True)
 @click.option('-i', '--id', type=bool, default=False, required=False, is_flag=True, help='Only output queue ID')
-def queue_check(debug, pretty, yaml, xml, toml, profile, job, id):
+def queue_check(debug, **kwargs):
     """Check if this job is in queue"""
     set_debug_log_level(debug)
-    cli_job.queue_check(pretty, yaml, xml, toml, profile, job, id)
+    cli_job.queue_check(**translate_kwargs(kwargs))
 
 
 @job.command(short_help='\tCancel this job in queue')
 @cli_decorators.debug
 @cli_decorators.profile
 @click.option('-i', '--id', type=int, default=False, required=True, help='Queue ID')
-def queue_cancel(debug, profile, id):
+def queue_cancel(debug, **kwargs):
     """Cancel this job in queue"""
     set_debug_log_level(debug)
-    # cli_job.queue_cancel(profile, id)
+    # cli_job.queue_cancel(**translate_kwargs(kwargs))
     click.secho('TODO :-/', fg='yellow')
 
 
@@ -137,10 +138,10 @@ def queue_cancel(debug, profile, id):
 @cli_decorators.debug
 @cli_decorators.profile
 @click.argument('job', nargs=1, type=str, required=True)
-def browser(debug, profile, job):
+def browser(debug, **kwargs):
     """Open job in web browser"""
     set_debug_log_level(debug)
-    cli_job.browser(profile, job)
+    cli_job.browser(**translate_kwargs(kwargs))
 
 
 @job.command(short_help='\tGet job configuration')
@@ -159,30 +160,30 @@ def browser(debug, profile, job):
               type=click.Path(file_okay=True, dir_okay=False),
               required=False,
               help='Filepath to write configurations to')
-def config(debug, pretty, yaml, xml, toml, json, profile, job, filepath):
+def config(debug, **kwargs):
     """Get job configuration"""
     set_debug_log_level(debug)
-    cli_job.config(pretty, yaml, xml, toml, json, profile, job, filepath)
+    cli_job.config(**translate_kwargs(kwargs))
 
 
 @job.command(short_help='\tDisable job')
 @cli_decorators.debug
 @cli_decorators.profile
 @click.argument('job', nargs=1, type=str, required=True)
-def disable(debug, profile, job):
+def disable(debug, **kwargs):
     """Disable job"""
     set_debug_log_level(debug)
-    cli_job.disable(profile, job)
+    cli_job.disable(**translate_kwargs(kwargs))
 
 
 @job.command(short_help='\tEnable job')
 @cli_decorators.debug
 @cli_decorators.profile
 @click.argument('job', nargs=1, type=str, required=True)
-def enable(debug, profile, job):
+def enable(debug, **kwargs):
     """Enable job"""
     set_debug_log_level(debug)
-    cli_job.enable(profile, job)
+    cli_job.enable(**translate_kwargs(kwargs))
 
 
 @job.command(short_help='\tRename job')
@@ -190,30 +191,30 @@ def enable(debug, profile, job):
 @cli_decorators.profile
 @click.argument('job', nargs=1, type=str, required=True)
 @click.argument('name', nargs=1, type=str, required=True)
-def rename(debug, profile, job, name):
+def rename(debug, **kwargs):
     """Rename job"""
     set_debug_log_level(debug)
-    cli_job.rename(profile, job, name)
+    cli_job.rename(**translate_kwargs(kwargs))
 
 
 @job.command(short_help='\tDelete job')
 @cli_decorators.debug
 @cli_decorators.profile
 @click.argument('job', nargs=1, type=str, required=True)
-def delete(debug, profile, job):
+def delete(debug, **kwargs):
     """Delete job"""
     set_debug_log_level(debug)
-    cli_job.delete(profile, job)
+    cli_job.delete(**translate_kwargs(kwargs))
 
 
 @job.command(short_help='\tWipe job workspace')
 @cli_decorators.debug
 @cli_decorators.profile
 @click.argument('job', nargs=1, type=str, required=True)
-def wipe(debug, profile, job):
+def wipe(debug, **kwargs):
     """Wipe job workspace"""
     set_debug_log_level(debug)
-    cli_job.wipe(profile, job)
+    cli_job.wipe(**translate_kwargs(kwargs))
 
 
 @job.command(short_help='\tStart monitor UI')
@@ -221,10 +222,10 @@ def wipe(debug, profile, job):
 @cli_decorators.profile
 @click.argument('job', nargs=1, type=str, required=False)
 @click.option('-s', '--sound', type=bool, required=False, is_flag=True, help='Enable sound effects')
-def monitor(debug, profile, job, sound):
+def monitor(debug, **kwargs):
     """Start monitor UI"""
     set_debug_log_level(debug)
-    cli_job.monitor(profile, job, sound)
+    cli_job.monitor(**translate_kwargs(kwargs))
 
 
 @job.command(short_help='\tCreate a job')
@@ -243,10 +244,10 @@ def monitor(debug, profile, job, sound):
               required=False,
               is_flag=True,
               help='The specified file is in JSON format')
-def create(debug, profile, name, folder, config_file, config_is_json):
+def create(debug, **kwargs):
     """Create a job"""
     set_debug_log_level(debug)
-    cli_job.create(profile, name, folder, config_file, config_is_json)
+    cli_job.create(**translate_kwargs(kwargs))
 
 
 @job.command(short_help='\tGet job parameters')
@@ -255,10 +256,10 @@ def create(debug, profile, name, folder, config_file, config_is_json):
 @cli_decorators.profile
 @click.argument('job', nargs=1, type=str, required=False)
 @cli_decorators.list
-def parameters(debug, pretty, yaml, xml, toml, profile, job, list):
+def parameters(debug, **kwargs):
     """Get job's build parameters
 
     Build parameters are the parameters to be used when building a job.
     """
     set_debug_log_level(debug)
-    cli_job.parameters(pretty, yaml, xml, toml, profile, job, list)
+    cli_job.parameters(**translate_kwargs(kwargs))

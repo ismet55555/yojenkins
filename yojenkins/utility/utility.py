@@ -31,7 +31,8 @@ KWARG_TRANSLATE_MAP = {
     'xml': 'opt_xml',
     'toml': 'opt_toml',
     'list': 'opt_list',
-    'json': 'opt_json'
+    'json': 'opt_json',
+    'id': 'opt_id'
 }
 
 
