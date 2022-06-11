@@ -10,6 +10,8 @@ import xmltodict
 from yojenkins.utility import utility
 from yojenkins.utility.utility import fail_out, print2
 from yojenkins.yo_jenkins.jenkins_item_classes import JenkinsItemClasses
+from yojenkins.yo_jenkins.rest import Rest
+
 
 # Getting the logger reference
 logger = logging.getLogger()
@@ -18,7 +20,7 @@ logger = logging.getLogger()
 class Node():
     """TODO Node"""
 
-    def __init__(self, rest: object) -> None:
+    def __init__(self, rest: Rest) -> None:
         """Object constructor method, called at object creation
 
         Args:
@@ -29,7 +31,7 @@ class Node():
         """
         self.rest = rest
 
-    def info(self, node_name: str, depth: int = 0) -> Tuple[list, list]:
+    def info(self, node_name: str, depth: int = 0) -> dict:
         """TODO Docstring
 
         Details: TODO
@@ -52,7 +54,7 @@ class Node():
 
         return node_info
 
-    def list(self, depth: int = 0) -> bool:
+    def list(self, depth: int = 0) -> Tuple[list, list]:
         """TODO Docstring
 
         Details: TODO
@@ -262,7 +264,7 @@ class Node():
                folder_url: str = '',
                opt_json: bool = False,
                opt_yaml: bool = False,
-               opt_toml: bool = False) -> Tuple[str, bool]:
+               opt_toml: bool = False) -> dict:
         """TODO Docstring
 
         Details: TODO

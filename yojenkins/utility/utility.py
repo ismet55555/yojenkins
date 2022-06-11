@@ -30,7 +30,8 @@ KWARG_TRANSLATE_MAP = {
     'yaml': 'opt_yaml',
     'xml': 'opt_xml',
     'toml': 'opt_toml',
-    'list': 'opt_list'
+    'list': 'opt_list',
+    'json': 'opt_json'
 }
 
 
@@ -919,10 +920,10 @@ def write_xml_to_file(xml_content: str,
 
     Args:
         xml_content : XML content to be written
-        filepath : Filepath to write the content to
-        opt_json : Write the content as JSON
-        opt_yaml : Write the content as YAML
-        opt_toml : Write the content as TOML
+        filepath    : Filepath to write the content to
+        opt_json    : Write the content as JSON
+        opt_yaml    : Write the content as YAML
+        opt_toml    : Write the content as TOML
 
     Returns:
         True if successful
