@@ -12,8 +12,7 @@ logger = logging.getLogger()
 
 
 @log_to_history
-def info(profile: str, token: str, name: str, job: str,
-         number: int, url: str, latest: bool, **kwargs) -> None:
+def info(profile: str, token: str, name: str, job: str, number: int, url: str, latest: bool, **kwargs) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -35,22 +34,14 @@ def info(profile: str, token: str, name: str, job: str,
 
     # Request the data
     if valid_url_format:
-        data = yj_obj.stage.info(stage_name=name,
-                                 build_url=url,
-                                 job_url=job,
-                                 build_number=number,
-                                 latest=latest)
+        data = yj_obj.stage.info(stage_name=name, build_url=url, job_url=job, build_number=number, latest=latest)
     else:
-        data = yj_obj.stage.info(stage_name=name,
-                                 build_url=url,
-                                 job_name=job,
-                                 build_number=number,
-                                 latest=latest)
+        data = yj_obj.stage.info(stage_name=name, build_url=url, job_name=job, build_number=number, latest=latest)
     cu.standard_out(data, **kwargs)
 
 
 @log_to_history
-def status(profile: str, token: str,  name: str, job: str, number: int, url: str, latest: bool) -> None:
+def status(profile: str, token: str, name: str, job: str, number: int, url: str, latest: bool) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -72,13 +63,13 @@ def status(profile: str, token: str,  name: str, job: str, number: int, url: str
 
     # Request the data
     if valid_url_format:
-        data = yj_obj.stage.status_text(stage_name= name,
+        data = yj_obj.stage.status_text(stage_name=name,
                                         build_url=url,
                                         job_url=job,
                                         build_number=number,
                                         latest=latest)
     else:
-        data = yj_obj.stage.status_text(stage_name= name,
+        data = yj_obj.stage.status_text(stage_name=name,
                                         build_url=url,
                                         job_name=job,
                                         build_number=number,
@@ -101,8 +92,8 @@ def status(profile: str, token: str,  name: str, job: str, number: int, url: str
 
 
 @log_to_history
-def steps(profile: str, token: str, opt_list: bool,
-          name: str, job: str, number: int, url: str, latest: bool, **kwargs) -> None:
+def steps(profile: str, token: str, opt_list: bool, name: str, job: str, number: int, url: str, latest: bool,
+          **kwargs) -> None:
     """TODO Docstring
 
     Details: TODO

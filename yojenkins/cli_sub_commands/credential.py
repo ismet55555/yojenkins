@@ -6,8 +6,8 @@ import click
 from yojenkins.__main__ import credential
 from yojenkins.cli import cli_credential, cli_decorators
 from yojenkins.cli.cli_utility import set_debug_log_level
-
 from yojenkins.utility.utility import translate_kwargs
+
 
 @credential.command(short_help='\tList credentials')
 @cli_decorators.debug

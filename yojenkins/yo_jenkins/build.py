@@ -2,22 +2,21 @@
 
 import logging
 import os
+import pprint
 from datetime import datetime, timedelta
 from itertools import islice
 from time import sleep, time
 from typing import Dict, List, Tuple
-import pprint
 
 import requests
 
 from yojenkins.monitor import BuildMonitor
 from yojenkins.utility import utility
 from yojenkins.utility.utility import fail_out, print2
-from yojenkins.yo_jenkins.jenkins_item_classes import JenkinsItemClasses
-from yojenkins.yo_jenkins.status import BuildStatus
-
-from yojenkins.yo_jenkins.rest import Rest
 from yojenkins.yo_jenkins.auth import Auth
+from yojenkins.yo_jenkins.jenkins_item_classes import JenkinsItemClasses
+from yojenkins.yo_jenkins.rest import Rest
+from yojenkins.yo_jenkins.status import BuildStatus
 
 # Getting the logger reference
 logger = logging.getLogger()

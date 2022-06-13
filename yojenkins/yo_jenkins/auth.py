@@ -587,7 +587,6 @@ class Auth:
         logger.debug(f'    - API Token:           {hidden_token}')
         self.jenkins_username = self.jenkins_profile['username']
 
-
         # Creating Jenkins SDK object(Exception handling: jenkins.JenkinsException)
         try:
             self.jenkins_sdk = JenkinsSDK(url=self.jenkins_profile['jenkins_server_url'],

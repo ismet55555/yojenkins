@@ -6,8 +6,8 @@ import click
 from yojenkins.__main__ import server
 from yojenkins.cli import cli_decorators, cli_server
 from yojenkins.cli.cli_utility import set_debug_log_level
-
 from yojenkins.utility.utility import translate_kwargs
+
 
 @server.command(short_help='\tServer information')
 @cli_decorators.debug
@@ -224,6 +224,7 @@ def server_deploy(debug, **kwargs):
     """
     set_debug_log_level(debug)
     cli_server.server_deploy(**translate_kwargs(kwargs))
+
 
 @server.command(short_help='\tRemove a local development server')
 @click.option('--remove-volume',

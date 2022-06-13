@@ -13,7 +13,6 @@ from yojenkins.docker_container import DockerJenkinsServer
 from yojenkins.utility.utility import fail_out, failures_out, print2
 from yojenkins.yo_jenkins import Auth, YoJenkins
 
-
 # Getting the logger reference
 logger = logging.getLogger()
 

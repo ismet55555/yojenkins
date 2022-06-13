@@ -14,10 +14,10 @@ from yojenkins.cli.cli_utility import log_to_history
 from yojenkins.tools import Package, SharedLibrary
 from yojenkins.utility.utility import (
     browser_open,
+    fail_out,
     html_clean,
     load_contents_from_local_file,
     print2,
-    fail_out
 )
 
 # Getting the logger reference
@@ -152,7 +152,7 @@ def history(profile: str, clear: bool) -> None:
         if profile in contents:
             output_history_to_console(contents[profile], profile)
         else:
-            fail_out(f'No history found for profile: {profile}' )
+            fail_out(f'No history found for profile: {profile}')
     else:
         for profile_name in contents:
             output_history_to_console(contents[profile_name], profile_name)

@@ -1,11 +1,10 @@
-
 import click
 
 from yojenkins.__main__ import account
 from yojenkins.cli import cli_account, cli_decorators
 from yojenkins.cli.cli_utility import set_debug_log_level
-
 from yojenkins.utility.utility import translate_kwargs
+
 
 @account.command(short_help='\tList all users')
 @cli_decorators.debug

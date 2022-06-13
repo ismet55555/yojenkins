@@ -14,8 +14,7 @@ logger = logging.getLogger()
 
 
 @log_to_history
-def list(profile: str, token: str, opt_list: bool, folder: str,
-         domain: str, keys: str, **kwargs) -> None:
+def list(profile: str, token: str, opt_list: bool, folder: str, domain: str, keys: str, **kwargs) -> None:
     """List credentials
 
     Args:
@@ -32,8 +31,7 @@ def list(profile: str, token: str, opt_list: bool, folder: str,
 
 
 @log_to_history
-def info(profile: str, token: str, credential: str, folder: str,
-         domain: str, **kwargs) -> None:
+def info(profile: str, token: str, credential: str, folder: str, domain: str, **kwargs) -> None:
     """Credential information
 
     Args:
@@ -73,8 +71,8 @@ def config(profile: str, token: str, opt_pretty: bool, opt_yaml: bool, opt_xml: 
 
 
 @log_to_history
-def get_template(profile: str, token: str, opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_json: bool,
-                 type: str, filepath: str) -> None:
+def get_template(profile: str, token: str, opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool,
+                 opt_json: bool, type: str, filepath: str) -> None:
     """Credential type template to create a credential
 
     Args:

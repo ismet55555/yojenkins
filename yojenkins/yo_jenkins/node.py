@@ -12,7 +12,6 @@ from yojenkins.utility.utility import fail_out, print2
 from yojenkins.yo_jenkins.jenkins_item_classes import JenkinsItemClasses
 from yojenkins.yo_jenkins.rest import Rest
 
-
 # Getting the logger reference
 logger = logging.getLogger()
 

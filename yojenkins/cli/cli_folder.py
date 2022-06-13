@@ -31,8 +31,8 @@ def info(profile: str, token: str, folder: str, **kwargs) -> None:
 
 
 @log_to_history
-def search(profile: str, token: str, search_pattern: str,
-           search_folder: str, depth: int, fullname: bool, opt_list: bool, **kwargs) -> None:
+def search(profile: str, token: str, search_pattern: str, search_folder: str, depth: int, fullname: bool,
+           opt_list: bool, **kwargs) -> None:
     """Search folders by REGEX pattern
 
     Args:
@@ -57,8 +57,7 @@ def search(profile: str, token: str, search_pattern: str,
 
 
 @log_to_history
-def subfolders(profile: str, token: str, folder: str,
-               opt_list: bool, **kwargs) -> None:
+def subfolders(profile: str, token: str, folder: str, opt_list: bool, **kwargs) -> None:
     """List all subfolders in folder
 
     Args:
@@ -74,8 +73,7 @@ def subfolders(profile: str, token: str, folder: str,
 
 
 @log_to_history
-def jobs(profile: str, token: str, folder: str,
-         opt_list: bool, **kwargs) -> None:
+def jobs(profile: str, token: str, folder: str, opt_list: bool, **kwargs) -> None:
     """List all jobs in folder
 
     Args:
@@ -91,8 +89,7 @@ def jobs(profile: str, token: str, folder: str,
 
 
 @log_to_history
-def views(profile: str, token: str, folder: str,
-          opt_list: int, **kwargs) -> None:
+def views(profile: str, token: str, folder: str, opt_list: int, **kwargs) -> None:
     """List all views in folder
 
     Args:
@@ -108,8 +105,7 @@ def views(profile: str, token: str, folder: str,
 
 
 @log_to_history
-def items(profile: str, token: str, folder: str,
-          opt_list: int, **kwargs) -> None:
+def items(profile: str, token: str, folder: str, opt_list: int, **kwargs) -> None:
     """List all items in folder
 
     Args:
@@ -139,8 +135,8 @@ def browser(profile: str, token: str, folder: str) -> None:
 
 
 @log_to_history
-def config(profile: str, token: str, opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_json: bool, folder: str,
-           filepath: str) -> None:
+def config(profile: str, token: str, opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_json: bool,
+           folder: str, filepath: str) -> None:
     """Get folder configuration
 
     Args:
@@ -168,7 +164,8 @@ def config(profile: str, token: str, opt_pretty: bool, opt_yaml: bool, opt_xml: 
 
 
 @log_to_history
-def create(profile: str, token: str, name: str, folder: str, type: str, config_file: str, config_is_json: bool) -> None:
+def create(profile: str, token: str, name: str, folder: str, type: str, config_file: str,
+           config_is_json: bool) -> None:
     """Create an item
 
     Args:
@@ -179,16 +176,16 @@ def create(profile: str, token: str, name: str, folder: str, type: str, config_f
     yj_obj = cu.config_yo_jenkins(profile, token)
     if cu.is_full_url(folder):
         yj_obj.folder.create(name=name,
-                                    type=type,
-                                    config=config_file,
-                                    folder_url=folder,
-                                    config_is_json=config_is_json)
+                             type=type,
+                             config=config_file,
+                             folder_url=folder,
+                             config_is_json=config_is_json)
     else:
         yj_obj.folder.create(name=name,
-                                    type=type,
-                                    config=config_file,
-                                    folder_name=folder,
-                                    config_is_json=config_is_json)
+                             type=type,
+                             config=config_file,
+                             folder_name=folder,
+                             config_is_json=config_is_json)
     click.secho('success', fg='bright_green', bold=True)
 
 

@@ -42,7 +42,8 @@ def info(profile: str, token: str, user_id: str, **kwargs) -> None:
 
 
 @log_to_history
-def create(profile: str, token: str, user_id: str, password: str, is_admin: bool, email: str, description: str) -> None:
+def create(profile: str, token: str, user_id: str, password: str, is_admin: bool, email: str,
+           description: str) -> None:
     """Delete a user account
 
     Args:
@@ -55,11 +56,7 @@ def create(profile: str, token: str, user_id: str, password: str, is_admin: bool
         description: The description for this user
     """
     yj_obj = cu.config_yo_jenkins(profile, token)
-    yj_obj.account.create(user_id=user_id,
-                                 password=password,
-                                 is_admin=is_admin,
-                                 email=email,
-                                 description=description)
+    yj_obj.account.create(user_id=user_id, password=password, is_admin=is_admin, email=email, description=description)
     click.secho('success', fg='bright_green', bold=True)
 
 

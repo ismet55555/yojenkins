@@ -31,7 +31,8 @@ def info(profile: str, token: str, job: str, **kwargs) -> None:
 
 
 @log_to_history
-def search(profile: str, token: str, search_pattern: str, search_folder: str, depth: int, fullname: bool, opt_list: bool, **kwargs) -> None:
+def search(profile: str, token: str, search_pattern: str, search_folder: str, depth: int, fullname: bool,
+           opt_list: bool, **kwargs) -> None:
     """TODO Docstring
 
     Args:
@@ -186,8 +187,8 @@ def browser(profile: str, token: str, job: str) -> None:
 
 
 @log_to_history
-def config(profile: str, token: str, opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_json: bool, job: str,
-           filepath: str) -> None:
+def config(profile: str, token: str, opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_json: bool,
+           job: str, filepath: str) -> None:
     """TODO Docstring
 
     Args:

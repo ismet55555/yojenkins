@@ -165,8 +165,7 @@ def delete(profile: str, token: str, job: str, number: int, url: str, latest: bo
 
 
 @log_to_history
-def stages(profile:str, token: str, opt_list: bool, job: str,
-           number: int, url: str, latest: bool, **kwargs) -> None:
+def stages(profile: str, token: str, opt_list: bool, job: str, number: int, url: str, latest: bool, **kwargs) -> None:
     """Get build stages
 
     Args:
@@ -188,15 +187,9 @@ def stages(profile:str, token: str, opt_list: bool, job: str,
     yj_obj = cu.config_yo_jenkins(profile, token)
 
     if _verify_build_url_get_job_format(build_url=url, job=job):
-        data, data_list = yj_obj.build.stage_list(build_url=url,
-                                                  job_url=job,
-                                                  build_number=number,
-                                                  latest=latest)
+        data, data_list = yj_obj.build.stage_list(build_url=url, job_url=job, build_number=number, latest=latest)
     else:
-        data, data_list = yj_obj.build.stage_list(build_url=url,
-                                                  job_name=job,
-                                                  build_number=number,
-                                                  latest=latest)
+        data, data_list = yj_obj.build.stage_list(build_url=url, job_name=job, build_number=number, latest=latest)
     data = data_list if opt_list else data
     cu.standard_out(data, **kwargs)
 
@@ -302,8 +295,8 @@ def monitor(profile: str, token: str, job: str, number: int, url: str, latest: b
 
 
 @log_to_history
-def parameters(profile:str, token: str, opt_list: bool, job: str,
-               number: int, url: str, latest: bool, **kwargs) -> None:
+def parameters(profile: str, token: str, opt_list: bool, job: str, number: int, url: str, latest: bool,
+               **kwargs) -> None:
     """Get build parameters
 
     Args:
@@ -325,14 +318,8 @@ def parameters(profile:str, token: str, opt_list: bool, job: str,
     yj_obj = cu.config_yo_jenkins(profile, token)
 
     if _verify_build_url_get_job_format(build_url=url, job=job):
-        data, data_list = yj_obj.build.parameters(build_url=url,
-                                                  job_url=job,
-                                                  build_number=number,
-                                                  latest=latest)
+        data, data_list = yj_obj.build.parameters(build_url=url, job_url=job, build_number=number, latest=latest)
     else:
-        data, data_list = yj_obj.build.parameters(build_url=url,
-                                                  job_name=job,
-                                                  build_number=number,
-                                                  latest=latest)
+        data, data_list = yj_obj.build.parameters(build_url=url, job_name=job, build_number=number, latest=latest)
     data = data_list if opt_list else data
     cu.standard_out(data, **kwargs)

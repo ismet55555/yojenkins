@@ -7,8 +7,8 @@ from click_help_colors import HelpColorsCommand
 from yojenkins.__main__ import auth
 from yojenkins.cli import cli_auth, cli_decorators
 from yojenkins.cli.cli_utility import set_debug_log_level
-
 from yojenkins.utility.utility import translate_kwargs
+
 
 @auth.command(short_help='\tConfigure authentication',
               cls=HelpColorsCommand,

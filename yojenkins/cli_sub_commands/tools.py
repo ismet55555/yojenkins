@@ -6,8 +6,8 @@ import click
 from yojenkins.__main__ import tools
 from yojenkins.cli import cli_decorators, cli_tools
 from yojenkins.cli.cli_utility import set_debug_log_level
-
 from yojenkins.utility.utility import translate_kwargs
+
 
 @tools.command(short_help='\tOpen browser to the documentation page')
 @cli_decorators.debug
@@ -25,7 +25,6 @@ def docs(debug):
 #     """Install the latest version of yojenkins. This is a thin wrapper to 'pip install'"""
 #     set_debug_log_level(debug)
 #     cli_tools.upgrade(user, proxy)
-
 
 # @tools.command(short_help='\tRemove yojenkins')
 # @cli_decorators.debug

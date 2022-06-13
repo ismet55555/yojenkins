@@ -6,8 +6,8 @@ import click
 from yojenkins.__main__ import stage
 from yojenkins.cli import cli_decorators, cli_stage
 from yojenkins.cli.cli_utility import set_debug_log_level
-
 from yojenkins.utility.utility import translate_kwargs
+
 
 @stage.command(short_help='\tStage information')
 @cli_decorators.debug

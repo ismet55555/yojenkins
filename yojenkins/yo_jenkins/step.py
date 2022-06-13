@@ -4,7 +4,6 @@ import logging
 from typing import Dict
 
 from yojenkins.utility.utility import fail_out
-
 from yojenkins.yo_jenkins.rest import Rest
 
 # Getting the logger reference

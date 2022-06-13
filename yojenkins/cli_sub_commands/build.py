@@ -6,8 +6,8 @@ import click
 from yojenkins.__main__ import build
 from yojenkins.cli import cli_build, cli_decorators
 from yojenkins.cli.cli_utility import set_debug_log_level
-
 from yojenkins.utility.utility import translate_kwargs
+
 
 @build.command(short_help='\tBuild information')
 @cli_decorators.debug
