@@ -7,16 +7,17 @@ from yojenkins.__main__ import folder
 from yojenkins.cli import cli_decorators, cli_folder
 from yojenkins.cli.cli_utility import set_debug_log_level
 
+from yojenkins.utility.utility import translate_kwargs
 
 @folder.command(short_help='\tFolder information')
 @cli_decorators.debug
 @cli_decorators.format_output
 @cli_decorators.profile
 @click.argument('folder', nargs=1, type=str, required=True)
-def info(debug, pretty, yaml, xml, toml, profile, folder):
+def info(debug, **kwargs):
     """Folder information"""
     set_debug_log_level(debug)
-    cli_folder.info(pretty, yaml, xml, toml, profile, folder)
+    cli_folder.info(**translate_kwargs(kwargs))
 
 
 @folder.command(short_help='\tSearch folders by REGEX pattern')
@@ -34,10 +35,10 @@ def info(debug, pretty, yaml, xml, toml, profile, folder):
               is_flag=True,
               help='Search entire folder path name')
 @cli_decorators.list
-def search(debug, pretty, yaml, xml, toml, profile, search_pattern, search_folder, depth, fullname, list):
+def search(debug, **kwargs):
     """Search folders by REGEX pattern"""
     set_debug_log_level(debug)
-    cli_folder.search(pretty, yaml, xml, toml, profile, search_pattern, search_folder, depth, fullname, list)
+    cli_folder.search(**translate_kwargs(kwargs))
 
 
 @folder.command(short_help='\tList all subfolders in folder')
@@ -46,10 +47,10 @@ def search(debug, pretty, yaml, xml, toml, profile, search_pattern, search_folde
 @cli_decorators.profile
 @click.argument('folder', nargs=1, type=str, required=True)
 @cli_decorators.list
-def subfolders(debug, pretty, yaml, xml, toml, profile, folder, list):
+def subfolders(debug, **kwargs):
     """List all subfolders in folder"""
     set_debug_log_level(debug)
-    cli_folder.subfolders(pretty, yaml, xml, toml, profile, folder, list)
+    cli_folder.subfolders(**translate_kwargs(kwargs))
 
 
 @folder.command(short_help='\tList all jobs in folder')
@@ -58,10 +59,10 @@ def subfolders(debug, pretty, yaml, xml, toml, profile, folder, list):
 @cli_decorators.profile
 @click.argument('folder', nargs=1, type=str, required=True)
 @cli_decorators.list
-def jobs(debug, pretty, yaml, xml, toml, profile, folder, list):
+def jobs(debug, **kwargs):
     """List all jobs in folder"""
     set_debug_log_level(debug)
-    cli_folder.jobs(pretty, yaml, xml, toml, profile, folder, list)
+    cli_folder.jobs(**translate_kwargs(kwargs))
 
 
 @folder.command(short_help='\tList all views in folder')
@@ -70,10 +71,10 @@ def jobs(debug, pretty, yaml, xml, toml, profile, folder, list):
 @cli_decorators.profile
 @click.argument('folder', nargs=1, type=str, required=True)
 @cli_decorators.list
-def views(debug, pretty, yaml, xml, toml, profile, folder, list):
+def views(debug, **kwargs):
     """List all views in folder"""
     set_debug_log_level(debug)
-    cli_folder.views(pretty, yaml, xml, toml, profile, folder, list)
+    cli_folder.views(**translate_kwargs(kwargs))
 
 
 @folder.command(short_help='\tList all items in folder')
@@ -82,20 +83,20 @@ def views(debug, pretty, yaml, xml, toml, profile, folder, list):
 @cli_decorators.profile
 @click.argument('folder', nargs=1, type=str, required=True)
 @cli_decorators.list
-def items(debug, pretty, yaml, xml, toml, profile, folder, list):
+def items(debug, **kwargs):
     """List all items in folder"""
     set_debug_log_level(debug)
-    cli_folder.items(pretty, yaml, xml, toml, profile, folder, list)
+    cli_folder.items(**translate_kwargs(kwargs))
 
 
 @folder.command(short_help='\tOpen folder in web browser')
 @cli_decorators.debug
 @cli_decorators.profile
 @click.argument('folder', nargs=1, type=str, required=True)
-def browser(debug, profile, folder):
+def browser(debug, **kwargs):
     """Open folder in web browser"""
     set_debug_log_level(debug)
-    cli_folder.browser(profile, folder)
+    cli_folder.browser(**translate_kwargs(kwargs))
 
 
 @folder.command(short_help='\tGet folder configuration')
@@ -114,10 +115,10 @@ def browser(debug, profile, folder):
               type=click.Path(file_okay=True, dir_okay=True),
               required=False,
               help='File/Filepath to write configurations to')
-def config(debug, pretty, yaml, xml, toml, json, profile, folder, filepath):
+def config(debug, **kwargs):
     """Get folder configuration"""
     set_debug_log_level(debug)
-    cli_folder.config(pretty, yaml, xml, toml, json, profile, folder, filepath)
+    cli_folder.config(**translate_kwargs(kwargs))
 
 
 @folder.command(short_help='\tCreate an item [folder, view, job]')
@@ -141,10 +142,10 @@ def config(debug, pretty, yaml, xml, toml, json, profile, folder, filepath):
               required=False,
               is_flag=True,
               help='The specified file is in JSON format')
-def create(debug, profile, name, folder, type, config_file, config_is_json):
+def create(debug, **kwargs):
     """Create an item [folder, view, job]"""
     set_debug_log_level(debug)
-    cli_folder.create(profile, name, folder, type, config_file, config_is_json)
+    cli_folder.create(**translate_kwargs(kwargs))
 
 
 @folder.command(short_help='\tCopy an existing item')
@@ -153,17 +154,17 @@ def create(debug, profile, name, folder, type, config_file, config_is_json):
 @click.argument('folder', nargs=1, type=str, required=True)
 @click.argument('original', nargs=1, type=str, required=True)
 @click.argument('new', nargs=1, type=str, required=True)
-def copy(debug, profile, folder, original, new):
+def copy(debug, **kwargs):
     """Copy an existing item"""
     set_debug_log_level(debug)
-    cli_folder.copy(profile, folder, original, new)
+    cli_folder.copy(**translate_kwargs(kwargs))
 
 
 @folder.command(short_help='\tDelete folder or view')
 @cli_decorators.debug
 @cli_decorators.profile
 @click.argument('folder', nargs=1, type=str, required=True)
-def delete(debug, profile, folder):
+def delete(debug, **kwargs):
     """Delete folder or view"""
     set_debug_log_level(debug)
-    cli_folder.delete(profile, folder)
+    cli_folder.delete(**translate_kwargs(kwargs))
