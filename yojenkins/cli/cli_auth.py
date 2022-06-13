@@ -19,11 +19,8 @@ def configure(auth_file: str) -> None:
 
     Args:
         auth_file: (Optional) Path to the the authentication setup JSON file
-
-    Returns:
-        None
     """
-    Auth().configure(auth_file=auth_file)
+    Auth().configure(auth_file)
     click.secho('Successfully configured credentials file', fg='bright_green', bold=True)
 
 
@@ -37,9 +34,6 @@ def token(profile: str, token_name: str, server_base_url: str, username: str, pa
         server_base_url: Server base URL address
         username: Account username
         password: User password to use to generate API token
-
-    Returns:
-        None
     """
     auth = Auth()
 
@@ -59,20 +53,14 @@ def token(profile: str, token_name: str, server_base_url: str, username: str, pa
 
 
 @log_to_history
-def show(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool) -> None:
+def show(**kwargs) -> None:
     """Show the local credentials profiles
 
     Args:
-        opt_pretty: Option to pretty print the output
-        opt_yaml: Option to output in YAML format
-        opt_xml: Option to output in XML format
-        opt_toml: Option to output in TOML format
-
-    Returns:
-        None
+        kwargs: Various CLI options
     """
     data = Auth().show_local_credentials()
-    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
+    cu.standard_out(data, **kwargs)
 
 
 @log_to_history
@@ -81,9 +69,6 @@ def verify(profile: str) -> None:
 
     Args:
         profile: The profile/account to use
-
-    Returns:
-        None
     """
     auth = Auth(Rest())
     auth.get_credentials(profile)
@@ -92,18 +77,12 @@ def verify(profile: str) -> None:
 
 
 @log_to_history
-def user(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str) -> None:
+def user(profile: str, token: str, **kwargs) -> None:
     """Show current user information
 
     Args:
-        opt_pretty: Option to pretty print the output
-        opt_yaml: Option to output in YAML format
-        opt_xml: Option to output in XML format
-        opt_toml: Option to output in TOML format
         profile: The profile/account to use
-
-    Returns:
-        None
+        token:   API token for Jenkins server
     """
-    data = cu.config_yo_jenkins(profile).auth.user()
-    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
+    data = cu.config_yo_jenkins(profile, token).auth.user()
+    cu.standard_out(data, **kwargs)

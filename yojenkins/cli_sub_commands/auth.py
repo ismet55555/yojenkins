@@ -8,6 +8,7 @@ from yojenkins.__main__ import auth
 from yojenkins.cli import cli_auth, cli_decorators
 from yojenkins.cli.cli_utility import set_debug_log_level
 
+from yojenkins.utility.utility import translate_kwargs
 
 @auth.command(short_help='\tConfigure authentication',
               cls=HelpColorsCommand,
@@ -61,10 +62,10 @@ def token(debug, profile, token_name, server_base_url, username, password):
 @auth.command(short_help='\tShow the local credentials profiles')
 @cli_decorators.debug
 @cli_decorators.format_output
-def show(debug, pretty, yaml, xml, toml):
+def show(debug, **kwargs):
     """Show the local credentials profiles"""
     set_debug_log_level(debug)
-    cli_auth.show(pretty, yaml, xml, toml)
+    cli_auth.show(**translate_kwargs(kwargs))
 
 
 @auth.command(short_help='\tCheck if credentials can authenticate')
@@ -88,7 +89,7 @@ def wipe(debug):
 @cli_decorators.debug
 @cli_decorators.format_output
 @cli_decorators.profile
-def user(debug, pretty, yaml, xml, toml, profile):
+def user(debug, **kwargs):
     """Show current user information"""
     set_debug_log_level(debug)
-    cli_auth.user(pretty, yaml, xml, toml, profile)
+    cli_auth.user(**translate_kwargs(kwargs))
