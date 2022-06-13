@@ -7,6 +7,7 @@ from yojenkins.__main__ import tools
 from yojenkins.cli import cli_decorators, cli_tools
 from yojenkins.cli.cli_utility import set_debug_log_level
 
+from yojenkins.utility.utility import translate_kwargs
 
 @tools.command(short_help='\tOpen browser to the documentation page')
 @cli_decorators.debug
@@ -24,6 +25,7 @@ def docs(debug):
 #     """Install the latest version of yojenkins. This is a thin wrapper to 'pip install'"""
 #     set_debug_log_level(debug)
 #     cli_tools.upgrade(user, proxy)
+
 
 # @tools.command(short_help='\tRemove yojenkins')
 # @cli_decorators.debug
@@ -53,10 +55,10 @@ def feature_request(debug):
 @cli_decorators.debug
 @click.option('--profile', type=str, required=False, is_flag=False, help='Filter by profile name')
 @click.option('--clear', type=bool, required=False, default=False, is_flag=True, help='Clear the history file')
-def history(debug, profile, clear):
+def history(debug, **kwargs):
     """Show detailed command usage history"""
     set_debug_log_level(debug)
-    cli_tools.history(profile, clear)
+    cli_tools.history(**kwargs)
 
 
 @tools.command(short_help='\tSend a generic Rest request to server')
@@ -76,7 +78,7 @@ def history(debug, profile, clear):
               default=False,
               is_flag=True,
               help='Clean any HTML tags from return')
-def rest_request(debug, profile, request_text, request_type, raw, clean_html):
+def rest_request(debug, **kwargs):
     """Use this command to send Rest calls to the server.
     The request will be send with the proper authentication from your profile.
     This can be useful if yojenkins does not have the functionality you need.
@@ -86,7 +88,7 @@ def rest_request(debug, profile, request_text, request_type, raw, clean_html):
       - yojenkins tools rest-request "me/api/json"
     """
     set_debug_log_level(debug)
-    cli_tools.rest_request(profile, request_text, request_type, raw, clean_html)
+    cli_tools.rest_request(**kwargs)
 
 
 @tools.command(short_help='\tRun Groovy script on server, return result')
@@ -104,7 +106,7 @@ def rest_request(debug, profile, request_text, request_type, raw, clean_html):
               is_flag=False,
               help='Save the result to this file')
 @click.pass_context
-def run_script(ctx, debug, profile, text, file, output):
+def run_script(ctx, debug, **kwargs):
     """Use this command to execute a Groovy script, as text or in a file,
     on the Jenkins server and return the output
 
@@ -115,8 +117,8 @@ def run_script(ctx, debug, profile, text, file, output):
       - yojenkins tools script --file ./my_script.groovy
     """
     set_debug_log_level(debug)
-    if text or file:
-        cli_tools.run_script(profile, text, file, output)
+    if kwargs.get("text") or kwargs.get("file"):
+        cli_tools.run_script(**translate_kwargs(kwargs))
     else:
         click.echo(ctx.get_help())
 
@@ -145,7 +147,7 @@ def run_script(ctx, debug, profile, text, file, output):
               type=str,
               required=False,
               help='ID of your git credentials in Jenkins credentials database')
-def shared_lib_setup(debug, profile, lib_name, repo_owner, repo_name, repo_url, repo_branch, implicit, credential_id):
+def shared_lib_setup(debug, **kwargs):
     """This sets up the Jenkins Shared Library, referencing a GitHub git repository.
 
     WARNING:
@@ -173,5 +175,4 @@ def shared_lib_setup(debug, profile, lib_name, repo_owner, repo_name, repo_url, 
 
     """
     set_debug_log_level(debug)
-    cli_tools.shared_lib_setup(profile, lib_name, repo_owner, repo_name, repo_url, repo_branch, implicit,
-                               credential_id)
+    cli_tools.shared_lib_setup(**translate_kwargs(kwargs))
