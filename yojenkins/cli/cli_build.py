@@ -34,67 +34,60 @@ def _verify_build_url_get_job_format(build_url: str, job: str) -> bool:
 
 
 @log_to_history
-def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, job: str, build_number: int,
-         build_url: str, latest: bool) -> None:
-    """TODO Docstring
+def info(profile: str, token: str, job: str, number: int, url: str, latest: bool, **kwargs) -> None:
+    """Fetching build information
 
     Args:
-        opt_pretty: Option to pretty print the output
-        opt_yaml: Option to output in YAML format
-        opt_xml: Option to output in XML format
-        opt_toml: Option to output in TOML format
         profile: The profile/account to use
-        job: The job this build is under
-        build_number: The build number to get info on
-        build_url: The build url to get info on
-        latest: Option to get the latest build
-
-    Returns:
-        None
+        token:   API Token for Jenkins server
+        job:     The job this build is under
+        number:  The build number to get info on
+        url:     The build url to get info on
+        latest:  Option to get the latest build
     """
-    if job and not build_number and not latest:
+    if job and not number and not latest:
         click.echo(
             click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
                         fg='bright_red',
                         bold=True))
         sys.exit(1)
 
-    yj_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile, token)
 
-    if _verify_build_url_get_job_format(build_url=build_url, job=job):
-        data = yj_obj.build.info(build_url=build_url, job_url=job, build_number=build_number, latest=latest)
+    if _verify_build_url_get_job_format(build_url=url, job=job):
+        data = yj_obj.build.info(build_url=url, job_url=job, build_number=number, latest=latest)
     else:
-        data = yj_obj.build.info(build_url=build_url, job_name=job, build_number=build_number, latest=latest)
-    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
+        data = yj_obj.build.info(build_url=url, job_name=job, build_number=number, latest=latest)
+    cu.standard_out(data, **kwargs)
 
 
 @log_to_history
-def status(profile: str, job: str, build_number: int, build_url: str, latest: bool) -> None:
+def status(profile: str, token: str, job: str, number: int, url: str, latest: bool) -> None:
     """Build status text/label
+
+    ### FIXME: Verify build number resolution works
 
     Args:
         profile: The profile/account to use
+        token:   API Token for Jenkins server
         job: The job this build is under
-        build_number: The build number to get info on
-        build_url: The build url to get info on
+        number: The build number to get info on
+        url: The build url to get info on
         latest: Option to get the latest build
-
-    Returns:
-        None
     """
-    if job and not build_number and not latest:
+    if job and not number and not latest:
         click.echo(
             click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
                         fg='bright_red',
                         bold=True))
         sys.exit(1)
 
-    yj_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile, token)
 
-    if _verify_build_url_get_job_format(build_url=build_url, job=job):
-        data = yj_obj.build.status_text(build_url=build_url, job_url=job, build_number=build_number, latest=latest)
+    if _verify_build_url_get_job_format(build_url=url, job=job):
+        data = yj_obj.build.status_text(build_url=url, job_url=job, build_number=number, latest=latest)
     else:
-        data = yj_obj.build.status_text(build_url=build_url, job_name=job, build_number=build_number, latest=latest)
+        data = yj_obj.build.status_text(build_url=url, job_name=job, build_number=number, latest=latest)
 
     # Color for output
     if data in Status.NONE.value:
@@ -116,147 +109,135 @@ def status(profile: str, job: str, build_number: int, build_url: str, latest: bo
 
 
 @log_to_history
-def abort(profile: str, job: str, build_number: int, build_url: str, latest: bool) -> None:
+def abort(profile: str, token: str, job: str, number: int, url: str, latest: bool) -> None:
     """Abort build
 
     Args:
         profile: The profile/account to use
+        token:   API Token for Jenkins server
         job: The job this build is under
-        build_number: The build number to get info on
-        build_url: The build url to get info on
+        number: The build number to get info on
+        url: The build url to get info on
         latest: Option to get the latest build
-
-    Returns:
-        None
     """
-    if job and not build_number and not latest:
+    if job and not number and not latest:
         click.echo(
             click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
                         fg='bright_red',
                         bold=True))
         sys.exit(1)
 
-    yj_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile, token)
 
-    if _verify_build_url_get_job_format(build_url=build_url, job=job):
-        data = yj_obj.build.abort(build_url=build_url, job_url=job, build_number=build_number, latest=latest)
+    if _verify_build_url_get_job_format(build_url=url, job=job):
+        yj_obj.build.abort(build_url=url, job_url=job, build_number=number, latest=latest)
     else:
-        data = yj_obj.build.abort(build_url=build_url, job_name=job, build_number=build_number, latest=latest)
+        yj_obj.build.abort(build_url=url, job_name=job, build_number=number, latest=latest)
     click.secho('success', fg='bright_green', bold=True)
 
 
 @log_to_history
-def delete(profile: str, job: str, build_number: int, build_url: str, latest: bool) -> None:
+def delete(profile: str, token: str, job: str, number: int, url: str, latest: bool) -> None:
     """Delete build
 
     Args:
         profile: The profile/account to use
+        token:   API Token for Jenkins server
         job: The job this build is under
-        build_number: The build number to get info on
-        build_url: The build url to get info on
+        number: The build number to get info on
+        url: The build url to get info on
         latest: Option to get the latest build
-
-    Returns:
-        None
     """
-    if job and not build_number and not latest:
+    if job and not number and not latest:
         click.echo(
             click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
                         fg='bright_red',
                         bold=True))
         sys.exit(1)
 
-    yj_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile, token)
 
-    if _verify_build_url_get_job_format(build_url=build_url, job=job):
-        data = yj_obj.build.delete(build_url=build_url, job_url=job, build_number=build_number, latest=latest)
+    if _verify_build_url_get_job_format(build_url=url, job=job):
+        yj_obj.build.delete(build_url=url, job_url=job, build_number=number, latest=latest)
     else:
-        data = yj_obj.build.delete(build_url=build_url, job_name=job, build_number=build_number, latest=latest)
+        yj_obj.build.delete(build_url=url, job_name=job, build_number=number, latest=latest)
     click.secho('success', fg='bright_green', bold=True)
 
 
 @log_to_history
-def stages(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, opt_list: bool, job: str,
-           build_number: int, build_url: str, latest: bool) -> None:
+def stages(profile:str, token: str, opt_list: bool, job: str,
+           number: int, url: str, latest: bool, **kwargs) -> None:
     """Get build stages
 
     Args:
-        opt_pretty: Option to pretty print the output
-        opt_yaml: Option to output in YAML format
-        opt_xml: Option to output in XML format
-        opt_toml: Option to output in TOML format
         profile: The profile/account to use
+        token:   API Token for Jenkins server
         opt_list: Option to list all stages without details
         job: The job name under which the build is located
-        build_number: The build number
-        build_url: The build URL
+        number: The build number
+        url: The build URL
         latest: Option to get the latest build
-
-    Returns:
-        None
     """
-    if job and not build_number and not latest:
+    if job and not number and not latest:
         click.echo(
             click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
                         fg='bright_red',
                         bold=True))
         sys.exit(1)
 
-    yj_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile, token)
 
-    if _verify_build_url_get_job_format(build_url=build_url, job=job):
-        data, data_list = yj_obj.build.stage_list(build_url=build_url,
+    if _verify_build_url_get_job_format(build_url=url, job=job):
+        data, data_list = yj_obj.build.stage_list(build_url=url,
                                                   job_url=job,
-                                                  build_number=build_number,
+                                                  build_number=number,
                                                   latest=latest)
     else:
-        data, data_list = yj_obj.build.stage_list(build_url=build_url,
+        data, data_list = yj_obj.build.stage_list(build_url=url,
                                                   job_name=job,
-                                                  build_number=build_number,
+                                                  build_number=number,
                                                   latest=latest)
     data = data_list if opt_list else data
-    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
+    cu.standard_out(data, **kwargs)
 
 
 @log_to_history
-def logs(profile: str, job: str, build_number: int, build_url: str, latest: bool, tail: float, download_dir: bool,
+def logs(profile: str, token: str, job: str, number: int, url: str, latest: bool, tail: float, download_dir: str,
          follow: bool) -> None:
     """Get build logs
 
     Args:
         profile: The profile/account to use
+        token:   API Token for Jenkins server
         job: The job this build is under
-        build_number: The build number to get info on
-        build_url: The build url to get info on
+        number: The build number to get info on
+        url: The build url to get info on
         latest: Option to get the latest build
         tail: Option to get the last N lines of the log
         download_dir: Option to download the log to a directory
         follow: Option to follow the log
-
-    Returns:
-        None
     """
-    if job and not build_number and not latest:
+    if job and not number and not latest:
         click.echo(
             click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
                         fg='bright_red',
                         bold=True))
         sys.exit(1)
 
-    yj_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile, token)
 
-    if _verify_build_url_get_job_format(build_url=build_url, job=job):
-        yj_obj.build.logs(build_url=build_url,
+    if _verify_build_url_get_job_format(build_url=url, job=job):
+        yj_obj.build.logs(build_url=url,
                           job_url=job,
-                          build_number=build_number,
+                          build_number=number,
                           latest=latest,
                           tail=tail,
                           download_dir=download_dir,
                           follow=follow)
     else:
-        yj_obj.build.logs(build_url=build_url,
+        yj_obj.build.logs(build_url=url,
                           job_name=job,
-                          build_number=build_number,
+                          build_number=number,
                           latest=latest,
                           tail=tail,
                           download_dir=download_dir,
@@ -266,98 +247,92 @@ def logs(profile: str, job: str, build_number: int, build_url: str, latest: bool
 
 
 @log_to_history
-def browser(profile: str, job: str, build_number: int, build_url: str, latest: bool) -> None:
+def browser(profile: str, token: str, job: str, number: int, url: str, latest: bool) -> None:
     """Open build in web browser
 
     Args:
         profile: The profile/account to use
+        token:   API Token for Jenkins server
         job: The job this build is under
-        build_number: The build number to get info on
-        build_url: The build url to get info on
+        number: The build number to get info on
+        url: The build url to get info on
         latest: Option to get the latest build
-
-    Returns:
-        None
     """
-    if job and not build_number and not latest:
+    if job and not number and not latest:
         click.echo(
             click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
                         fg='bright_red',
                         bold=True))
         sys.exit(1)
 
-    yj_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile, token)
 
-    if _verify_build_url_get_job_format(build_url=build_url, job=job):
-        yj_obj.build.browser_open(build_url=build_url, job_url=job, build_number=build_number, latest=latest)
+    if _verify_build_url_get_job_format(build_url=url, job=job):
+        yj_obj.build.browser_open(build_url=url, job_url=job, build_number=number, latest=latest)
     else:
-        yj_obj.build.browser_open(build_url=build_url, job_name=job, build_number=build_number, latest=latest)
+        yj_obj.build.browser_open(build_url=url, job_name=job, build_number=number, latest=latest)
 
 
 @log_to_history
-def monitor(profile: str, job: str, build_number: int, build_url: str, latest: bool, sound: bool) -> None:
+def monitor(profile: str, token: str, job: str, number: int, url: str, latest: bool, sound: bool) -> None:
     """Start monitor UI
 
     Args:
         profile: The profile/account to use
+        token:   API Token for Jenkins server
         job: The job this build is under
-        build_number: The build number to get info on
-        build_url: The build url to get info on
+        number: The build number to get info on
+        url: The build url to get info on
         latest: Option to get the latest build
         sound: Option to play a sound when the build status changes
-
-    Returns:
-        None
     """
-    if job and not build_number and not latest:
+    if job and not number and not latest:
         click.echo(
             click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
                         fg='bright_red',
                         bold=True))
         sys.exit(1)
 
-    yj_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile, token)
 
-    if _verify_build_url_get_job_format(build_url=build_url, job=job):
-        yj_obj.build.monitor(build_url=build_url, job_url=job, build_number=build_number, latest=latest, sound=sound)
+    if _verify_build_url_get_job_format(build_url=url, job=job):
+        yj_obj.build.monitor(build_url=url, job_url=job, build_number=number, latest=latest, sound=sound)
     else:
-        yj_obj.build.monitor(build_url=build_url, job_name=job, build_number=build_number, latest=latest, sound=sound)
+        yj_obj.build.monitor(build_url=url, job_name=job, build_number=number, latest=latest, sound=sound)
 
 
 @log_to_history
-def parameters(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, opt_list: bool, job: str,
-               build_number: int, build_url: str, latest: bool) -> None:
+def parameters(profile:str, token: str, opt_list: bool, job: str,
+               number: int, url: str, latest: bool, **kwargs) -> None:
     """Get build parameters
 
     Args:
         profile: The profile/account to use
+        token:   API Token for Jenkins server
         opt_list: Option to list all stages without details
         job: The job name under which the build is located
-        build_number: The build number
-        build_url: The build URL
+        number: The build number
+        url: The build URL
         latest: Option to get the latest build
-
-    Returns:
-        None
     """
-    if job and not build_number and not latest:
+    if job and not number and not latest:
         click.echo(
             click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
                         fg='bright_red',
                         bold=True))
         sys.exit(1)
 
-    yj_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile, token)
 
-    if _verify_build_url_get_job_format(build_url=build_url, job=job):
-        data, data_list = yj_obj.build.parameters(build_url=build_url,
+    if _verify_build_url_get_job_format(build_url=url, job=job):
+        data, data_list = yj_obj.build.parameters(build_url=url,
                                                   job_url=job,
-                                                  build_number=build_number,
+                                                  build_number=number,
                                                   latest=latest)
     else:
-        data, data_list = yj_obj.build.parameters(build_url=build_url,
+        data, data_list = yj_obj.build.parameters(build_url=url,
                                                   job_name=job,
-                                                  build_number=build_number,
+                                                  build_number=number,
                                                   latest=latest)
     data = data_list if opt_list else data
-    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
+    cu.standard_out(data, **kwargs)
