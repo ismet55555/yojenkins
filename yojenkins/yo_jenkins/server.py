@@ -24,7 +24,6 @@ class Server():
         """
         self.rest = rest
         self.auth = auth
-
         self.server_base_url = auth.jenkins_profile['jenkins_server_url']
 
     def info(self) -> Dict:

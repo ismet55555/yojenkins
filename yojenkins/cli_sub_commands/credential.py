@@ -6,6 +6,7 @@ import click
 from yojenkins.__main__ import credential
 from yojenkins.cli import cli_credential, cli_decorators
 from yojenkins.cli.cli_utility import set_debug_log_level
+from yojenkins.utility.utility import translate_kwargs
 
 
 @credential.command(short_help='\tList credentials')
@@ -22,10 +23,10 @@ from yojenkins.cli.cli_utility import set_debug_log_level
               show_default=True,
               required=False,
               help='Credential info keys to return [ie. displayName,id,etc]')
-def list(debug, pretty, yaml, xml, toml, list, profile, folder, domain, keys):
+def list(debug, **kwargs):
     """List credentials"""
     set_debug_log_level(debug)
-    cli_credential.list(pretty, yaml, xml, toml, list, profile, folder, domain, keys)
+    cli_credential.list(**translate_kwargs(kwargs))
 
 
 @credential.command(short_help='\tCredential information')
@@ -35,10 +36,10 @@ def list(debug, pretty, yaml, xml, toml, list, profile, folder, domain, keys):
 @click.argument('credential', nargs=1, type=str, required=True)
 @click.option('--folder', type=str, default="root", show_default=True, required=False, help='Credential folder')
 @click.option('--domain', type=str, default="global", show_default=True, required=False, help='Credential domain')
-def info(debug, pretty, yaml, xml, toml, profile, credential, folder, domain):
+def info(debug, **kwargs):
     """Credential information"""
     set_debug_log_level(debug)
-    cli_credential.info(pretty, yaml, xml, toml, profile, credential, folder, domain)
+    cli_credential.info(**translate_kwargs(kwargs))
 
 
 @credential.command(short_help='\tGet credential configuration')
@@ -59,10 +60,10 @@ def info(debug, pretty, yaml, xml, toml, profile, credential, folder, domain):
               type=click.Path(file_okay=True, dir_okay=True),
               required=False,
               help='File/Filepath to write configurations to')
-def config(debug, pretty, yaml, xml, toml, json, profile, credential, folder, domain, filepath):
+def config(debug, **kwargs):
     """Get credential configuration"""
     set_debug_log_level(debug)
-    cli_credential.config(pretty, yaml, xml, toml, json, profile, credential, folder, domain, filepath)
+    cli_credential.config(**translate_kwargs(kwargs))
 
 
 @credential.command(short_help='\tCredential type template to create a credential')
@@ -84,10 +85,10 @@ def config(debug, pretty, yaml, xml, toml, json, profile, credential, folder, do
               type=click.Path(file_okay=True, dir_okay=True),
               required=False,
               help='File/Filepath to write template to')
-def get_template(debug, pretty, yaml, xml, toml, json, profile, type, filepath):
+def get_template(debug, **kwargs):
     """Credential type template to create a credential"""
     set_debug_log_level(debug)
-    cli_credential.get_template(pretty, yaml, xml, toml, json, profile, type, filepath)
+    cli_credential.get_template(**translate_kwargs(kwargs))
 
 
 @credential.command(short_help='\tCreate new credentials')
@@ -97,10 +98,10 @@ def get_template(debug, pretty, yaml, xml, toml, json, profile, type, filepath):
 @click.argument('config-file', nargs=1, type=click.Path(exists=True), required=True)
 @click.option('--folder', type=str, default="root", show_default=True, required=False, help='Credential folder')
 @click.option('--domain', type=str, default="global", show_default=True, required=False, help='Credential domain')
-def create(debug, profile, config_file, folder, domain):
+def create(debug, **kwargs):
     """Create new credentials"""
     set_debug_log_level(debug)
-    cli_credential.create(profile, config_file, folder, domain)
+    cli_credential.create(**translate_kwargs(kwargs))
 
 
 @credential.command(short_help='\tRemove credentials')
@@ -109,10 +110,10 @@ def create(debug, profile, config_file, folder, domain):
 @click.argument('credential', nargs=1, type=str, required=True)
 @click.option('--folder', type=str, default="root", show_default=True, required=False, help='Credential folder')
 @click.option('--domain', type=str, default="global", show_default=True, required=False, help='Credential domain')
-def delete(debug, profile, credential, folder, domain):
+def delete(debug, **kwargs):
     """Remove credentials"""
     set_debug_log_level(debug)
-    cli_credential.delete(profile, credential, folder, domain)
+    cli_credential.delete(**translate_kwargs(kwargs))
 
 
 @credential.command(short_help='\tReconfigure existing credentials')

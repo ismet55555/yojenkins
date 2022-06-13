@@ -6,6 +6,7 @@ import click
 from yojenkins.__main__ import node
 from yojenkins.cli import cli_decorators, cli_node
 from yojenkins.cli.cli_utility import set_debug_log_level
+from yojenkins.utility.utility import translate_kwargs
 
 
 @node.command(short_help='\tNode information')
@@ -14,20 +15,20 @@ from yojenkins.cli.cli_utility import set_debug_log_level
 @cli_decorators.profile
 @click.argument('name', nargs=1, type=str, required=True)
 @click.option('-d', '--depth', type=int, default=0, required=False, help='Search depth from root directory')
-def info(debug, pretty, yaml, xml, toml, profile, name, depth):
+def info(debug, **kwargs):
     """Node information"""
     set_debug_log_level(debug)
-    cli_node.info(pretty, yaml, xml, toml, profile, name, depth)
+    cli_node.info(**translate_kwargs(kwargs))
 
 
 @node.command(short_help='\tNode status')
 @cli_decorators.debug
 @cli_decorators.profile
 @click.argument('name', nargs=1, type=str, required=True)
-def status(debug, profile, name):
+def status(debug, **kwargs):
     """Node status"""
     set_debug_log_level(debug)
-    click.secho('TODO :-/', fg='yellow')
+    click.secho(**translate_kwargs(kwargs))
 
 
 @node.command(short_help='\tList all nodes')
@@ -36,10 +37,10 @@ def status(debug, profile, name):
 @cli_decorators.format_output
 @cli_decorators.list
 @click.option('-d', '--depth', type=int, default=0, required=False, help='Search depth from root directory')
-def list(debug, profile, pretty, yaml, xml, toml, list, depth):
+def list(debug, **kwargs):
     """List all nodes"""
     set_debug_log_level(debug)
-    cli_node.list(pretty, yaml, xml, toml, list, profile, depth)
+    cli_node.list(**translate_kwargs(kwargs))
 
 
 @node.command(short_help='\tPrepare a remote machine to become a node')
@@ -47,7 +48,8 @@ def list(debug, profile, pretty, yaml, xml, toml, list, depth):
 def prepare(debug):
     """Prepare a remote machine to become a node"""
     set_debug_log_level(debug)
-    cli_node.prepare()
+    click.secho('TODO :-/', fg='yellow')
+    #  cli_node.prepare()
 
 
 @node.command(short_help='\tSetup a local or remote persistent node')
@@ -101,7 +103,7 @@ def prepare(debug):
               required=False,
               help='SSH verification strategy')
 # @click.option('--config-file', type=click.Path(file_okay=True, dir_okay=False), required=False, help='Path to local XML file defining agent')
-def create_permanent(debug, profile, **kwargs):
+def create_permanent(debug, **kwargs):
     """
     This command sets up a local or remote node on a virtual machine, container,
     or physical machine, connecting with SSH. The target system must have the following:
@@ -129,7 +131,7 @@ def create_permanent(debug, profile, **kwargs):
     - yojenkins node create-permanent "Node 1" ey-yo.com my-cred --labels label1,label2,label3
     """
     set_debug_log_level(debug)
-    cli_node.create_permanent(profile, **kwargs)
+    cli_node.create_permanent(**translate_kwargs(kwargs))
 
 
 @node.command(short_help='\tSetup a local or remote ephemeral/as-needed node')
@@ -144,10 +146,10 @@ def create_ephemeral(debug):
 @cli_decorators.debug
 @cli_decorators.profile
 @click.argument('name', nargs=1, type=str, required=True)
-def delete(debug, profile, name):
+def delete(debug, **kwargs):
     """Delete a node"""
     set_debug_log_level(debug)
-    cli_node.delete(profile, name)
+    cli_node.delete(**translate_kwargs(kwargs))
 
 
 @node.command(short_help='\tDisable a node')
@@ -155,10 +157,10 @@ def delete(debug, profile, name):
 @cli_decorators.profile
 @click.argument('name', nargs=1, type=str, required=True)
 @click.option('--message', type=str, required=False, help='Message for disabling node')
-def disable(debug, profile, name, message):
+def disable(debug, **kwargs):
     """Disable a node"""
     set_debug_log_level(debug)
-    cli_node.disable(profile, name, message)
+    cli_node.disable(**translate_kwargs(kwargs))
 
 
 @node.command(short_help='\tEnable a node')
@@ -166,10 +168,10 @@ def disable(debug, profile, name, message):
 @cli_decorators.profile
 @click.argument('name', nargs=1, type=str, required=True)
 @click.option('--message', type=str, required=False, help='Message for enabling node')
-def enable(debug, profile, name, message):
+def enable(debug, **kwargs):
     """Enable a node"""
     set_debug_log_level(debug)
-    cli_node.enable(profile, name, message)
+    cli_node.enable(**translate_kwargs(kwargs))
 
 
 @node.command(short_help='\tGet node configuration')
@@ -188,10 +190,10 @@ def enable(debug, profile, name, message):
               type=click.Path(file_okay=True, dir_okay=True),
               required=False,
               help='File/Filepath to write configurations to')
-def config(debug, pretty, yaml, xml, toml, json, profile, name, filepath):
+def config(debug, **kwargs):
     """Get node configuration"""
     set_debug_log_level(debug)
-    cli_node.config(pretty, yaml, xml, toml, json, profile, name, filepath)
+    cli_node.config(**translate_kwargs(kwargs))
 
 
 @node.command(short_help='\tReconfigure the node')
@@ -209,16 +211,16 @@ def config(debug, pretty, yaml, xml, toml, json, profile, name, filepath):
               required=False,
               is_flag=True,
               help='The specified file is in JSON format')
-def reconfig(debug, profile, name, config_file, config_is_json):
+def reconfig(debug, **kwargs):
     """Reconfigure the node"""
     set_debug_log_level(debug)
-    cli_node.reconfig(profile, name, config_file, config_is_json)
+    cli_node.reconfig(**kwargs)
 
 
 @node.command(short_help='\tNode logs')
 @cli_decorators.debug
 @cli_decorators.profile
-def logs(debug, profile):
+def logs(debug, **kwargs):
     """Node logs"""
     set_debug_log_level(debug)
     click.secho('TODO :-/', fg='yellow')

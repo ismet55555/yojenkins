@@ -9,7 +9,7 @@ from datetime import datetime
 from inspect import getfullargspec
 from pathlib import Path
 from shlex import quote
-from typing import Callable, Dict
+from typing import Callable, Dict, List, Union
 
 import click
 import toml
@@ -84,13 +84,14 @@ def platform_information() -> None:
     logger.debug(f'    - Bundled:   {am_i_bundled()}')
 
 
-def config_yo_jenkins(profile: str) -> YoJenkins:
+def config_yo_jenkins(profile: str, token: str) -> YoJenkins:
     """Initialize/Prepare YoJenkins object using the appropriate
     authentication information
 
 
     Args:
         profile: Name of the yojenkins authentication profile
+        token:   API token to override profile value
 
     Returns:
         Initialized YoJenkins object
@@ -103,14 +104,14 @@ def config_yo_jenkins(profile: str) -> YoJenkins:
         sys.exit(1)
 
     # Create authentication
-    if not auth.create_auth():
+    if not auth.create_auth(token=token):
         click.secho('Failed authentication', fg='bright_red', bold=True)
         sys.exit(1)
 
     return YoJenkins(auth)
 
 
-def standard_out(data: Dict,
+def standard_out(data: Union[Dict, List],
                  opt_pretty: bool = False,
                  opt_yaml: bool = False,
                  opt_xml: bool = False,

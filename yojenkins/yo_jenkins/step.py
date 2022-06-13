@@ -4,6 +4,7 @@ import logging
 from typing import Dict
 
 from yojenkins.utility.utility import fail_out
+from yojenkins.yo_jenkins.rest import Rest
 
 # Getting the logger reference
 logger = logging.getLogger()
@@ -12,18 +13,15 @@ logger = logging.getLogger()
 class Step():
     """TODO Step"""
 
-    def __init__(self, rest: object) -> None:
+    def __init__(self, rest: Rest) -> None:
         """Object constructor method, called at object creation
 
         Args:
             None
-
-        Returns:
-            None
         """
         self.rest = rest
 
-    def info(self, step_url=str) -> Dict:
+    def info(self, step_url: str) -> Dict:
         """Get the information of the specified step
 
         Details: Step URL can be gotten with stage_step_list.

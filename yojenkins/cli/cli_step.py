@@ -13,28 +13,25 @@ logger = logging.getLogger()
 
 
 @log_to_history
-def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, step_url: str) -> None:
+def info(profile: str, token: str, url: str, **kwargs) -> None:
     """TODO Docstring
 
     Details: TODO
 
     Args:
         TODO
-
-    Returns:
-        TODO
     """
     # Check if URL is ok
-    if not cu.is_full_url(step_url):
-        click.secho(f'INPUT ERROR: Step url is not a URL: {step_url}', fg='bright_red', bold=True)
+    if not cu.is_full_url(url):
+        click.secho(f'INPUT ERROR: Step url is not a URL: {url}', fg='bright_red', bold=True)
         sys.exit(1)
 
-    yj_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile, token)
 
     # Request the data
-    data = yj_obj.step.info(step_url=step_url)
+    data = yj_obj.step.info(step_url=url)
 
     if not data:
         click.secho('No step information', fg='bright_red', bold=True)
         sys.exit(1)
-    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
+    cu.standard_out(data, **kwargs)

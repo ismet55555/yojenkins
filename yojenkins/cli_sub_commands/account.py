@@ -1,11 +1,9 @@
-"""Account click sub-command"""
-# pylint: skip-file
-
 import click
 
 from yojenkins.__main__ import account
 from yojenkins.cli import cli_account, cli_decorators
 from yojenkins.cli.cli_utility import set_debug_log_level
+from yojenkins.utility.utility import translate_kwargs
 
 
 @account.command(short_help='\tList all users')
@@ -13,10 +11,10 @@ from yojenkins.cli.cli_utility import set_debug_log_level
 @cli_decorators.format_output
 @cli_decorators.list
 @cli_decorators.profile
-def list(debug, pretty, yaml, xml, toml, list, profile):
+def list(debug, **kwargs):
     """List all users"""
     set_debug_log_level(debug)
-    cli_account.list(pretty, yaml, xml, toml, list, profile)
+    cli_account.list(**translate_kwargs(kwargs))
 
 
 @account.command(short_help='\tGet user information')
@@ -24,10 +22,10 @@ def list(debug, pretty, yaml, xml, toml, list, profile):
 @cli_decorators.format_output
 @cli_decorators.profile
 @click.argument('user-id', nargs=1, type=str, required=True)
-def info(debug, pretty, yaml, xml, toml, profile, user_id):
+def info(debug, **kwargs):
     """Get user information"""
     set_debug_log_level(debug)
-    cli_account.info(pretty, yaml, xml, toml, profile, user_id)
+    cli_account.info(**translate_kwargs(kwargs))
 
 
 @account.command(short_help='\tCreate a user account')
@@ -43,20 +41,20 @@ def info(debug, pretty, yaml, xml, toml, profile, user_id):
               help='User has administrator control')
 @click.option('--email', type=str, required=False, help='User email address')
 @click.option('--description', type=str, required=False, help='User description')
-def create(debug, profile, user_id, password, is_admin, email, description):
+def create(debug, **kwargs):
     """Create a user account"""
     set_debug_log_level(debug)
-    cli_account.create(profile, user_id, password, is_admin, email, description)
+    cli_account.create(**translate_kwargs(kwargs))
 
 
 @account.command(short_help='\tDelete a user account')
 @cli_decorators.debug
 @cli_decorators.profile
 @click.argument('user-id', nargs=1, type=str, required=True)
-def delete(debug, profile, user_id):
+def delete(debug, **kwargs):
     """Delete a user account"""
     set_debug_log_level(debug)
-    cli_account.delete(profile, user_id)
+    cli_account.delete(**translate_kwargs(kwargs))
 
 
 @account.command(short_help='\tAdd or remove user permission')
@@ -68,7 +66,7 @@ def delete(debug, profile, user_id):
               required=True,
               help='Add or remove permission action')
 @click.option('--permission-id', type=str, required=True, help='ID(s) of permission (comma separated)')
-def permission(debug, profile, user_id, action, permission_id):
+def permission(debug, **kwargs):
     """
     Add or remove user permission
 
@@ -86,7 +84,7 @@ def permission(debug, profile, user_id, action, permission_id):
       - Will work/match:      hudson.security.Permission.CREATE
     """
     set_debug_log_level(debug)
-    cli_account.permission(profile, user_id, action, permission_id)
+    cli_account.permission(**translate_kwargs(kwargs))
 
 
 @account.command(short_help='\tList all available permissions')
@@ -94,7 +92,7 @@ def permission(debug, profile, user_id, action, permission_id):
 @cli_decorators.format_output
 @cli_decorators.list
 @cli_decorators.profile
-def permission_list(debug, pretty, yaml, xml, toml, list, profile):
+def permission_list(debug, **kwargs):
     """List all available permissions
 
     \b
@@ -111,13 +109,13 @@ def permission_list(debug, pretty, yaml, xml, toml, list, profile):
       - Will work/match:      hudson.security.Permission.CREATE
     """
     set_debug_log_level(debug)
-    cli_account.permission_list(pretty, yaml, xml, toml, list, profile)
+    cli_account.permission_list(**translate_kwargs(kwargs))
 
 
 @account.command(short_help='\tReset a user password')
 @cli_decorators.debug
 @cli_decorators.profile
-def password_reset(debug, profile):
+def password_reset(debug, **kwargs):
     """Reset a user password"""
     set_debug_log_level(debug)
     click.secho('TODO :-/', fg='yellow')

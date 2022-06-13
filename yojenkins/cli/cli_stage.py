@@ -12,82 +12,67 @@ logger = logging.getLogger()
 
 
 @log_to_history
-def info(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, stage_name: str, job: str,
-         build_number: int, build_url: str, latest: bool) -> None:
+def info(profile: str, token: str, name: str, job: str, number: int, url: str, latest: bool, **kwargs) -> None:
     """TODO Docstring
 
     Details: TODO
 
     Args:
         TODO
-
-    Returns:
-        TODO
     """
-    if job and not build_number and not latest:
+    if job and not number and not latest:
         fail_out('INPUT ERROR: For job, either specify --number or --latest. See --help')
 
-    yj_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile, token)
 
     # Differentiate if name or url
-    if build_url:
-        logger.debug(f'Build URL passed: {build_url}')
+    if url:
+        logger.debug(f'Build URL passed: {url}')
         valid_url_format = True
     else:
-        valid_url_format = cu.is_full_url(job) if not build_url else True
+        valid_url_format = cu.is_full_url(job) if not url else True
 
     # Request the data
     if valid_url_format:
-        data = yj_obj.stage.info(stage_name=stage_name,
-                                 build_url=build_url,
-                                 job_url=job,
-                                 build_number=build_number,
-                                 latest=latest)
+        data = yj_obj.stage.info(stage_name=name, build_url=url, job_url=job, build_number=number, latest=latest)
     else:
-        data = yj_obj.stage.info(stage_name=stage_name,
-                                 build_url=build_url,
-                                 job_name=job,
-                                 build_number=build_number,
-                                 latest=latest)
-    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
+        data = yj_obj.stage.info(stage_name=name, build_url=url, job_name=job, build_number=number, latest=latest)
+    cu.standard_out(data, **kwargs)
 
 
 @log_to_history
-def status(profile: str, stage_name: str, job: str, build_number: int, build_url: str, latest: bool) -> None:
+def status(profile: str, token: str, name: str, job: str, number: int, url: str, latest: bool) -> None:
     """TODO Docstring
 
     Details: TODO
 
     Args:
         TODO
-
-    Returns:
-        TODO
     """
-    if job and not build_number and not latest:
+    if job and not number and not latest:
         fail_out('INPUT ERROR: For job, either specify --number or --latest. See --help')
 
-    yj_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile, token)
 
     # Differentiate if name or url
-    if build_url:
-        logger.debug(f'Build URL passed: {build_url}')
+    if url:
+        logger.debug(f'Build URL passed: {url}')
         valid_url_format = True
     else:
-        valid_url_format = cu.is_full_url(job) if not build_url else True
+        valid_url_format = cu.is_full_url(job) if not url else True
 
     # Request the data
     if valid_url_format:
-        data = yj_obj.stage.status_text(stage_name=stage_name,
-                                        build_url=build_url,
+        data = yj_obj.stage.status_text(stage_name=name,
+                                        build_url=url,
                                         job_url=job,
-                                        build_number=build_number,
+                                        build_number=number,
                                         latest=latest)
     else:
-        data = yj_obj.stage.status_text(stage_name=stage_name,
-                                        build_url=build_url,
+        data = yj_obj.stage.status_text(stage_name=name,
+                                        build_url=url,
                                         job_name=job,
-                                        build_number=build_number,
+                                        build_number=number,
                                         latest=latest)
 
     # Color for output
@@ -107,49 +92,46 @@ def status(profile: str, stage_name: str, job: str, build_number: int, build_url
 
 
 @log_to_history
-def steps(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, opt_list: bool,
-          stage_name: str, job: str, build_number: int, build_url: str, latest: bool) -> None:
+def steps(profile: str, token: str, opt_list: bool, name: str, job: str, number: int, url: str, latest: bool,
+          **kwargs) -> None:
     """TODO Docstring
 
     Details: TODO
 
     Args:
         TODO
-
-    Returns:
-        TODO
     """
-    if job and not build_number and not latest:
+    if job and not number and not latest:
         fail_out('INPUT ERROR: For job, either specify --number or --latest. See --help')
 
-    yj_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile, token)
 
     # Differentiate if name or url
-    if build_url:
-        logger.debug(f'Build URL passed: {build_url}')
+    if url:
+        logger.debug(f'Build URL passed: {url}')
         valid_url_format = True
     else:
-        valid_url_format = cu.is_full_url(job) if not build_url else True
+        valid_url_format = cu.is_full_url(job) if not url else True
 
     # Request the data
     if valid_url_format:
-        data, data_list = yj_obj.stage.step_list(stage_name=stage_name,
-                                                 build_url=build_url,
+        data, data_list = yj_obj.stage.step_list(stage_name=name,
+                                                 build_url=url,
                                                  job_url=job,
-                                                 build_number=build_number,
+                                                 build_number=number,
                                                  latest=latest)
     else:
-        data, data_list = yj_obj.stage.step_list(stage_name=stage_name,
-                                                 build_url=build_url,
+        data, data_list = yj_obj.stage.step_list(stage_name=name,
+                                                 build_url=url,
                                                  job_name=job,
-                                                 build_number=build_number,
+                                                 build_number=number,
                                                  latest=latest)
     data = data_list if opt_list else data
-    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
+    cu.standard_out(data, **kwargs)
 
 
 @log_to_history
-def logs(profile: str, stage_name: str, job: str, build_number: int, build_url: str, latest: bool,
+def logs(profile: str, token: str, name: str, job: str, number: int, url: str, latest: bool,
          download_dir: bool) -> None:
     """TODO Docstring
 
@@ -157,34 +139,31 @@ def logs(profile: str, stage_name: str, job: str, build_number: int, build_url: 
 
     Args:
         TODO
-
-    Returns:
-        TODO
     """
-    if job and not build_number and not latest:
+    if job and not number and not latest:
         fail_out('INPUT ERROR: For job, either specify --number or --latest. See --help')
 
-    yj_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile, token)
 
     # Differentiate if name or url
-    if build_url:
-        logger.debug(f'Build URL passed: {build_url}')
+    if url:
+        logger.debug(f'Build URL passed: {url}')
         valid_url_format = True
     else:
-        valid_url_format = cu.is_full_url(job) if not build_url else True
+        valid_url_format = cu.is_full_url(job) if not url else True
 
     # Request the data
     if valid_url_format:
-        yj_obj.stage.logs(stage_name=stage_name,
-                          build_url=build_url,
+        yj_obj.stage.logs(stage_name=name,
+                          build_url=url,
                           job_url=job,
-                          build_number=build_number,
+                          build_number=number,
                           latest=latest,
                           download_dir=download_dir)
     else:
-        yj_obj.stage.logs(stage_name=stage_name,
-                          build_url=build_url,
+        yj_obj.stage.logs(stage_name=name,
+                          build_url=url,
                           job_name=job,
-                          build_number=build_number,
+                          build_number=number,
                           latest=latest,
                           download_dir=download_dir)

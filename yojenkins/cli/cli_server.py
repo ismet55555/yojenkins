@@ -10,7 +10,7 @@ import click
 from yojenkins.cli import cli_utility as cu
 from yojenkins.cli.cli_utility import log_to_history
 from yojenkins.docker_container import DockerJenkinsServer
-from yojenkins.utility.utility import fail_out, failures_out, print2, translate_kwargs
+from yojenkins.utility.utility import fail_out, failures_out, print2
 from yojenkins.yo_jenkins import Auth, YoJenkins
 
 # Getting the logger reference
@@ -21,83 +21,70 @@ CONFIG_DIR_NAME = '.yojenkins'
 
 
 @log_to_history
-def info(profile: str, **kwargs) -> None:
+def info(profile: str, token: str, **kwargs) -> None:
     """Get the server information
 
     Details: Targeting the server that is specified in the selected profile
-
-    Args:
-        TODO
     """
-    data = cu.config_yo_jenkins(profile).server.info()
-    cu.standard_out(data, **translate_kwargs(kwargs))
+    data = cu.config_yo_jenkins(profile, token).server.info()
+    cu.standard_out(data, **kwargs)
 
 
 @log_to_history
-def people(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, opt_list: bool) -> None:
+def people(profile: str, token: str, opt_list: bool, **kwargs) -> None:
     """TODO Docstring
 
     Details: TODO
 
     Args:
         TODO
-
-    Returns:
-        TODO
     """
-    data, data_list = cu.config_yo_jenkins(profile).server.people()
+    data, data_list = cu.config_yo_jenkins(profile, token).server.people()
     data = data_list if opt_list else data
-    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
+    cu.standard_out(data, **kwargs)
 
 
 @log_to_history
-def queue(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, opt_list: bool) -> None:
+def queue(profile: str, token: str, opt_list: bool, **kwargs) -> None:
     """TODO Docstring
 
     Details: TODO
 
     Args:
         TODO
-
-    Returns:
-        TODO
     """
-    yj_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile, token)
     if opt_list:
         data = yj_obj.server.queue_list()  # TODO: Combine with server_queue_list adding a list argument
     else:
         data = yj_obj.server.queue_info()
-    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
+    cu.standard_out(data, **kwargs)
 
 
 @log_to_history
-def plugins(opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, profile: str, opt_list: bool) -> None:
+def plugins(profile: str, token: str, opt_list: bool, **kwargs) -> None:
     """TODO Docstring
 
     Details: TODO
 
     Args:
         TODO
-
-    Returns:
-        TODO
     """
-    data, data_list = cu.config_yo_jenkins(profile).server.plugin_list()
+    data, data_list = cu.config_yo_jenkins(profile, token).server.plugin_list()
     data = data_list if opt_list else data
-    cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
+    cu.standard_out(data, **kwargs)
 
 
 @log_to_history
-def browser(profile: str) -> None:
+def browser(profile: str, token: str) -> None:
     """TODO Docstring
+
+    Details: TODO
 
     Args:
         TODO
-
-    Returns:
-        TODO
     """
-    cu.config_yo_jenkins(profile).server.browser_open()
+    cu.config_yo_jenkins(profile, token).server.browser_open()
 
 
 @log_to_history
@@ -108,9 +95,6 @@ def reachable(profile: str, timeout: int) -> None:
 
     Args:
         TODO
-
-    Returns:
-        TODO
     """
     auth = Auth()
     auth.get_credentials(profile)
@@ -119,50 +103,41 @@ def reachable(profile: str, timeout: int) -> None:
 
 
 @log_to_history
-def quiet(profile: str, off: bool):
+def quiet(profile: str, token: str, off: bool) -> None:
     """TODO Docstring
 
     Details: TODO
 
     Args:
         TODO
-
-    Returns:
-        TODO
     """
-    cu.config_yo_jenkins(profile).server.quiet(off=off)
+    cu.config_yo_jenkins(profile, token).server.quiet(off=off)
     click.secho('success', fg='bright_green', bold=True)
 
 
 @log_to_history
-def restart(profile: str, force: bool):
+def restart(profile: str, token: str, force: bool) -> None:
     """TODO Docstring
 
     Details: TODO
 
     Args:
         TODO
-
-    Returns:
-        TODO
     """
-    cu.config_yo_jenkins(profile).server.restart(force=force)
+    cu.config_yo_jenkins(profile, token).server.restart(force=force)
     click.secho('success', fg='bright_green', bold=True)
 
 
 @log_to_history
-def shutdown(profile: str, force: bool):
+def shutdown(profile: str, token: str, force: bool) -> None:
     """TODO Docstring
 
     Details: TODO
 
     Args:
         TODO
-
-    Returns:
-        TODO
     """
-    cu.config_yo_jenkins(profile).server.shutdown(force=force)
+    cu.config_yo_jenkins(profile, token).server.shutdown(force=force)
     click.secho('success', fg='bright_green', bold=True)
 
 
@@ -175,9 +150,6 @@ def server_deploy(config_file: str, plugins_file: str, protocol_schema: str, hos
     Details: TODO
 
     Args:
-        TODO
-
-    Returns:
         TODO
     """
     click.echo('Setting up a local Jenkins development server. Hold tight, this may take a minute ...')
@@ -241,20 +213,18 @@ def server_deploy(config_file: str, plugins_file: str, protocol_schema: str, hos
 
 
 @log_to_history
-def server_teardown(remove_volume: bool, remove_image: bool):
+def server_teardown(remove_volume: bool, remove_image: bool) -> None:
     """TODO Docstring
 
     Details: TODO
 
     Args:
         TODO
-
-    Returns:
-        TODO
     """
     # Load deployment info file with deployment information
     filepath = os.path.join(Path.home(), CONFIG_DIR_NAME, 'last_deploy_info.json')
     logger.debug(f'Detecting server deployment info file: {filepath} ...')
+    deployed = {}
     try:
         with open(os.path.join(filepath), 'r') as file:
             deployed = json.load(file)

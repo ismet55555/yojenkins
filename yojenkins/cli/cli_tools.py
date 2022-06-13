@@ -5,7 +5,7 @@ import logging
 import os
 import sys
 from pathlib import Path
-from typing import Tuple
+from typing import NoReturn, Union
 
 import click
 
@@ -14,6 +14,7 @@ from yojenkins.cli.cli_utility import log_to_history
 from yojenkins.tools import Package, SharedLibrary
 from yojenkins.utility.utility import (
     browser_open,
+    fail_out,
     html_clean,
     load_contents_from_local_file,
     print2,
@@ -22,6 +23,7 @@ from yojenkins.utility.utility import (
 # Getting the logger reference
 logger = logging.getLogger()
 
+# TODO: Move all these configs to a central config file
 BUG_REPORT_URL = "https://github.com/ismet55555/yojenkins/issues/new?assignees=ismet55555&labels=bug%2Ctriage&template=bug_report.yml&title=%5BBug%5D%3A+"
 FEATURE_REQUEST_URL = "https://github.com/ismet55555/yojenkins/issues/new?assignees=ismet55555&labels=feature-request&template=feature_request.yml&title=%5BFeature-Request%5D%3A+"
 DOCS_URL = "https://www.yojenkins.com/"
@@ -35,9 +37,6 @@ def documentation() -> None:
 
     Args:
         TODO
-
-    Returns:
-        TODO
     """
     logger.debug(f'Opening documentation in web browser: "{DOCS_URL}" ...')
     success = browser_open(url=DOCS_URL)
@@ -45,7 +44,6 @@ def documentation() -> None:
         logger.debug('Successfully opened in web browser')
     else:
         logger.debug('Failed to open in web browser')
-    return success
 
 
 @log_to_history
@@ -55,9 +53,6 @@ def upgrade(user: bool, proxy: str) -> None:
     Details: TODO
 
     Args:
-        TODO
-
-    Returns:
         TODO
     """
     if not Package.install(user=user, proxy=proxy):
@@ -74,9 +69,6 @@ def remove() -> None:
 
     Args:
         TODO
-
-    Returns:
-        TODO
     """
     if click.confirm('Are you sure you want to remove yojenkins?'):
         Package.uninstall()
@@ -90,9 +82,6 @@ def bug_report() -> None:
 
     Args:
         TODO
-
-    Returns:
-        TODO
     """
     logger.debug(f'Opening bug report webpage in web browser: "{BUG_REPORT_URL}" ...')
     success = browser_open(url=BUG_REPORT_URL)
@@ -100,7 +89,6 @@ def bug_report() -> None:
         logger.debug('Successfully opened in web browser')
     else:
         logger.debug('Failed to open in web browser')
-    return success
 
 
 @log_to_history
@@ -111,9 +99,6 @@ def feature_request() -> None:
 
     Args:
         TODO
-
-    Returns:
-        TODO
     """
     logger.debug(f'Opening feature request webpage in web browser: "{FEATURE_REQUEST_URL}" ...')
     success = browser_open(url=FEATURE_REQUEST_URL)
@@ -121,20 +106,16 @@ def feature_request() -> None:
         logger.debug('Successfully opened in web browser')
     else:
         logger.debug('Failed to open in web browser')
-    return success
 
 
 def history(profile: str, clear: bool) -> None:
     """Displaying the command history and clearing the history file if requested.
 
-    # TODO: Ability to clear only for a specific profile.
+    ### TODO: Ability to clear only for a specific profile.
 
     Args:
-        profile (str): The name of the profile to to filter history with
-        clear (bool):  Clearing the history file
-
-    Returns:
-        None
+        profile: The name of the profile to to filter history with
+        clear:   Clearing the history file
     """
     # Load contents from history file
     history_file_path = os.path.join(os.path.join(Path.home(), cu.CONFIG_DIR_NAME), cu.HISTORY_FILE_NAME)
@@ -148,13 +129,11 @@ def history(profile: str, clear: bool) -> None:
         logger.debug(f'Removing history file: {history_file_path} ...')
         try:
             os.remove(history_file_path)
-        except OSError:
-            logger.debug('Failed to clear history file')
-            click.secho('failed', fg='bright_red', bold=True)
-        else:
-            logger.debug('Successfully cleared history file')
-            click.secho('successfully cleared', fg='bright_green', bold=True)
-            sys.exit(0)
+        except (OSError, IOError, PermissionError) as error:
+            fail_out(f'Failed to clear history file. Exception: {error}')
+        logger.debug('Successfully cleared history file')
+        click.secho('success', fg='bright_green', bold=True)
+        sys.exit(0)
 
     # Displaying the command history
     logger.debug(f'Displaying command history for profile "{profile}" ...')
@@ -173,27 +152,25 @@ def history(profile: str, clear: bool) -> None:
         if profile in contents:
             output_history_to_console(contents[profile], profile)
         else:
-            click.secho('No history found for profile: ' + profile, fg='bright_red', bold=True)
+            fail_out(f'No history found for profile: {profile}')
     else:
         for profile_name in contents:
             output_history_to_console(contents[profile_name], profile_name)
 
 
 @log_to_history
-def rest_request(profile: str, request_text: str, request_type: str, raw: bool, clean_html: bool) -> None:
+def rest_request(profile: str, token: str, request_text: str, request_type: str, raw: bool, clean_html: bool) -> None:
     """Send a generic REST request to Jenkins Server using the loaded credentials
 
     Args:
-        profile (str): The name of the credentials profile
-        request_text (str): The text of the request to send
-        request_type (str): The type of request to send
-        raw (bool): Whether to return the raw response or formatted JSON
-        clean_html (bool): Whether to clean the HTML tags from the response
-
-    Returns:
-        None
+        profile: The name of the credentials profile
+        token:   API token for Jenkins server
+        request_text: The text of the request to send
+        request_type: The type of request to send
+        raw: Whether to return the raw response or formatted JSON
+        clean_html: Whether to clean the HTML tags from the response
     """
-    yj_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile, token)
     request_text = request_text.strip('/')
     content, header, success = yj_obj.rest.request(
         target=request_text,
@@ -202,8 +179,7 @@ def rest_request(profile: str, request_text: str, request_type: str, raw: bool, 
     )
 
     if not success:
-        click.secho('Failed to make request', fg='bright_red', bold=True)
-        sys.exit(1)
+        fail_out('Failed to make request')
 
     if request_type == 'HEAD':
         print2(header)
@@ -221,39 +197,36 @@ def rest_request(profile: str, request_text: str, request_type: str, raw: bool, 
             except Exception:
                 print2(content)
     else:
-        click.echo(
-            click.style('Content returned, however possible HTML content. Try --raw.', fg='bright_red', bold=True))
+        fail_out('Content returned, however possible HTML content. Try --raw.')
 
 
 @log_to_history
-def run_script(profile: str, script_text: str, script_filepath: str, output_filepath: str) -> Tuple[str, bool]:
+def run_script(profile: str, token: str, text: str, file: str, output: str) -> Union[NoReturn, None]:
     """TODO
 
     Details: TODO:
 
     Args:
         TODO
-
-    Returns:
-        None
     """
-    yj_obj = cu.config_yo_jenkins(profile)
+    yj_obj = cu.config_yo_jenkins(profile, token)
 
     # Prepare the commands/script
-    if script_text:
-        script_text = script_text.strip().replace('  ', ' ')
-        script = script_text
-    elif script_filepath:
-        logger.debug(f'Loading specified script from file: {script_filepath} ...')
+    script = ''
+    if text:
+        text = text.strip().replace('  ', ' ')
+        script = text
+    elif file:
+        logger.debug(f'Loading specified script from file: {file} ...')
         try:
-            with open(os.path.join(script_filepath), 'r') as open_file:
+            with open(os.path.join(file), 'r') as open_file:
                 script = open_file.read()
-            script_size = os.path.getsize(script_filepath)
+            script_size = os.path.getsize(file)
             logger.debug(f'Successfully loaded script file ({script_size} Bytes)')
         except FileNotFoundError as error:
-            click.echo(
-                click.style(f'Failed to find specified script file ({script_filepath})', fg='bright_red', bold=True))
-            sys.exit(1)
+            fail_out(f'Failed to find specified script file ({file})')
+        except (OSError, IOError, PermissionError) as error:
+            fail_out(f'Failed to read specified script file ({file}). Exception: {error}')
 
     # Send the request to the server
     content, _, success = yj_obj.rest.request(target='scriptText',
@@ -262,45 +235,34 @@ def run_script(profile: str, script_text: str, script_filepath: str, output_file
                                               json_content=False)
 
     if not success:
-        click.secho('Failed to make script run request', fg='bright_red', bold=True)
-        sys.exit(1)
+        fail_out('Failed to make script run request')
 
     # Save script result to file
-    if output_filepath:
-        logger.debug(f'Saving script result into file: {output_filepath} ...')
+    if output:
+        logger.debug(f'Saving script result into file: {output} ...')
         try:
-            with open(output_filepath, 'w+') as file:
-                file.write(content)
+            with open(output, 'w+') as open_file:
+                open_file.write(content)
             logger.debug('Successfully wrote script result to file')
-        except Exception as error:
-            logger.debug(f'Failed to write script result to file. Exception: {error}')
-            return "", False
+        except (OSError, IOError, PermissionError) as error:
+            fail_out(f"Failed to write script output to file. Exception: {error}")
 
     click.echo(content)
 
 
 @log_to_history
-def shared_lib_setup(profile: str, lib_name: str, repo_owner: str, repo_name: str, repo_url: str, repo_branch: str,
-                     implicit: bool, credential_id: str) -> bool:
+def shared_lib_setup(profile: str, token: str, **kwargs) -> Union[NoReturn, None]:
     """Sets up a shared library on the Jenkins Server
 
     Args:
         profile: The name of the credentials profile
-        lib_name: The name of the shared library
-        repo_owner: The owner of the git repo
-        repo_name: The name of the git repo
-        repo_url: The full url of the git repo (https://<path-to-the-shared-library-repository>)
-        repo_branch: The branch of the git repo (ie. master)
-        implicit: Whether to use the implicit shared library setup
-        credential_id: The Jenkins credential ID to use for the shared library
+        token:   API Token for Jenkins server
 
     Returns:
         True if the setup was successful, else False
     """
-    yj_obj = cu.config_yo_jenkins(profile)
-    data = SharedLibrary().setup(yj_obj.rest, lib_name, repo_owner, repo_name, repo_url, repo_branch, implicit,
-                                 credential_id)
+    yj_obj = cu.config_yo_jenkins(profile, token)
+    data = SharedLibrary().setup(yj_obj.rest, **kwargs)
     if not data:
-        click.secho('failed', fg='bright_red', bold=True)
-        sys.exit(1)
+        fail_out('failed')
     click.secho('success', fg='bright_green', bold=True)
