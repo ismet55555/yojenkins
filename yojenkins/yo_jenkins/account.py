@@ -7,6 +7,8 @@ from typing import Tuple
 from yojenkins.utility import utility
 from yojenkins.utility.utility import fail_out
 
+from yojenkins.yo_jenkins.rest import Rest
+
 # Getting the logger reference
 logger = logging.getLogger()
 
@@ -14,13 +16,10 @@ logger = logging.getLogger()
 class Account():
     """Account Class"""
 
-    def __init__(self, rest) -> None:
+    def __init__(self, rest: Rest) -> None:
         """Object constructor method, called at object creation
 
         Args:
-            None
-
-        Returns:
             None
         """
         self.rest = rest
@@ -71,7 +70,7 @@ class Account():
                 return user
         fail_out(f'Failed to find account: {user_id}')
 
-    def create(self, user_id: str, password: str, is_admin: str, email: str, description: str) -> bool:
+    def create(self, user_id: str, password: str, is_admin: bool, email: str, description: str) -> bool:
         """Create a new user account
 
         Args:
