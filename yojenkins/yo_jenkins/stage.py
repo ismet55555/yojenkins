@@ -4,7 +4,7 @@ import logging
 import os
 import threading
 from datetime import datetime, timedelta
-from typing import Dict, Tuple
+from typing import Dict, Tuple, Union
 
 from yojenkins.utility import utility
 from yojenkins.utility.utility import fail_out, print2
@@ -155,11 +155,11 @@ class Stage():
             return stage_info['status']
 
     def step_list(self,
-                  stage_name=str,
+                  stage_name: str,
                   build_url: str = '',
                   job_name: str = '',
                   job_url: str = '',
-                  build_number: int = None,
+                  build_number: Union[int, None] = None,
                   latest: bool = False) -> Tuple[list, list]:
         """List of steps for this stage
 
@@ -250,11 +250,11 @@ class Stage():
         logger.debug(f'Thread stopped - Step Info - (ID: {threading.get_ident()} - INDEX: {step_index}) ...')
 
     def logs(self,
-             stage_name=str,
+             stage_name: str,
              build_url: str = '',
              job_name: str = '',
              job_url: str = '',
-             build_number: int = None,
+             build_number: Union[int, None] = None,
              latest: bool = False,
              download_dir: bool = False) -> bool:
         """Prints out the console log for this specified stage
