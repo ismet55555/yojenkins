@@ -49,14 +49,14 @@ def configure(debug, auth_file):
 @click.option('--server-base-url', type=str, required=False, help='Server base URL address')
 @click.option('--username', type=str, required=False, help='Account username')
 @click.option('--password', type=str, required=False, help='Account password')
-def token(debug, profile, token_name, server_base_url, username, password):
+def token(debug, **kwargs):
     """Generate authentication API token
 
     NOTE: To generate an API token and automatically add it to the
     an existing authentication profile, use the --profile option.
     """
     set_debug_log_level(debug)
-    cli_auth.token(profile, token_name, server_base_url, username, password)
+    cli_auth.token(**translate_kwargs(kwargs))
 
 
 @auth.command(short_help='\tShow the local credentials profiles')
