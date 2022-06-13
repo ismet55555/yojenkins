@@ -98,8 +98,11 @@ def reachable(profile: str, timeout: int) -> None:
     """
     auth = Auth()
     auth.get_credentials(profile)
-    YoJenkins(auth=auth).rest.is_reachable(auth.jenkins_profile['jenkins_server_url'], timeout=timeout)
-    click.secho('success', fg='bright_green', bold=True)
+    data = YoJenkins(auth=auth).rest.is_reachable(auth.jenkins_profile['jenkins_server_url'], timeout=timeout)
+    if data:
+        click.secho('true', fg='bright_green', bold=True)
+    else:
+        click.secho('false', fg='bright_red', bold=True)
 
 
 @log_to_history

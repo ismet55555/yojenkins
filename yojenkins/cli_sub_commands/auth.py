@@ -71,10 +71,11 @@ def show(debug, **kwargs):
 @auth.command(short_help='\tCheck if credentials can authenticate')
 @cli_decorators.debug
 @cli_decorators.profile
-def verify(debug, profile):
+def verify(debug, **kwargs):
     """Check if credentials can authenticate"""
     set_debug_log_level(debug)
-    cli_auth.verify(profile)
+    del kwargs['token']
+    cli_auth.verify(**translate_kwargs(kwargs))
 
 
 @auth.command(short_help='\tWipe all credentials for this device')
