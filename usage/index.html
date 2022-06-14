@@ -1,69 +1,63 @@
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <meta name="author" content="Ismet Handzic">
-  <link rel="canonical" href="https://yojenkins.com/usage/">
-  <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>Usage - yojenkins</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
-
-  <link rel="stylesheet" href="../css/theme.css" />
-  <link rel="stylesheet" href="../css/theme_extra.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
-  
-  <script>
-    // Current page data
-    var mkdocs_page_name = "Usage";
-    var mkdocs_page_input_path = "usage.md";
-    var mkdocs_page_url = "/usage/";
-  </script>
-  
-  <script src="../js/jquery-2.1.1.min.js" defer></script>
-  <script src="../js/modernizr-2.8.3.min.js" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script> 
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Ismet Handzic" /><link rel="canonical" href="https://yojenkins.com/usage/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Usage - yojenkins</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Usage";
+        var mkdocs_page_input_path = "usage.md";
+        var mkdocs_page_url = "/usage/";
+      </script>
+    
+    <script src="../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
 </head>
 
 <body class="wy-body-for-nav" role="document">
 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
     <div class="wy-side-scroll">
       <div class="wy-side-nav-search">
-        <a href=".." class="icon icon-home"> yojenkins</a>
-        <div role="search">
+          <a href=".." class="icon icon-home"> yojenkins
+        </a><div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
       <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
   </form>
 </div>
       </div>
 
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../quick_start/">Quick Start</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../requirements/">Jenkins Plugin Requirements</a>
-                    </li>
-                </ul>
-                <ul class="current">
-                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Usage</a>
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../quick_start/">Quick Start</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../requirements/">Jenkins Plugin Requirements</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">Usage</a>
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#cli-basics">CLI Basics</a>
     </li>
@@ -82,6 +76,10 @@
     <li class="toctree-l4"><a class="reference internal" href="#using-a-json-file">Using a JSON file</a>
     </li>
         </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#authenticating-without-a-local-credentials-file">Authenticating Without a Local Credentials File</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#providing-or-overriding-api-token">Providing or Overriding API Token</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#requesting-and-storing-api-tokens">Requesting and Storing API Tokens</a>
     </li>
@@ -120,71 +118,60 @@
         </ul>
     </li>
     </ul>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../cli_outline/">CLI Outline</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../scripting_examples/">Scripting Examples</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../bug_report/">Bug Report</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../feature_request/">Feature Request</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../contribute/">Contribute to This Project!</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../support/">Support this Project!</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../license/">License</a>
-                    </li>
-                </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../cli_outline/">CLI Outline</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../scripting_examples/">Scripting Examples</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../bug_report/">Bug Report</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../feature_request/">Feature Request</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../contribute/">Contribute to This Project!</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../support/">Support this Project!</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../license/">License</a>
+                </li>
+              </ul>
       </div>
     </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="..">yojenkins</a>
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">yojenkins</a>
+        
       </nav>
-
-      
       <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="breadcrumbs navigation">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="..">Docs</a> &raquo;</li>
-    
-      
-    
-    <li>Usage</li>
+    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li><li>Usage</li>
     <li class="wy-breadcrumbs-aside">
-      
         <a href="https://github.com/ismet55555/yojenkins/edit/master/docs/source/usage.md"
           class="icon icon-github"> Edit on GitHub</a>
-      
     </li>
   </ul>
-  
   <hr/>
 </div>
 
-          <div role="main">
-            <div class="section">
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
               
                 <h1 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h1>
 <div class="toc">
@@ -200,6 +187,8 @@
 <li><a href="#using-a-json-file">Using a JSON file</a></li>
 </ul>
 </li>
+<li><a href="#authenticating-without-a-local-credentials-file">Authenticating Without a Local Credentials File</a></li>
+<li><a href="#providing-or-overriding-api-token">Providing or Overriding API Token</a></li>
 <li><a href="#requesting-and-storing-api-tokens">Requesting and Storing API Tokens</a></li>
 <li><a href="#order-of-precedence-specifying-profiles">Order of Precedence Specifying Profiles</a></li>
 </ul>
@@ -434,6 +423,28 @@ you to simultaneously configure multiple profiles at once.</p>
 </code></pre>
 <p>These profiles would then be configured with</p>
 <pre><code class="language-bash">yojenkins auth configure --auth-file my_auth_file.json
+</code></pre>
+<h3 id="authenticating-without-a-local-credentials-file">Authenticating Without a Local Credentials File<a class="headerlink" href="#authenticating-without-a-local-credentials-file" title="Permanent link">&para;</a></h3>
+<p>Sometimes it is advantageous to not rely on a locally stored credentials file and feed all
+required information via the CLI prompt. This can be particularly useful in a continuous
+integration pipeline setups.</p>
+<p>This is possible by passing authentication credentials as a JSON object text/string into
+the <code>--profile</code> CLI option.</p>
+<p>The JSON object string will include the contents of an entire profile.</p>
+<p><strong>Example 1: All In One Command</strong></p>
+<p>Here all information is provided within one single command. Note, the quotation mark patterns.</p>
+<pre><code class="language-txt">yojenkins server info --profile '{&quot;jenkins_server_url&quot;: &quot;https://my-server.com&quot;, &quot;username&quot;: &quot;user1&quot;, &quot;api_token&quot;: &quot;48fb9cb61d34edfe73f82763cf8879u79y&quot;}'
+</code></pre>
+<p><strong>Example 2: Using a Environmental Variable</strong></p>
+<pre><code class="language-txt">MY_CREDS='{&quot;jenkins_server_url&quot;: &quot;https://my-server.com&quot;, &quot;username&quot;: &quot;user1&quot;, &quot;api_token&quot;: &quot;48fb9cb61d34edfe73f82763cf8879u79y&quot;}'
+yojenkins server info --profile $MY_CREDS
+</code></pre>
+<h3 id="providing-or-overriding-api-token">Providing or Overriding API Token<a class="headerlink" href="#providing-or-overriding-api-token" title="Permanent link">&para;</a></h3>
+<p><code>yojenkins</code> allows you to override or seperataly provide the API token for the targeted Jenkins
+server by using the <code>--token</code> CLI option available to <code>yojenkins</code> commands. This can be
+particularly useful in a continuous integration pipeline setups where you may keep the API token
+within a secrets manager.</p>
+<pre><code class="language-txt">yojenkins server info --token 48fb9cb61d34edfe73f82763cf8879u79y
 </code></pre>
 <h3 id="requesting-and-storing-api-tokens">Requesting and Storing API Tokens<a class="headerlink" href="#requesting-and-storing-api-tokens" title="Permanent link">&para;</a></h3>
 <p><code>yojenkins</code> is able to request an API token from the Jenkins server to use for subsequent authentication
@@ -743,31 +754,22 @@ docker container rm &lt;CONTAINER ID&gt;
 </code></pre>
               
             </div>
-          </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../requirements/" class="btn btn-neutral float-left" title="Jenkins Plugin Requirements"><span class="icon icon-circle-arrow-left"></span> Previous</a>
         <a href="../cli_outline/" class="btn btn-neutral float-right" title="CLI Outline">Next <span class="icon icon-circle-arrow-right"></span></a>
-      
-      
-        <a href="../requirements/" class="btn btn-neutral" title="Jenkins Plugin Requirements"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-      
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <!-- Copyright etc -->
-    
       <p>Copyright 2021 - 2022 Ismet Handžić - GNU General Public License v3.0</p>
-    
   </div>
 
-  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
 </footer>
-      
+          
         </div>
       </div>
 
@@ -775,11 +777,11 @@ docker container rm &lt;CONTAINER ID&gt;
 
   </div>
 
-  <div class="rst-versions" role="note" aria-label="versions">
+  <div class="rst-versions" role="note" aria-label="Versions">
   <span class="rst-current-version" data-toggle="rst-current-version">
     
         <span>
-          <a href="https://github.com/ismet55555/yojenkins/" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+          <a href="https://github.com/ismet55555/yojenkins" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
         </span>
     
     
