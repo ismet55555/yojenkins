@@ -266,6 +266,47 @@ These profiles would then be configured with
 yojenkins auth configure --auth-file my_auth_file.json
 ```
 
+### Authenticating Without a Local Credentials File
+
+Sometimes it is advantageous to not rely on a locally stored credentials file and feed all
+required information via the CLI prompt. This can be particularly useful in a continuous
+integration pipeline setups.
+
+This is possible by passing authentication credentials as a JSON object text/string into
+the `--profile` CLI option.
+
+The JSON object string will include the contents of an entire profile.
+
+**Example 1: All In One Command**
+
+Here all information is provided within one single command. Note, the quotation mark patterns.
+
+```txt
+yojenkins server info --profile '{"jenkins_server_url": "https://my-server.com", "username": "user1", "api_token": "48fb9cb61d34edfe73f82763cf8879u79y"}'
+```
+
+**Example 2: Using a Environmental Variable**
+
+```txt
+MY_CREDS='{"jenkins_server_url": "https://my-server.com", "username": "user1", "api_token": "48fb9cb61d34edfe73f82763cf8879u79y"}'
+yojenkins server info --profile $MY_CREDS
+```
+
+
+### Providing or Overriding API Token
+
+`yojenkins` allows you to override or seperataly provide the API token for the targeted Jenkins
+server by using the `--token` CLI option available to `yojenkins` commands. This can be
+particularly useful in a continuous integration pipeline setups where you may keep the API token
+within a secrets manager.
+
+```txt
+yojenkins server info --token 48fb9cb61d34edfe73f82763cf8879u79y
+```
+
+
+
+
 
 ### Requesting and Storing API Tokens
 
