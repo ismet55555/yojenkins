@@ -79,3 +79,14 @@ This is a very young project and I am always looking for help in any way. If you
 
   - For financial or marketing support options see [Support This Project!](https://www.yojenkins.com/support/).
   - To contribute to this project, see [Contribute to This Project!](https://www.yojenkins.com/contribute/).
+
+
+## :broken_heart: Similar Projects
+
+If this project is not something you were were looking for, that ok, there are similar projects out there, 
+which each one with their own advantages and disadvantages.
+
+- [Official Jenkins CLI](https://www.jenkins.io/doc/book/managing/cli/)
+- [jenkins-cli](https://github.com/jenkins-zh/jenkins-cli)
+- [jenni](https://github.com/m-sureshraj/jenni)
+- [jenkins-job-cli](https://github.com/gocruncher/jenkins-job-cli)
