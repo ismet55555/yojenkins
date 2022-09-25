@@ -323,3 +323,31 @@ def parameters(profile: str, token: str, opt_list: bool, job: str, number: int, 
         data, data_list = yj_obj.build.parameters(build_url=url, job_name=job, build_number=number, latest=latest)
     data = data_list if opt_list else data
     cu.standard_out(data, **kwargs)
+
+
+@log_to_history
+def rebuild(profile: str, token: str, job: str, number: int, url: str, latest: bool) -> None:
+    """Rebuild a build with same setup/parameters
+
+    Args:
+        profile: The profile/account to use
+        token:   API Token for Jenkins server
+        job: The job name under which the build is located
+        number: The build number
+        url: The build URL
+        latest: Option to get the latest build
+    """
+    if job and not number and not latest:
+        click.echo(
+            click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
+                        fg='bright_red',
+                        bold=True))
+        sys.exit(1)
+
+    yj_obj = cu.config_yo_jenkins(profile, token)
+
+    if _verify_build_url_get_job_format(build_url=url, job=job):
+        data = yj_obj.build.rebuild(build_url=url, job_url=job, build_number=number, latest=latest)
+    else:
+        data = yj_obj.build.rebuild(build_url=url, job_name=job, build_number=number, latest=latest)
+    click.secho(f'success. queue number: {data}', fg='bright_green', bold=True)
