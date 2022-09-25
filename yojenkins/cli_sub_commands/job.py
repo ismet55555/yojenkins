@@ -107,7 +107,7 @@ def build_exist(debug, **kwargs):
               help='Specify key-value parameter. Can use multiple times. Use once per parameter')
 def build(debug, **kwargs):
     """Build a job
-    
+
     EXAMPLES:
 
     \b

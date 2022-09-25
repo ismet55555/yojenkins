@@ -584,11 +584,11 @@ class Build():
         return parameters, parameters_list
 
     def rebuild(self,
-                   build_url: str = '',
-                   job_name: str = '',
-                   job_url: str = '',
-                   build_number: int = None,
-                   latest: bool = False) -> int:
+                build_url: str = '',
+                job_name: str = '',
+                job_url: str = '',
+                build_number: int = None,
+                latest: bool = False) -> int:
         """TODO Docstring
 
         Args:
@@ -607,7 +607,7 @@ class Build():
         parameter_actions = utility.get_item_action(build_info, 'hudson.model.ParametersAction')
         try:
             parameters = parameter_actions[0]['parameters']
-            parameters = {param['name']: param['value'] for param in parameters }
+            parameters = {param['name']: param['value'] for param in parameters}
             logger.debug(f'Triggering job with job build parameters: {parameters}')
             post_url = f'{job_url}/buildWithParameters?{urlencode(parameters)}'
         except IndexError:
