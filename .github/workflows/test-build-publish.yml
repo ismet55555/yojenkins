@@ -172,7 +172,7 @@ jobs:
         run: pipenv sync --de
 
       - name: Show all installed pip packages
-        run: pipenv run pip list
+        run: pipenv graph
 
       - name: Build with PyInstaller
         env:
