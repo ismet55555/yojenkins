@@ -3,8 +3,7 @@
 Below is a complete outline of the `yojenkins` CLI command structure.
 
 !!! note
-    As of Version: **0.0.73**
-
+As of Version: **0.0.74**
 
 ```text
 yojenkins
@@ -35,6 +34,7 @@ yojenkins
     |     |--- info     Build information
     |     |--- logs     Get build logs
     |     |--- monitor  Start monitor UI
+    |     |--- rebuild  Rebuild a build with same parameters
     |     |--- stages   Get build stages
     |     |--- status   Build status text/label
     |

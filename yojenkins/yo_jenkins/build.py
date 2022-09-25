@@ -2,11 +2,11 @@
 
 import logging
 import os
-import pprint
 from datetime import datetime, timedelta
 from itertools import islice
 from time import sleep, time
 from typing import Dict, List, Tuple
+from urllib.parse import urlencode
 
 import requests
 
@@ -76,7 +76,10 @@ class Build():
             if job_info['_class'] not in JenkinsItemClasses.JOB.value['class_type']:
                 fail_out(f'Failed to match job type/class. The found item is "{job_info["_class"]}"')
 
-            job_last_build_number = job_info['lastBuild']['number'] if 'lastBuild' in job_info else 0
+            try:
+                job_last_build_number = job_info['lastBuild']['number'] if 'lastBuild' in job_info else 0
+            except TypeError:
+                fail_out('Failed to find previous builds. This job may not have any past builds')
 
             # If build number is not passed, get the latest build number for job
             if not build_number and latest:
@@ -579,3 +582,50 @@ class Build():
         ]
 
         return parameters, parameters_list
+
+    def rebuild(self,
+                build_url: str = '',
+                job_name: str = '',
+                job_url: str = '',
+                build_number: int = None,
+                latest: bool = False) -> int:
+        """TODO Docstring
+
+        Args:
+            TODO
+
+        Returns:
+            TODO
+        """
+        build_info = self.info(build_url, job_name, job_url, build_number, latest)
+        if not build_url:
+            build_url = build_info['url']
+        if not job_url:
+            job_url = utility.build_url_to_other_url(build_url, "job")
+
+        logger.debug(f'Rebuilding build: "{build_info["url"]}" ...')
+        parameter_actions = utility.get_item_action(build_info, 'hudson.model.ParametersAction')
+        try:
+            parameters = parameter_actions[0]['parameters']
+            parameters = {param['name']: param['value'] for param in parameters}
+            logger.debug(f'Triggering job with job build parameters: {parameters}')
+            post_url = f'{job_url}/buildWithParameters?{urlencode(parameters)}'
+        except IndexError:
+            logger.debug('No job build parameters found for this build')
+            post_url = f'{job_url}/build'
+
+        return_headers = self.rest.request(post_url, 'post', is_endpoint=False)[1]
+
+        # Parse the queue location of the build
+        if return_headers:
+            build_queue_url = return_headers['Location']
+            if build_queue_url.endswith('/'):
+                queue_location = build_queue_url[:-1]
+            parts = queue_location.split('/')
+            build_queue_number = int(parts[-1])
+            logger.debug(f'Build queue URL: {queue_location}')
+            logger.debug(f'Build queue ID: {build_queue_number}')
+        else:
+            fail_out('Failed to trigger build. Failed to send request')
+
+        return build_queue_number

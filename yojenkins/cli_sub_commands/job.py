@@ -106,7 +106,14 @@ def build_exist(debug, **kwargs):
               required=False,
               help='Specify key-value parameter. Can use multiple times. Use once per parameter')
 def build(debug, **kwargs):
-    """Build a job"""
+    """Build a job
+
+    EXAMPLES:
+
+    \b
+      - yojenkins job build my_job
+      - yojenkins job build my_job --parameter MY_PARAM "my param value"
+    """
     set_debug_log_level(debug)
     cli_job.build(**translate_kwargs(kwargs))
 

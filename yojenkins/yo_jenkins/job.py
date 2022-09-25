@@ -309,7 +309,7 @@ class Job():
 
         return False
 
-    def build_trigger(self, job_name: str = '', job_url: str = '', paramters: Dict = {}, token: str = '') -> int:
+    def build_trigger(self, job_name: str = '', job_url: str = '', paramters: Dict = {}) -> int:
         """TODO Docstring
 
         Args:
@@ -343,8 +343,6 @@ class Job():
         else:
             # No paramters passed
             post_url = f'{job_url}/build'
-
-        logger.debug(f'POST url: {post_url}')
 
         # Posting to Jenkins
         return_headers = self.rest.request(post_url, 'post', is_endpoint=False)[1]

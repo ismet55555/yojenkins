@@ -83,7 +83,7 @@ This is a very young project and I am always looking for help in any way. If you
 
 ## :broken_heart: Similar Projects
 
-If this project is not something you were were looking for, that ok, there are similar projects out there, 
+If this project is not something you were were looking for, that ok, there are similar projects out there,
 which each one with their own advantages and disadvantages.
 
 - [Official Jenkins CLI](https://www.jenkins.io/doc/book/managing/cli/)

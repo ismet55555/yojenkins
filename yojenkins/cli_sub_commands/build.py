@@ -186,3 +186,23 @@ def parameters(ctx, debug, **kwargs):
         cli_build.parameters(**translate_kwargs(kwargs))
     else:
         click.echo(ctx.get_help())
+
+
+@build.command(short_help='\tRebuild build')
+@cli_decorators.debug
+@cli_decorators.profile
+@click.argument('job', nargs=1, type=str, required=False)
+@click.option('-n', '--number', type=int, required=False, help='Build number')
+@click.option('-u', '--url', type=str, required=False, help='Build URL (No job info needed)')
+@click.option('--latest', type=str, required=False, is_flag=True, help='Latest build (Replaces --number)')
+@click.pass_context
+def rebuild(ctx, debug, **kwargs):
+    """Get build parameters
+
+    Rebuild the specified build exactly as it ran
+    """
+    set_debug_log_level(debug)
+    if kwargs.get("job") or kwargs.get("url"):
+        cli_build.rebuild(**translate_kwargs(kwargs))
+    else:
+        click.echo(ctx.get_help())
