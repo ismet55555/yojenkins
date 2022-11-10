@@ -439,42 +439,18 @@ class Build():
                 logger.debug(
                     'NOTE: Jenkins server does not support requesting partial byte ranges, MUST download entire log to get log message differences'
                 )
-                auth = requests.auth.HTTPBasicAuth(self.rest.username, self.rest.api_token)
-                old_dict = {}
-                fetch_number = 1
                 try:
+                    text_position = 0
                     while True:
-                        # FIXME: Preserve already used session!  Use Rest object
-                        response = requests.head(request_url, auth=auth)
-                        if 'content-length' not in response.headers:
-                            fail_out(
-                                f'Failed to find "content-length" key in server response headers: {response.headers}')
-                        content_length_sample_1 = int(response.headers['Content-Length'])
-                        sleep(1)
-                        response = requests.head(request_url, auth=auth)
-                        content_length_sample_2 = int(response.headers['Content-Length'])
-
-                        content_length_diff = content_length_sample_2 - content_length_sample_1
-                        if content_length_diff:
-                            logger.debug(
-                                f'FETCH {fetch_number}: Content length difference: {content_length_diff} bytes')
-                            return_content, _, return_success = self.rest.request(request_url,
-                                                                                  'get',
-                                                                                  is_endpoint=False,
-                                                                                  json_content=False)
-                            # new_dict = dict.fromkeys([ x for x in (line.strip() for line in return_content.splitlines()) if x ])
-                            new_dict = dict.fromkeys(list(map(lambda num: num.strip(), return_content.splitlines())))
-
-                            diff = dict.fromkeys(x for x in new_dict if x not in old_dict)
-                            diff_list = list(diff.keys())
-                            diff_text = os.linesep.join(diff_list)
-
-                            old_dict = new_dict
-                            fetch_number += 1
-
-                            print2(diff_text)
-                        else:
-                            logger.debug('No content length difference')
+                        request_url = f"{url.strip('/')}/logText/progressiveText?start={text_position}"
+                        return_content, headers, return_success = self.rest.request(request_url, 'get', is_endpoint=False, json_content=False)
+                        logger.debug(headers)
+                        if len(return_content) != 0:
+                                print2(return_content.strip())
+                        if 'X-More-Data' not in headers:
+                            break
+                        text_position = headers['X-Text-Size']
+                        sleep(10)
                 except KeyboardInterrupt:
                     logger.debug('Keyboard Interrupt (CTRL-C) by user. Stopping log following ...')
         return True
