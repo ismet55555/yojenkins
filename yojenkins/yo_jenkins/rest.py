@@ -2,7 +2,7 @@
 
 import logging
 from time import perf_counter
-from typing import Dict, Tuple, Union
+from typing import Dict, Literal, Tuple, Union
 
 import requests
 from requests.auth import HTTPBasicAuth
@@ -30,11 +30,11 @@ class Rest:
         # Request session
         if not session:
             logger.debug('Starting new requests session (Type: FuturesSession) ...')
-            self.request_session = FuturesSession(max_workers=16)
+            self.session = FuturesSession(max_workers=16)
         else:
             # Convert to future session
             logger.debug('Converting request session to FutureSession ...')
-            self.request_session = FuturesSession(session=session, max_workers=16)
+            self.session = FuturesSession(session=session, max_workers=16)
 
         # Authentication passed
         self.username: str = username
@@ -78,7 +78,7 @@ class Rest:
         Returns:
             TODO
         """
-        return self.request_session
+        return self.session
 
     def is_reachable(self, server_url: str = '', timeout: int = 5) -> bool:
         """Check if the server is reachable
@@ -112,7 +112,7 @@ class Rest:
 
     def request(self,
                 target: str,
-                request_type: str,
+                request_type: Literal['get', 'post', 'head'],
                 is_endpoint: bool = True,
                 json_content: bool = True,
                 auth: Tuple = None,
@@ -162,49 +162,49 @@ class Rest:
                 auth = HTTPBasicAuth(self.username, self.api_token)
 
         # Use a connection session if possible
-        if not self.request_session or new_session:
+        if not self.session or new_session:
             logger.debug('Starting new requests session')
-            self.request_session = FuturesSession(max_workers=16)
+            self.session = FuturesSession(max_workers=16)
 
         # Making the request
         start_time = perf_counter()
         try:
             if request_type.lower() == 'get':
-                response = self.request_session.get(request_url,
-                                                    params=params,
-                                                    data=data,
-                                                    json=json_data,
-                                                    headers=headers,
-                                                    auth=auth,
-                                                    timeout=timeout,
-                                                    allow_redirects=allow_redirect)
+                response = self.session.get(request_url,
+                                            params=params,
+                                            data=data,
+                                            json=json_data,
+                                            headers=headers,
+                                            auth=auth,
+                                            timeout=timeout,
+                                            allow_redirects=allow_redirect)
             elif request_type.lower() == 'post':
-                response = self.request_session.post(request_url,
-                                                     params=params,
-                                                     data=data,
-                                                     json=json_data,
-                                                     headers=headers,
-                                                     auth=auth,
-                                                     timeout=timeout,
-                                                     allow_redirects=allow_redirect)
+                response = self.session.post(request_url,
+                                             params=params,
+                                             data=data,
+                                             json=json_data,
+                                             headers=headers,
+                                             auth=auth,
+                                             timeout=timeout,
+                                             allow_redirects=allow_redirect)
             elif request_type.lower() == 'head':
-                response = self.request_session.head(request_url,
-                                                     params=params,
-                                                     data=data,
-                                                     json=json_data,
-                                                     headers=headers,
-                                                     auth=auth,
-                                                     timeout=timeout,
-                                                     allow_redirects=allow_redirect)
+                response = self.session.head(request_url,
+                                             params=params,
+                                             data=data,
+                                             json=json_data,
+                                             headers=headers,
+                                             auth=auth,
+                                             timeout=timeout,
+                                             allow_redirects=allow_redirect)
             elif request_type.lower() == 'delete':
-                response = self.request_session.delete(request_url,
-                                                       params=params,
-                                                       data=data,
-                                                       json=json_data,
-                                                       headers=headers,
-                                                       auth=auth,
-                                                       timeout=timeout,
-                                                       allow_redirects=allow_redirect)
+                response = self.session.delete(request_url,
+                                               params=params,
+                                               data=data,
+                                               json=json_data,
+                                               headers=headers,
+                                               auth=auth,
+                                               timeout=timeout,
+                                               allow_redirects=allow_redirect)
             else:
                 logger.debug(f'Request type "{request_type}" not recognized')
                 return {}, {}, False
