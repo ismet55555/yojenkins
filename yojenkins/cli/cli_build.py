@@ -357,19 +357,17 @@ def rebuild(profile: str, token: str, job: str, number: int, url: str, latest: b
         click.secho(f'success. queue number: {data}', fg='bright_green', bold=True)
         return
 
-
+    # Stream/Follow logs after build
+    click.echo(f"Build is queued with queue ID {data}. Waiting for build, checking every 2 seconds ...")
     while True:
-        click.echo(f"Build is queued with ID {data}. Waiting ...")
-        time.sleep(5)
+        # TODO: Simple Waiting/Spinning animation
         queue_data = yj_obj.job.queue_info(build_queue_number=data)
         if "executable" in queue_data:
             break
-
-    job_number = queue_data["executable"]["number"]
-    click.echo(f"Job is running with ID {job_number}. Output below:")
-    yj_obj.build.logs(build_url=None,
-                job_url=queue_data["jobUrl"],
-                build_number=job_number,
-                follow=True)
-
-
+        if queue_data.get('stuck'):
+            click.secho('BUILD STUCK IN QUEUE', fg='bright_red', bold=True)
+            sys.exit(1)
+        time.sleep(2)
+    build_number = queue_data["executable"]["number"]
+    click.echo(f"Running with build number {build_number}. Following console logs below:")
+    yj_obj.build.logs(build_url=None, job_url=queue_data["jobUrl"], build_number=build_number, follow=True)
