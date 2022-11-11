@@ -2,6 +2,7 @@
 
 import logging
 import sys
+import time
 
 import click
 
@@ -326,7 +327,7 @@ def parameters(profile: str, token: str, opt_list: bool, job: str, number: int, 
 
 
 @log_to_history
-def rebuild(profile: str, token: str, job: str, number: int, url: str, latest: bool) -> None:
+def rebuild(profile: str, token: str, job: str, number: int, url: str, latest: bool, show_logs: bool) -> None:
     """Rebuild a build with same setup/parameters
 
     Args:
@@ -336,6 +337,7 @@ def rebuild(profile: str, token: str, job: str, number: int, url: str, latest: b
         number: The build number
         url: The build URL
         latest: Option to get the latest build
+        show_logs: Waits for the job to run and shows it's logs
     """
     if job and not number and not latest:
         click.echo(
@@ -350,4 +352,24 @@ def rebuild(profile: str, token: str, job: str, number: int, url: str, latest: b
         data = yj_obj.build.rebuild(build_url=url, job_url=job, build_number=number, latest=latest)
     else:
         data = yj_obj.build.rebuild(build_url=url, job_name=job, build_number=number, latest=latest)
-    click.secho(f'success. queue number: {data}', fg='bright_green', bold=True)
+
+    if not show_logs:
+        click.secho(f'success. queue number: {data}', fg='bright_green', bold=True)
+        return
+
+
+    while True:
+        click.echo(f"Build is queued with ID {data}. Waiting ...")
+        time.sleep(5)
+        queue_data = yj_obj.job.queue_info(build_queue_number=data)
+        if "executable" in queue_data:
+            break
+
+    job_number = queue_data["executable"]["number"]
+    click.echo(f"Job is running with ID {job_number}. Output below:")
+    yj_obj.build.logs(build_url=None,
+                job_url=queue_data["jobUrl"],
+                build_number=job_number,
+                follow=True)
+
+
