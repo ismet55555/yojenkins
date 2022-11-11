@@ -121,7 +121,18 @@ def stages(ctx, debug, **kwargs):
               help='Follow/Stream the logs as they are generated')
 @click.pass_context
 def logs(ctx, debug, **kwargs):
-    """Get build logs"""
+    """Get build logs
+
+    EXAMPLES:
+
+    \b
+    - yojenkins build logs "myFolder/myJob" --latest
+    - yojenkins build logs "myFolder/myJob" --latest --tail 10
+    - yojenkins build logs "myFolder/myJob" --latest --tail 0.1
+    - yojenkins build logs "myFolder/myJob" --number 2 --follow
+    - yojenkins build logs "myFolder/myJob" --latest -dd .
+
+    """
     set_debug_log_level(debug)
     if kwargs.get("job") or kwargs.get("url"):
         cli_build.logs(**translate_kwargs(kwargs))
