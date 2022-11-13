@@ -7,6 +7,7 @@ import click
 
 from yojenkins.cli import cli_utility as cu
 from yojenkins.cli.cli_utility import log_to_history
+from yojenkins.utility.utility import wait_for_build_and_follow_logs
 from yojenkins.yo_jenkins.status import Status
 
 # Getting the logger reference
@@ -326,16 +327,17 @@ def parameters(profile: str, token: str, opt_list: bool, job: str, number: int, 
 
 
 @log_to_history
-def rebuild(profile: str, token: str, job: str, number: int, url: str, latest: bool) -> None:
+def rebuild(profile: str, token: str, job: str, number: int, url: str, latest: bool, follow_logs: bool) -> None:
     """Rebuild a build with same setup/parameters
 
     Args:
         profile: The profile/account to use
         token:   API Token for Jenkins server
-        job: The job name under which the build is located
-        number: The build number
-        url: The build URL
-        latest: Option to get the latest build
+        job:     The job name under which the build is located
+        number:  The build number
+        url:     The build URL
+        latest:  Option to get the latest build
+        follow_logs: Waits for the job build, then follows resulting logs
     """
     if job and not number and not latest:
         click.echo(
@@ -350,4 +352,8 @@ def rebuild(profile: str, token: str, job: str, number: int, url: str, latest: b
         data = yj_obj.build.rebuild(build_url=url, job_url=job, build_number=number, latest=latest)
     else:
         data = yj_obj.build.rebuild(build_url=url, job_name=job, build_number=number, latest=latest)
-    click.secho(f'success. queue number: {data}', fg='bright_green', bold=True)
+
+    if not follow_logs:
+        click.secho(f'success. queue number: {data}', fg='bright_green', bold=True)
+        return
+    wait_for_build_and_follow_logs(yj_obj, data)

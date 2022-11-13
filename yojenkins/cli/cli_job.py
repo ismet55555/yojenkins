@@ -9,7 +9,7 @@ import xmltodict
 
 from yojenkins.cli import cli_utility as cu
 from yojenkins.cli.cli_utility import log_to_history
-from yojenkins.utility.utility import print2
+from yojenkins.utility.utility import print2, wait_for_build_and_follow_logs
 
 # Getting the logger reference
 logger = logging.getLogger()
@@ -74,7 +74,7 @@ def build_list(profile: str, token: str, opt_list: bool, job: str, **kwargs) -> 
 
 @log_to_history
 def build_next(profile: str, token: str, job: str) -> None:
-    """TODO Docstring
+    """Get last build number for a job
 
     Args:
         TODO
@@ -89,7 +89,7 @@ def build_next(profile: str, token: str, job: str) -> None:
 
 @log_to_history
 def build_last(profile: str, token: str, job: str) -> None:
-    """TODO Docstring
+    """Get previous build number for a job
 
     Args:
         TODO
@@ -104,7 +104,7 @@ def build_last(profile: str, token: str, job: str) -> None:
 
 @log_to_history
 def build_set(profile: str, token: str, job: str, build_number: int) -> None:
-    """TODO Docstring
+    """Set the current build number for a job
 
     Args:
         TODO
@@ -119,7 +119,7 @@ def build_set(profile: str, token: str, job: str, build_number: int) -> None:
 
 @log_to_history
 def build_exist(profile: str, token: str, job: str, build_number: int) -> None:
-    """TODO Docstring
+    """Check if a build number for this job exists
 
     Args:
         TODO
@@ -136,11 +136,15 @@ def build_exist(profile: str, token: str, job: str, build_number: int) -> None:
 
 
 @log_to_history
-def build(profile: str, token: str, job: str, parameter: tuple) -> None:
-    """TODO Docstring
+def build(profile: str, token: str, job: str, parameter: tuple, follow_logs: bool) -> None:
+    """Build a job
 
     Args:
-        TODO
+        profile:     The profile/account to use
+        token:       API Token for Jenkins server
+        job:         The job name under which the build is located
+        parameter:   Specify key-value parameter. Can use multiple times. Use once per parameter
+        follow_logs: Waits for the job build, then follows resulting logs
     """
     yj_obj = cu.config_yo_jenkins(profile, token)
 
@@ -151,7 +155,10 @@ def build(profile: str, token: str, job: str, parameter: tuple) -> None:
         data = yj_obj.job.build_trigger(job_url=job, paramters=parameters)
     else:
         data = yj_obj.job.build_trigger(job_name=job, paramters=parameters)
-    click.secho(f'success. queue number: {data}', fg='bright_green', bold=True)
+    if not follow_logs:
+        click.secho(f'success. queue number: {data}', fg='bright_green', bold=True)
+        return
+    wait_for_build_and_follow_logs(yj_obj, data)
 
 
 @log_to_history

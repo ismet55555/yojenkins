@@ -6,6 +6,7 @@ import os
 import re
 import sys
 import sysconfig
+import time
 import webbrowser
 from pathlib import Path
 from string import Template
@@ -18,6 +19,8 @@ import xmltodict
 import yaml
 from click import echo, style
 from urllib3.util import parse_url
+from yaspin import yaspin
+from yaspin.spinners import Spinners
 
 from yojenkins import __version__
 from yojenkins.yo_jenkins.jenkins_item_classes import JenkinsItemClasses
@@ -1116,3 +1119,36 @@ def create_new_history_file(file_path: str) -> None:
         fail_out(f'Failed to create history file ({file_path}). Exception: {error}')
     except Exception as error:
         logger.exception(f"Failed to create new command history file. Exception: {error}")
+
+
+def wait_for_build_and_follow_logs(yj_obj: object, queue_id: int) -> None:
+    """Wait for build to leave queue, run, then follow/stream logs to console
+
+    Details:
+        Will only use loading spinner when not in logger debug mode
+
+    Args:
+        yj_obj:   YoJenkins object
+        queue_id: Build queue ID
+    """
+    msg = f"Build is in queue with queue ID {queue_id}. Waiting for build to run ..."
+    if logger.level > 10:
+        spinner = yaspin(spinner=getattr(Spinners, "bouncingBar"), attrs=["bold"], text=msg)
+        spinner.start()
+    else:
+        logger.info(msg)
+
+    while True:
+        queue_data = yj_obj.job.queue_info(build_queue_number=queue_id)
+        if "executable" in queue_data:
+            break
+        if queue_data.get('stuck'):
+            fail_out(f'Build is stuck in queue as queue number {queue_id}', fg='bright_red', bold=True)
+        time.sleep(2)
+
+    if logger.level > 10:
+        spinner.stop()
+
+    build_number = queue_data["executable"]["number"]
+    print2(f"Running with build number {build_number}. Following console logs below:")
+    yj_obj.build.logs(build_url=None, job_url=queue_data["jobUrl"], build_number=build_number, follow=True)
