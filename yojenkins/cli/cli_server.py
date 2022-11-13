@@ -6,6 +6,8 @@ import os
 from pathlib import Path
 
 import click
+from yaspin import yaspin
+from yaspin.spinners import Spinners
 
 from yojenkins.cli import cli_utility as cu
 from yojenkins.cli.cli_utility import log_to_history
@@ -155,7 +157,12 @@ def server_deploy(config_file: str, plugins_file: str, protocol_schema: str, hos
     Args:
         TODO
     """
-    click.echo('Setting up a local Jenkins development server. Hold tight, this may take a minute ...')
+    msg = "Setting up a local Jenkins development server. Hold tight, this may take a minute ..."
+    if logger.level > 10:
+        spinner = yaspin(spinner=getattr(Spinners, "bouncingBar"), attrs=["bold"], text=msg)
+        spinner.start()
+    else:
+        click.echo(msg)
 
     # TODO: Check if the docker server deployment file is there. If so, show that it is being renewed.
 
@@ -178,10 +185,16 @@ def server_deploy(config_file: str, plugins_file: str, protocol_schema: str, hos
 
     # Initialize docker client
     if not djs.docker_client_init():
+        if logger.level > 10:
+            spinner.stop()
         fail_out('Failed to connect to local docker client')
 
     # Setup the server
     deployed, success = djs.setup()
+
+    if logger.level > 10:
+        spinner.stop()
+
     if not success:
         failures = ['Failed to setup containerized server']
         if deployed:
