@@ -105,6 +105,11 @@ def build_exist(debug, **kwargs):
               multiple=True,
               required=False,
               help='Specify key-value parameter. Can use multiple times. Use once per parameter')
+@click.option('--follow-logs',
+              type=bool,
+              required=False,
+              is_flag=True,
+              help='Wait for build, follow logs when build starts')
 def build(debug, **kwargs):
     """Build a job
 
@@ -113,6 +118,7 @@ def build(debug, **kwargs):
     \b
       - yojenkins job build my_job
       - yojenkins job build my_job --parameter MY_PARAM "my param value"
+      - yojenkins job build my_job --follow-logs
     """
     set_debug_log_level(debug)
     cli_job.build(**translate_kwargs(kwargs))

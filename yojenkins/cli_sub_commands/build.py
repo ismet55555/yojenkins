@@ -206,7 +206,11 @@ def parameters(ctx, debug, **kwargs):
 @click.option('-n', '--number', type=int, required=False, help='Build number')
 @click.option('-u', '--url', type=str, required=False, help='Build URL (No job info needed)')
 @click.option('--latest', type=str, required=False, is_flag=True, help='Latest build (Replaces --number)')
-@click.option('--show-logs', type=bool, required=False, is_flag=True, help='Shows the logs of the new job')
+@click.option('--follow-logs',
+              type=bool,
+              required=False,
+              is_flag=True,
+              help='Wait for build, follow logs when build starts')
 @click.pass_context
 def rebuild(ctx, debug, **kwargs):
     """Get build parameters

@@ -2,12 +2,12 @@
 
 import logging
 import sys
-import time
 
 import click
 
 from yojenkins.cli import cli_utility as cu
 from yojenkins.cli.cli_utility import log_to_history
+from yojenkins.utility.utility import wait_for_build_and_follow_logs
 from yojenkins.yo_jenkins.status import Status
 
 # Getting the logger reference
@@ -327,17 +327,17 @@ def parameters(profile: str, token: str, opt_list: bool, job: str, number: int, 
 
 
 @log_to_history
-def rebuild(profile: str, token: str, job: str, number: int, url: str, latest: bool, show_logs: bool) -> None:
+def rebuild(profile: str, token: str, job: str, number: int, url: str, latest: bool, follow_logs: bool) -> None:
     """Rebuild a build with same setup/parameters
 
     Args:
         profile: The profile/account to use
         token:   API Token for Jenkins server
-        job: The job name under which the build is located
-        number: The build number
-        url: The build URL
-        latest: Option to get the latest build
-        show_logs: Waits for the job to run and shows it's logs
+        job:     The job name under which the build is located
+        number:  The build number
+        url:     The build URL
+        latest:  Option to get the latest build
+        follow_logs: Waits for the job build, then follows resulting logs
     """
     if job and not number and not latest:
         click.echo(
@@ -353,21 +353,7 @@ def rebuild(profile: str, token: str, job: str, number: int, url: str, latest: b
     else:
         data = yj_obj.build.rebuild(build_url=url, job_name=job, build_number=number, latest=latest)
 
-    if not show_logs:
+    if not follow_logs:
         click.secho(f'success. queue number: {data}', fg='bright_green', bold=True)
         return
-
-    # Stream/Follow logs after build
-    click.echo(f"Build is queued with queue ID {data}. Waiting for build, checking every 2 seconds ...")
-    while True:
-        # TODO: Simple Waiting/Spinning animation
-        queue_data = yj_obj.job.queue_info(build_queue_number=data)
-        if "executable" in queue_data:
-            break
-        if queue_data.get('stuck'):
-            click.secho('BUILD STUCK IN QUEUE', fg='bright_red', bold=True)
-            sys.exit(1)
-        time.sleep(2)
-    build_number = queue_data["executable"]["number"]
-    click.echo(f"Running with build number {build_number}. Following console logs below:")
-    yj_obj.build.logs(build_url=None, job_url=queue_data["jobUrl"], build_number=build_number, follow=True)
+    wait_for_build_and_follow_logs(yj_obj, data)
