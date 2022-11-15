@@ -3,7 +3,7 @@
 Below is a complete outline of the `yojenkins` CLI command structure.
 
 !!! note
-As of Version: **0.0.76**
+As of Version: **0.0.77**
 
 ```text
 yojenkins
