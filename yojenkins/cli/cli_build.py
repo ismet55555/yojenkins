@@ -326,6 +326,34 @@ def parameters(profile: str, token: str, opt_list: bool, job: str, number: int, 
     cu.standard_out(data, **kwargs)
 
 
+def _parse_integer(n):
+    try:
+        return int(n)
+    except ValueError:
+        return False
+
+def _detect_job_number(job_url):
+    # a tipical build URL will be something like
+    # http://JENKINS_URL/job/FOLDER/job/SUBFOLDER/job/.../job/Api_Deployment/26938/console
+    # or
+    # http://JENKINS_URL/job/FOLDER/job/SUBFOLDER/job/.../job/Api_Deployment/26938/console
+    #
+    # This function will :
+    #   split the job_url into an array using "/",
+    #   look for a part that is an integer (26938 in my example)
+    #   make sure two positions before, the element is called "job"
+    #
+    # if so, it will return the job number as integer and the simplified build_url http://JENKINS_URL/job/FOLDER/job/SUBFOLDER/job/.../job/Api_Deployment
+
+    job_array = job_url.split("/")
+    num_elems = len(job_array) -1
+    for i in range(num_elems, 2, -1):
+        possible_build_number = _parse_integer(job_array[i])
+        if possible_build_number and job_array[ i - 2 ] == "job":
+            new_job_url = "/".join(job_array[0:i])
+            return possible_build_number, new_job_url
+    return None, None
+
 @log_to_history
 def rebuild(profile: str, token: str, job: str, number: int, url: str, latest: bool, follow_logs: bool) -> None:
     """Rebuild a build with same setup/parameters
@@ -340,11 +368,16 @@ def rebuild(profile: str, token: str, job: str, number: int, url: str, latest: b
         follow_logs: Waits for the job build, then follows resulting logs
     """
     if job and not number and not latest:
-        click.echo(
-            click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
-                        fg='bright_red',
-                        bold=True))
-        sys.exit(1)
+        possible_build_number, possible_new_job_url = _detect_job_number(job)
+        if possible_build_number is not None:
+            job = possible_new_job_url
+            number = possible_build_number
+        else:
+            click.echo(
+                click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
+                            fg='bright_red',
+                            bold=True))
+            sys.exit(1)
 
     yj_obj = cu.config_yo_jenkins(profile, token)
 
