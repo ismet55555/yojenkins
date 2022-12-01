@@ -24,7 +24,7 @@ if sys.version_info < (3, 7):
 MAIN_HELP_TEXT = f"""
     \t\t\t \033[93m YOJENKINS (Version: {__version__}) \033[0m
 
-    yojenkins is a tool that is focused on interfacing with
+    yojenkins is a flexible tool that is focused on interfacing with
     Jenkins server from the comfort of the beloved command line.
     This tool can also be used as a middleware utility, generating and
     passing Jenkins information or automating tasks.

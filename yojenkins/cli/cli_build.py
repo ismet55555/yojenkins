@@ -15,7 +15,7 @@ logger = logging.getLogger()
 
 
 def _verify_build_url_get_job_format(build_url: str, job: str) -> bool:
-    """Utility function to verify buld url and determine if job is URL or name
+    """Utility function to verify build url and determine if job is URL or name
 
     Args:
         build_url: Build URL
