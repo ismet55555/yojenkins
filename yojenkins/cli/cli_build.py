@@ -47,8 +47,7 @@ def info(profile: str, token: str, job: str, number: int, url: str, latest: bool
         latest:  Option to get the latest build
     """
     if url is None and job and is_complete_build_url(job):
-        url = job
-        job = None
+        url, job = job, None
     elif job and not number and not latest:
         click.echo(
             click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
@@ -80,8 +79,7 @@ def status(profile: str, token: str, job: str, number: int, url: str, latest: bo
         latest: Option to get the latest build
     """
     if url is None and job and is_complete_build_url(job):
-        url = job
-        job = None
+        url, job = job, None
     elif job and not number and not latest:
         click.echo(
             click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
@@ -128,8 +126,7 @@ def abort(profile: str, token: str, job: str, number: int, url: str, latest: boo
         latest: Option to get the latest build
     """
     if url is None and job and is_complete_build_url(job):
-        url = job
-        job = None
+        url, job = job, None
     elif job and not number and not latest:
         click.echo(
             click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
@@ -159,8 +156,7 @@ def delete(profile: str, token: str, job: str, number: int, url: str, latest: bo
         latest: Option to get the latest build
     """
     if url is None and job and is_complete_build_url(job):
-        url = job
-        job = None
+        url, job = job, None
     elif job and not number and not latest:
         click.echo(
             click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
@@ -191,8 +187,7 @@ def stages(profile: str, token: str, opt_list: bool, job: str, number: int, url:
         latest: Option to get the latest build
     """
     if url is None and job and is_complete_build_url(job):
-        url = job
-        job = None
+        url, job = job, None
     elif job and not number and not latest:
         click.echo(
             click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
@@ -227,8 +222,7 @@ def logs(profile: str, token: str, job: str, number: int, url: str, latest: bool
         follow: Option to follow the log
     """
     if url is None and job and is_complete_build_url(job):
-        url = job
-        job = None
+        url, job = job, None
     elif job and not number and not latest:
         click.echo(
             click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
@@ -271,8 +265,7 @@ def browser(profile: str, token: str, job: str, number: int, url: str, latest: b
         latest: Option to get the latest build
     """
     if url is None and job and is_complete_build_url(job):
-        url = job
-        job = None
+        url, job = job, None
     elif job and not number and not latest:
         click.echo(
             click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
@@ -302,8 +295,7 @@ def monitor(profile: str, token: str, job: str, number: int, url: str, latest: b
         sound: Option to play a sound when the build status changes
     """
     if url is None and job and is_complete_build_url(job):
-        url = job
-        job = None
+        url, job = job, None
     elif job and not number and not latest:
         click.echo(
             click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
@@ -334,8 +326,7 @@ def parameters(profile: str, token: str, opt_list: bool, job: str, number: int, 
         latest: Option to get the latest build
     """
     if url is None and job and is_complete_build_url(job):
-        url = job
-        job = None
+        url, job = job, None
     elif job and not number and not latest:
         click.echo(
             click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
@@ -368,8 +359,7 @@ def rebuild(profile: str, token: str, job: str, number: int, url: str, latest: b
     """
 
     if url is None and job and is_complete_build_url(job):
-        url = job
-        job = None
+        url, job = job, None
     elif job and not number and not latest:
         click.echo(
             click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
