@@ -7,7 +7,7 @@ import sys
 import setuptools
 
 # Package version number (Updated via bump2version tool)
-__version__ = "0.0.78"
+__version__ = "0.0.79"
 
 def check_py_version():
     """Check the python version"""
