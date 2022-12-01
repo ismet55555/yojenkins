@@ -7,7 +7,7 @@ import click
 
 from yojenkins.cli import cli_utility as cu
 from yojenkins.cli.cli_utility import log_to_history
-from yojenkins.utility.utility import wait_for_build_and_follow_logs
+from yojenkins.utility.utility import wait_for_build_and_follow_logs, is_complete_build_url
 from yojenkins.yo_jenkins.status import Status
 
 # Getting the logger reference
@@ -46,7 +46,9 @@ def info(profile: str, token: str, job: str, number: int, url: str, latest: bool
         url:     The build url to get info on
         latest:  Option to get the latest build
     """
-    if job and not number and not latest:
+    if url is None and job and is_complete_build_url(job):
+        url, job = job, None
+    elif job and not number and not latest:
         click.echo(
             click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
                         fg='bright_red',
@@ -76,7 +78,9 @@ def status(profile: str, token: str, job: str, number: int, url: str, latest: bo
         url: The build url to get info on
         latest: Option to get the latest build
     """
-    if job and not number and not latest:
+    if url is None and job and is_complete_build_url(job):
+        url, job = job, None
+    elif job and not number and not latest:
         click.echo(
             click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
                         fg='bright_red',
@@ -121,7 +125,9 @@ def abort(profile: str, token: str, job: str, number: int, url: str, latest: boo
         url: The build url to get info on
         latest: Option to get the latest build
     """
-    if job and not number and not latest:
+    if url is None and job and is_complete_build_url(job):
+        url, job = job, None
+    elif job and not number and not latest:
         click.echo(
             click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
                         fg='bright_red',
@@ -149,7 +155,9 @@ def delete(profile: str, token: str, job: str, number: int, url: str, latest: bo
         url: The build url to get info on
         latest: Option to get the latest build
     """
-    if job and not number and not latest:
+    if url is None and job and is_complete_build_url(job):
+        url, job = job, None
+    elif job and not number and not latest:
         click.echo(
             click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
                         fg='bright_red',
@@ -178,7 +186,9 @@ def stages(profile: str, token: str, opt_list: bool, job: str, number: int, url:
         url: The build URL
         latest: Option to get the latest build
     """
-    if job and not number and not latest:
+    if url is None and job and is_complete_build_url(job):
+        url, job = job, None
+    elif job and not number and not latest:
         click.echo(
             click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
                         fg='bright_red',
@@ -211,7 +221,9 @@ def logs(profile: str, token: str, job: str, number: int, url: str, latest: bool
         download_dir: Option to download the log to a directory
         follow: Option to follow the log
     """
-    if job and not number and not latest:
+    if url is None and job and is_complete_build_url(job):
+        url, job = job, None
+    elif job and not number and not latest:
         click.echo(
             click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
                         fg='bright_red',
@@ -252,7 +264,9 @@ def browser(profile: str, token: str, job: str, number: int, url: str, latest: b
         url: The build url to get info on
         latest: Option to get the latest build
     """
-    if job and not number and not latest:
+    if url is None and job and is_complete_build_url(job):
+        url, job = job, None
+    elif job and not number and not latest:
         click.echo(
             click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
                         fg='bright_red',
@@ -280,7 +294,9 @@ def monitor(profile: str, token: str, job: str, number: int, url: str, latest: b
         latest: Option to get the latest build
         sound: Option to play a sound when the build status changes
     """
-    if job and not number and not latest:
+    if url is None and job and is_complete_build_url(job):
+        url, job = job, None
+    elif job and not number and not latest:
         click.echo(
             click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
                         fg='bright_red',
@@ -309,7 +325,9 @@ def parameters(profile: str, token: str, opt_list: bool, job: str, number: int, 
         url: The build URL
         latest: Option to get the latest build
     """
-    if job and not number and not latest:
+    if url is None and job and is_complete_build_url(job):
+        url, job = job, None
+    elif job and not number and not latest:
         click.echo(
             click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
                         fg='bright_red',
@@ -339,7 +357,10 @@ def rebuild(profile: str, token: str, job: str, number: int, url: str, latest: b
         latest:  Option to get the latest build
         follow_logs: Waits for the job build, then follows resulting logs
     """
-    if job and not number and not latest:
+
+    if url is None and job and is_complete_build_url(job):
+        url, job = job, None
+    elif job and not number and not latest:
         click.echo(
             click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
                         fg='bright_red',
