@@ -599,10 +599,10 @@ class Build():
         """
         # TODO: Pass a list of build numbers
         build_url = utility.build_url_complete(build_url)
+        build_info = self.info(build_url, job_name, job_url, build_number, latest)
         if not build_url:
             logger.debug('No build URL passed. Getting build information ...')
             # Get build info request
-            build_info = self.info(build_url, job_name, job_url, build_number, latest)
             build_url = build_info['url']
 
         logger.debug(f'Getting build parameters for: "{build_url}" ...')
