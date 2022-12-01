@@ -58,6 +58,9 @@ def translate_kwargs(original_kwargs: Dict[str, Any]) -> Dict[str, Any]:
 
     Details: This is primarirly used if kwarg keys are named like
              a module or python native object.
+             Examples:
+                - pretty -> opt_pretty
+                - json -> opt_json
 
     Args:
         original_kwargs: Key-value data to be updated
@@ -81,6 +84,9 @@ def print2(message: str, bold: bool = False, color: str = 'reset') -> None:
         - Colors: `black` (might be a gray), `red`, `green`, `yellow` (might be an orange), `blue`,
           `magenta`, `cyan`, `white` (might be light gray), `reset` (reset the color code only)
 
+    Example Usage:
+        - `print2("Hey there!", bold=True, color="green")`
+
     Args:
         message: Message to print to console
         bold   : Whether to bold the message
@@ -90,7 +96,10 @@ def print2(message: str, bold: bool = False, color: str = 'reset') -> None:
 
 
 def fail_out(message: str) -> None:
-    """Output a failure message to the console, then exit
+    """Output one failure message to the console, then exit
+
+    Example Usage:
+        - `fail_out("Something went wrong!")`
 
     Args:
         message: Message to output to console
@@ -102,8 +111,11 @@ def fail_out(message: str) -> None:
 def failures_out(messages: list) -> None:
     """Output multiple failure messages to the console, then exit
 
+    Example Usage:
+        - `failures_out(["Oh no!", "This is not good!"])`
+
     Args:
-        message: Messages to output to console
+        message: Multiple messages to output to console
     """
     for message in messages:
         echo(style(message, fg='bright_red', bold=True))
@@ -300,6 +312,9 @@ def is_list_items_in_dict(list_items: list, dict_to_check: dict) -> Union[int, N
         list_items    : List of items to find in dict_to_check
         dict_to_check : Dict to match the top level keys to
 
+    Example Usage:
+        - `is_list_items_in_dict(["hey", "yo"], {"yo": 1}) -> 1`
+
     Returns:
         Index of any/first matched item in the list to the top level keys of the dict
     """
@@ -310,7 +325,7 @@ def is_list_items_in_dict(list_items: list, dict_to_check: dict) -> Union[int, N
 
 
 def iter_data_empty_item_stripper(iter_data: Union[Dict, List, Set, Tuple]) -> Union[Dict, List, Set, Tuple]:
-    """Removes any empty data from a nested or un-nested iter item
+    """Removes any empty data from a nested or un-nested iter item (list, dict, set, etc)
 
     Details: https://stackoverflow.com/a/27974027/11294572
 
@@ -334,7 +349,7 @@ def iter_data_empty_item_stripper(iter_data: Union[Dict, List, Set, Tuple]) -> U
 
 
 def is_credential_id_format(text: str) -> bool:
-    """Checking if the entire text is in Jenkins credential ID format
+    """Checking if the passed text is in Jenkins credential ID format
 
     Args:
         text: The text to check
@@ -352,13 +367,13 @@ def is_credential_id_format(text: str) -> bool:
 
 
 def is_full_url(url: str) -> bool:
-    """TODO Docstring
+    """Check if passed string is a valid and full URL
 
     Args:
-        TODO
+        url: The text to check
 
     Returns:
-        TODO
+        True if valid and full URL, else False
     """
 
     # TODO: Replace this same function in cli_utility.py usages with this one within classes
@@ -392,11 +407,7 @@ def url_to_name(url: str) -> str:
     # name = url_components.path.strip('/').replace('/job/', '/').strip().strip('/').strip('job/').replace('view/', '').replace('change-requests/', '')
     url_split = url_components.path.strip().strip('/').split('/')
     remove_list = ['job', 'view', 'change-requests']
-
-    filtered_list = []
-    for list_item in url_split:  # TODO: Use list comprehension
-        if list_item not in remove_list:
-            filtered_list.append(list_item)
+    filtered_list = [list_item for list_item in url_split if list_item not in remove_list]
 
     # Assemble back
     name = '/'.join(filtered_list)
@@ -507,27 +518,110 @@ def build_url_to_other_url(build_url: str, target_url: str = 'job') -> str:
     return result_url
 
 
-def build_url_to_build_number(build_url: str) -> int:
-    """Get the build number from its build URL
+def build_url_to_build_number(build_url: str) -> Union[int, None]:
+    """If possible, extract the build number from a passed Jenkins URL
+    In order to extract the build number, the passed URL must be related to the
+    build (ie. URL of build logs)
 
     Args:
-        build_url : The URL of the build
+        build_url : URL of anything build related
+
+    Example Usage:
+        - `build_url_to_build_number("http://......job/myJob/15/") -> 15`
+        - `build_url_to_build_number("http://......job/myJob/15/console") -> 15`
+        - `build_url_to_build_number("http://......job/myJob") -> None`
 
     Returns:
-        The build number
+        The build number if extracted, else None
     """
     logger.debug(f'Extracting build number from URL: {build_url} ...')
-    # Dissect the build url
-    url_parsed = urlparse(build_url)
+    # Split the URL path, remove the empty items
+    url_path_split_list = list(filter(None, urlparse(build_url).path.split('/')))
 
-    # Split the path, remove the empty items
-    url_path_split_list = list(filter(None, url_parsed.path.split('/')))
-
-    # Get the last item, convert to int
-    build_number = int(url_path_split_list[-1])
+    # Stepping from the back one item at a time
+    build_number = None
+    for index in range(len(url_path_split_list) - 1, 2, -1):
+        try:
+            build_number = int(url_path_split_list[index])
+            if url_path_split_list[index - 2] != "job":
+                raise ValueError
+            break
+        except ValueError:
+            build_number = None
 
     logger.debug(f'From build URL "{build_url}" extracted build number "{build_number}"')
     return build_number
+
+
+def is_complete_build_url(build_url: str) -> bool:
+    """Check if passed URL is a complete and valid build URL
+
+    Args:
+        build_url : URL of anything build related
+
+    Returns:
+        True if valid and complete, else False
+    """
+    if not build_url:
+        return False
+    url_path_split_list = list(filter(None, urlparse(build_url).path.split('/')))
+    is_complete = True
+    try:
+        int(url_path_split_list[-1])
+        if url_path_split_list[-3] != "job":
+            is_complete = False
+    except ValueError:
+        is_complete = False
+    return is_complete
+
+
+def build_url_complete(build_url: str) -> Union[str, None]:
+    """If possible, extract only the build URL from a passed Jenkins URL
+    In order to extract the complete build URL, the passed URL must be related to the
+    build (ie. URL of build logs)
+
+    Args:
+        build_url : URL of anything build related
+
+    Example Usage:
+        - `build_url_complete("......job/myJob/15/")` -> `......job/myJob/15/``
+        - `build_url_complete("......job/myJob/15/console")` -> `......job/myJob/15/`
+        - `build_url_complete("......job/myJob/")` -> `None`
+
+    Returns:
+        Cleaned build URL, else None
+    """
+    if not build_url:
+        return None
+
+    if is_complete_build_url(build_url):
+        return build_url
+
+    # Split the URL path, remove the empty items
+    url_parsed = urlparse(build_url)
+    url_path_split_list = list(filter(None, url_parsed.path.split('/')))
+
+    # Stepping from the back one item at a time
+    for index in range(len(url_path_split_list.copy()) - 1, 0, -1):
+        try:
+            int(url_path_split_list[index])
+            if url_path_split_list[index - 2] != "job":
+                raise ValueError
+            break
+        except ValueError:
+            url_path_split_list.pop()
+
+    if len(url_path_split_list) < 2:
+        logger.debug(f'Cannot extract complete build url from "{build_url}"')
+        return None
+
+    # Assemble Everything back
+    path_new = '/'.join(url_path_split_list)
+    base_url = url_parsed.scheme + '://' + url_parsed.netloc
+    build_url_complete = urljoin(base_url, path_new) + '/'
+
+    logger.debug(f'Extracted complete build URL "{build_url_complete}" from "{build_url}"')
+    return build_url_complete
 
 
 def item_url_to_server_url(url: str, include_scheme: bool = True) -> str:

@@ -35,10 +35,10 @@ The following is the main menu displayed when running `yojenkins --help`.
 
                         YOJENKINS (Version: 0.0.00)
 
-  yojenkins is a tool that is focused on interfacing with a Jenkins server from
-  the comfort of the beloved command line.  This tool can also be used as a
-  middleware utility, generating and passing Jenkins information or automating
-  tasks.
+  yojenkins is a flexible tool that is focused on interfacing with Jenkins
+  server from the comfort of the beloved command line. This tool can also be
+  used as a middleware utility, generating and passing Jenkins information or
+  automating tasks.
 
   QUICK START:
 

@@ -60,6 +60,9 @@ class Stage():
         Returns:
             Stage information
         """
+        if build_url:
+            build_url = utility.build_url_complete(build_url)
+
         # Getting all stages
         build_stage_list, build_stage_name_list = self.build.stage_list(build_url, job_name, job_url, build_number,
                                                                         latest)
@@ -135,6 +138,9 @@ class Stage():
         Returns:
             Stage status text
         """
+        if build_url:
+            build_url = utility.build_url_complete(build_url)
+
         # Get the stage info
         stage_info = self.info(stage_name=stage_name,
                                build_url=build_url,
@@ -179,6 +185,9 @@ class Stage():
         Returns:
             List of steps, information and URL list
         """
+        if build_url:
+            build_url = utility.build_url_complete(build_url)
+
         # Getting the stage info
         stage_info = self.info(stage_name=stage_name,
                                build_url=build_url,
@@ -276,6 +285,9 @@ class Stage():
         Returns:
             True if success, else False
         """
+        if build_url:
+            build_url = utility.build_url_complete(build_url)
+
         # Getting all stage step information
         stage_step_list = self.step_list(stage_name=stage_name,
                                          build_url=build_url,

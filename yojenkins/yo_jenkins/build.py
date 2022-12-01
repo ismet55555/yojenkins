@@ -57,6 +57,7 @@ class Build():
         """
         if build_url:
             # Making a direct request using the passed url
+            build_url = utility.build_url_complete(build_url)
             request_url = f"{build_url.strip('/')}/api/json"
             build_info = self.rest.request(request_url, 'get', is_endpoint=False)[0]
             if not build_info:
@@ -175,6 +176,7 @@ class Build():
             TODO
         """
         # Get the build info
+        build_url = utility.build_url_complete(build_url)
         build_info = self.info(build_url=build_url,
                                job_name=job_name,
                                job_url=job_url,
@@ -237,6 +239,7 @@ class Build():
         """
         if build_url:
             logger.debug(f'Build URL passed: {build_url}')
+            build_url = utility.build_url_complete(build_url)
             url = build_url
         else:
             logger.debug('No build URL passed. Getting build information ...')
@@ -270,6 +273,7 @@ class Build():
         """
         # TODO: Pass a list of build numbers
         if build_url:
+            build_url = utility.build_url_complete(build_url)
             logger.debug(f'Build URL passed: {build_url}')
             url = build_url
         else:
@@ -307,6 +311,7 @@ class Build():
         if not build_url:
             logger.debug('No build URL passed. Getting build information ...')
             # Get build info request
+            build_url = utility.build_url_complete(build_url)
             build_info = self.info(build_url, job_name, job_url, build_number, latest)
             build_url = build_info['url']
 
@@ -351,6 +356,7 @@ class Build():
             TODO
         """
         # Test on build with artifacts
+        build_url = utility.build_url_complete(build_url)
         return self.info(build_url=build_url, job_name=job_name, job_url=job_url,
                          build_number=build_number).get('artifacts')
 
@@ -385,6 +391,7 @@ class Build():
         """
         if build_url:
             logger.debug(f'Build URL passed: {build_url}')
+            build_url = utility.build_url_complete(build_url)
             url = build_url
         else:
             logger.debug('No build URL passed. Getting build information through job ...')
@@ -526,6 +533,7 @@ class Build():
         # Need URL
         if build_url:
             logger.debug(f'Build URL passed: {build_url}')
+            build_url = utility.build_url_complete(build_url)
             build_url = build_url.strip('/')
         else:
             logger.debug('No build URL passed. Getting build information ...')
@@ -558,7 +566,8 @@ class Build():
         """
         if build_url:
             logger.debug(f'Build URL passed: {build_url}')
-            if not self.rest.request(f"{build_url.strip('/')}/api/json", 'head', is_endpoint=False)[0]:
+            build_url = utility.build_url_complete(build_url)
+            if not self.rest.request(f"{build_url.strip('/')}/api/json", 'head', is_endpoint=False)[2]:
                 fail_out(f'Failed to find build. The build may not exist: {build_url}')
             url = build_url
         else:
@@ -589,6 +598,7 @@ class Build():
             TODO
         """
         # TODO: Pass a list of build numbers
+        build_url = utility.build_url_complete(build_url)
         if not build_url:
             logger.debug('No build URL passed. Getting build information ...')
             # Get build info request
@@ -627,6 +637,7 @@ class Build():
         Returns:
             TODO
         """
+        build_url = utility.build_url_complete(build_url)
         build_info = self.info(build_url, job_name, job_url, build_number, latest)
         if not build_url:
             build_url = build_info['url']
