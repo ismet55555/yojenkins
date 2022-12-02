@@ -10,10 +10,11 @@ from urllib.parse import urlencode
 
 import jenkins
 import xmltodict
+import yaml
 
 from yojenkins.monitor import JobMonitor
 from yojenkins.utility import utility
-from yojenkins.utility.utility import fail_out, failures_out
+from yojenkins.utility.utility import diff_show, fail_out, failures_out
 from yojenkins.yo_jenkins.jenkins_item_classes import JenkinsItemClasses
 from yojenkins.yo_jenkins.jenkins_item_config import JenkinsItemConfig
 
@@ -803,3 +804,41 @@ class Job():
             parameters_list.append(item)
 
         return parameters, parameters_list
+
+    def diff(
+        self,
+        job_1: str = '',
+        job_2: str = '',
+        no_color: bool = False,
+        diff_only: bool = False,
+        diff_guide: bool = False,
+    ) -> None:
+        """Get the diff comparison for two jobs
+
+        Args:
+            job_1:       First job for comparison (name or url)
+            job_2:       Second job for comparison (name or url)
+            no_color:    Output diff with no color
+            diff_only:   Only show the lines that have changed
+            diff_guide:  Show diff guide, showing where exactly difference is in line
+        """
+        logger.debug(f'Getting jobs INFO diff for the following two jobs:')
+        logger.debug(f'    - Job 1:   {job_1}')
+        logger.debug(f'    - Job 2:   {job_2}')
+        logger.debug("Diff output options specified:")
+        logger.debug(f'    - Show no color:   {no_color}')
+        logger.debug(f'    - Show diff only:  {diff_only}')
+        logger.debug(f'    - Show diff guide: {diff_guide}')
+
+        if not utility.is_full_url(job_1):
+            job_info_1 = self.info(job_name=job_1)
+        else:
+            job_info_1 = self.info(job_url=job_1)
+        if not utility.is_full_url(job_2):
+            job_info_2 = self.info(job_name=job_2)
+        else:
+            job_info_2 = self.info(job_url=job_2)
+
+        job_info_yaml_1 = yaml.safe_dump(job_info_1, default_flow_style=False, indent=2)
+        job_info_yaml_2 = yaml.safe_dump(job_info_2, default_flow_style=False, indent=2)
+        diff_show(job_info_yaml_1, job_info_yaml_2, "---  JOB 1", "+++  JOB 2", 0, no_color, diff_only, diff_guide)

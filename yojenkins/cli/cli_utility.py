@@ -162,15 +162,16 @@ def standard_out(data: Union[Dict, List],
 
 
 def is_full_url(url: str) -> bool:
-    """TODO Docstring
+    """Check if the provided url is a full and valide URL
+
+    ### DUPLICATE: See yojenkins.utility.utility
 
     Args:
-        TODO
+        url: The URL to check
 
     Returns:
-        TODO
+        True if full and valid, else False
     """
-
     # TODO: Remove this function from this file
     #       Do url check within the class, not within the cli to not keep repeating it
     #       In classes use yojenkins.utility.utility.is_full_url()
