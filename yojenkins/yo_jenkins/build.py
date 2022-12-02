@@ -1,5 +1,6 @@
 """Build class definition"""
 
+import difflib
 import logging
 import os
 from datetime import datetime, timedelta
@@ -8,11 +9,13 @@ from time import sleep, time
 from typing import Dict, List, Tuple
 from urllib.parse import urlencode
 
+import click
 import requests
+import yaml
 
 from yojenkins.monitor import BuildMonitor
 from yojenkins.utility import utility
-from yojenkins.utility.utility import fail_out, print2
+from yojenkins.utility.utility import diff_show, fail_out, print2
 from yojenkins.yo_jenkins.auth import Auth
 from yojenkins.yo_jenkins.jenkins_item_classes import JenkinsItemClasses
 from yojenkins.yo_jenkins.rest import Rest
@@ -56,12 +59,11 @@ class Build():
             TODO
         """
         if build_url:
-            # Making a direct request using the passed url
             build_url = utility.build_url_complete(build_url)
             request_url = f"{build_url.strip('/')}/api/json"
             build_info = self.rest.request(request_url, 'get', is_endpoint=False)[0]
             if not build_info:
-                fail_out('Failed to get build info')
+                fail_out(f'Failed to get build info for provided build url ({build_url})')
         else:
             if not job_name and not job_url:
                 fail_out('No job name, job url, and build url provided')
@@ -392,16 +394,14 @@ class Build():
         if build_url:
             logger.debug(f'Build URL passed: {build_url}')
             build_url = utility.build_url_complete(build_url)
-            url = build_url
         else:
             logger.debug('No build URL passed. Getting build information through job ...')
-            # Get build info request
             build_info = self.info(job_name=job_name, job_url=job_url, build_number=build_number, latest=latest)
-            url = build_info['url']
+            build_url = build_info['url']
 
         # FIXME: Check if this is an actual build and job/folder/etc
 
-        request_url = f"{url.strip('/')}/consoleText"
+        request_url = f"{build_url.strip('/')}/consoleText"
 
         if download_dir:
             # Download to local file
@@ -447,18 +447,19 @@ class Build():
                 logger.debug(f'Following/streaming logs from server at poll interval: {log_poll_interval}s ...')
 
                 # Check if Jenkins server supports progressiveText
-                _, headers, request_success = self.rest.request(f"{url.strip('/')}/logText/progressiveText?start=0",
-                                                                'head',
-                                                                is_endpoint=False,
-                                                                json_content=False)
+                _, headers, request_success = self.rest.request(
+                    f"{build_url.strip('/')}/logText/progressiveText?start=0",
+                    'head',
+                    is_endpoint=False,
+                    json_content=False)
 
                 if request_success and "X-Text-Size" in headers:
-                    # Method 1: Fetch logs using progressiveText endpoint
+                    # METHOD 1: Fetch logs using progressiveText endpoint
                     logger.debug('Jenkins server supports requesting partial byte ranges (progressiveText)')
                     try:
                         progressive_text_position = headers['X-Text-Size']
                         while True:
-                            request_url = f"{url.strip('/')}/logText/progressiveText?start={progressive_text_position}"
+                            request_url = f"{build_url.strip('/')}/logText/progressiveText?start={progressive_text_position}"
                             return_content, headers, _ = self.rest.request(request_url,
                                                                            'get',
                                                                            is_endpoint=False,
@@ -473,14 +474,14 @@ class Build():
                     except KeyboardInterrupt:
                         logger.debug('Keyboard Interrupt (CTRL-C) by user. Stopping log following ...')
                 else:
-                    # Method 2: Fetch logs using log difference (Server does not support progressiveText)
+                    # METHOD 2: Fetch logs using log difference (Server does not support progressiveText)
                     try:
                         logger.debug(
                             'Jenkins server does not support requesting partial byte ranges (progressiveText), '
                             'MUST download entire log to get log message differences')
                         old_dict = {}
                         fetch_number = 1
-                        request_url = f"{url.strip('/')}/consoleText"
+                        request_url = f"{build_url.strip('/')}/consoleText"
                         while True:
                             headers = self.rest.request(request_url, 'head', is_endpoint=False, json_content=False)[1]
                             if 'content-length' not in headers:
@@ -670,3 +671,65 @@ class Build():
             fail_out('Failed to trigger build. Failed to send request')
 
         return build_queue_number
+
+    def diff(
+        self,
+        build_url_1: str = '',
+        build_url_2: str = '',
+        type: str = "info",
+        char_ignore: int = 0,
+        no_color: bool = False,
+        diff_only: bool = False,
+        diff_guide: bool = False,
+        stats_only: bool = False,
+    ) -> bool:
+        """TODO Docstring
+
+        Args:
+            TODO
+
+        Returns:
+            TODO
+        """
+        build_url_1 = utility.build_url_complete(build_url_1)
+        if not build_url_1:
+            fail_out('Failed to parse provided BUILD_URL_1. Please check specified arguments')
+        build_url_2 = utility.build_url_complete(build_url_2)
+        if not build_url_2:
+            fail_out('Failed to parse provided BUILD_URL_2. Please check specified arguments')
+
+        diff_type = type.upper()
+        logger.debug(f'Getting build {diff_type} diff for the following two builds:')
+        logger.debug(f'    - Build 1:   {build_url_1}')
+        logger.debug(f'    - Build 2:   {build_url_2}')
+
+        logger.debug("Diff output options specified:")
+        logger.debug(f'    - Show no color:   {no_color}')
+        logger.debug(f'    - Show diff only:  {diff_only}')
+        logger.debug(f'    - Show diff guide: {diff_guide}')
+
+        if type.lower() == 'info':
+            build_info_1 = self.info(build_url=build_url_1)
+            build_info_2 = self.info(build_url=build_url_2)
+            build_info_yaml_1 = yaml.safe_dump(build_info_1, default_flow_style=False, indent=2)
+            build_info_yaml_2 = yaml.safe_dump(build_info_2, default_flow_style=False, indent=2)
+            diff_show(build_info_yaml_1, build_info_yaml_2, "---  BUILD 1", "+++  BUILD 2", char_ignore, no_color,
+                      diff_only, diff_guide)
+
+        elif type.lower() == 'logs':
+            build_logs_1, _, success = self.rest.request(f"{build_url_1.strip('/')}/consoleText",
+                                                         'get',
+                                                         is_endpoint=False,
+                                                         json_content=False)
+            if not success:
+                fail_out(f'Failed to fetch logs for build "{build_url_1}"')
+
+            build_logs_2, _, success = self.rest.request(f"{build_url_2.strip('/')}/consoleText",
+                                                         'get',
+                                                         is_endpoint=False,
+                                                         json_content=False)
+            if not success:
+                fail_out(f'Failed to fetch logs for build "{build_url_2}"')
+
+            diff_show(build_logs_1, build_logs_2, "---  BUILD 1", "+++  BUILD 2", char_ignore, no_color, diff_only,
+                      diff_guide)

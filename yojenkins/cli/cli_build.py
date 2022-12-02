@@ -7,7 +7,7 @@ import click
 
 from yojenkins.cli import cli_utility as cu
 from yojenkins.cli.cli_utility import log_to_history
-from yojenkins.utility.utility import wait_for_build_and_follow_logs, is_complete_build_url
+from yojenkins.utility.utility import is_complete_build_url, wait_for_build_and_follow_logs
 from yojenkins.yo_jenkins.status import Status
 
 # Getting the logger reference
@@ -378,3 +378,18 @@ def rebuild(profile: str, token: str, job: str, number: int, url: str, latest: b
         click.secho(f'success. queue number: {data}', fg='bright_green', bold=True)
         return
     wait_for_build_and_follow_logs(yj_obj, data)
+
+
+@log_to_history
+def diff(profile: str, token: str, build_url_1: str, build_url_2: str, type: str, char_ignore: int, no_color: bool,
+         diff_only: bool, diff_guide: bool, stats_only: bool) -> None:
+    """TODO
+
+    Args:
+        profile: The profile/account to use
+        token:   API Token for Jenkins server
+
+        TODO
+    """
+    yj_obj = cu.config_yo_jenkins(profile, token)
+    yj_obj.build.diff(build_url_1, build_url_2, type, char_ignore, no_color, diff_only, diff_guide, stats_only)

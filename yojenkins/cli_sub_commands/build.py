@@ -222,3 +222,50 @@ def rebuild(ctx, debug, **kwargs):
         cli_build.rebuild(**translate_kwargs(kwargs))
     else:
         click.echo(ctx.get_help())
+
+
+@build.command(short_help='\tFind difference between two builds')
+@cli_decorators.debug
+@cli_decorators.profile
+@click.argument('build-url-1', nargs=1, type=str, required=True)
+@click.argument('build-url-2', nargs=1, type=str, required=True)
+@click.option('--type',
+              type=click.Choice(['info', 'logs'], case_sensitive=False),
+              default="info",
+              show_default=True,
+              required=False,
+              help='Type of diff comparison')
+@click.option('--char-ignore',
+              default=0,
+              type=click.IntRange(0),
+              required=False,
+              help='Number of characters to ignore at line start')
+@click.option('--no-color', type=bool, default=False, required=False, is_flag=True, help='Show output without color')
+@click.option('--diff-only',
+              type=bool,
+              default=False,
+              required=False,
+              is_flag=True,
+              help='Show only lines that are different')
+@click.option('--diff-guide',
+              type=bool,
+              default=False,
+              required=False,
+              is_flag=True,
+              help='Show where the difference is in line')
+# @click.option('--stats-only', type=bool, default=False, required=False, is_flag=True, help='Show diff stats only')
+def diff(debug, **kwargs):
+    """Get the diff comparison for two builds (info, logs)
+
+    EXAMPLES:
+
+    \b
+    - yojenkins build diff "myFolder/myJob/4" "myFolder/myJob/5"
+    - yojenkins build diff "myJob/4/console" "myJob/5" --type logs --diff-guide
+    - yojenkins build diff "myJob/5/" "yourJob/8" --diff-only
+    - yojenkins build diff "myJob/2/" "youJob/2/" --type logs --char-ignore 40
+    - yojenkins build diff "myJob/5/" "yourJob/8" --stats-only
+
+    """
+    set_debug_log_level(debug)
+    cli_build.diff(**translate_kwargs(kwargs))

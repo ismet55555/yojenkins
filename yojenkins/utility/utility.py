@@ -1,5 +1,6 @@
 """General utility and tools"""
 
+import difflib
 import json
 import logging
 import os
@@ -17,7 +18,7 @@ import requests
 import toml
 import xmltodict
 import yaml
-from click import echo, style
+from click import echo, secho, style
 from urllib3.util import parse_url
 from yaspin import yaspin
 from yaspin.spinners import Spinners
@@ -1246,3 +1247,65 @@ def wait_for_build_and_follow_logs(yj_obj: object, queue_id: int) -> None:
     build_number = queue_data["executable"]["number"]
     print2(f"Running with build number {build_number}. Following console logs below:")
     yj_obj.build.logs(build_url=None, job_url=queue_data["jobUrl"], build_number=build_number, follow=True)
+
+
+def diff_show(text_1: str, text_2: str, label_1: str, label_2: str, char_ignore: int, no_color: bool, diff_only: bool,
+              diff_guide: bool) -> None:
+    """Display/Show line diffs between two specified texts
+
+    Args:
+        text_1: String text 1
+        text_2: String text 2 to compare to text 1
+        label_1: text_1 label/description
+        label_2: text_2 label/description
+        char_ignore: Number of characters to ignore for comparison at start of each line
+        no_color: Display with no color
+        diff_only: Only show lines that are different
+        diff_guide: Show diff specifiers/guides to show where difference is on line
+    """
+    logger.debug('Showing the diff of two provided text strings ...')
+
+    text_1 = [line[char_ignore:] for line in text_1.splitlines()]
+    text_2 = [line[char_ignore:] for line in text_2.splitlines()]
+    # lines_diff = difflib.Differ().compare(text_1, text_2)
+    # lines_diff = difflib.unified_diff(text_1, text_2, fromfile="Build URL 1", tofile="Build URL 2")
+    lines_diff = difflib.ndiff(text_1, text_2)
+
+    # Legend Header
+    if no_color:
+        print(label_1)
+        print(label_2)
+    else:
+        secho(style(label_1, fg="red", bold=False))
+        secho(style(label_2, fg="green", bold=False))
+    if char_ignore > 0:
+        print(f'\nNOTE: Ignoring first {char_ignore} characters of each line')
+    print("")
+
+    for line in lines_diff:
+        if line.isspace():
+            continue
+
+        if line.startswith('?') and not diff_guide:
+            continue
+
+        first_char = line[0]
+        if no_color:
+            color, bold = "reset", False
+        elif first_char == "+":
+            color, bold = "green", False
+        elif first_char == "-":
+            color, bold = "red", False
+        elif first_char == "?":
+            color, bold = "magenta", True
+        else:
+            color, bold = None, False
+
+        # Show only diff
+        if diff_only and first_char not in ['-', "+"]:
+            continue
+
+        if line.startswith("?"):
+            line = line.replace("?", " ", 1)
+
+        secho(style(f"  {line}", fg=color, bold=bold))

@@ -174,3 +174,5 @@ config.yaml
 
 # Documentation build files
 docs/site/**
+
+NOTES.md
