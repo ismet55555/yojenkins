@@ -276,3 +276,36 @@ def parameters(debug, **kwargs):
     """
     set_debug_log_level(debug)
     cli_job.parameters(**translate_kwargs(kwargs))
+
+
+@job.command(short_help='\tFind difference between two jobs')
+@cli_decorators.debug
+@cli_decorators.profile
+@click.argument('job-1', nargs=1, type=str, required=True)
+@click.argument('job-2', nargs=1, type=str, required=True)
+@click.option('--no-color', type=bool, default=False, required=False, is_flag=True, help='Show output without color')
+@click.option('--diff-only',
+              type=bool,
+              default=False,
+              required=False,
+              is_flag=True,
+              help='Show only lines that are different')
+@click.option('--diff-guide',
+              type=bool,
+              default=False,
+              required=False,
+              is_flag=True,
+              help='Show where the difference is in line')
+def diff(debug, **kwargs):
+    """Get the diff comparison for two jobs
+
+    EXAMPLES:
+
+    \b
+    - yojenkins build diff "myFolder/myJob" "myFolder/myJob"
+    - yojenkins build diff "myJob" "myJob" --diff-guide
+    - yojenkins build diff "myJob" "yourJob" --diff-only
+
+    """
+    set_debug_log_level(debug)
+    cli_job.diff(**translate_kwargs(kwargs))

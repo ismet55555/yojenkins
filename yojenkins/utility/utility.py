@@ -376,7 +376,6 @@ def is_full_url(url: str) -> bool:
     Returns:
         True if valid and full URL, else False
     """
-
     # TODO: Replace this same function in cli_utility.py usages with this one within classes
 
     parsed_url = parse_url(url)
@@ -1254,14 +1253,14 @@ def diff_show(text_1: str, text_2: str, label_1: str, label_2: str, char_ignore:
     """Display/Show line diffs between two specified texts
 
     Args:
-        text_1: String text 1
-        text_2: String text 2 to compare to text 1
-        label_1: text_1 label/description
-        label_2: text_2 label/description
+        text_1:      String text 1
+        text_2:      String text 2 to compare to text 1
+        label_1:     text_1 label/description
+        label_2:     text_2 label/description
         char_ignore: Number of characters to ignore for comparison at start of each line
-        no_color: Display with no color
-        diff_only: Only show lines that are different
-        diff_guide: Show diff specifiers/guides to show where difference is on line
+        no_color:    Display with no color
+        diff_only:   Only show lines that are different
+        diff_guide:  Show diff specifiers/guides to show where difference is on line
     """
     logger.debug('Showing the diff of two provided text strings ...')
 
@@ -1302,7 +1301,7 @@ def diff_show(text_1: str, text_2: str, label_1: str, label_2: str, char_ignore:
         elif first_char == "-":
             color, bold = "red", False
         elif first_char == "?":
-            color, bold = "magenta", True
+            color, bold = "yellow", True
         else:
             color, bold = None, False
 

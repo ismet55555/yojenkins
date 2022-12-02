@@ -339,3 +339,20 @@ def parameters(profile: str, token: str, job: str, opt_list: bool, **kwargs) -> 
         data, data_list = yj_obj.job.parameters(job_name=job)
     data = data_list if opt_list else data
     cu.standard_out(data, **kwargs)
+
+
+@log_to_history
+def diff(profile: str, token: str, job_1: str, job_2: str, no_color: bool, diff_only: bool, diff_guide: bool) -> None:
+    """Get the diff comparison for two jobs
+
+    Args:
+        profile:     The profile/account to use
+        token:       API Token for Jenkins server
+        job_1:       First job for comparison (name or url)
+        job_2:       Second job for comparison (name or url)
+        no_color:    Output diff with no color
+        diff_only:   Only show the lines that have changed
+        diff_guide:  Show diff guide, showing where exactly difference is in line
+    """
+    yj_obj = cu.config_yo_jenkins(profile, token)
+    yj_obj.job.diff(job_1, job_2, no_color, diff_only, diff_guide)

@@ -381,15 +381,20 @@ def rebuild(profile: str, token: str, job: str, number: int, url: str, latest: b
 
 
 @log_to_history
-def diff(profile: str, token: str, build_url_1: str, build_url_2: str, type: str, char_ignore: int, no_color: bool,
+def diff(profile: str, token: str, build_url_1: str, build_url_2: str, logs: bool, char_ignore: int, no_color: bool,
          diff_only: bool, diff_guide: bool) -> None:
-    """TODO
+    """Get the diff comparison for two builds
 
     Args:
-        profile: The profile/account to use
-        token:   API Token for Jenkins server
-
-        TODO
+        profile:     The profile/account to use
+        token:       API Token for Jenkins server
+        build_url_1: First build for comparison
+        build_url_2: Second build for comparison
+        logs:        Compare build logs
+        char_ignore: Number of characters to ignore at start of each line
+        no_color:    Output diff with no color
+        diff_only:   Only show the lines that have changed
+        diff_guide:  Show diff guide, showing where exactly difference is in line
     """
     yj_obj = cu.config_yo_jenkins(profile, token)
-    yj_obj.build.diff(build_url_1, build_url_2, type, char_ignore, no_color, diff_only, diff_guide)
+    yj_obj.build.diff(build_url_1, build_url_2, logs, char_ignore, no_color, diff_only, diff_guide)

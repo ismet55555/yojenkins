@@ -676,19 +676,22 @@ class Build():
         self,
         build_url_1: str = '',
         build_url_2: str = '',
-        type: str = "info",
+        logs: bool = False,
         char_ignore: int = 0,
         no_color: bool = False,
         diff_only: bool = False,
         diff_guide: bool = False,
-    ) -> bool:
-        """TODO Docstring
+    ) -> None:
+        """Get the diff comparison for two builds
 
         Args:
-            TODO
-
-        Returns:
-            TODO
+            build_url_1: First build for comparison
+            build_url_2: Second build for comparison
+            logs:        Compare build logs
+            char_ignore: Number of characters to ignore at start of each line
+            no_color:    Output diff with no color
+            diff_only:   Only show the lines that have changed
+            diff_guide:  Show diff guide, showing where exactly difference is in line
         """
         build_url_1 = utility.build_url_complete(build_url_1)
         if not build_url_1:
@@ -697,24 +700,15 @@ class Build():
         if not build_url_2:
             fail_out('Failed to parse provided BUILD_URL_2. Please check specified arguments')
 
-        logger.debug(f'Getting build {type.upper()} diff for the following two builds:')
+        logger.debug(f'Getting build {"LOGS" if logs else "INFO"} diff for the following two builds:')
         logger.debug(f'    - Build 1:   {build_url_1}')
         logger.debug(f'    - Build 2:   {build_url_2}')
-
         logger.debug("Diff output options specified:")
         logger.debug(f'    - Show no color:   {no_color}')
         logger.debug(f'    - Show diff only:  {diff_only}')
         logger.debug(f'    - Show diff guide: {diff_guide}')
 
-        if type.lower() == 'info':
-            build_info_1 = self.info(build_url=build_url_1)
-            build_info_2 = self.info(build_url=build_url_2)
-            build_info_yaml_1 = yaml.safe_dump(build_info_1, default_flow_style=False, indent=2)
-            build_info_yaml_2 = yaml.safe_dump(build_info_2, default_flow_style=False, indent=2)
-            diff_show(build_info_yaml_1, build_info_yaml_2, "---  BUILD 1", "+++  BUILD 2", char_ignore, no_color,
-                      diff_only, diff_guide)
-
-        elif type.lower() == 'logs':
+        if logs:
             build_logs_1, _, success = self.rest.request(f"{build_url_1.strip('/')}/consoleText",
                                                          'get',
                                                          is_endpoint=False,
@@ -731,3 +725,10 @@ class Build():
 
             diff_show(build_logs_1, build_logs_2, "---  BUILD 1", "+++  BUILD 2", char_ignore, no_color, diff_only,
                       diff_guide)
+        else:
+            build_info_1 = self.info(build_url=build_url_1)
+            build_info_2 = self.info(build_url=build_url_2)
+            build_info_yaml_1 = yaml.safe_dump(build_info_1, default_flow_style=False, indent=2)
+            build_info_yaml_2 = yaml.safe_dump(build_info_2, default_flow_style=False, indent=2)
+            diff_show(build_info_yaml_1, build_info_yaml_2, "---  BUILD 1", "+++  BUILD 2", char_ignore, no_color,
+                      diff_only, diff_guide)
