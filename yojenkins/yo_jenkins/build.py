@@ -681,7 +681,6 @@ class Build():
         no_color: bool = False,
         diff_only: bool = False,
         diff_guide: bool = False,
-        stats_only: bool = False,
     ) -> bool:
         """TODO Docstring
 
@@ -698,8 +697,7 @@ class Build():
         if not build_url_2:
             fail_out('Failed to parse provided BUILD_URL_2. Please check specified arguments')
 
-        diff_type = type.upper()
-        logger.debug(f'Getting build {diff_type} diff for the following two builds:')
+        logger.debug(f'Getting build {type.upper()} diff for the following two builds:')
         logger.debug(f'    - Build 1:   {build_url_1}')
         logger.debug(f'    - Build 2:   {build_url_2}')
 

@@ -1270,16 +1270,21 @@ def diff_show(text_1: str, text_2: str, label_1: str, label_2: str, char_ignore:
     # lines_diff = difflib.Differ().compare(text_1, text_2)
     # lines_diff = difflib.unified_diff(text_1, text_2, fromfile="Build URL 1", tofile="Build URL 2")
     lines_diff = difflib.ndiff(text_1, text_2)
+    diff_ratio = difflib.SequenceMatcher(None, text_1, text_2).quick_ratio() * 100
 
     # Legend Header
+    print()
     if no_color:
         print(label_1)
         print(label_2)
     else:
         secho(style(label_1, fg="red", bold=False))
         secho(style(label_2, fg="green", bold=False))
+
     if char_ignore > 0:
-        print(f'\nNOTE: Ignoring first {char_ignore} characters of each line')
+        print('\n' + "-" * 51)
+        print(f'  NOTE: Ignoring first {char_ignore} characters of each line')
+        print("-" * 51)
     print("")
 
     for line in lines_diff:
@@ -1309,3 +1314,6 @@ def diff_show(text_1: str, text_2: str, label_1: str, label_2: str, char_ignore:
             line = line.replace("?", " ", 1)
 
         secho(style(f"  {line}", fg=color, bold=bold))
+
+    print('\n' + "-" * 51)
+    print(f'\n  Similarity: {diff_ratio:.1f}%')

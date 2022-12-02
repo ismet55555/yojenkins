@@ -382,7 +382,7 @@ def rebuild(profile: str, token: str, job: str, number: int, url: str, latest: b
 
 @log_to_history
 def diff(profile: str, token: str, build_url_1: str, build_url_2: str, type: str, char_ignore: int, no_color: bool,
-         diff_only: bool, diff_guide: bool, stats_only: bool) -> None:
+         diff_only: bool, diff_guide: bool) -> None:
     """TODO
 
     Args:
@@ -392,4 +392,4 @@ def diff(profile: str, token: str, build_url_1: str, build_url_2: str, type: str
         TODO
     """
     yj_obj = cu.config_yo_jenkins(profile, token)
-    yj_obj.build.diff(build_url_1, build_url_2, type, char_ignore, no_color, diff_only, diff_guide, stats_only)
+    yj_obj.build.diff(build_url_1, build_url_2, type, char_ignore, no_color, diff_only, diff_guide)
