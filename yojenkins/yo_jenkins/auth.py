@@ -172,11 +172,13 @@ class Auth:
 
         return generated_token
 
-    def profile_add_new_token(self, profile_name: str) -> str:
+    def profile_add_new_token(self, profile_name: str, token: str = "", password: str = "") -> str:
         """Update the specified credentials profile with a new server API token
 
         Args:
             profile_name : Name of the profile as specified in the credentials file
+            token:         Add this provided API token instead of generating a new one
+            password:      Password for referenced account in profile
 
         Returns:
             Server API Token
@@ -214,8 +216,15 @@ class Auth:
         else:
             username = profile_info['username']
 
-        # Generate and store the API token
-        api_token = self.generate_token(token_name=token_name, server_base_url=server_url, username=username)
+        # Use provided or generate and store the API token
+        if token:
+            logger.debug('Using API token provided with --token CLI option ...')
+            api_token = token
+        else:
+            api_token = self.generate_token(token_name=token_name,
+                                            server_base_url=server_url,
+                                            username=username,
+                                            password=password)
         profiles[profile_name]['api_token'] = api_token
 
         success = self._update_profiles(profiles=profiles)
