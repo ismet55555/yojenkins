@@ -841,4 +841,4 @@ class Job():
 
         job_info_yaml_1 = yaml.safe_dump(job_info_1, default_flow_style=False, indent=2)
         job_info_yaml_2 = yaml.safe_dump(job_info_2, default_flow_style=False, indent=2)
-        diff_show(job_info_yaml_1, job_info_yaml_2, "---  JOB 1", "+++  JOB 2", 0, no_color, diff_only, diff_guide)
+        diff_show(job_info_yaml_1, job_info_yaml_2, "---  JOB 1", "+++  JOB 2", (), 0, no_color, diff_only, diff_guide)

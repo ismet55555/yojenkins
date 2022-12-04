@@ -1248,28 +1248,54 @@ def wait_for_build_and_follow_logs(yj_obj: object, queue_id: int) -> None:
     yj_obj.build.logs(build_url=None, job_url=queue_data["jobUrl"], build_number=build_number, follow=True)
 
 
-def diff_show(text_1: str, text_2: str, label_1: str, label_2: str, char_ignore: int, no_color: bool, diff_only: bool,
-              diff_guide: bool) -> None:
+def diff_show(text_1: str, text_2: str, label_1: str, label_2: str, line_pattern: tuple, char_ignore: int,
+              no_color: bool, diff_only: bool, diff_guide: bool) -> None:
     """Display/Show line diffs between two specified texts
 
     Args:
-        text_1:      String text 1
-        text_2:      String text 2 to compare to text 1
-        label_1:     text_1 label/description
-        label_2:     text_2 label/description
-        char_ignore: Number of characters to ignore for comparison at start of each line
-        no_color:    Display with no color
-        diff_only:   Only show lines that are different
-        diff_guide:  Show diff specifiers/guides to show where difference is on line
+        text_1:       String text 1
+        text_2:       String text 2 to compare to text 1
+        label_1:      text_1 label/description
+        label_2:      text_2 label/description
+        line-pattern: Patterns to consider for diff for each line
+        char_ignore:  Number of characters to ignore for comparison at start of each line
+        no_color:     Display with no color
+        diff_only:    Only show lines that are different
+        diff_guide:   Show diff specifiers/guides to show where difference is on line
     """
-    logger.debug('Showing the diff of two provided text strings ...')
+    text_1, text_2 = text_1.splitlines(), text_2.splitlines()
 
-    text_1 = [line[char_ignore:] for line in text_1.splitlines()]
-    text_2 = [line[char_ignore:] for line in text_2.splitlines()]
+    # Ignore specified number of initial characters
+    if char_ignore > 0:
+        logger.debug(f'Applying {char_ignore} initial characters for each line before diff ...')
+        text_1 = [line[char_ignore:] for line in text_1]
+        text_2 = [line[char_ignore:] for line in text_2]
+
+    # Only select REGEX line patterns to diff
+    if line_pattern:
+        regex_pattern = "|".join(list(line_pattern))
+        logger.debug(f'Applying REGEX pattern line filter before diff "{regex_pattern}":')
+        count_1, count_2 = len(text_1), len(text_2)
+
+        text_1 = [re.findall(regex_pattern, line) for line in text_1]  # Apply regex
+        text_1 = ["".join(line) for line in filter(lambda x: x, text_1)]  # Filter
+        logger.debug(f'   - Text 1: Kept {len(text_1)} of {count_1} lines ({len(text_1)/count_1 * 100:.1f}%)')
+
+        text_2 = [re.findall(regex_pattern, line) for line in text_2]
+        text_2 = ["".join(line) for line in filter(lambda x: x, text_2)]
+        logger.debug(f'   - Text 2: Kept {len(text_2)} of {count_2} lines ({len(text_2)/count_2 * 100:.1f}%)')
+
+    # Compute the diff
     # lines_diff = difflib.Differ().compare(text_1, text_2)
     # lines_diff = difflib.unified_diff(text_1, text_2, fromfile="Build URL 1", tofile="Build URL 2")
     lines_diff = difflib.ndiff(text_1, text_2)
     diff_ratio = difflib.SequenceMatcher(None, text_1, text_2).quick_ratio() * 100
+
+    logger.debug('Showing the diff of two provided text strings ...')
+    logger.debug("Diff output options specified:")
+    logger.debug(f'    - Show no color:   {no_color}')
+    logger.debug(f'    - Show diff only:  {diff_only}')
+    logger.debug(f'    - Show diff guide: {diff_guide}')
 
     # Legend Header
     print()
@@ -1281,38 +1307,35 @@ def diff_show(text_1: str, text_2: str, label_1: str, label_2: str, char_ignore:
         secho(style(label_2, fg="green", bold=False))
 
     if char_ignore > 0:
-        print('\n' + "-" * 51)
-        print(f'  NOTE: Ignoring first {char_ignore} characters of each line')
-        print("-" * 51)
+        print(f'***  NOTE: Ignoring first {char_ignore} characters of each line')
+    if line_pattern:
+        print(f'***  NOTE: Only considering log lines with REGEX pattern: {regex_pattern}')
     print("")
+    print("-" * 51)
 
     for line in lines_diff:
-        if line.isspace():
+        if line.isspace():  # difflib sometimes returns empty strings
+            continue
+        if diff_only and line[0] not in ['-', "+", "?"]:  # Skip non-diff lines
+            continue
+        if not diff_guide and line.startswith('?'):
             continue
 
-        if line.startswith('?') and not diff_guide:
-            continue
-
-        first_char = line[0]
         if no_color:
             color, bold = "reset", False
-        elif first_char == "+":
+        elif line[0] == "+":
             color, bold = "green", False
-        elif first_char == "-":
+        elif line[0] == "-":
             color, bold = "red", False
-        elif first_char == "?":
+        elif line[0] == "?":
             color, bold = "yellow", True
         else:
             color, bold = None, False
-
-        # Show only diff
-        if diff_only and first_char not in ['-', "+"]:
-            continue
 
         if line.startswith("?"):
             line = line.replace("?", " ", 1)
 
         secho(style(f"  {line}", fg=color, bold=bold))
 
-    print('\n' + "-" * 51)
+    print("-" * 51)
     print(f'\n  Similarity: {diff_ratio:.1f}%')

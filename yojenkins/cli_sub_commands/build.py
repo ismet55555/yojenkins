@@ -236,6 +236,11 @@ def rebuild(ctx, debug, **kwargs):
 #               required=False,
 #               help='Type of diff comparison')
 @click.option('--logs', type=bool, default=False, required=False, is_flag=True, help='Build logs diff')
+@click.option('--line-pattern',
+              type=str,
+              multiple=True,
+              required=False,
+              help='Keep part of each line that contains this REGEX pattern [Can use multiple times]')
 @click.option('--char-ignore',
               default=0,
               type=click.IntRange(0),
@@ -264,8 +269,9 @@ def diff(debug, **kwargs):
     - yojenkins build diff "myFolder/myJob/4" "myFolder/myJob/5"
     - yojenkins build diff "myJob/4/console" "myJob/5" --logs --diff-guide
     - yojenkins build diff "myJob/5/" "yourJob/8" --diff-only
-    - yojenkins build diff "myJob/2/" "youJob/2/" --logs --char-ignore 40
-    - yojenkins build diff "myJob/5/" "yourJob/8" --stats-only
+    - yojenkins build diff "myJob/2/" "youJob/4/" --logs --char-ignore 40
+    - yojenkins build diff "myJob/2/" "youJob/4/" --logs --line-patten "(?<= - ).+"
+    - yojenkins build diff "myJob/2/" "youJob/4/" --logs --line-patten "FAIL" --line-patten "SUCCESS"
 
     """
     set_debug_log_level(debug)
