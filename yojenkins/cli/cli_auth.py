@@ -1,7 +1,6 @@
 """Auth Menu CLI Entrypoints"""
 
 import logging
-import sys
 
 import click
 
@@ -15,7 +14,7 @@ logger = logging.getLogger()
 
 @log_to_history
 def configure(auth_file: str) -> None:
-    """Configure authentication
+    """Configure yojenkins authentication profile(s)
 
     Args:
         auth_file: (Optional) Path to the the authentication setup JSON file
@@ -24,14 +23,25 @@ def configure(auth_file: str) -> None:
     click.secho('Successfully configured credentials file', fg='bright_green', bold=True)
 
 
+# @log_to_history
+# def remove(profile: str) -> None:
+#     """Remove yojenkins authentication profile(s)
+#
+#     Args:
+#         profile: The yojenkins profile name to remove from credentials
+#     """
+#     Auth().remove(profile_name=profile)
+#     click.secho('Successfully removed credentials profile', fg='bright_green', bold=True)
+
+
 @log_to_history
-def token(profile: str, token: str, token_name: str, server_base_url: str, username: str, password: str) -> None:
+def token(profile: str, token: str, name: str, server_base_url: str, username: str, password: str) -> None:
     """Generate authentication API token
 
     Args:
         profile: The profile/account to use
         token:   API Token for Jenkins server
-        token_name: Name of the generated token
+        name: Name of the generated token
         server_base_url: Server base URL address
         username: Account username
         password: User password to use to generate API token
@@ -40,10 +50,13 @@ def token(profile: str, token: str, token_name: str, server_base_url: str, usern
 
     if profile:
         # Add/Refresh the newly generated API token for an existing profile
-        data = auth.profile_add_new_token(profile_name=profile)
+        data = auth.profile_add_new_token(profile_name=profile, token=token, password=password)
     else:
-        # Simply display the new API Token
-        data = auth.generate_token(token_name=token_name,
+        # Simply display/output the newly generated API Token
+        if token:
+            click.secho('Ignoring --token. Must be specfied with --profile', fg="yellow")
+            print()
+        data = auth.generate_token(token_name=name,
                                    server_base_url=server_base_url,
                                    username=username,
                                    password=password)
