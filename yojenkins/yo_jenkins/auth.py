@@ -199,7 +199,6 @@ class Auth:
 
         profile_info = profiles[profile_name]
         logger.debug(f'Profile "{profile_name}" loaded')
-        logger.debug(f'Profile info: {profile_info}')
 
         # Generate a API token name (seen in Jenkins UI)
         token_name = f'yojenkins_{datetime.now().strftime("%m-%d-%Y_%I-%M-%S")}'

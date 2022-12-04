@@ -213,7 +213,7 @@ class JobMonitor(Monitor):
 
                     # Build Status
                     if 'resultText' in build and build['resultText'] != None:
-                        line = build['resultText']
+                        line = build['resultText'].replace("_", " ")
                     else:
                         line = BuildStatus.UNKNOWN.value
                     status_color = self.status_to_color(line)

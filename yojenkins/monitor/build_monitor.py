@@ -285,7 +285,7 @@ class BuildMonitor(Monitor):
                     result_text = build_stage['status'] if 'status' in build_stage else StageStatus.UNKNOWN.value
                     status_color = self.status_to_color(build_stage['status'])
 
-                    mu.draw_text(scr, result_text, y_row, x_col[3], color=self.color[status_color])
+                    mu.draw_text(scr, result_text.replace("_", " "), y_row, x_col[3], color=self.color[status_color])
                     y_row += 1
             else:
                 # Change the minimum window height limit (no stages section)
