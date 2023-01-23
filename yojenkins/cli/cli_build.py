@@ -397,6 +397,5 @@ def diff(profile: str, token: str, build_url_1: str, build_url_2: str, logs: boo
         diff_only:    Only show the lines that have changed
         diff_guide:   Show diff guide, showing where exactly difference is in line
     """
-    print(line_pattern)
     yj_obj = cu.config_yo_jenkins(profile, token)
     yj_obj.build.diff(build_url_1, build_url_2, logs, line_pattern, char_ignore, no_color, diff_only, diff_guide)

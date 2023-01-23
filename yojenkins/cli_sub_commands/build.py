@@ -266,12 +266,12 @@ def diff(debug, **kwargs):
     EXAMPLES:
 
     \b
-    - yojenkins build diff "myFolder/myJob/4" "myFolder/myJob/5"
-    - yojenkins build diff "myJob/4/console" "myJob/5" --logs --diff-guide
-    - yojenkins build diff "myJob/5/" "yourJob/8" --diff-only
-    - yojenkins build diff "myJob/2/" "youJob/4/" --logs --char-ignore 40
-    - yojenkins build diff "myJob/2/" "youJob/4/" --logs --line-patten "(?<= - ).+"
-    - yojenkins build diff "myJob/2/" "youJob/4/" --logs --line-patten "FAIL" --line-patten "SUCCESS"
+    - yojenkins build diff "http://jenkins.com/myFolder/myJob/4" "http://jenkins.com/myFolder/myJob/5"
+    - yojenkins build diff "<SERVER>/myJob/4/console" "<SERVER>/myJob/5" --logs --diff-guide
+    - yojenkins build diff "<SERVER>/myJob/5/" "<SERVER>/yourJob/8" --diff-only
+    - yojenkins build diff "<SERVER>/myJob/2/" "<SERVER>/youJob/4/" --logs --char-ignore 40
+    - yojenkins build diff "<SERVER>/myJob/2/" "<SERVER>/youJob/4/" --logs --line-patten "(?<= - ).+"
+    - yojenkins build diff "<SERVER>/myJob/2/" "<SERVER>/youJob/4/" --logs --line-patten "FAIL" --line-patten "SUCCESS"
 
     """
     set_debug_log_level(debug)
