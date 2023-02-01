@@ -35,7 +35,6 @@ python-jenkins = "*"
 pywin32 = {version = "*", markers = "sys_platform == 'win32' or platform_system == 'Windows' or os_name =='nt'"}
 pyyaml = "*"
 requests_futures = "*"
-simpleaudio = {version = "*", platform_system = "!= 'Windows'"}
 toml = "*"
 windows-curses = {version = "*", markers = "sys_platform == 'win32' or platform_system == 'Windows' or os_name =='nt'"}
 xmltodict = "*"

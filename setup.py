@@ -77,6 +77,9 @@ setuptools.setup(
     url="https://github.com/ismet55555/yojenkins",
     packages=setuptools.find_packages(),
     install_requires=get_requirements(),
+    extras_require={
+        'sound': ['simpleaudio; sys_platform != "win32"']
+    },
     include_package_data=True,
     long_description=read('README.md'),
     long_description_content_type='text/markdown',
