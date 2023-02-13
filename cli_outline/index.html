@@ -103,15 +103,14 @@
       <div class="wy-nav-content">
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li><li>CLI Outline</li>
+    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+      <li>CLI Outline</li>
     <li class="wy-breadcrumbs-aside">
-        <a href="https://github.com/ismet55555/yojenkins/edit/master/docs/source/cli_outline.md"
-          class="icon icon-github"> Edit on GitHub</a>
+          <a href="https://github.com/ismet55555/yojenkins/edit/master/docs/source/cli_outline.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
 </div>
-
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
@@ -119,8 +118,8 @@
 <p>Below is a complete outline of the <code>yojenkins</code> CLI command structure.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>As of Version: <strong>0.0.72</strong></p>
 </div>
+<p>As of Version: <strong>0.0.82</strong></p>
 <pre><code class="language-text">yojenkins
     |
     |-- account     Manage user accounts
@@ -146,9 +145,11 @@
     |     |--- abort    Abort build
     |     |--- browser  Open build in web browser
     |     |--- delete   Delete build
+    |     |--- diff     Find difference between two builds
     |     |--- info     Build information
     |     |--- logs     Get build logs
     |     |--- monitor  Start monitor UI
+    |     |--- rebuild  Rebuild a build with same parameters
     |     |--- stages   Get build stages
     |     |--- status   Build status text/label
     |
@@ -185,6 +186,7 @@
     |     |--- config        Get job configuration
     |     |--- create        Create a job
     |     |--- delete        Delete job
+    |     |--- diff          Find difference between two jobs
     |     |--- disable       Disable job
     |     |--- enable        Enable job
     |     |--- info          Job information
