@@ -31,6 +31,7 @@ yojenkins
     |     |--- abort    Abort build
     |     |--- browser  Open build in web browser
     |     |--- delete   Delete build
+    |     |--- diff     Find difference between two builds
     |     |--- info     Build information
     |     |--- logs     Get build logs
     |     |--- monitor  Start monitor UI
@@ -71,6 +72,7 @@ yojenkins
     |     |--- config        Get job configuration
     |     |--- create        Create a job
     |     |--- delete        Delete job
+    |     |--- diff          Find difference between two jobs
     |     |--- disable       Disable job
     |     |--- enable        Enable job
     |     |--- info          Job information

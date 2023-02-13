@@ -23,8 +23,8 @@ With `yojenkins` you can manage:
 - **Nodes/agents:** *Create, delete, shut down server, and more*
 - **Credentials**: *Create, update, delete, list, and more*
 - **Folders:** *Create items, delete items, disable, enable, and more*
-- **Jobs:** *Create, delete, trigger, monitor, search, and more*
-- **Builds:** *Monitor, abort, tail logs, follow logs, and more*
+- **Jobs:** *Create, delete, diff, trigger, monitor, search, and more*
+- **Builds:** *Monitor, diff, abort, tail logs, follow logs, and more*
 - **Stages:** *Get info, get logs, view steps, view status*
 - **Steps:** *Get info*
 - **Other tools and functions:** *Run groovy scripts remotely, run custom REST calls, setup a shared library, view command usage history, and more*

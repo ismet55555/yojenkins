@@ -31,6 +31,7 @@ however it will not play any sound effects.
     - If it is not, install it: [Guide](https://pip.pypa.io/en/stable/installation/)
 5.  Install `yojenkins` from PYPI
     - `pip install yojenkins`
+    - `pip install yojenkins[sound]` *(Include sound notifications)*
 
 
 ## Install Using the Included `setup.py`
