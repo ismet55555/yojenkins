@@ -27,8 +27,10 @@
   <img alt="Workflow" src="https://github.com/ismet55555/yojenkins/actions/workflows/test-build-publish.yml/badge.svg">
 </a>
 
-</p>
 
+<a href="https://www.yojenkins.com/installation/">Install Now!</a>
+
+</p>
 
 **`yojenkins`** is a cross-platform command line interface (CLI) tool to monitor, manage, and deal with Jenkins server. It makes it possible to interact with a Jenkins server without using the browser based Jenkins UI.
 
