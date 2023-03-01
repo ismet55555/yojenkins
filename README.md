@@ -27,8 +27,9 @@
   <img alt="Workflow" src="https://github.com/ismet55555/yojenkins/actions/workflows/test-build-publish.yml/badge.svg">
 </a>
 
-
+<h3 align="center">
 <a href="https://www.yojenkins.com/installation/">Install Now!</a>
+</h3>
 
 </p>
 
