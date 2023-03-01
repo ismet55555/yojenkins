@@ -51,13 +51,13 @@
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="./">Installation</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#system-dependencies-for-sound">System Dependencies For Sound</a>
-    </li>
     <li class="toctree-l2"><a class="reference internal" href="#install-from-python-package-index-pypi-using-pip-recommended">Install From Python Package Index (PYPI) Using pip (Recommended)</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#install-using-the-included-setuppy">Install Using the Included setup.py</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#download-pre-compiled-binary">Download Pre-compiled Binary</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#system-dependencies-for-sound">System Dependencies For Sound</a>
     </li>
     </ul>
                 </li>
@@ -126,46 +126,17 @@
 <div class="toc">
 <ul>
 <li><a href="#installation">Installation</a><ul>
-<li><a href="#system-dependencies-for-sound">System Dependencies For Sound</a></li>
 <li><a href="#install-from-python-package-index-pypi-using-pip-recommended">Install From Python Package Index (PYPI) Using pip (Recommended)</a></li>
 <li><a href="#install-using-the-included-setuppy">Install Using the Included setup.py</a></li>
 <li><a href="#download-pre-compiled-binary">Download Pre-compiled Binary</a></li>
+<li><a href="#system-dependencies-for-sound">System Dependencies For Sound</a></li>
 </ul>
 </li>
 </ul>
 </div>
 <hr />
-<h2 id="system-dependencies-for-sound">System Dependencies For Sound<a class="headerlink" href="#system-dependencies-for-sound" title="Permanent link">&para;</a></h2>
-<p>The following system dependencies are needed for <code>yojenkins</code> to be able to play sound effects.
-Sound effects are used for job and build monitor.</p>
-<p>If you do not install these dependencies, <code>yojenkins</code> will still be able to function,
-however it will not play any sound effects.</p>
-<table>
-<thead>
-<tr>
-<th>Platform</th>
-<th>Command</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>MacOS and Windows</td>
-<td>Not needed</td>
-</tr>
-<tr>
-<td>Ubuntu</td>
-<td><code>sudo apt update &amp;&amp; apt-get install -y python3-dev python3-pip libasound2-dev</code></td>
-</tr>
-<tr>
-<td>CentOS</td>
-<td><code>sudo yum update &amp;&amp; yum install -y python3-devel gcc alsa-lib-devel</code></td>
-</tr>
-</tbody>
-</table>
 <h2 id="install-from-python-package-index-pypi-using-pip-recommended">Install From Python Package Index (PYPI) Using <code>pip</code> <em>(Recommended)</em><a class="headerlink" href="#install-from-python-package-index-pypi-using-pip-recommended" title="Permanent link">&para;</a></h2>
 <ol>
-<li>Ensure internet connection</li>
-<li>Open up a terminal on your computer</li>
 <li>Ensure python is installed and has compatible version<ul>
 <li><code>python --version</code></li>
 <li>If it is not, install it: <a href="https://realpython.com/installing-python/">Guide</a></li>
@@ -178,7 +149,7 @@ however it will not play any sound effects.</p>
 </li>
 <li>Install <code>yojenkins</code> from PYPI<ul>
 <li><code>pip install yojenkins</code></li>
-<li><code>pip install yojenkins[sound]</code> <em>(Include sound notifications)</em></li>
+<li><code>pip install "yojenkins[sound]"</code> <em>(With monitor sound effects)</em></li>
 </ul>
 </li>
 </ol>
@@ -227,6 +198,33 @@ however it will not play any sound effects.</p>
 <p>Not all operating systems and architectures are supported.
 As of now, only select and/or popular ones are.</p>
 </div>
+<h2 id="system-dependencies-for-sound">System Dependencies For Sound<a class="headerlink" href="#system-dependencies-for-sound" title="Permanent link">&para;</a></h2>
+<p>The following system dependencies are needed for <code>yojenkins</code> to be able to play sound effects.
+Sound effects are used for job and build monitor.</p>
+<p>If you do not install these dependencies, <code>yojenkins</code> will still be able to function,
+however it will not play any sound effects.</p>
+<table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MacOS and Windows</td>
+<td>Not needed</td>
+</tr>
+<tr>
+<td>Ubuntu</td>
+<td><code>sudo apt update &amp;&amp; apt-get install -y python3-dev python3-pip libasound2-dev</code></td>
+</tr>
+<tr>
+<td>CentOS</td>
+<td><code>sudo yum update &amp;&amp; yum install -y python3-devel gcc alsa-lib-devel</code></td>
+</tr>
+</tbody>
+</table>
               
             </div>
           </div><footer>
