@@ -5,17 +5,15 @@
 ---
 ## Install From Python Package Index (PYPI) Using `pip` *(Recommended)*
 
-1.  Ensure internet connection
-2.  Open up a terminal on your computer
-3.  Ensure python is installed and has compatible version
+1.  Ensure python is installed and has compatible version
     * `python --version`
     * If it is not, install it: [Guide](https://realpython.com/installing-python/)
-4.  Ensure that `pip` is installed
+2.  Ensure that `pip` is installed
     - `pip --version`
     - If it is not, install it: [Guide](https://pip.pypa.io/en/stable/installation/)
-5.  Install `yojenkins` from PYPI
+3.  Install `yojenkins` from PYPI
     - `pip install yojenkins`
-    - `pip install yojenkins[sound]` *(Include sound notifications)*
+    - `pip install "yojenkins[sound]"` *(With monitor sound effects)*
 
 
 ## Install Using the Included `setup.py`
