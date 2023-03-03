@@ -4,6 +4,10 @@
 <img src="logo_final.png" alt="drawing" width="150"/>
 </p>
 
+<p style="text-align: center;">
+<a href="./installation/">Install Now!</a>
+</p>
+
 `yojenkins` is a cross-platform command line interface (CLI) tool to monitor,
 manage, and have fun with a Jenkins server. It makes it possible to interact
 with a Jenkins server without using the browser based Jenkins UI.

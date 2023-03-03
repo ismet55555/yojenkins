@@ -3,35 +3,17 @@
 [TOC]
 
 ---
-
-## System Dependencies For Sound
-
-The following system dependencies are needed for `yojenkins` to be able to play sound effects.
-Sound effects are used for job and build monitor.
-
-If you do not install these dependencies, `yojenkins` will still be able to function,
-however it will not play any sound effects.
-
-| Platform          | Command                                                                        |
-| ----------------- | ------------------------------------------------------------------------------ |
-| MacOS and Windows | Not needed                                                                     |
-| Ubuntu            | `sudo apt update && apt-get install -y python3-dev python3-pip libasound2-dev` |
-| CentOS            | `sudo yum update && yum install -y python3-devel gcc alsa-lib-devel`           |
-
-
 ## Install From Python Package Index (PYPI) Using `pip` *(Recommended)*
 
-1.  Ensure internet connection
-2.  Open up a terminal on your computer
-3.  Ensure python is installed and has compatible version
+1.  Ensure python is installed and has compatible version
     * `python --version`
     * If it is not, install it: [Guide](https://realpython.com/installing-python/)
-4.  Ensure that `pip` is installed
+2.  Ensure that `pip` is installed
     - `pip --version`
     - If it is not, install it: [Guide](https://pip.pypa.io/en/stable/installation/)
-5.  Install `yojenkins` from PYPI
+3.  Install `yojenkins` from PYPI
     - `pip install yojenkins`
-    - `pip install yojenkins[sound]` *(Include sound notifications)*
+    - `pip install "yojenkins[sound]"` *(With monitor sound effects)*
 
 
 ## Install Using the Included `setup.py`
@@ -64,3 +46,19 @@ however it will not play any sound effects.
 !!! note "Note"
     Not all operating systems and architectures are supported.
     As of now, only select and/or popular ones are.
+
+
+## System Dependencies For Sound
+
+The following system dependencies are needed for `yojenkins` to be able to play sound effects.
+Sound effects are used for job and build monitor.
+
+If you do not install these dependencies, `yojenkins` will still be able to function,
+however it will not play any sound effects.
+
+| Platform          | Command                                                                        |
+| ----------------- | ------------------------------------------------------------------------------ |
+| MacOS and Windows | Not needed                                                                     |
+| Ubuntu            | `sudo apt update && apt-get install -y python3-dev python3-pip libasound2-dev` |
+| CentOS            | `sudo yum update && yum install -y python3-devel gcc alsa-lib-devel`           |
+
