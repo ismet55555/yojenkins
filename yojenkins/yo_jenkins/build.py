@@ -254,10 +254,9 @@ class Build():
         request_url = f"{url.strip('/')}/stop"
         if not self.rest.request(request_url, 'post', is_endpoint=False)[2]:
             messages = [
-                    'Failed to abort build',
-                    '   - Build may not exist, is queued, or you are not authorized to abort',
-                    '   - For more details run with --debug'
-                    ]
+                'Failed to abort build', '   - Build may not exist, is queued, or you are not authorized to abort',
+                '   - For more details run with --debug'
+            ]
             failures_out(messages)
 
         logger.debug('Successfully aborted build')
