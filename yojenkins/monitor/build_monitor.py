@@ -393,11 +393,8 @@ class BuildMonitor(Monitor):
                     if build_url:
                         self.server_interaction = True
                         build_number = self.build.abort(build_url=build_url)
-                        if build_number == 0:
-                            # TODO: Show error message
-                            pass
                     else:
-                        # TODO: Show error message
+                        # TODO: Show UI error message for missing build_url
                         pass
                     self.build_abort = 0
             else:
