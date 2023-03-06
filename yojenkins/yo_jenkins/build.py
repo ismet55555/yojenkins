@@ -15,7 +15,7 @@ import yaml
 
 from yojenkins.monitor import BuildMonitor
 from yojenkins.utility import utility
-from yojenkins.utility.utility import diff_show, fail_out, print2
+from yojenkins.utility.utility import diff_show, fail_out, failures_out, print2
 from yojenkins.yo_jenkins.auth import Auth
 from yojenkins.yo_jenkins.jenkins_item_classes import JenkinsItemClasses
 from yojenkins.yo_jenkins.rest import Rest
@@ -253,7 +253,11 @@ class Build():
         logger.debug(f'Aborting build: {url} ...')
         request_url = f"{url.strip('/')}/stop"
         if not self.rest.request(request_url, 'post', is_endpoint=False)[2]:
-            fail_out('Failed to abort build. Build may not exist or is queued')
+            messages = [
+                'Failed to abort build', '   - Build may not exist, is queued, or you are not authorized to abort',
+                '   - For more details run with --debug'
+            ]
+            failures_out(messages)
 
         logger.debug('Successfully aborted build')
 
