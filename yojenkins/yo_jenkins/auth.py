@@ -686,7 +686,10 @@ class Auth:
             fail_out('Failed to find profile key "jenkins_server_url". Profile may not have loaded correctly')
         request_success = self.rest.request(target=request_url, is_endpoint=False, request_type='head')[2]
         if not request_success:
-            fail_out('Failed server authentication with specified user credentials')
+            messages = ['Failed server authentication with specified user credentials']
+            if "YOJENKINS_TOKEN" in os.environ:
+                messages.append("   - NOTE: Environmental variable YOJENKINS_TOKEN is defined")
+            failures_out(messages)
         logger.debug('Successfully authenticated with specified user credentials')
 
         return True
