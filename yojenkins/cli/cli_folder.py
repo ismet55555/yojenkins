@@ -12,7 +12,7 @@ from yojenkins.cli.cli_utility import log_to_history
 from yojenkins.utility.utility import print2
 
 # Getting the logger reference
-logger = logging.getLogger()
+log = logging.getLogger()
 
 
 @log_to_history

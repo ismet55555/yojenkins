@@ -406,20 +406,20 @@ class Folder():
                     fail_out(f'Failed to convert the specified JSON file to XML format. Exception: {error}')
         else:
             # Use blank item config
-            # FIXME: These are not valid XML configs, try json instead
-            # FIXME: This does not account for the name of the item
             if type == 'folder':
-                endpoint = f'createItem?name={name}'
                 item_config = JenkinsItemConfig.FOLDER.value['blank']
-                # prefix = JenkinsItemClasses.FOLDER.value['prefix']
             elif type == 'view':
-                endpoint = f'createView?name={name}'
                 item_config = JenkinsItemConfig.VIEW.value['blank']
-                # prefix = JenkinsItemClasses.VIEW.value['prefix']
             elif type == 'job':
-                endpoint = f'createItem?name={name}'
                 item_config = JenkinsItemConfig.JOB.value['blank']
-                # prefix = JenkinsItemClasses.JOB.value['prefix']
+            # item_config = item_config.encode('utf-8')
+
+        if type == 'folder':
+            endpoint = f'createItem?name={name}'
+        elif type == 'view':
+            endpoint = f'createView?name={name}'
+        elif type == 'job':
+            endpoint = f'createItem?name={name}'
 
         # Checking if the item exists
         if utility.item_exists_in_folder(name, folder_url, type, self.rest):
@@ -430,7 +430,7 @@ class Folder():
         headers = {'Content-Type': 'application/xml; charset=utf-8'}
         success = self.rest.request(f'{folder_url.strip("/")}/{endpoint}',
                                     'post',
-                                    data=item_config.encode('utf-8'),
+                                    data=item_config,
                                     headers=headers,
                                     is_endpoint=False)[2]
         if not success:

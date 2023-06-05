@@ -26,10 +26,7 @@ class YoJenkins:
         """Object constructor method, called at object creation
 
         Args:
-            None
-
-        Returns:
-            None
+            auth: Auth object
         """
         self.auth = auth
         self.rest = self.auth.get_rest()

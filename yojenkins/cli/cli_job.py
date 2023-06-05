@@ -12,7 +12,7 @@ from yojenkins.cli.cli_utility import log_to_history
 from yojenkins.utility.utility import print2, wait_for_build_and_follow_logs
 
 # Getting the logger reference
-logger = logging.getLogger()
+log = logging.getLogger()
 
 
 @log_to_history
@@ -152,9 +152,9 @@ def build(profile: str, token: str, job: str, parameter: tuple, follow_logs: boo
     parameters = dict(list(parameter))
 
     if cu.is_full_url(job):
-        data = yj_obj.job.build_trigger(job_url=job, paramters=parameters)
+        data = yj_obj.job.build_trigger(job_url=job, parameters=parameters)
     else:
-        data = yj_obj.job.build_trigger(job_name=job, paramters=parameters)
+        data = yj_obj.job.build_trigger(job_name=job, parameters=parameters)
     if not follow_logs:
         click.secho(f'success. queue number: {data}', fg='bright_green', bold=True)
         return

@@ -8,7 +8,7 @@ from yojenkins.utility.utility import fail_out, print2
 from yojenkins.yo_jenkins.status import Status
 
 # Getting the logger reference
-logger = logging.getLogger()
+log = logging.getLogger()
 
 
 @log_to_history
@@ -27,7 +27,7 @@ def info(profile: str, token: str, name: str, job: str, number: int, url: str, l
 
     # Differentiate if name or url
     if url:
-        logger.debug(f'Build URL passed: {url}')
+        log.debug(f'Build URL passed: {url}')
         valid_url_format = True
     else:
         valid_url_format = cu.is_full_url(job) if not url else True
@@ -56,7 +56,7 @@ def status(profile: str, token: str, name: str, job: str, number: int, url: str,
 
     # Differentiate if name or url
     if url:
-        logger.debug(f'Build URL passed: {url}')
+        log.debug(f'Build URL passed: {url}')
         valid_url_format = True
     else:
         valid_url_format = cu.is_full_url(job) if not url else True
@@ -108,7 +108,7 @@ def steps(profile: str, token: str, opt_list: bool, name: str, job: str, number:
 
     # Differentiate if name or url
     if url:
-        logger.debug(f'Build URL passed: {url}')
+        log.debug(f'Build URL passed: {url}')
         valid_url_format = True
     else:
         valid_url_format = cu.is_full_url(job) if not url else True
@@ -147,7 +147,7 @@ def logs(profile: str, token: str, name: str, job: str, number: int, url: str, l
 
     # Differentiate if name or url
     if url:
-        logger.debug(f'Build URL passed: {url}')
+        log.debug(f'Build URL passed: {url}')
         valid_url_format = True
     else:
         valid_url_format = cu.is_full_url(job) if not url else True

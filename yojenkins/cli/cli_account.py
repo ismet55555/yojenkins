@@ -8,7 +8,7 @@ from yojenkins.cli import cli_utility as cu
 from yojenkins.cli.cli_utility import log_to_history
 
 # Getting the logger reference
-logger = logging.getLogger()
+log = logging.getLogger()
 
 
 @log_to_history

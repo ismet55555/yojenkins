@@ -9,7 +9,7 @@ from yojenkins.cli.cli_utility import log_to_history
 from yojenkins.yo_jenkins import Auth, Rest
 
 # Getting the logger reference
-logger = logging.getLogger()
+log = logging.getLogger()
 
 
 @log_to_history

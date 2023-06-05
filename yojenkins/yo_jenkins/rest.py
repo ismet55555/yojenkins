@@ -13,7 +13,7 @@ logger = logging.getLogger()
 
 
 class Rest:
-    """Handeling of REST requests"""
+    """Handling of REST requests"""
 
     def __init__(self, username: str = '', api_token: str = '', server_url: str = '', session=None) -> None:
         """TODO Docstring
@@ -128,7 +128,7 @@ class Rest:
 
         Details: Currently supported GET, POST, HEAD
 
-        **TODO**: Refactor/Rework this method. Too bloated. Take appart into multiple methods!
+        **TODO**: Refactor/Rework this method. Too bloated. Take apart into multiple methods!
 
         Args:
             target         : Request URL target. Does not include server_url
@@ -139,7 +139,7 @@ class Rest:
             auth_needed    : If True, use credentials, else do not
             new_session    : If True, create a new connection sessions, else re-use previous/default session
             params         : Parameters passed with the request
-            data           : Data passed with the request
+            data           : A dictionary, list of tuples, bytes or a file object to send to the specified url
             json_data      : JSON data passed with the request
             headers        : Headers passed with the request
             timeout        : Number of seconds to wait for request

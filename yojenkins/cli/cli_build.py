@@ -11,7 +11,7 @@ from yojenkins.utility.utility import is_complete_build_url, wait_for_build_and_
 from yojenkins.yo_jenkins.status import Status
 
 # Getting the logger reference
-logger = logging.getLogger()
+log = logging.getLogger()
 
 
 def _verify_build_url_get_job_format(build_url: str, job: str) -> bool:
@@ -36,7 +36,7 @@ def _verify_build_url_get_job_format(build_url: str, job: str) -> bool:
 
 @log_to_history
 def info(profile: str, token: str, job: str, number: int, url: str, latest: bool, **kwargs) -> None:
-    """Fetching build information
+    """Fetch build information.
 
     Args:
         profile: The profile/account to use
@@ -66,7 +66,7 @@ def info(profile: str, token: str, job: str, number: int, url: str, latest: bool
 
 @log_to_history
 def status(profile: str, token: str, job: str, number: int, url: str, latest: bool) -> None:
-    """Build status text/label
+    """Build status text/label.
 
     ### FIXME: Verify build number resolution works
 

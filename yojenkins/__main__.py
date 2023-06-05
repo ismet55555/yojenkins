@@ -11,7 +11,7 @@ from yojenkins import __version__
 from yojenkins.cli import logger_setup
 from yojenkins.cli.cli_utility import set_debug_log_level
 
-logger = logging.getLogger()
+log = logging.getLogger()
 
 if sys.version_info < (3, 7):
     click.secho('Your Python version ({}.{}) is not supported'.format(sys.version_info.major, sys.version_info.minor), fg='bright_red', bold=True)

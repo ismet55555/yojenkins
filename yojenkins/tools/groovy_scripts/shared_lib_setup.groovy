@@ -50,5 +50,5 @@ try {
     libraryConfiguration.setImplicit(implicit)
     globalLibraryDescriptor.get().setLibraries([libraryConfiguration])
 } catch (groovyError) {
-    print "['yojenkins groovy script failed', '${groovyError.message}', 'failed to create shared libraray: ${globalLibraryName}']"
+    print "['yojenkins groovy script failed', '${groovyError.message}', 'failed to create shared library: ${globalLibraryName}']"
 }

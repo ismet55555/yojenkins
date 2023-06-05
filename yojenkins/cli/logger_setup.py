@@ -1,4 +1,4 @@
-""""Logger Setup"""
+""""Logger Setup."""
 
 # TODO: Move to utilities
 

@@ -25,7 +25,7 @@ class Account():
         self.groovy_script_directory = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'groovy_scripts')
 
     def list(self) -> Tuple[list, list]:
-        """List all accounts for the server
+        """List all accounts for the server.
 
         Args:
             None
@@ -49,7 +49,7 @@ class Account():
         return account_list, account_list_id
 
     def info(self, user_id: str) -> dict:
-        """Get information about an account
+        """Get information about an account.
 
         Args:
             user_id: User account ID
@@ -162,7 +162,7 @@ class Account():
         return True
 
     def permission_list(self) -> Tuple[list, list]:
-        """Get all the available permissions and descriptions
+        """Get all the available permissions and descriptions.
 
         Args:
             None

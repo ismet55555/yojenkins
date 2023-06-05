@@ -20,8 +20,3 @@ line_length = 100
 include_trailing_comma = true
 supported_extensions = [".py"]
 extend_skip = ["env", "venv", ".vscode", ".pytest_cache", "docs", "dev_things"]
-
-[tool.bandit]
-# tests = ["B105", "B107"]  # List of included tests
-skips = ["B101", "B105", "B107"]  # List skipped tests
-exclude = ['*_test.py', 'test_*.py', './tests', './dev_things']

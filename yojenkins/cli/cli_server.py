@@ -16,7 +16,7 @@ from yojenkins.utility.utility import fail_out, failures_out, print2
 from yojenkins.yo_jenkins import Auth, YoJenkins
 
 # Getting the logger reference
-logger = logging.getLogger()
+log = logging.getLogger()
 
 # TODO: Find centralized location for these static values
 CONFIG_DIR_NAME = '.yojenkins'
@@ -158,7 +158,7 @@ def server_deploy(config_file: str, plugins_file: str, protocol_schema: str, hos
         TODO
     """
     msg = "Setting up a local Jenkins development server. Hold tight, this may take a minute ..."
-    if logger.level > 10:
+    if log.level > 10:
         spinner = yaspin(spinner=getattr(Spinners, "bouncingBar"), attrs=["bold"], text=msg)
         spinner.start()
     else:
@@ -185,14 +185,14 @@ def server_deploy(config_file: str, plugins_file: str, protocol_schema: str, hos
 
     # Initialize docker client
     if not djs.docker_client_init():
-        if logger.level > 10:
+        if log.level > 10:
             spinner.stop()
         fail_out('Failed to connect to local docker client')
 
     # Setup the server
     deployed, success = djs.setup()
 
-    if logger.level > 10:
+    if log.level > 10:
         spinner.stop()
 
     if not success:
@@ -206,7 +206,7 @@ def server_deploy(config_file: str, plugins_file: str, protocol_schema: str, hos
     filepath = os.path.join(Path.home(), CONFIG_DIR_NAME, 'last_deploy_info.json')
     if not filepath:
         fail_out('Failed to find yojenkins module included data directory')
-    logger.debug(f'Writing server deploy information to file: {filepath}')
+    log.debug(f'Writing server deploy information to file: {filepath}')
     try:
         with open(os.path.join(filepath), 'w') as file:
             json.dump(deployed, file, indent=4, sort_keys=True)
@@ -239,12 +239,12 @@ def server_teardown(remove_volume: bool, remove_image: bool) -> None:
     """
     # Load deployment info file with deployment information
     filepath = os.path.join(Path.home(), CONFIG_DIR_NAME, 'last_deploy_info.json')
-    logger.debug(f'Detecting server deployment info file: {filepath} ...')
+    log.debug(f'Detecting server deployment info file: {filepath} ...')
     deployed = {}
     try:
         with open(os.path.join(filepath), 'r') as file:
             deployed = json.load(file)
-        logger.debug(f'Successfully found and loaded server deployment info file: {deployed}')
+        log.debug(f'Successfully found and loaded server deployment info file: {deployed}')
     except (FileNotFoundError, FileExistsError):
         failures = ['Failed to find server deployment info file']
         failures.append('If you think there was a previously successfull deployment, use Docker to remove it manually')

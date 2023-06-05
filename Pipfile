@@ -13,6 +13,7 @@ python_version = "3"
 bump2version = "*"
 macholib = {version = "*", platform_system = "== 'Darwin'"}
 mkdocs = "*"
+mypy = "*"
 myst_parser = "*"
 pre-commit = "*"
 pyinstaller = "*"
@@ -21,6 +22,7 @@ pytest = "*"
 setuptools = "*"
 twine = "*"
 wheel = "*"
+yamllint = "*"
 yapf = "*"
 yojenkins = {editable = true, path = "."}
 

@@ -176,3 +176,5 @@ config.yaml
 docs/site/**
 
 NOTES.md
+yojenkins.yaml
+*.xml

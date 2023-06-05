@@ -1,4 +1,4 @@
-"""General utility and tools"""
+"""General utility and tools."""
 
 import difflib
 import json
@@ -79,7 +79,7 @@ def translate_kwargs(original_kwargs: Dict[str, Any]) -> Dict[str, Any]:
     return new_kwargs
 
 
-def print2(message: str, bold: bool = False, color: str = "reset") -> None:
+def print2(message: Any, bold: bool = False, color: str = "reset") -> None:
     """Print a message to the console using click
 
     Details:
@@ -95,6 +95,18 @@ def print2(message: str, bold: bool = False, color: str = "reset") -> None:
         color  : Color to use for the message ()
     """
     echo(style(message, fg=color, bold=bold))
+
+
+def warn_out(message: str) -> None:
+    """Output one warning message to the console
+
+    Example Usage:
+        - `warn_out("Something went wrong!")`
+
+    Args:
+        message: Message to output to console
+    """
+    echo(style(message, fg="bright_yellow", bold=True))
 
 
 def fail_out(message: str) -> None:
@@ -959,7 +971,8 @@ def item_exists_in_folder(item_name: str, folder_url: str, item_type: str, rest:
     item_type_info = getattr(JenkinsItemClasses, item_type.upper())
     prefix = item_type_info.value["prefix"]
 
-    item_url = urljoin(folder_url, f"{prefix}/{item_name}")
+    # item_url = urljoin(folder_url, f"{prefix}/{item_name}")
+    item_url = f"{folder_url.strip('/')}/{prefix}/{item_name}"
 
     logger.debug(f'Checking if {item_type} "{item_name}" already exists within folder "{folder_url}" ...')
     item_exists = rest.request(f'{item_url.strip("/")}/api/json', "head", is_endpoint=False)[2]
@@ -967,7 +980,7 @@ def item_exists_in_folder(item_name: str, folder_url: str, item_type: str, rest:
         logger.debug(f'Found existing {item_type} "{item_name}" within "{folder_url}"')
         return True
     else:
-        logger.debug(f'Did not found {item_type} "{item_name}" within "{folder_url}"')
+        logger.debug(f'Did not find {item_type} "{item_name}" within "{folder_url}"')
 
     return item_exists
 
@@ -1243,8 +1256,8 @@ def create_new_history_file(file_path: str) -> None:
         logger.exception(f"Failed to create new command history file. Exception: {error}")
 
 
-def wait_for_build_and_follow_logs(yj_obj: object, queue_id: int) -> None:
-    """Wait for build to leave queue, run, then follow/stream logs to console
+def wait_for_build(yj_obj: object, queue_id: int, poll_interval: int = 2) -> None:
+    """Wait for build to leave queue
 
     Details:
         Will only use loading spinner when not in logger debug mode
@@ -1252,13 +1265,12 @@ def wait_for_build_and_follow_logs(yj_obj: object, queue_id: int) -> None:
     Args:
         yj_obj:   YoJenkins object
         queue_id: Build queue ID
+        poll_interval: Polling interval in seconds
     """
-    msg = f"Build is in queue with queue ID {queue_id}. Waiting for build to run ..."
     if logger.level > 10:
-        spinner = yaspin(spinner=getattr(Spinners, "bouncingBar"), attrs=["bold"], text=msg)
-        spinner.start()
+        spinner = yaspin(spinner=getattr(Spinners, "bouncingBar"), attrs=["bold"], text=msg).start()
     else:
-        logger.info(msg)
+        logger.info(f"Build is in queue with queue ID {queue_id}. Waiting for build to run ...")
 
     while True:
         queue_data = yj_obj.job.queue_info(build_queue_number=queue_id)
@@ -1270,11 +1282,23 @@ def wait_for_build_and_follow_logs(yj_obj: object, queue_id: int) -> None:
                 fg="bright_red",
                 bold=True,
             )
-        time.sleep(2)
+        time.sleep(poll_interval)
 
     if logger.level > 10:
         spinner.stop()
 
+
+def wait_for_build_and_follow_logs(yj_obj: object, queue_id: int) -> None:
+    """Wait for build to leave queue, run, then follow/stream logs to console
+
+    Details:
+        Will only use loading spinner when not in logger debug mode
+
+    Args:
+        yj_obj:   YoJenkins object
+        queue_id: Build queue ID
+    """
+    wait_for_build(yj_obj, queue_id)
     build_number = queue_data["executable"]["number"]
     print2(f"Running with build number {build_number}. Following console logs below:")
     yj_obj.build.logs(
@@ -1283,6 +1307,20 @@ def wait_for_build_and_follow_logs(yj_obj: object, queue_id: int) -> None:
         build_number=build_number,
         follow=True,
     )
+
+
+def wait_for_build_and_monitor(yj_obj: object, queue_id: int) -> None:
+    """Wait for build to leave queue, run, then monitor build
+
+    Details:
+        Will only use loading spinner when not in logger debug mode
+
+    Args:
+        yj_obj:   YoJenkins object
+        queue_id: Build queue ID
+    """
+    wait_for_build(yj_obj, queue_id)
+    # TODO: monitor build
 
 
 def diff_show(

@@ -310,7 +310,7 @@ class Job():
 
         return False
 
-    def build_trigger(self, job_name: str = '', job_url: str = '', paramters: Dict = {}) -> int:
+    def build_trigger(self, job_name: str = '', job_url: str = '', parameters: Dict = {}) -> int:
         """TODO Docstring
 
         Args:
@@ -337,12 +337,12 @@ class Job():
         next_build_number = self.build_next_number(job_name=job_name, job_url=job_url)
         logger.debug(f'Triggering job "{job_url}", build {next_build_number} ...')
 
-        if paramters:
-            # Use the paramters passed
-            logger.debug(f'Triggering with job paramters: {paramters}')
-            post_url = f'{job_url}/buildWithParameters?{urlencode(paramters)}'
+        if parameters:
+            # Use the parameters passed
+            logger.debug(f'Triggering with {len(parameters)} job parameters: {parameters} ...')
+            post_url = f'{job_url}/buildWithParameters?{urlencode(parameters)}'
         else:
-            # No paramters passed
+            # No parameters passed
             post_url = f'{job_url}/build'
 
         # Posting to Jenkins
