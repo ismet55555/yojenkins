@@ -61,4 +61,3 @@ however it will not play any sound effects.
 | MacOS and Windows | Not needed                                                                     |
 | Ubuntu            | `sudo apt update && apt-get install -y python3-dev python3-pip libasound2-dev` |
 | CentOS            | `sudo yum update && yum install -y python3-devel gcc alsa-lib-devel`           |
-
