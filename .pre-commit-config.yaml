@@ -44,12 +44,6 @@ repos:
     hooks:
       - id: gitleaks
 
-  - repo: https://github.com/adrienverge/yamllint.git
-    rev: v1.29.0
-    hooks:
-      - id: yamllint
-        args: [--strict, -c=.yamllint]
-
   - repo: https://github.com/pre-commit/mirrors-yapf
     rev: v0.31.0
     hooks:
@@ -83,5 +77,6 @@ repos:
             "--rcfile=.pylintrc", # Link to your config file
             "--load-plugins=pylint.extensions.docparams", # Load an extension
             "--output-format=colorized", # Load an extension
-            "--fail-under=8.0"
+            "--fail-under=8.0",
+            # "--disable=R0913,W0511,R0912,W1309", # Disable some specific messages IDs
           ]

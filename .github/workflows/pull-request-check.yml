@@ -72,7 +72,6 @@ jobs:
           key: ${{ runner.os }}-pipenv-${{ hashFiles('**/Pipfile.lock') }}
 
       - name: Install dependencies if not in cache
-        # if: steps.cache-pipenv.outputs.cache-hit != 'true'
         run: pipenv sync --dev
 
       - name: Show all dependencies (pipenv)
@@ -81,8 +80,8 @@ jobs:
       - name: Show all dependencies (pip)
         run: pipenv run pip list
 
-      - name: Code Linting
-        run: pipenv run pylint ./yojenkins --rcfile=.pylintrc
+      - name: Pre-commit run
+        run: pipenv run pre-commit run --all-files
 
       - name: Build the package
         run: pipenv run python setup.py install --verbose
