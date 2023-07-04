@@ -80,7 +80,7 @@ jobs:
         run: pipenv run pip install pylint
 
       - name: Show all dependencies (pipenv)
-        run: pipenv graph
+        run: pipenv graph --bare
 
       - name: Show all dependencies (pip)
         run: pipenv run pip list
