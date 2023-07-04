@@ -232,11 +232,6 @@ def log_to_history(decorated_function) -> Callable:
         if not os.path.isfile(history_file_path):
             create_new_history_file(history_file_path)
 
-        # # If profile history length is too long, remove the oldest history item
-        # if profile_name in file_contents:
-        #     if len(file_contents[profile_name]) > MAX_PROFILE_HISTORY_LENGTH:
-        #         file_contents[profile_name].pop(0)
-
         logger.debug(f'Logging command to command history file: "{history_file_path}" ...')
         command_info = {
             'profile': profile_name,
