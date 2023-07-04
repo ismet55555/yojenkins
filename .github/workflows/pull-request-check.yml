@@ -3,6 +3,7 @@ on: [pull_request]
 jobs:
   format:
     # Check if the PR is not from a fork
+    name: Format Code
     if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     steps:
@@ -72,7 +73,7 @@ jobs:
           key: ${{ runner.os }}-pipenv-${{ hashFiles('**/Pipfile.lock') }}
 
       - name: Install dependencies if not in cache
-        run: pipenv sync --dev
+        run: pipenv install --ignore-pipfile --dev
 
       - name: Show all dependencies (pipenv)
         run: pipenv graph
