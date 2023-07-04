@@ -55,7 +55,7 @@ def feature_request(debug):
 @click.option('--profile', type=str, required=False, is_flag=False, help='Filter by profile name')
 @click.option('--clear', type=bool, required=False, default=False, is_flag=True, help='Clear the history file')
 def history(debug, **kwargs):
-    """Show detailed command usage history"""
+    """Show detailed command usage history."""
     set_debug_log_level(debug)
     cli_tools.history(**kwargs)
 
