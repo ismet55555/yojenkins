@@ -48,9 +48,8 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get install -y python3-dev libasound2-dev
 
-      - name: Install pipenv
-        run: |
-          python -m pip install --upgrade-strategy=only-if-needed pip pipenv
+      - name: Install/Upgrade Python tooling
+        run: python -m pip install --upgrade pip pipenv virtualenv wheel setuptools
 
       - id: cache-pipenv
         uses: actions/cache@v3
@@ -100,8 +99,8 @@ jobs:
       - name: Install Linux simpleaudio dependency
         run: sudo apt-get install -y python3-dev libasound2-dev
 
-      - name: Install pipenv
-        run: python -m pip install --upgrade-strategy=only-if-needed pip pipenv
+      - name: Install/Upgrade Python tooling
+        run: python -m pip install --upgrade pip pipenv virtualenv wheel setuptools
 
       - id: cache-pipenv
         uses: actions/cache@v3
@@ -164,8 +163,8 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get install -y python3-dev libasound2-dev
 
-      - name: Install pipenv
-        run: python -m pip install --upgrade-strategy=only-if-needed pip pipenv
+      - name: Install/Upgrade Python tooling
+        run: python -m pip install --upgrade pip pipenv virtualenv wheel setuptools
 
       - id: cache-pipenv
         uses: actions/cache@v3
