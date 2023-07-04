@@ -75,6 +75,9 @@ jobs:
       - name: Install dependencies if not in cache
         run: pipenv install --ignore-pipfile --dev
 
+      - name: Stupid hack for pylint
+        run: pipenv run pip install pylint
+
       - name: Show all dependencies (pipenv)
         run: pipenv graph
 
