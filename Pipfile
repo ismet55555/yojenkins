@@ -22,6 +22,7 @@ setuptools = "*"
 twine = "*"
 wheel = "*"
 yapf = "*"
+yamllint = "*"
 yojenkins = {editable = true, path = "."}
 
 [packages]
