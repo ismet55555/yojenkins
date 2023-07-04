@@ -1,4 +1,4 @@
-name: YAPF Formatting Check
+name: Pull Request Check
 on: [pull_request]
 jobs:
   format:
@@ -70,14 +70,17 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.local/share/virtualenvs
-          key: ${{ runner.os }}-pipenv-V3-${{ hashFiles('**/Pipfile.lock') }}
+          key: ${{ runner.os }}-pipenv-${{ hashFiles('**/Pipfile.lock') }}
 
       - name: Install dependencies if not in cache
         if: steps.cache-pipenv.outputs.cache-hit != 'true'
         run: pipenv sync --dev
 
-      - name: Show All dependencies
+      - name: Show all dependencies (pipenv)
         run: pipenv graph
+
+      - name: Show all dependencies (pip)
+        run: pip list
 
       - name: Code Linting
         run: pipenv run pylint ./yojenkins --rcfile=.pylintrc

@@ -56,14 +56,17 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.local/share/virtualenvs
-          key: ${{ runner.os }}-pipenv-V3-${{ hashFiles('**/Pipfile.lock') }}
+          key: ${{ runner.os }}-pipenv-${{ hashFiles('**/Pipfile.lock') }}
 
       - name: Install dependencies if not in cache
         if: steps.cache-pipenv.outputs.cache-hit != 'true'
         run: pipenv sync --dev
 
-      - name: Show All dependencies
+      - name: Show all dependencies (pipenv)
         run: pipenv graph
+
+      - name: Show all dependencies (pip)
+        run: pip list
 
       - name: Code Linting
         run: pipenv run pylint ./yojenkins --rcfile=.pylintrc
@@ -104,7 +107,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.local/share/virtualenvs
-          key: ${{ runner.os }}-pipenv-V3-${{ hashFiles('**/Pipfile.lock') }}
+          key: ${{ runner.os }}-pipenv-${{ hashFiles('**/Pipfile.lock') }}
 
       - name: Install dependencies if not in cache
         if: steps.cache-pipenv.outputs.cache-hit != 'true'
@@ -113,8 +116,11 @@ jobs:
       - name: Install pypa/build tooling
         run: pipenv run python -m pip install build
 
-      - name: Show all installed pip packages
+      - name: Show all dependencies (pipenv)
         run: pipenv graph
+
+      - name: Show all dependencies (pip)
+        run: pip list
 
       - name: Create release version tag
         id: release
@@ -165,14 +171,17 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.local/share/virtualenvs
-          key: ${{ runner.os }}-pipenv-V3-${{ hashFiles('**/Pipfile.lock') }}
+          key: ${{ runner.os }}-pipenv-${{ hashFiles('**/Pipfile.lock') }}
 
       - name: Install dependencies if not in cache
         if: steps.cache-pipenv.outputs.cache-hit != 'true'
-        run: pipenv sync --de
+        run: pipenv sync --dev
 
-      - name: Show all installed pip packages
+      - name: Show all dependencies (pipenv)
         run: pipenv graph
+
+      - name: Show all dependencies (pip)
+        run: pip list
 
       - name: Build with PyInstaller
         env:
