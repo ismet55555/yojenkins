@@ -1,4 +1,4 @@
-"""General utility and tools"""
+"""General utility and tools."""
 
 import difflib
 import json
@@ -11,7 +11,7 @@ import time
 import webbrowser
 from pathlib import Path
 from string import Template
-from typing import Any, Dict, List, Set, Tuple, Union
+from typing import Any, Dict, List, Literal, Set, Tuple, Union
 from urllib.parse import urljoin, urlparse
 
 import requests
@@ -41,7 +41,7 @@ KWARG_TRANSLATE_MAP = {
 
 
 class TextStyle:
-    """Text style definitions"""
+    """Text style definitions."""
 
     HEADER = "\033[95m"
     BLUE = "\033[94m"
@@ -55,8 +55,7 @@ class TextStyle:
 
 
 def translate_kwargs(original_kwargs: Dict[str, Any]) -> Dict[str, Any]:
-    """Rename the key names of the provided kwargs based on
-    a set of translation rules.
+    """Rename the key names of the provided kwargs based on a set of translation rules.
 
     Details: This is primarirly used if kwarg keys are named like
              a module or python native object.
@@ -80,7 +79,7 @@ def translate_kwargs(original_kwargs: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def print2(message: str, bold: bool = False, color: str = "reset") -> None:
-    """Print a message to the console using click
+    """Print a message to the console using click.
 
     Details:
         - Colors: `black` (might be a gray), `red`, `green`, `yellow` (might be an orange), `blue`,
@@ -98,7 +97,7 @@ def print2(message: str, bold: bool = False, color: str = "reset") -> None:
 
 
 def fail_out(message: str) -> None:
-    """Output one failure message to the console, then exit
+    """Output one failure message to the console, then exit.
 
     Example Usage:
         - `fail_out("Something went wrong!")`
@@ -111,7 +110,7 @@ def fail_out(message: str) -> None:
 
 
 def failures_out(messages: list) -> None:
-    """Output multiple failure messages to the console, then exit
+    """Output multiple failure messages to the console, then exit.
 
     Example Usage:
         - `failures_out(["Oh no!", "This is not good!"])`
@@ -124,19 +123,18 @@ def failures_out(messages: list) -> None:
     sys.exit(1)
 
 
-def load_contents_from_local_file(file_type: str, local_file_path: str) -> Dict:
-    """Loading a local file contents
+def load_contents_from_local_file(file_type: Literal['yaml', 'toml', 'json', 'jsonl'],
+                                  local_file_path: str) -> Union[Dict, List]:
+    """Load a local file contents.
 
     ### TODO: Add default option to load file as plain text
 
     Parameters:
-        file_type (str)       : Type of file to be loaded ie. 'yaml', 'toml', 'json'
-        local_file_path (str) : Path to a local TOML file to be loaded
+        file_type       : Type of file to be loaded (ie. json)
+        local_file_path : Path to a local TOML file to be loaded
     Returns:
-        file_contents (dict) : The contents of file
+        file_contents
     """
-    file_type = file_type.lower()
-
     # Check if file exists
     if not os.path.isfile(local_file_path):
         fail_out(f"Failed to find file: {local_file_path}")
@@ -146,6 +144,7 @@ def load_contents_from_local_file(file_type: str, local_file_path: str) -> Dict:
         return {}
 
     logger.debug(f"Loading specified local .{file_type} file: '{local_file_path}' ...")
+    file_contents: Union[List, Dict] = {}
     try:
         with open(local_file_path, "r") as open_file:
             if file_type == "yaml":
@@ -154,6 +153,8 @@ def load_contents_from_local_file(file_type: str, local_file_path: str) -> Dict:
                 file_contents = toml.load(open_file)
             elif file_type == "json":
                 file_contents = json.loads(open_file.read())
+            elif file_type == "jsonl":
+                file_contents = [json.loads(line) for line in open_file]
             else:
                 raise ValueError(f"Unknown file type passed: '{file_type}'")
         logger.debug(f"Successfully loaded local .{file_type} file")
@@ -163,7 +164,7 @@ def load_contents_from_local_file(file_type: str, local_file_path: str) -> Dict:
 
 
 def load_contents_from_string(file_type: str, text: str) -> Dict:
-    """Loading a local file contents
+    """Load a local file contents.
 
     Parameters:
         file_type (str) : Type of file to be loaded ie. 'yaml', 'toml', 'json'
@@ -186,7 +187,7 @@ def load_contents_from_string(file_type: str, text: str) -> Dict:
 
 
 def load_contents_from_remote_file_url(file_type: str, remote_file_url: str, allow_redirects: bool = True) -> Dict:
-    """Loading a remote yaml file contents over HTTP
+    """Load a remote yaml file contents over HTTP.
 
     ### FIXME: Make it able to load toml, json, and yaml file types
 
@@ -333,7 +334,7 @@ def is_list_items_in_dict(list_items: list, dict_to_check: dict) -> Union[int, N
 
 
 def iter_data_empty_item_stripper(iter_data: Union[Dict, List, Set, Tuple]) -> Union[Dict, List, Set, Tuple]:
-    """Removes any empty data from a nested or un-nested iter item (list, dict, set, etc)
+    """Remove any empty data from a nested or un-nested iter item (list, dict, set, etc).
 
     Details: https://stackoverflow.com/a/27974027/11294572
 
@@ -357,7 +358,7 @@ def iter_data_empty_item_stripper(iter_data: Union[Dict, List, Set, Tuple]) -> U
 
 
 def is_credential_id_format(text: str) -> bool:
-    """Checking if the passed text is in Jenkins credential ID format
+    """Check if the passed text is in Jenkins credential ID format.
 
     Args:
         text: The text to check
@@ -369,13 +370,12 @@ def is_credential_id_format(text: str) -> bool:
     cred_match = re.match(regex_pattern, text)
     if cred_match:
         logger.debug(f"Successfully identified credential ID format")
-    else:
-        logger.debug(f"Failed to identify credential ID format")
-    return cred_match
+        return True
+    return False
 
 
 def is_full_url(url: str) -> bool:
-    """Check if passed string is a valid and full URL
+    """Check if passed string is a valid and full URL.
 
     Args:
         url: The text to check
@@ -399,7 +399,7 @@ def is_full_url(url: str) -> bool:
 
 
 def url_to_name(url: str) -> str:
-    """Convert the jenkins item URL to its name
+    """Convert the jenkins item URL to its name.
 
     Args:
         url : URL of the item (ie. folder, job, build)
@@ -424,7 +424,7 @@ def url_to_name(url: str) -> str:
 
 
 def format_name(name: str) -> str:
-    """Format / clean up the passed name
+    """Format / clean up the passed name.
 
     Details: The formatting includes it:
         - /Non-PAR/job/Non-Prod-Jobs/job/Something/job/job --> /Non-PAR/Non-Prod-Jobs/Something/job
@@ -447,7 +447,7 @@ def format_name(name: str) -> str:
 
 
 def fullname_to_name(fullname: str) -> str:
-    """Convert the jenkins item full name to its name only
+    """Convert the jenkins item full name to its name only.
 
     Details: Hey/This/Is/A/Full/Job --> Job
 
@@ -463,7 +463,7 @@ def fullname_to_name(fullname: str) -> str:
 
 
 def name_to_url(server_base_url: str, name: str) -> str:
-    """Convert the item name to URL
+    """Convert the item name to URL.
 
     ** TODO **
 
@@ -491,7 +491,7 @@ def name_to_url(server_base_url: str, name: str) -> str:
 
 
 def build_url_to_other_url(build_url: str, target_url: str = "job") -> str:
-    """From build_url get job or folder url
+    """From build_url get job or folder url.
 
     Args:
         build_url  : The URL of the build
@@ -526,7 +526,8 @@ def build_url_to_other_url(build_url: str, target_url: str = "job") -> str:
 
 
 def build_url_to_build_number(build_url: str) -> Union[int, None]:
-    """If possible, extract the build number from a passed Jenkins URL
+    """If possible, extract the build number from a passed Jenkins URL.
+
     In order to extract the build number, the passed URL must be related to the
     build (ie. URL of build logs)
 
@@ -561,7 +562,7 @@ def build_url_to_build_number(build_url: str) -> Union[int, None]:
 
 
 def is_complete_build_url(build_url: str) -> bool:
-    """Check if passed URL is a complete and valid build URL
+    """Check if passed URL is a complete and valid build URL.
 
     Args:
         build_url : URL of anything build related
@@ -584,6 +585,7 @@ def is_complete_build_url(build_url: str) -> bool:
 
 def build_url_complete(build_url: str) -> Union[str, None]:
     """If possible, extract only the build URL from a passed Jenkins URL.
+
     Will try to truncate anything after the build number.
     In order to extract the complete build URL, the passed URL must be related to the
     build (ie. URL of build logs).
@@ -635,7 +637,7 @@ def build_url_complete(build_url: str) -> Union[str, None]:
 
 
 def item_url_to_server_url(url: str, include_scheme: bool = True) -> str:
-    """From build_url get job or folder url
+    """From build_url get job or folder url.
 
     Args:
         url            : The URL of the build
@@ -653,7 +655,7 @@ def item_url_to_server_url(url: str, include_scheme: bool = True) -> str:
 
 
 def has_build_number_started(job_info: dict, build_number: int) -> bool:
-    """Given the job info, check if build number has been started/run
+    """Given the job info, check if build number has been started/run.
 
     Args:
         job_info     : The job information
@@ -668,7 +670,7 @@ def has_build_number_started(job_info: dict, build_number: int) -> bool:
         if not "number" in build:
             continue
         if build["number"] == build_number:
-            logger.debug(f"Successfully found tha build {build_number} was previously started")
+            logger.debug(f"Successfully found the build {build_number} was previously started")
             return True
     logger.debug(f"Failed to find build {build_number} was previously started")
     return False
@@ -681,7 +683,7 @@ def item_subitem_list(
     item_class_list: list = [],
     item_class_key: str = "_class",
 ) -> Tuple[list, list]:
-    """Given a item (job, build, etc) info, get the sub-items matching criteria
+    """Given a item (job, build, etc) info, get the sub-items matching criteria.
 
     Details: <DETAILED DESCRIPTION>
 
@@ -714,8 +716,8 @@ def item_subitem_list(
 
 
 def to_seconds(time_quantity: int, time_unit_text: str) -> int:
-    """
-    Get the number of seconds from the time quantity and time unit type.
+    """Get the number of seconds from the time quantity and time unit type.
+
     Examples:
         - 45 min -> 2700 seconds
         - 2 days -> 432000 seconds
@@ -749,7 +751,7 @@ def to_seconds(time_quantity: int, time_unit_text: str) -> int:
 
 
 def html_clean(html: str) -> str:
-    """Clean up HTML format to text without HTML tags
+    """Clean up HTML format to text without HTML tags.
 
     Args:
         html : HTML content
@@ -772,7 +774,7 @@ def html_clean(html: str) -> str:
 
 
 def browser_open(url: str, new: int = 2, autoraise: bool = True) -> bool:
-    """Clean up HTML format to text without HTML tags
+    """Clean up HTML format to text without HTML tags.
 
     Args:
         url       : Weblink URL
@@ -791,7 +793,7 @@ def browser_open(url: str, new: int = 2, autoraise: bool = True) -> bool:
 
 
 def has_special_char(text: str, special_chars: str = "@!#$%^&*<>?/\|~:") -> bool:
-    """Check if passed text string contains any special characters
+    """Check if passed text string contains any special characters.
 
     Args:
         text          : Text to check
@@ -810,7 +812,7 @@ def has_special_char(text: str, special_chars: str = "@!#$%^&*<>?/\|~:") -> bool
 
 
 def remove_special_char(text: str, special_chars: str = "@!#$%^&*<>?/\|~:") -> str:
-    """Remove any special characters from text string
+    """Remove any special characters from text string.
 
     Args:
         text          : Text to remove special characters from
@@ -826,7 +828,7 @@ def remove_special_char(text: str, special_chars: str = "@!#$%^&*<>?/\|~:") -> s
 
 
 def queue_find(all_queue_info: dict, job_name: str = "", job_url: str = "", first: bool = True) -> list:
-    """Finding job in server build queue
+    """Find job in server build queue.
 
     Args:
         TODO
@@ -991,7 +993,7 @@ def am_i_bundled() -> bool:
     return getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS")
 
 
-def parse_and_check_input_string_list(string_list: str, join_back_char: str = "", split_char: str = ",") -> list:
+def parse_and_check_input_string_list(string_list: str, join_back_char: str = "", split_char: str = ",") -> List[str]:
     """Parsing a string list into a list of strings
 
     Details:
@@ -1219,9 +1221,6 @@ def create_new_history_file(file_path: str) -> None:
 
     Args:
         file_path: Full path to the history file
-
-    Returns:
-        None
     """
     try:
         # Creating configuration directory if it does not exist
@@ -1234,8 +1233,10 @@ def create_new_history_file(file_path: str) -> None:
         if not os.path.exists(file_path):
             logger.debug(f'Command history file NOT found: "{file_path}"')
             logger.debug("Creating a new command history file ...")
+
         with open(file_path, "w") as open_file:
-            json.dump({}, open_file)
+            # json.dump({}, open_file)
+            open_file.write("")
 
     except (FileNotFoundError, IOError, PermissionError) as error:
         fail_out(f"Failed to create history file ({file_path}). Exception: {error}")
@@ -1296,7 +1297,7 @@ def diff_show(
     diff_only: bool,
     diff_guide: bool,
 ) -> None:
-    """Display/Show line diffs between two specified texts
+    """Display/Show line diffs between two specified texts.
 
     Args:
         text_1:       String text 1

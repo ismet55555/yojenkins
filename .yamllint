@@ -1,0 +1,12 @@
+# -*- mode: yaml -*-
+# vim: set filetype=yaml
+---
+rules:
+  line-length:
+    level: error
+    max: 120
+
+yaml-files:
+  - '*.yaml'
+  - '*.yml'
+  - '.yamllint'

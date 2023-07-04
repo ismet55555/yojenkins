@@ -29,8 +29,8 @@ from yojenkins.utility.utility import iter_data_empty_item_stripper, load_conten
 logger = logging.getLogger()
 
 CONFIG_DIR_NAME = '.yojenkins'
-HISTORY_FILE_NAME = 'history'
-COMMAND_HISTORY_FORMAT = 'json'
+HISTORY_FILE_NAME = 'history.jsonl'
+COMMAND_HISTORY_FORMAT = 'jsonl'
 DEFAULT_PROFILE_NAME = 'default'
 MAX_PROFILE_HISTORY_LENGTH = 1000
 
@@ -195,7 +195,7 @@ def server_target_check(target: str) -> bool:
 
 
 def log_to_history(decorated_function) -> Callable:
-    """This function decorates a function that is a cli command.
+    """Decorate/wrap a function that is a cli command.
     The function will log the CLI command and its info to the command history.
 
     Details: Add this function like "@log_to_history" to a function
@@ -204,7 +204,7 @@ def log_to_history(decorated_function) -> Callable:
         decorated_function : Function that is decorated
 
     Returns:
-        None
+        The decorated function
     """
     # Get the profile argument index
     argspec = getfullargspec(decorated_function)
@@ -227,39 +227,30 @@ def log_to_history(decorated_function) -> Callable:
             # If function has profile argument, but none was passed, use the default profile name
             profile_name = DEFAULT_PROFILE_NAME
 
-        # Check if history file exists
+        # Check if history file exists, if not create it
         history_file_path = os.path.join(os.path.join(Path.home(), CONFIG_DIR_NAME), HISTORY_FILE_NAME)
         if not os.path.isfile(history_file_path):
             create_new_history_file(history_file_path)
 
-        # Load the history file content
-        file_contents = load_contents_from_local_file(COMMAND_HISTORY_FORMAT, history_file_path)
-        if not file_contents:
-            logger.debug("Command history file is blank")
+        # # If profile history length is too long, remove the oldest history item
+        # if profile_name in file_contents:
+        #     if len(file_contents[profile_name]) > MAX_PROFILE_HISTORY_LENGTH:
+        #         file_contents[profile_name].pop(0)
 
-        # If profile history length is too long, remove the oldest history item
-        if profile_name in file_contents:
-            if len(file_contents[profile_name]) > MAX_PROFILE_HISTORY_LENGTH:
-                file_contents[profile_name].pop(0)
-
-        # Add the command to the history file
         logger.debug(f'Logging command to command history file: "{history_file_path}" ...')
-        if profile_name not in file_contents:
-            file_contents[profile_name] = []
-
         command_info = {
+            'profile': profile_name,
             'tool_path': CLI_CMD_PATH,
             'arguments': CLI_CMD_ARGS,
             'timestamp': datetime.now().timestamp(),
             'datetime': datetime.now().strftime("%A, %B %d, %Y %I:%M:%S"),
             'tool_version': __version__
         }
-        file_contents[profile_name].append(command_info)
 
-        # Add to file, overwritting entire file
+        # Add line to history file
         try:
-            with open(history_file_path, 'w') as outfile:
-                json.dump(file_contents, outfile, indent=4)
+            with open(history_file_path, 'a', encoding="utf-8") as outfile:
+                outfile.write(json.dumps(command_info) + '\n')
         except Exception as error:
             logger.debug(f'Failed to write command history file: {error}')
 
