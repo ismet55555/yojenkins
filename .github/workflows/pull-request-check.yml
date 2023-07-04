@@ -79,8 +79,8 @@ jobs:
         if: matrix.os == 'macos-latest'
         run: pipenv run pip install pylint
 
-      - name: Show all dependencies (pipenv)
-        run: pipenv graph --bare
+      # - name: Show all dependencies (pipenv)
+      #   run: pipenv graph --bare
 
       - name: Show all dependencies (pip)
         run: pipenv run pip list
