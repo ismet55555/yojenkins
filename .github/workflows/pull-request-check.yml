@@ -79,7 +79,7 @@ jobs:
         run: pipenv graph
 
       - name: Show all dependencies (pip)
-        run: pip list
+        run: pipenv run pip list
 
       - name: Code Linting
         run: pipenv run pylint ./yojenkins --rcfile=.pylintrc

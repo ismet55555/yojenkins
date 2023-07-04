@@ -21,8 +21,9 @@ pytest = "*"
 setuptools = "*"
 twine = "*"
 wheel = "*"
-yapf = "*"
+wrapt = "*"
 yamllint = "*"
+yapf = "*"
 yojenkins = {editable = true, path = "."}
 
 [packages]
