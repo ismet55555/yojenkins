@@ -1,0 +1,120 @@
+# -*- mode: yaml -*-
+# vim: set filetype=yaml
+---
+profile: my_profile                        # Profile to use to run, fail if not there
+jenkins_server_url: http://localhost:8080  # Override jenkins server
+
+create:
+  folder:
+    - name: my_folder_4
+      folder: .
+      config_file: my_folder_config.xml         # Optional
+      skip_if_exists: true                     # Optional
+
+    - name: my_folder_5
+      folder: .
+      config_file: my_folder_config.xml         # Optional
+      skip_if_exists: true                     # Optional
+
+  job:
+    - name: my_job_test
+      folder: my_folder_4
+      config_file: my_job_config.xml             # Optional
+      skip_if_exists: true                      # Optional
+
+    - name: my_job_test_2
+      folder: my_folder_5
+      config_file: my_job_config.xml             # Optional
+      skip_if_exists: true                      # Optional
+      # NOTE: Update job?
+
+      
+build:
+  pre:                                     # Optional pre-build activities
+    - task: os                             # Command to execute on local OS
+      delay: 3              # Optional
+      command: BAD COMMAND  # Required
+      arguments:            # Optional
+        - -la
+      expected_result:     
+        exit_code: 0
+      show_output: true
+      skip_on_fail: true
+
+    - task: os                                    # Command to execute on local OS
+      delay: 1
+      command: date
+      arguments:
+        - +%s
+        - --utc
+      expected_result:
+        exit_code: 0
+      show_output: true
+      skip_on_fail: false
+
+    - task: request                               # Rest request
+      delay: 1
+      url: http://localhost:9500/network/connection_list
+      type: get
+      headers:
+        Content-Type: application/json
+      # parameters:
+      #   key1: value1
+      #   key2: value2
+      # json_data_file: my_file.json
+      # expected_result:                            # Leave for later (need to change rest object)
+      #   status_code: 200
+      skip_on_fail: true
+
+    - task: request
+      url: http://localhost:9500/network/internet_connectivity
+      type: get
+      headers:
+        Content-Type: application/json
+      # parameters:
+      #   ssid: Bayside Guest WiFi
+      #   password: gymnastics2
+
+
+
+
+  job: 
+    - name: my_folder_4/my_job_test                         # Name/URL of the job
+      parameters:                              # Parameters to feed to job build
+        # my_param_1: true
+        # my_param_2: 2
+
+
+
+
+  post:                                   # Optional post-build activities
+    - task: os
+      delay: 3
+      command: ls424
+      arguments:
+        - -la
+      expected_result:     
+        exit_code: 0
+      show_output: true
+      skip_on_fail: true
+
+    - task: request
+      delay: 1
+      url: http://localhost:9500/network/connection_list
+      type: get
+      headers:
+        Content-Type: application/json
+      expected_result:
+        status_code: 200
+      skip_on_fail: true
+
+
+
+# logs:  # Potentially in build section
+#   - name: my_job_test
+#     folder: my_folder_4
+#     build: latest
+#     tail: 10
+#     follow: false
+#     glob_pattern: "*"
+#     regex_pattern: "*"
