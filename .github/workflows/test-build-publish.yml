@@ -154,7 +154,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest] #, windows-latest]
-        python-version: [3.10]
+        python-version: ['3.10']
 
     steps:
       - uses: actions/checkout@v3
@@ -257,7 +257,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest] #, windows-latest]
-        python-version: [3.10]
+        python-version: ['3.10']
 
     steps:
       - uses: actions/download-artifact@v3
