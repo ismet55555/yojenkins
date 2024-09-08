@@ -92,7 +92,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.9
+          python-version: 3.10
 
       - name: Display Python version
         run: python -c "import sys; print(sys.version)"
@@ -154,7 +154,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest] #, windows-latest]
-        python-version: [3.9]
+        python-version: [3.10]
 
     steps:
       - uses: actions/checkout@v3
@@ -257,7 +257,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest] #, windows-latest]
-        python-version: [3.9]
+        python-version: [3.10]
 
     steps:
       - uses: actions/download-artifact@v3
@@ -293,14 +293,14 @@ jobs:
           path: dist/
 
       - name: Publish distribution package to TEST PyPI
-        uses: pypa/gh-action-pypi-publish@master
+        uses: pypa/gh-action-pypi-publish@release/v1
         with:
           password: ${{ secrets.TEST_PYPI_API_TOKEN }}
           repository_url: https://test.pypi.org/legacy/
           skip_existing: true
 
       - name: Publish distribution package to PyPI
-        uses: pypa/gh-action-pypi-publish@master
+        uses: pypa/gh-action-pypi-publish@release/v1
         with:
           password: ${{ secrets.PYPI_API_TOKEN }}
           skip_existing: true
