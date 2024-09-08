@@ -1,15 +1,15 @@
 # This file for setup.py run
 
 PyYAML==6.0
-click-help-colors==0.9.1
-click==8.1.3
+click-help-colors==0.9.4
+click==8.1.7
 coloredlogs==15.0.1
-docker==6.0.1
+docker==7.1.0
 json2xml
 pypiwin32; platform_system == "Windows"
-python-jenkins==1.8.0.0a0
+python-jenkins==1.8.2
 pywin32; platform_system == "Windows"  # docker package needs 227!
-requests-futures==1.0.0
+requests-futures==1.0.1
 toml==0.10.2
 windows-curses; sys_platform == "win32"
 xmltodict
