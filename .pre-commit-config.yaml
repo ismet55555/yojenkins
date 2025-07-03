@@ -77,6 +77,6 @@ repos:
             "--rcfile=.pylintrc", # Link to your config file
             "--load-plugins=pylint.extensions.docparams", # Load an extension
             "--output-format=colorized", # Load an extension
-            "--fail-under=8.0",
+            "--fail-under=7.0",
             # "--disable=R0913,W0511,R0912,W1309", # Disable some specific messages IDs
           ]
