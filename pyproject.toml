@@ -61,18 +61,15 @@ ignore = [
 max-complexity = 10
 
 [tool.ruff.lint.pylint]
-# Only specify limits that differ from ruff defaults
 max-args = 5
 max-statements = 50
 max-branches = 12
 
 [tool.ruff.lint.isort]
-# Match your current isort config
 known-first-party = ["yojenkins"]
 
 [tool.ruff.format]
-# Use ruff's smart defaults for formatting
-quote-style = "double"
+quote-style = "single"
 
 [tool.ruff.lint.per-file-ignores]
 # Only essential per-file ignores
