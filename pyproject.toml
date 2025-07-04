@@ -14,201 +14,67 @@ testpaths = ["tests"]
 python_files = ["test_*.py"]
 
 [tool.bandit]
-skips = ["B101", "B105", "B107"]  # List skipped tests
+skips = ["B101", "B105", "B107"]
 exclude = ['*_test.py', 'test_*.py', './tests', './dev_things']
 
 # ============================================================================
-# RUFF CONFIGURATION
+# RUFF CONFIGURATION - Simplified, leveraging defaults
 # ============================================================================
 
 [tool.ruff]
 line-length = 119
-target-version = "py310"
+target-version = "py39"
 
-# Exclude directories
+# Only specify exclusions beyond ruff's smart defaults
 exclude = [
-    ".bzr",
-    ".direnv", 
-    ".eggs",
-    ".git",
-    ".git-rewrite",
-    ".hg",
-    ".mypy_cache",
-    ".nox",
-    ".pants.d",
-    ".pytype",
-    ".ruff_cache",
-    ".svn",
-    ".tox",
-    ".venv",
-    "__pycache__",
-    "__pypackages__",
-    "_build",
-    "buck-out",
-    "build",
-    "dist",
-    "node_modules",
-    "venv",
-    "env",
-    "ENV",
-    "develop-eggs",
-    "downloads",
-    "eggs",
-    "lib",
-    "lib64",
-    "parts",
-    "sdist",
-    "var",
-    "wheels",
-    "pip-wheel-metadata",
-    "share/python-wheels",
-    "*.egg-info",
-    "htmlcov",
-    ".coverage.*",
-    ".cache",
-    "nosetests.xml",
-    "coverage.xml",
-    ".hypothesis",
-    ".pytest_cache",
-    ".ipynb_checkpoints",
-    "profile_default",
-    "ipython_config.py",
     "dev_things",
-    "test",
-    "docs",
+    "docs", 
     "setup.py",
     "**/__main__.py",
 ]
 
 [tool.ruff.lint]
-# Enable comprehensive rule sets
+# Enable comprehensive rule sets - ruff's defaults are already good
 select = [
-    "E",     # pycodestyle errors
-    "W",     # pycodestyle warnings  
-    "F",     # Pyflakes
-    "I",     # isort (replaces standalone isort)
-    "B",     # flake8-bugbear
-    "C4",    # flake8-comprehensions
-    "UP",    # pyupgrade
-    "ARG",   # flake8-unused-arguments
-    "C90",   # mccabe complexity
-    "T20",   # flake8-print
-    "SIM",   # flake8-simplify
-    "TCH",   # flake8-type-checking
-    "PTH",   # flake8-use-pathlib
-    "ERA",   # eradicate (commented code)
-    "PL",    # pylint rules
-    "RUF",   # ruff-specific rules
-    "N",     # pep8-naming
-    "TID",   # flake8-tidy-imports
-    "ICN",   # flake8-import-conventions
-    "PIE",   # flake8-pie
-    "T10",   # flake8-debugger
-    "LOG",   # flake8-logging
+    "E", "W",    # pycodestyle
+    "F",         # Pyflakes  
+    "I",         # isort
+    "B",         # flake8-bugbear
+    "C4",        # flake8-comprehensions
+    "UP",        # pyupgrade
+    "C90",       # mccabe
+    "PL",        # pylint rules
+    "RUF",       # ruff-specific
 ]
 
-# Ignore specific rules
+# Only ignore what conflicts with your current codebase
 ignore = [
-    "E501",    # Line too long (handled by formatter)
-    "B008",    # Do not perform function calls in argument defaults
-    "C901",    # Too complex (will use mccabe config instead)
-    "PLR0913", # Too many arguments (matches pylint max-args=5)
-    "PLR0915", # Too many statements (matches pylint max-statements=50)
-    "PLR2004", # Magic value used in comparison
-    "PLR0912", # Too many branches (matches pylint max-branches=12)
-    "PLR0911", # Too many return statements (matches pylint max-returns=6)
-    "PLC0414", # Import alias does not rename original package (useless-import-alias)
-    "PLW0603", # Using the global statement (global-statement)
-    "T201",    # print found (since you might use print for CLI output)
-    "T203",    # pprint found
-    "ERA001",  # Found commented-out code (might be too aggressive)
-    "N999",    # Invalid module name (for __main__.py files)
-    "N802",    # Function name should be lowercase (for API compatibility)
-    "PLC1901", # Compare-to-empty-string can be simplified (logging-fstring-interpolation equivalent)
-    "PLR1714", # Consider merging multiple comparisons (consider-using-in)
-    "PLW2901", # Redefined loop variable (redefined-loop-name)
-    "PLW0621", # Redefined outer name (redefined-outer-name)
-    "PLR0904", # Too many public methods (matches pylint max-public-methods=20)
-    "PLR0902", # Too many instance attributes (matches pylint max-attributes=7)
-    "PLW1508", # Invalid type for environment variable default (invalid-envvar-default)
-    "PLW1510", # subprocess.run without explicit check (subprocess-run-check) 
-    "PLW3301", # Nested min/max calls (nested-min-max)
+    "E501",      # Line too long (handled by formatter)
+    "PLR0913",   # Too many arguments
+    "PLR0915",   # Too many statements  
+    "PLR2004",   # Magic values
+    "T201",      # print statements (CLI tool needs these)
 ]
 
-# Configure specific rules
 [tool.ruff.lint.mccabe]
 max-complexity = 10
 
 [tool.ruff.lint.pylint]
-max-args = 5                    # pylint max-args
-max-branches = 12               # pylint max-branches  
-max-returns = 6                 # pylint max-returns
-max-statements = 50             # pylint max-statements
-max-public-methods = 20         # pylint max-public-methods
-max-bool-expr = 5               # pylint max-bool-expr
-max-locals = 15                 # pylint max-locals
-max-nested-blocks = 5           # pylint max-nested-blocks
+# Only specify limits that differ from ruff defaults
+max-args = 5
+max-statements = 50
+max-branches = 12
 
 [tool.ruff.lint.isort]
-# Configure import sorting to match your current isort config
+# Match your current isort config
 known-first-party = ["yojenkins"]
-multi-line-output = 3
-line-length = 119  # Match ruff line length
-include-trailing-comma = true
-force-grid-wrap = 0
-combine-as-imports = true
-split-on-trailing-comma = true
-
-# Handle the ignored modules from your pylint config
-known-third-party = [
-    "click",
-    "coloredlogs", 
-    "curses",
-    "docker",
-    "jenkins",
-    "json2xml",
-    "requests",
-    "simpleaudio", 
-    "urllib3",
-    "winsound",
-    "xmltodict",
-    "yaml",
-]
-
-[tool.ruff.lint.pyupgrade]
-# Keep modern Python syntax
-keep-runtime-typing = true
-
-[tool.ruff.lint.flake8-quotes]
-# Use double quotes (can be changed to single if preferred)
-docstring-quotes = "double"
-inline-quotes = "double"
 
 [tool.ruff.format]
-# Configure formatting to match your yapf style
+# Use ruff's smart defaults for formatting
 quote-style = "double"
-indent-style = "space"
-skip-magic-trailing-comma = false
-line-ending = "auto"
-
-# Match yapf's behavior for docstrings and strings
-docstring-code-format = true
-docstring-code-line-length = "dynamic"
-
-[tool.ruff.lint.pep8-naming]
-# Configure naming conventions
-classmethod-decorators = ["classmethod"]
-staticmethod-decorators = ["staticmethod"]
-
-[tool.ruff.lint.flake8-unused-arguments]
-# Ignore unused arguments that start with underscore
-ignore-variadic-names = true
 
 [tool.ruff.lint.per-file-ignores]
-# Specific ignores for certain file patterns
-"tests/**" = ["PLR2004", "S101", "S105", "S106"]  # Allow magic values and asserts in tests
-"**/__init__.py" = ["F401"]  # Allow unused imports in __init__.py
-"setup.py" = ["ALL"]  # Ignore all rules for setup.py
-"**/conftest.py" = ["F401", "F403"]  # Allow star imports in conftest files
-"docs/**" = ["ALL"]  # Ignore documentation files
-"dev_things/**" = ["ALL"]  # Ignore development files
+# Only essential per-file ignores
+"tests/**" = ["PLR2004", "S101"]  # Allow magic values and asserts in tests
+"**/__init__.py" = ["F401"]       # Allow unused imports
+"setup.py" = ["ALL"]              # Ignore setup.py entirely
