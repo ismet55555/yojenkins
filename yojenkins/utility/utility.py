@@ -23,34 +23,35 @@ from urllib3.util import parse_url
 from yaspin import yaspin
 from yaspin.spinners import Spinners
 
+from yojenkins import __version__
 from yojenkins.yo_jenkins.jenkins_item_classes import JenkinsItemClasses
 
 logger = logging.getLogger()
 
-CONFIG_DIR_NAME = '.yojenkins'
+CONFIG_DIR_NAME = ".yojenkins"
 KWARG_TRANSLATE_MAP = {
-    'pretty': 'opt_pretty',
-    'yaml': 'opt_yaml',
-    'xml': 'opt_xml',
-    'toml': 'opt_toml',
-    'list': 'opt_list',
-    'json': 'opt_json',
-    'id': 'opt_id',
+    "pretty": "opt_pretty",
+    "yaml": "opt_yaml",
+    "xml": "opt_xml",
+    "toml": "opt_toml",
+    "list": "opt_list",
+    "json": "opt_json",
+    "id": "opt_id",
 }
 
 
 class TextStyle:
     """Text style definitions."""
 
-    HEADER = '\033[95m'
-    BLUE = '\033[94m'
-    CYAN = '\033[96m'
-    GREEN = '\033[92m'
-    YELLOW = '\033[93m'
-    RED = '\033[91m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
-    NORMAL = '\033[0m'
+    HEADER = "\033[95m"
+    BLUE = "\033[94m"
+    CYAN = "\033[96m"
+    GREEN = "\033[92m"
+    YELLOW = "\033[93m"
+    RED = "\033[91m"
+    BOLD = "\033[1m"
+    UNDERLINE = "\033[4m"
+    NORMAL = "\033[0m"
 
 
 def translate_kwargs(original_kwargs: Dict[str, Any]) -> Dict[str, Any]:
@@ -77,7 +78,7 @@ def translate_kwargs(original_kwargs: Dict[str, Any]) -> Dict[str, Any]:
     return new_kwargs
 
 
-def print2(message: str, bold: bool = False, color: str = 'reset') -> None:
+def print2(message: str, bold: bool = False, color: str = "reset") -> None:
     """Print a message to the console using click.
 
     Details:
@@ -104,7 +105,7 @@ def fail_out(message: str) -> None:
     Args:
         message: Message to output to console
     """
-    echo(style(message, fg='bright_red', bold=True))
+    echo(style(message, fg="bright_red", bold=True))
     sys.exit(1)
 
 
@@ -118,13 +119,12 @@ def failures_out(messages: list) -> None:
         message: Multiple messages to output to console
     """
     for message in messages:
-        echo(style(message, fg='bright_red', bold=True))
+        echo(style(message, fg="bright_red", bold=True))
     sys.exit(1)
 
 
-def load_contents_from_local_file(
-    file_type: Literal['yaml', 'toml', 'json', 'jsonl'], local_file_path: str
-) -> Union[Dict, List]:
+def load_contents_from_local_file(file_type: Literal['yaml', 'toml', 'json', 'jsonl'],
+                                  local_file_path: str) -> Union[Dict, List]:
     """Load a local file contents.
 
     ### TODO: Add default option to load file as plain text
@@ -137,7 +137,7 @@ def load_contents_from_local_file(
     """
     # Check if file exists
     if not os.path.isfile(local_file_path):
-        fail_out(f'Failed to find file: {local_file_path}')
+        fail_out(f"Failed to find file: {local_file_path}")
 
     # Check if file is completely empty
     if os.stat(local_file_path).st_size == 0:
@@ -146,18 +146,18 @@ def load_contents_from_local_file(
     logger.debug(f"Loading specified local .{file_type} file: '{local_file_path}' ...")
     file_contents: Union[List, Dict] = {}
     try:
-        with open(local_file_path) as open_file:
-            if file_type == 'yaml':
+        with open(local_file_path, "r") as open_file:
+            if file_type == "yaml":
                 file_contents = yaml.safe_load(open_file)
-            elif file_type == 'toml':
+            elif file_type == "toml":
                 file_contents = toml.load(open_file)
-            elif file_type == 'json':
+            elif file_type == "json":
                 file_contents = json.loads(open_file.read())
-            elif file_type == 'jsonl':
+            elif file_type == "jsonl":
                 file_contents = [json.loads(line) for line in open_file]
             else:
                 raise ValueError(f"Unknown file type passed: '{file_type}'")
-        logger.debug(f'Successfully loaded local .{file_type} file')
+        logger.debug(f"Successfully loaded local .{file_type} file")
     except Exception as error:
         fail_out(f"Failed to load specified local .{file_type} file: '{local_file_path}'. Exception: {error}")
     return file_contents
@@ -174,11 +174,11 @@ def load_contents_from_string(file_type: str, text: str) -> Dict:
     """
     file_type = file_type.lower()
     logger.debug(f"Loading specified text string as filetype '{file_type}' ...")
-    if file_type == 'yaml':
+    if file_type == "yaml":
         contents = yaml.safe_load(text)
-    elif file_type == 'toml':
+    elif file_type == "toml":
         contents = toml.loads(text)
-    elif file_type == 'json':
+    elif file_type == "json":
         contents = json.loads(text)
     else:
         raise ValueError(f'Unknown file type passed: "{file_type}"')
@@ -202,15 +202,14 @@ def load_contents_from_remote_file_url(file_type: str, remote_file_url: str, all
 
     # Getting name of file from URL
     remote_filename = Path(remote_file_url).name
-    logger.debug(f'Requested remote filename parsed: {remote_filename}')
+    logger.debug(f"Requested remote filename parsed: {remote_filename}")
 
     # Check requested file extension
     remote_file_ext = Path(remote_file_url).suffix
-    file_ext_accepted = ['.yml', '.yaml', '.conf']
-    if remote_file_ext not in file_ext_accepted:
+    file_ext_accepted = [".yml", ".yaml", ".conf"]
+    if not remote_file_ext in file_ext_accepted:
         logger.debug(
-            f'Remote file requested "{remote_filename}"" is not one of the accepted file types: {file_ext_accepted}'
-        )
+            f'Remote file requested "{remote_filename}"" is not one of the accepted file types: {file_ext_accepted}')
         return {}
 
     # Get request headers
@@ -218,13 +217,13 @@ def load_contents_from_remote_file_url(file_type: str, remote_file_url: str, all
     try:
         return_content = requests.head(remote_file_url)
     except Exception as error:
-        logger.debug(f'Failed to request headers. Exception: {error}')
+        logger.debug(f"Failed to request headers. Exception: {error}")
         return {}
     header = return_content.headers
 
     # Check if file is below size limit
-    content_length = int(header['Content-length']) / 1000000
-    logger.debug(f'Requested file content length: {content_length:.5f} MB)')
+    content_length = int(header["Content-length"]) / 1000000
+    logger.debug(f"Requested file content length: {content_length:.5f} MB)")
     if content_length > 1.0:
         logger.debug(
             f'The requested remote file "{remote_filename}" is {content_length:.2f} MB and larger than 1.0 MB limit, will not download'
@@ -233,14 +232,14 @@ def load_contents_from_remote_file_url(file_type: str, remote_file_url: str, all
 
     # Check if content is text or yaml based
     content_types_accepted = [
-        'text/plain',
-        'text/x-yaml',
-        'application/x-yaml',
-        'text/yaml',
-        'text/vnd.yaml',
+        "text/plain",
+        "text/x-yaml",
+        "application/x-yaml",
+        "text/yaml",
+        "text/vnd.yaml",
     ]
-    content_type = header.get('content-type')
-    logger.debug(f'Request content type: {content_type}')
+    content_type = header.get("content-type")
+    logger.debug(f"Request content type: {content_type}")
     if not content_type:
         return {}
     elif not any(ext in content_type for ext in content_types_accepted):
@@ -256,22 +255,21 @@ def load_contents_from_remote_file_url(file_type: str, remote_file_url: str, all
     # Check if no error from downloading
     if remote_request.status_code == requests.codes.ok:
         # Loading the yaml file content
-        logger.debug('Loading contents of remote file ...')
+        logger.debug("Loading contents of remote file ...")
         try:
             file_contents = yaml.safe_load(remote_request.content)
         except Exception as error:
-            logger.debug(f'Failed loading requested file. Exception: {error}')
+            logger.debug(f"Failed loading requested file. Exception: {error}")
             return {}
     else:
         logger.debug(
-            f"Failed to get remote file '{remote_file_url}'. HTTP request error code {remote_request.status_code}"
-        )
+            f"Failed to get remote file '{remote_file_url}'. HTTP request error code {remote_request.status_code}")
         return {}
 
     return file_contents
 
 
-def append_lines_to_file(filepath: str, lines_to_append: List[str], location: str = 'beginning') -> bool:
+def append_lines_to_file(filepath: str, lines_to_append: List[str], location: str = "beginning") -> bool:
     """Add lines to the end to a text based file
 
     Details: The passed list is parsed and each list item is a separate line added
@@ -289,29 +287,29 @@ def append_lines_to_file(filepath: str, lines_to_append: List[str], location: st
 
     # Check if file exists
     if not os.path.isfile(filepath):
-        logger.debug(f'Failed to find file: {filepath}')
+        logger.debug(f"Failed to find file: {filepath}")
         return False
 
-    logger.debug(f'Appending lines of text to the {location} of file: {filepath} ...')
+    logger.debug(f"Appending lines of text to the {location} of file: {filepath} ...")
     try:
-        if location == 'beginning':
-            open_file = open(filepath, 'r+')
+        if location == "beginning":
+            open_file = open(filepath, "r+")
             lines_old = open_file.readlines()  # read old content
             lines = lines_to_append + lines_old
             open_file.seek(0)
             for line in lines:
                 open_file.write(line)
             open_file.close()
-        elif location == 'end':
-            open_file = open(filepath, 'a')
+        elif location == "end":
+            open_file = open(filepath, "a")
             for line in lines_to_append:
                 open_file.write(line)
             open_file.close()
         else:
-            logger.debug(f'Unsupported append file location: {location}')
+            logger.debug(f"Unsupported append file location: {location}")
             return False
     except Exception as error:
-        logger.error(f'Failed to append lines of text to the end of file ({filepath}). Exception: {error}')
+        logger.error(f"Failed to append lines of text to the end of file ({filepath}). Exception: {error}")
         return False
     return True
 
@@ -368,10 +366,10 @@ def is_credential_id_format(text: str) -> bool:
     Returns:
         True if the text is in credential ID format, else False
     """
-    regex_pattern = r'^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$'
+    regex_pattern = (r"^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$")
     cred_match = re.match(regex_pattern, text)
     if cred_match:
-        logger.debug('Successfully identified credential ID format')
+        logger.debug(f"Successfully identified credential ID format")
         return True
     return False
 
@@ -392,7 +390,7 @@ def is_full_url(url: str) -> bool:
         is_valid_url = True
     else:
         is_valid_url = False
-    logger.debug(f'Is valid URL format: {is_valid_url} - {url}')
+    logger.debug(f"Is valid URL format: {is_valid_url} - {url}")
     logger.debug(f'    - scheme:  {parsed_url.scheme} - {"OK" if parsed_url.scheme else "MISSING"}')
     logger.debug(f'    - netloc:  {parsed_url.netloc} - {"OK" if parsed_url.netloc else "MISSING"}')
     logger.debug(f'    - path:    {parsed_url.path} - {"OK" if parsed_url.path else "MISSING"}')
@@ -414,12 +412,12 @@ def url_to_name(url: str) -> str:
 
     # Split and filter out terms
     # name = url_components.path.strip('/').replace('/job/', '/').strip().strip('/').strip('job/').replace('view/', '').replace('change-requests/', '')
-    url_split = url_components.path.strip().strip('/').split('/')
-    remove_list = ['job', 'view', 'change-requests']
+    url_split = url_components.path.strip().strip("/").split("/")
+    remove_list = ["job", "view", "change-requests"]
     filtered_list = [list_item for list_item in url_split if list_item not in remove_list]
 
     # Assemble back
-    name = '/'.join(filtered_list)
+    name = "/".join(filtered_list)
 
     logger.debug(f'Converted URL "{url}" to fullname "{name}"')
     return name
@@ -440,10 +438,9 @@ def format_name(name: str) -> str:
         Formatted item name
     """
     # Filter out terms
-    name_formatted = name.strip().replace('/job/', '/').strip('/')
-    name_formatted = (
-        name_formatted.replace('job/', '/').strip('/').replace('view/', '').replace('change-requests/', '')
-    )
+    name_formatted = name.strip().replace("/job/", "/").strip("/")
+    name_formatted = (name_formatted.replace("job/", "/").strip("/").replace("view/",
+                                                                             "").replace("change-requests/", ""))
 
     logger.debug(f'Formatted "{name}" to "{name_formatted}"')
     return name_formatted
@@ -460,7 +457,7 @@ def fullname_to_name(fullname: str) -> str:
     Returns:
         The name of the item
     """
-    name = fullname.strip().strip('/').split('/')[-1]
+    name = fullname.strip().strip("/").split("/")[-1]
     logger.debug(f'Converted fullname "{fullname}" to name "{name}"')
     return name
 
@@ -479,13 +476,13 @@ def name_to_url(server_base_url: str, name: str) -> str:
         Item URL
     """
     # FIXME: Fix this workaround
-    cut_off = 1 if name == '.' else 0
+    cut_off = 1 if name == "." else 0
 
-    a_path = name.strip('/').split('/')
+    a_path = name.strip("/").split("/")
     if len(a_path) > cut_off:
-        short_name = 'job/' + '/job/'.join(a_path)
+        short_name = "job/" + "/job/".join(a_path)
     else:
-        short_name = ''
+        short_name = ""
     # short_name = (('job/' + '/job/'.join(a_path[:-1]) + '/') if len(a_path) > 1 else '')
     url = str(urljoin(server_base_url, short_name))
     logger.debug(f'Converted name "{name}" to URL "{url}"')
@@ -493,7 +490,7 @@ def name_to_url(server_base_url: str, name: str) -> str:
     return url
 
 
-def build_url_to_other_url(build_url: str, target_url: str = 'job') -> str:
+def build_url_to_other_url(build_url: str, target_url: str = "job") -> str:
     """From build_url get job or folder url.
 
     Args:
@@ -505,24 +502,24 @@ def build_url_to_other_url(build_url: str, target_url: str = 'job') -> str:
     """
     # Dissect the build url
     url_parsed = urlparse(build_url)
-    path_list = url_parsed.path.split('/')
+    path_list = url_parsed.path.split("/")
 
     # Get the indexes to remove
-    if target_url == 'job':
+    if target_url == "job":
         last_index = -2 if not path_list[-1] else -1
-    elif target_url == 'folder':
+    elif target_url == "folder":
         last_index = -4 if not path_list[-1] else -3
     else:
-        logger.debug(f'Failed to recognize passed target URL. Passed value: {target_url}')
-        return ''
+        logger.debug(f"Failed to recognize passed target URL. Passed value: {target_url}")
+        return ""
 
     # Join the new path
-    path_new = '/'.join(path_list[0:last_index])
+    path_new = "/".join(path_list[0:last_index])
 
     # Assemble the job url
-    base_url = url_parsed.scheme + '://' + url_parsed.netloc
+    base_url = url_parsed.scheme + "://" + url_parsed.netloc
 
-    result_url = urljoin(base_url, path_new) + '/'
+    result_url = urljoin(base_url, path_new) + "/"
     logger.debug(f'From build URL "{build_url}" extracted {target_url} URL "{result_url}"')
 
     return result_url
@@ -545,16 +542,16 @@ def build_url_to_build_number(build_url: str) -> Union[int, None]:
     Returns:
         The build number if extracted, else None
     """
-    logger.debug(f'Extracting build number from URL: {build_url} ...')
+    logger.debug(f"Extracting build number from URL: {build_url} ...")
     # Split the URL path, remove the empty items
-    url_path_split_list = list(filter(None, urlparse(build_url).path.split('/')))
+    url_path_split_list = list(filter(None, urlparse(build_url).path.split("/")))
 
     # Stepping from the back one item at a time
     build_number = None
     for index in range(len(url_path_split_list) - 1, 2, -1):
         try:
             build_number = int(url_path_split_list[index])
-            if url_path_split_list[index - 2] != 'job':
+            if url_path_split_list[index - 2] != "job":
                 raise ValueError
             break
         except ValueError:
@@ -575,11 +572,11 @@ def is_complete_build_url(build_url: str) -> bool:
     """
     if not build_url:
         return False
-    url_path_split_list = list(filter(None, urlparse(build_url).path.split('/')))
+    url_path_split_list = list(filter(None, urlparse(build_url).path.split("/")))
     is_complete = True
     try:
         int(url_path_split_list[-1])
-        if url_path_split_list[-3] != 'job':
+        if url_path_split_list[-3] != "job":
             is_complete = False
     except (ValueError, IndexError):
         is_complete = False
@@ -614,13 +611,13 @@ def build_url_complete(build_url: str) -> Union[str, None]:
 
     # Split the URL path, remove the empty items
     url_parsed = urlparse(build_url)
-    url_path_split_list = list(filter(None, url_parsed.path.split('/')))
+    url_path_split_list = list(filter(None, url_parsed.path.split("/")))
 
     # Stepping from the back, one item at a time
     for index in range(len(url_path_split_list.copy()) - 1, 0, -1):
         try:
             int(url_path_split_list[index])
-            if url_path_split_list[index - 2] != 'job':
+            if url_path_split_list[index - 2] != "job":
                 raise ValueError
             break
         except ValueError:
@@ -631,9 +628,9 @@ def build_url_complete(build_url: str) -> Union[str, None]:
         return None
 
     # Assemble Everything back
-    path_new = '/'.join(url_path_split_list)
-    base_url = url_parsed.scheme + '://' + url_parsed.netloc
-    build_url_complete = urljoin(base_url, path_new) + '/'
+    path_new = "/".join(url_path_split_list)
+    base_url = url_parsed.scheme + "://" + url_parsed.netloc
+    build_url_complete = urljoin(base_url, path_new) + "/"
 
     logger.debug(f'Extracted complete build URL "{build_url_complete}" from "{build_url}"')
     return build_url_complete
@@ -651,7 +648,7 @@ def item_url_to_server_url(url: str, include_scheme: bool = True) -> str:
     """
     url_parsed = urlparse(url)
     if include_scheme:
-        server_url = url_parsed.scheme + '://' + url_parsed.netloc
+        server_url = url_parsed.scheme + "://" + url_parsed.netloc
     else:
         server_url = url_parsed.netloc
     return server_url
@@ -667,15 +664,15 @@ def has_build_number_started(job_info: dict, build_number: int) -> bool:
     Returns:
         True if build number has starated, else false
     """
-    if 'builds' not in job_info:
+    if "builds" not in job_info:
         return False
-    for build in job_info['builds']:
-        if 'number' not in build:
+    for build in job_info["builds"]:
+        if not "number" in build:
             continue
-        if build['number'] == build_number:
-            logger.debug(f'Successfully found the build {build_number} was previously started')
+        if build["number"] == build_number:
+            logger.debug(f"Successfully found the build {build_number} was previously started")
             return True
-    logger.debug(f'Failed to find build {build_number} was previously started')
+    logger.debug(f"Failed to find build {build_number} was previously started")
     return False
 
 
@@ -684,7 +681,7 @@ def item_subitem_list(
     get_key_info: str,
     item_type: str,
     item_class_list: list = [],
-    item_class_key: str = '_class',
+    item_class_key: str = "_class",
 ) -> Tuple[list, list]:
     """Given a item (job, build, etc) info, get the sub-items matching criteria.
 
@@ -704,8 +701,10 @@ def item_subitem_list(
     item_list = []
     item_name_list = []
     if item_type in item_info:
+
         # Loop subsection (ie. jobs, views, etc)
         for subitem_info in item_info[item_type]:
+
             # Check if subitem has the looked after class
             if subitem_info[item_class_key] in item_class_list:
                 item_list.append(subitem_info)
@@ -732,19 +731,19 @@ def to_seconds(time_quantity: int, time_unit_text: str) -> int:
     if not time_quantity:
         return 0
 
-    if time_unit_text in ['s', 'sec', 'second', 'seconds']:
+    if time_unit_text in ["s", "sec", "second", "seconds"]:
         return time_quantity
 
-    if time_unit_text in ['m', 'min', 'minute', 'minutes']:
+    if time_unit_text in ["m", "min", "minute", "minutes"]:
         return time_quantity * 60
 
-    if time_unit_text in ['h', 'hr', 'hour', 'hours']:
+    if time_unit_text in ["h", "hr", "hour", "hours"]:
         return time_quantity * 60 * 60
 
-    if time_unit_text in ['d', 'day', 'days']:
+    if time_unit_text in ["d", "day", "days"]:
         return time_quantity * 60 * 60 * 60
 
-    if time_unit_text in ['blue moon']:
+    if time_unit_text in ["blue moon"]:
         blue_moon = 41  # months
         return int(time_quantity * blue_moon * 2.628e6)
 
@@ -761,15 +760,15 @@ def html_clean(html: str) -> str:
         Cleaned text
     """
     # Remove all HTML tags
-    cleaned_text = re.sub(re.compile('<.*?>'), '', html)
+    cleaned_text = re.sub(re.compile("<.*?>"), "", html)
 
     # Convert symbols back
-    cleaned_text = cleaned_text.replace('&lt;', '<')
-    cleaned_text = cleaned_text.replace('&gt;', '>')
-    cleaned_text = cleaned_text.replace('&quot;', '"')
-    cleaned_text = cleaned_text.replace('&apos;', "'")
-    cleaned_text = cleaned_text.replace('&nbsp;', '')
-    cleaned_text = cleaned_text.replace('&amp;', '&')  # This has to be last
+    cleaned_text = cleaned_text.replace("&lt;", "<")
+    cleaned_text = cleaned_text.replace("&gt;", ">")
+    cleaned_text = cleaned_text.replace("&quot;", '"')
+    cleaned_text = cleaned_text.replace("&apos;", "'")
+    cleaned_text = cleaned_text.replace("&nbsp;", "")
+    cleaned_text = cleaned_text.replace("&amp;", "&")  # This has to be last
 
     return cleaned_text
 
@@ -786,14 +785,14 @@ def browser_open(url: str, new: int = 2, autoraise: bool = True) -> bool:
         True if successful, else False
     """
     try:
-        webbrowser.open(url.strip('/'), new, autoraise)
+        webbrowser.open(url.strip("/"), new, autoraise)
     except Exception as error:
         logger.debug(f'Failed to open web browser for URL: {url.strip("/")}  Exception: {error}')
         return False
     return True
 
 
-def has_special_char(text: str, special_chars: str = r'@!#$%^&*<>?/\|~:') -> bool:
+def has_special_char(text: str, special_chars: str = "@!#$%^&*<>?/\|~:") -> bool:
     """Check if passed text string contains any special characters.
 
     Args:
@@ -803,7 +802,7 @@ def has_special_char(text: str, special_chars: str = r'@!#$%^&*<>?/\|~:') -> boo
     Returns:
         True if includes special characters, else False
     """
-    regex = re.compile('[' + special_chars + ']')
+    regex = re.compile("[" + special_chars + "]")
     includes_special_chars = regex.search(text) != None
     if includes_special_chars:
         logger.debug(f'Item "{text}" includes special characters. Special characters: {special_chars}')
@@ -812,7 +811,7 @@ def has_special_char(text: str, special_chars: str = r'@!#$%^&*<>?/\|~:') -> boo
     return includes_special_chars
 
 
-def remove_special_char(text: str, special_chars: str = r'@!#$%^&*<>?/\|~:') -> str:
+def remove_special_char(text: str, special_chars: str = "@!#$%^&*<>?/\|~:") -> str:
     """Remove any special characters from text string.
 
     Args:
@@ -822,13 +821,13 @@ def remove_special_char(text: str, special_chars: str = r'@!#$%^&*<>?/\|~:') -> 
     Returns:
         Text with special characters removed
     """
-    regex = re.compile('[' + special_chars + ']')
-    text_new = re.sub(regex, '', text)
+    regex = re.compile("[" + special_chars + "]")
+    text_new = re.sub(regex, "", text)
     logger.debug(f'Removed special characters "{special_chars}" from string')
     return text_new
 
 
-def queue_find(all_queue_info: dict, job_name: str = '', job_url: str = '', first: bool = True) -> list:
+def queue_find(all_queue_info: dict, job_name: str = "", job_url: str = "", first: bool = True) -> list:
     """Find job in server build queue.
 
     Args:
@@ -838,22 +837,22 @@ def queue_find(all_queue_info: dict, job_name: str = '', job_url: str = '', firs
         TODO
     """
     if not job_name and not job_url:
-        logger.debug('=No job name or job URL provided')
+        logger.debug("=No job name or job URL provided")
         return []
     job_name = job_name if job_name else url_to_name(job_url)
 
     queue_item_matches = []
 
-    for i, queue_item in enumerate(all_queue_info['items']):
+    for i, queue_item in enumerate(all_queue_info["items"]):
         # Check the item type
-        if queue_item['task']['_class'] not in JenkinsItemClasses.JOB.value['class_type']:
+        if (queue_item["task"]["_class"] not in JenkinsItemClasses.JOB.value["class_type"]):
             logger.debug(
-                f'[ITEM {i + 1}/{len(all_queue_info["items"])}] Queued item not a job. Item class: {queue_item["task"]["_class"]}'
+                f"[ITEM {i+1}/{len(all_queue_info['items'])}] Queued item not a job. Item class: {queue_item['task']['_class']}"
             )
             continue
 
-        queue_job_url = queue_item['task']['url']
-        logger.debug(f'[ITEM {i + 1}/{len(all_queue_info["items"])}] Queue job item: {queue_job_url}')
+        queue_job_url = queue_item["task"]["url"]
+        logger.debug(f"[ITEM {i+1}/{len(all_queue_info['items'])}] Queue job item: {queue_job_url}")
 
         queue_job_name = url_to_name(url=queue_job_url)
 
@@ -865,7 +864,7 @@ def queue_find(all_queue_info: dict, job_name: str = '', job_url: str = '', firs
                 break
 
     if not queue_item_matches:
-        logger.debug('Failed to find job in build queue')
+        logger.debug("Failed to find job in build queue")
 
     return queue_item_matches
 
@@ -890,12 +889,12 @@ def get_resource_path(relative_path: str) -> str:
     # If the file has not been found and it is on windows, try APPDATA directory
     if not os.path.exists(resource_path):
         logger.debug(f'Failed to find resource "{relative_path}" in: {resource_dir}')
-        return ''
-    logger.debug(f'Successfully found existing resource: {resource_path}')
+        return ""
+    logger.debug(f"Successfully found existing resource: {resource_path}")
     return resource_path
 
 
-def get_project_dir(sample_path: str = 'resources') -> str:
+def get_project_dir(sample_path: str = "resources") -> str:
     """Getting the path to the directory containing project resources
 
     Details:
@@ -910,16 +909,16 @@ def get_project_dir(sample_path: str = 'resources') -> str:
     """
     if am_i_bundled():
         # Program is running within a pyinstaller bundle
-        project_dir = ''
+        project_dir = ""
         possible_dirs = {
-            'pyinstaller': sys._MEIPASS,
+            "pyinstaller": sys._MEIPASS,
         }
     else:
-        project_dir = 'yojenkins'
+        project_dir = "yojenkins"
         possible_dirs = {
-            'relative': os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')),
-            'sys_dirs': sysconfig.get_paths()['purelib'],
-            'cwd': os.getcwd(),
+            "relative": os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")),
+            "sys_dirs": sysconfig.get_paths()["purelib"],
+            "cwd": os.getcwd(),
         }
         # NOTE: "site" module does not work with pyinstaller bundle (AttributeError)
         # 'usr_dirs': site.getusersitepackages(),
@@ -932,18 +931,18 @@ def get_project_dir(sample_path: str = 'resources') -> str:
         else:
             dirs.append(possible_dir)
 
-    logger.debug('Searching project resource directory ...')
-    resource_dir_path = ''
+    logger.debug("Searching project resource directory ...")
+    resource_dir_path = ""
     for possible_dir in dirs:
         if os.path.exists(os.path.join(possible_dir, project_dir, sample_path)):
             resource_dir_path = os.path.join(possible_dir, project_dir)
-            logger.debug(f'    - {possible_dir} - FOUND')
+            logger.debug(f"    - {possible_dir} - FOUND")
             break
-        logger.debug(f'    - {possible_dir} - NOT FOUND')
+        logger.debug(f"    - {possible_dir} - NOT FOUND")
 
     if not resource_dir_path:
-        logger.fatal('Failed to find included data directory')
-        return ''
+        logger.fatal("Failed to find included data directory")
+        return ""
     return resource_dir_path
 
 
@@ -960,12 +959,12 @@ def item_exists_in_folder(item_name: str, folder_url: str, item_type: str, rest:
         True if the item exists, False if not
     """
     item_type_info = getattr(JenkinsItemClasses, item_type.upper())
-    prefix = item_type_info.value['prefix']
+    prefix = item_type_info.value["prefix"]
 
-    item_url = urljoin(folder_url, f'{prefix}/{item_name}')
+    item_url = urljoin(folder_url, f"{prefix}/{item_name}")
 
     logger.debug(f'Checking if {item_type} "{item_name}" already exists within folder "{folder_url}" ...')
-    item_exists = rest.request(f'{item_url.strip("/")}/api/json', 'head', is_endpoint=False)[2]
+    item_exists = rest.request(f'{item_url.strip("/")}/api/json', "head", is_endpoint=False)[2]
     if item_exists:
         logger.debug(f'Found existing {item_type} "{item_name}" within "{folder_url}"')
         return True
@@ -981,8 +980,8 @@ def am_i_inside_docker() -> bool:
     Returns:
         True if running in docker container, else False
     """
-    path = '/proc/self/cgroup'
-    return os.path.exists('/.dockerenv') or (os.path.isfile(path) and any('docker' in line for line in open(path)))
+    path = "/proc/self/cgroup"
+    return (os.path.exists("/.dockerenv") or os.path.isfile(path) and any("docker" in line for line in open(path)))
 
 
 def am_i_bundled() -> bool:
@@ -991,10 +990,10 @@ def am_i_bundled() -> bool:
     Returns:
         True if running bundled, else False
     """
-    return getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS')
+    return getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS")
 
 
-def parse_and_check_input_string_list(string_list: str, join_back_char: str = '', split_char: str = ',') -> List[str]:
+def parse_and_check_input_string_list(string_list: str, join_back_char: str = "", split_char: str = ",") -> List[str]:
     """Parsing a string list into a list of strings
 
     Details:
@@ -1044,7 +1043,7 @@ def write_xml_to_file(
         True if successful
     """
     if any([opt_json, opt_yaml, opt_toml]):
-        logger.debug('Converting content to JSON ...')
+        logger.debug("Converting content to JSON ...")
         data_ordered_dict = xmltodict.parse(xml_content)
         content_to_write = json.loads(json.dumps(data_ordered_dict))
     else:
@@ -1053,19 +1052,19 @@ def write_xml_to_file(
     if opt_json:
         content_to_write = json.dumps(data_ordered_dict, indent=4)
     elif opt_yaml:
-        logger.debug('Converting content to YAML ...')
+        logger.debug("Converting content to YAML ...")
         content_to_write = yaml.dump(content_to_write)
     elif opt_toml:
-        logger.debug('Converting content to TOML ...')
+        logger.debug("Converting content to TOML ...")
         content_to_write = toml.dumps(content_to_write)
 
     logger.debug(f'Writing fetched configuration to "{filepath}" ...')
     try:
-        with open(filepath, 'w+') as file:
+        with open(filepath, "w+") as file:
             file.write(content_to_write)
-        logger.debug('Successfully wrote configurations to file')
-    except Exception:
-        logger.debug('Failed to write configurations to file. Exception: {error}')
+        logger.debug("Successfully wrote configurations to file")
+    except Exception as error:
+        logger.debug("Failed to write configurations to file. Exception: {error}")
         return False
 
     return True
@@ -1091,32 +1090,31 @@ def template_apply(string_template: str, is_json: bool = False, **kwargs) -> Uni
     Returns:
         String template with variables applied
     """
-    logger.debug('Applying variables to string template ...')
+    logger.debug("Applying variables to string template ...")
     logger.debug(f'Applied variables: {", ".join(list(kwargs.keys()))}')
     # Replace None with empty string
     for key, value in kwargs.items():
         if value is None:
-            kwargs[key] = ''
+            kwargs[key] = ""
 
     template = Template(string_template)
     try:
         template_filled = template.safe_substitute(**kwargs)
     except Exception as error:
-        logger.debug(f'Failed to apply variables to string template. Exception: {error}')
-        return ''
+        logger.debug(f"Failed to apply variables to string template. Exception: {error}")
+        return ""
     if is_json:
         try:
             template_filled = json.loads(template_filled)
         except json.JSONDecodeError:
-            logger.debug('Failed to parse filled string template as JSON')
-            return ''
-    logger.debug('Successfully applied variables to string template')
+            logger.debug("Failed to parse filled string template as JSON")
+            return ""
+    logger.debug("Successfully applied variables to string template")
     return template_filled
 
 
-def run_groovy_script(
-    script_filepath: str, json_return: bool, rest: object, **kwargs
-) -> Tuple[Union[dict, str], bool, str]:
+def run_groovy_script(script_filepath: str, json_return: bool, rest: object,
+                      **kwargs) -> Tuple[Union[dict, str], bool, str]:
     """Run a Groovy script on the server and return the response
 
     Details:
@@ -1135,67 +1133,67 @@ def run_groovy_script(
         Success flag
         Error message
     """
-    logger.debug(f'Loading Groovy script: {script_filepath}')
+    logger.debug(f"Loading Groovy script: {script_filepath}")
     try:
-        with open(script_filepath) as open_file:
+        with open(script_filepath, "r") as open_file:
             script = open_file.read()
-    except (OSError, FileNotFoundError, PermissionError) as error:
-        logger.debug(f'Failed to find or read specified Groovy script file ({script_filepath}). Exception: {error}')
+    except (FileNotFoundError, IOError, PermissionError) as error:
+        logger.debug(f"Failed to find or read specified Groovy script file ({script_filepath}). Exception: {error}")
         return (
             {},
             False,
-            f'Failed to find or read specified Groovy script file ({script_filepath}). Exception: {error}',
+            f"Failed to find or read specified Groovy script file ({script_filepath}). Exception: {error}",
         )
 
     # Apply passed kwargs to the string template
     if kwargs:
         script = template_apply(string_template=script, is_json=False, **kwargs)
         if not script:
-            return {}, False, 'Failed to apply variables to Groovy script template'
+            return {}, False, "Failed to apply variables to Groovy script template"
 
     # Send the request to the server
-    logger.debug(f'Running the following Groovy script on server: {script_filepath} ...')
+    logger.debug(f"Running the following Groovy script on server: {script_filepath} ...")
     script_result, _, success = rest.request(
-        target='scriptText',
-        request_type='post',
-        data={'script': script},
+        target="scriptText",
+        request_type="post",
+        data={"script": script},
         json_content=False,
     )
     if not success:
-        logger.debug('Failed server REST request for Groovy script execution')
-        return {}, False, 'Failed server REST request for Groovy script execution'
+        logger.debug("Failed server REST request for Groovy script execution")
+        return {}, False, "Failed server REST request for Groovy script execution"
 
     # Check for yojenkins Groovy script error flag
-    if 'yojenkins groovy script failed' in script_result:
+    if "yojenkins groovy script failed" in script_result:
         groovy_return = eval(script_result.strip(os.linesep))
-        logger.debug('Failed to execute Groovy script')
-        logger.debug(f'Groovy Exception: {groovy_return[1]}')
+        logger.debug("Failed to execute Groovy script")
+        logger.debug(f"Groovy Exception: {groovy_return[1]}")
         logger.debug(groovy_return[2])
         return (
             {},
             False,
-            f'Error while executing Groovy script: {groovy_return[1]}: {groovy_return[2]}',
+            f"Error while executing Groovy script: {groovy_return[1]}: {groovy_return[2]}",
         )
 
     # Check for script exception
-    exception_keywords = ['Exception', 'java:']
+    exception_keywords = ["Exception", "java:"]
     if any(exception_keyword in script_result for exception_keyword in exception_keywords):
-        logger.debug(f'Error keyword matched in script response: {exception_keywords}')
+        logger.debug(f"Error keyword matched in script response: {exception_keywords}")
         return (
             {},
             False,
-            f'Error keyword matched in script response: {exception_keywords}',
+            f"Error keyword matched in script response: {exception_keywords}",
         )
 
     # Parse script result as JSON
     if json_return:
         try:
             script_result = json.loads(script_result)
-        except json.JSONDecodeError:
-            logger.debug('Failed to parse response to JSON format')
-            return {}, False, 'Failed to parse response to JSON format'
+        except json.JSONDecodeError as error:
+            logger.debug("Failed to parse response to JSON format")
+            return {}, False, "Failed to parse response to JSON format"
 
-    return script_result, True, ''
+    return script_result, True, ""
 
 
 def get_item_action(item_info: dict, class_type: str) -> List[dict]:
@@ -1210,9 +1208,9 @@ def get_item_action(item_info: dict, class_type: str) -> List[dict]:
     """
     logger.debug(f'Getting actions for item corresponding to class type "{class_type}" ...')
     actions_info = []
-    for action in item_info['actions']:
+    for action in item_info["actions"]:
         if action:
-            if action['_class'] == class_type:
+            if action["_class"] == class_type:
                 actions_info.append(action)
 
     return actions_info
@@ -1229,21 +1227,21 @@ def create_new_history_file(file_path: str) -> None:
         config_dir_abs_path = os.path.join(Path.home(), CONFIG_DIR_NAME)
 
         if not os.path.exists(config_dir_abs_path):
-            logger.debug('Configuration directory does not exist. Creating it ...')
+            logger.debug("Configuration directory does not exist. Creating it ...")
             os.makedirs(config_dir_abs_path)
 
         if not os.path.exists(file_path):
             logger.debug(f'Command history file NOT found: "{file_path}"')
-            logger.debug('Creating a new command history file ...')
+            logger.debug("Creating a new command history file ...")
 
-        with open(file_path, 'w') as open_file:
+        with open(file_path, "w") as open_file:
             # json.dump({}, open_file)
-            open_file.write('')
+            open_file.write("")
 
-    except (OSError, FileNotFoundError, PermissionError) as error:
-        fail_out(f'Failed to create history file ({file_path}). Exception: {error}')
+    except (FileNotFoundError, IOError, PermissionError) as error:
+        fail_out(f"Failed to create history file ({file_path}). Exception: {error}")
     except Exception as error:
-        logger.exception(f'Failed to create new command history file. Exception: {error}')
+        logger.exception(f"Failed to create new command history file. Exception: {error}")
 
 
 def wait_for_build_and_follow_logs(yj_obj: object, queue_id: int) -> None:
@@ -1256,21 +1254,21 @@ def wait_for_build_and_follow_logs(yj_obj: object, queue_id: int) -> None:
         yj_obj:   YoJenkins object
         queue_id: Build queue ID
     """
-    msg = f'Build is in queue with queue ID {queue_id}. Waiting for build to run ...'
+    msg = f"Build is in queue with queue ID {queue_id}. Waiting for build to run ..."
     if logger.level > 10:
-        spinner = yaspin(spinner=Spinners.bouncingBar, attrs=['bold'], text=msg)
+        spinner = yaspin(spinner=getattr(Spinners, "bouncingBar"), attrs=["bold"], text=msg)
         spinner.start()
     else:
         logger.info(msg)
 
     while True:
         queue_data = yj_obj.job.queue_info(build_queue_number=queue_id)
-        if 'executable' in queue_data:
+        if "executable" in queue_data:
             break
-        if queue_data.get('stuck'):
+        if queue_data.get("stuck"):
             fail_out(
-                f'Build is stuck in queue as queue number {queue_id}',
-                fg='bright_red',
+                f"Build is stuck in queue as queue number {queue_id}",
+                fg="bright_red",
                 bold=True,
             )
         time.sleep(2)
@@ -1278,11 +1276,11 @@ def wait_for_build_and_follow_logs(yj_obj: object, queue_id: int) -> None:
     if logger.level > 10:
         spinner.stop()
 
-    build_number = queue_data['executable']['number']
-    print2(f'Running with build number {build_number}. Following console logs below:')
+    build_number = queue_data["executable"]["number"]
+    print2(f"Running with build number {build_number}. Following console logs below:")
     yj_obj.build.logs(
         build_url=None,
-        job_url=queue_data['jobUrl'],
+        job_url=queue_data["jobUrl"],
         build_number=build_number,
         follow=True,
     )
@@ -1316,23 +1314,23 @@ def diff_show(
 
     # Ignore specified number of initial characters
     if char_ignore > 0:
-        logger.debug(f'Applying {char_ignore} initial characters for each line before diff ...')
+        logger.debug(f"Applying {char_ignore} initial characters for each line before diff ...")
         text_1 = [line[char_ignore:] for line in text_1]
         text_2 = [line[char_ignore:] for line in text_2]
 
     # Only select REGEX line patterns to diff
     if line_pattern:
-        regex_pattern = '|'.join(list(line_pattern))
+        regex_pattern = "|".join(list(line_pattern))
         logger.debug(f'Applying REGEX pattern line filter before diff "{regex_pattern}":')
         count_1, count_2 = len(text_1), len(text_2)
 
         text_1 = [re.findall(regex_pattern, line) for line in text_1]  # Apply regex
-        text_1 = [''.join(line) for line in filter(lambda x: x, text_1)]  # Filter
-        logger.debug(f'   - Text 1: Kept {len(text_1)} of {count_1} lines ({len(text_1) / count_1 * 100:.1f}%)')
+        text_1 = ["".join(line) for line in filter(lambda x: x, text_1)]  # Filter
+        logger.debug(f"   - Text 1: Kept {len(text_1)} of {count_1} lines ({len(text_1)/count_1 * 100:.1f}%)")
 
         text_2 = [re.findall(regex_pattern, line) for line in text_2]
-        text_2 = [''.join(line) for line in filter(lambda x: x, text_2)]
-        logger.debug(f'   - Text 2: Kept {len(text_2)} of {count_2} lines ({len(text_2) / count_2 * 100:.1f}%)')
+        text_2 = ["".join(line) for line in filter(lambda x: x, text_2)]
+        logger.debug(f"   - Text 2: Kept {len(text_2)} of {count_2} lines ({len(text_2)/count_2 * 100:.1f}%)")
 
     # Compute the diff
     # lines_diff = difflib.Differ().compare(text_1, text_2)
@@ -1340,11 +1338,11 @@ def diff_show(
     lines_diff = difflib.ndiff(text_1, text_2)
     diff_ratio = difflib.SequenceMatcher(None, text_1, text_2).quick_ratio() * 100
 
-    logger.debug('Showing the diff of two provided text strings ...')
-    logger.debug('Diff output options specified:')
-    logger.debug(f'    - Show no color:   {no_color}')
-    logger.debug(f'    - Show diff only:  {diff_only}')
-    logger.debug(f'    - Show diff guide: {diff_guide}')
+    logger.debug("Showing the diff of two provided text strings ...")
+    logger.debug("Diff output options specified:")
+    logger.debug(f"    - Show no color:   {no_color}")
+    logger.debug(f"    - Show diff only:  {diff_only}")
+    logger.debug(f"    - Show diff guide: {diff_guide}")
 
     # Legend Header
     print()
@@ -1352,39 +1350,39 @@ def diff_show(
         print(label_1)
         print(label_2)
     else:
-        secho(style(label_1, fg='red', bold=False))
-        secho(style(label_2, fg='green', bold=False))
+        secho(style(label_1, fg="red", bold=False))
+        secho(style(label_2, fg="green", bold=False))
 
     if char_ignore > 0:
-        print(f'***  NOTE: Ignoring first {char_ignore} characters of each line')
+        print(f"***  NOTE: Ignoring first {char_ignore} characters of each line")
     if line_pattern:
-        print(f'***  NOTE: Only considering log lines with REGEX pattern: {regex_pattern}')
-    print('')
-    print('-' * 51)
+        print(f"***  NOTE: Only considering log lines with REGEX pattern: {regex_pattern}")
+    print("")
+    print("-" * 51)
 
     for line in lines_diff:
         if line.isspace():  # difflib sometimes returns empty strings
             continue
-        if diff_only and line[0] not in ['-', '+', '?']:  # Skip non-diff lines
+        if diff_only and line[0] not in ["-", "+", "?"]:  # Skip non-diff lines
             continue
-        if not diff_guide and line.startswith('?'):
+        if not diff_guide and line.startswith("?"):
             continue
 
         if no_color:
-            color, bold = 'reset', False
-        elif line[0] == '+':
-            color, bold = 'green', False
-        elif line[0] == '-':
-            color, bold = 'red', False
-        elif line[0] == '?':
-            color, bold = 'yellow', True
+            color, bold = "reset", False
+        elif line[0] == "+":
+            color, bold = "green", False
+        elif line[0] == "-":
+            color, bold = "red", False
+        elif line[0] == "?":
+            color, bold = "yellow", True
         else:
             color, bold = None, False
 
-        if line.startswith('?'):
-            line = line.replace('?', ' ', 1)
+        if line.startswith("?"):
+            line = line.replace("?", " ", 1)
 
-        secho(style(f'  {line}', fg=color, bold=bold))
+        secho(style(f"  {line}", fg=color, bold=bold))
 
-    print('-' * 51)
-    print(f'\n  Similarity: {diff_ratio:.1f}%')
+    print("-" * 51)
+    print(f"\n  Similarity: {diff_ratio:.1f}%")

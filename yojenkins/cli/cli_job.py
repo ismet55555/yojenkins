@@ -31,16 +31,8 @@ def info(profile: str, token: str, job: str, **kwargs) -> None:
 
 
 @log_to_history
-def search(
-    profile: str,
-    token: str,
-    search_pattern: str,
-    search_folder: str,
-    depth: int,
-    fullname: bool,
-    opt_list: bool,
-    **kwargs,
-) -> None:
+def search(profile: str, token: str, search_pattern: str, search_folder: str, depth: int, fullname: bool,
+           opt_list: bool, **kwargs) -> None:
     """TODO Docstring
 
     Args:
@@ -48,15 +40,17 @@ def search(
     """
     yj_obj = cu.config_yo_jenkins(profile, token)
     if cu.is_full_url(search_folder):
-        data, data_list = yj_obj.job.search(
-            search_pattern=search_pattern, folder_url=search_folder, folder_depth=depth, fullname=fullname
-        )
+        data, data_list = yj_obj.job.search(search_pattern=search_pattern,
+                                            folder_url=search_folder,
+                                            folder_depth=depth,
+                                            fullname=fullname)
     else:
-        data, data_list = yj_obj.job.search(
-            search_pattern=search_pattern, folder_name=search_folder, folder_depth=depth, fullname=fullname
-        )
+        data, data_list = yj_obj.job.search(search_pattern=search_pattern,
+                                            folder_name=search_folder,
+                                            folder_depth=depth,
+                                            fullname=fullname)
     if not data:
-        print2('No folders found', color='yellow')
+        print2("No folders found", color="yellow")
         sys.exit(1)
     data = data_list if opt_list else data
     cu.standard_out(data, **kwargs)
@@ -200,17 +194,8 @@ def browser(profile: str, token: str, job: str) -> None:
 
 
 @log_to_history
-def config(
-    profile: str,
-    token: str,
-    opt_pretty: bool,
-    opt_yaml: bool,
-    opt_xml: bool,
-    opt_toml: bool,
-    opt_json: bool,
-    job: str,
-    filepath: str,
-) -> None:
+def config(profile: str, token: str, opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_json: bool,
+           job: str, filepath: str) -> None:
     """TODO Docstring
 
     Args:
@@ -218,13 +203,17 @@ def config(
     """
     yj_obj = cu.config_yo_jenkins(profile, token)
     if cu.is_full_url(job):
-        data = yj_obj.job.config(
-            filepath=filepath, job_url=job, opt_json=opt_json, opt_yaml=opt_yaml, opt_toml=opt_toml
-        )
+        data = yj_obj.job.config(filepath=filepath,
+                                 job_url=job,
+                                 opt_json=opt_json,
+                                 opt_yaml=opt_yaml,
+                                 opt_toml=opt_toml)
     else:
-        data = yj_obj.job.config(
-            filepath=filepath, job_name=job, opt_json=opt_json, opt_yaml=opt_yaml, opt_toml=opt_toml
-        )
+        data = yj_obj.job.config(filepath=filepath,
+                                 job_name=job,
+                                 opt_json=opt_json,
+                                 opt_yaml=opt_yaml,
+                                 opt_toml=opt_toml)
 
     # data = json.loads(json.dumps(xmltodict.parse(data)))  # Converting XML to dict
     opt_xml = not any([opt_json, opt_yaml, opt_toml])

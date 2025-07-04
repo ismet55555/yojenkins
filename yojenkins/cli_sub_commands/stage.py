@@ -35,7 +35,7 @@ def info(ctx, debug, **kwargs):
     - yojenkins stage info stage-name --build_url http://localhost:8080/job/my-job/3/ --pretty
     """
     set_debug_log_level(debug)
-    if kwargs.get('job') or kwargs.get('url'):
+    if kwargs.get("job") or kwargs.get("url"):
         cli_stage.info(**translate_kwargs(kwargs))
     else:
         click.echo(ctx.get_help())
@@ -53,7 +53,7 @@ def info(ctx, debug, **kwargs):
 def status(ctx, debug, **kwargs):
     """Stage status text"""
     set_debug_log_level(debug)
-    if kwargs.get('job') or kwargs.get('url'):
+    if kwargs.get("job") or kwargs.get("url"):
         cli_stage.status(**translate_kwargs(kwargs))
     else:
         click.echo(ctx.get_help())
@@ -73,7 +73,7 @@ def status(ctx, debug, **kwargs):
 def steps(ctx, debug, **kwargs):
     """Get stage steps"""
     set_debug_log_level(debug)
-    if kwargs.get('job') or kwargs.get('url'):
+    if kwargs.get("job") or kwargs.get("url"):
         cli_stage.steps(**translate_kwargs(kwargs))
     else:
         click.echo(ctx.get_help())
@@ -87,19 +87,17 @@ def steps(ctx, debug, **kwargs):
 @click.option('-n', '--number', type=int, required=False, help='Build number')
 @click.option('-u', '--url', type=str, required=False, help='Build URL (No job info needed)')
 @click.option('--latest', type=bool, required=False, is_flag=True, help='Latest build (Replaces --number)')
-@click.option(
-    '-dd',
-    '--download_dir',
-    type=click.Path(file_okay=False, dir_okay=True),
-    required=False,
-    is_flag=False,
-    help='Download logs to directory',
-)
+@click.option('-dd',
+              '--download_dir',
+              type=click.Path(file_okay=False, dir_okay=True),
+              required=False,
+              is_flag=False,
+              help='Download logs to directory')
 @click.pass_context
 def logs(ctx, debug, **kwargs):
     """Stage logs"""
     set_debug_log_level(debug)
-    if kwargs.get('job') or kwargs.get('url'):
+    if kwargs.get("job") or kwargs.get("url"):
         cli_stage.logs(**translate_kwargs(kwargs))
     else:
         click.echo(ctx.get_help())

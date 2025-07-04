@@ -11,7 +11,8 @@ class JenkinsItemConfig(Enum):
     """
 
     FOLDER = {
-        'blank': """<?xml version='1.1' encoding='UTF-8'?>
+        "blank":
+            '''<?xml version='1.1' encoding='UTF-8'?>
                     <com.cloudbees.hudson.plugins.folder.Folder plugin="cloudbees-folder@6.15">
                     <properties/>
                     <folderViews class="com.cloudbees.hudson.plugins.folder.views.DefaultFolderViewHolder">
@@ -28,11 +29,13 @@ class JenkinsItemConfig(Enum):
                     </folderViews>
                     <healthMetrics/>
                     <icon class="com.cloudbees.hudson.plugins.folder.icons.StockFolderIcon"/>
-                    </com.cloudbees.hudson.plugins.folder.Folder>""",
-        'template': '',
+                    </com.cloudbees.hudson.plugins.folder.Folder>''',
+        "template":
+            ""
     }
     VIEW = {
-        'blank': """<?xml version="1.1" encoding="UTF-8"?>
+        "blank":
+            '''<?xml version="1.1" encoding="UTF-8"?>
                     <hudson.model.ListView>
                         <name>blankio</name>
                         <filterExecutors>false</filterExecutors>
@@ -52,11 +55,13 @@ class JenkinsItemConfig(Enum):
                             <hudson.views.BuildButtonColumn/>
                         </columns>
                         <recurse>false</recurse>
-                    </hudson.model.ListView>""",
-        'template': '',
+                    </hudson.model.ListView>''',
+        "template":
+            ""
     }
     JOB = {
-        'blank': """<?xml version='1.1' encoding='UTF-8'?>
+        "blank":
+            '''<?xml version='1.1' encoding='UTF-8'?>
                     <project>
                         <description></description>
                         <keepDependencies>false</keepDependencies>
@@ -71,8 +76,9 @@ class JenkinsItemConfig(Enum):
                         <builders/>
                         <publishers/>
                         <buildWrappers/>
-                    </project>""",
-        'script': """<?xml version='1.1' encoding='UTF-8'?>
+                    </project>''',
+        "script":
+            '''<?xml version='1.1' encoding='UTF-8'?>
                     <project>
                         <actions/>
                         <description></description>
@@ -95,5 +101,5 @@ class JenkinsItemConfig(Enum):
                         </builders>
                         <publishers/>
                         <buildWrappers/>
-                    </project>""",
+                    </project>'''
     }

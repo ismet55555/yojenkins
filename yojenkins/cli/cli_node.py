@@ -99,17 +99,8 @@ def enable(profile: str, token: str, name: str, message: str) -> None:
 
 
 @log_to_history
-def config(
-    profile: str,
-    token: str,
-    opt_pretty: bool,
-    opt_yaml: bool,
-    opt_xml: bool,
-    opt_toml: bool,
-    opt_json: bool,
-    name: str,
-    filepath: str,
-) -> None:
+def config(profile: str, token: str, opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_json: bool,
+           name: str, filepath: str) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -118,9 +109,11 @@ def config(
         TODO
     """
     yj_obj = cu.config_yo_jenkins(profile, token)
-    data = yj_obj.node.config(
-        filepath=filepath, node_name=name, opt_json=opt_json, opt_yaml=opt_yaml, opt_toml=opt_toml
-    )
+    data = yj_obj.node.config(filepath=filepath,
+                              node_name=name,
+                              opt_json=opt_json,
+                              opt_yaml=opt_yaml,
+                              opt_toml=opt_toml)
     opt_xml = not any([opt_json, opt_yaml, opt_toml])
     data = data if opt_xml else json.loads(json.dumps(xmltodict.parse(data)))
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)

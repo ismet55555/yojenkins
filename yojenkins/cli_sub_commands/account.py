@@ -33,9 +33,12 @@ def info(debug, **kwargs):
 @cli_decorators.profile
 @click.argument('user-id', nargs=1, type=str, required=True)
 @click.argument('password', nargs=1, type=str, required=True)
-@click.option(
-    '--is-admin', type=bool, default=False, required=False, is_flag=True, help='User has administrator control'
-)
+@click.option('--is-admin',
+              type=bool,
+              default=False,
+              required=False,
+              is_flag=True,
+              help='User has administrator control')
 @click.option('--email', type=str, required=False, help='User email address')
 @click.option('--description', type=str, required=False, help='User description')
 def create(debug, **kwargs):
@@ -58,12 +61,10 @@ def delete(debug, **kwargs):
 @cli_decorators.debug
 @cli_decorators.profile
 @click.argument('user_id', nargs=1, type=str, required=True)
-@click.option(
-    '--action',
-    type=click.Choice(['add', 'remove'], case_sensitive=False),
-    required=True,
-    help='Add or remove permission action',
-)
+@click.option('--action',
+              type=click.Choice(['add', 'remove'], case_sensitive=False),
+              required=True,
+              help='Add or remove permission action')
 @click.option('--permission-id', type=str, required=True, help='ID(s) of permission (comma separated)')
 def permission(debug, **kwargs):
     """

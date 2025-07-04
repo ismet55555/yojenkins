@@ -5,7 +5,6 @@ import logging
 import os
 import sys
 import threading
-
 #  from pprint import pprint
 from time import perf_counter, sleep, time
 
@@ -60,7 +59,7 @@ class BuildMonitor(Monitor):
         # Temporary message box on screen
         self.message_box_temp_duration = 1  # sec
 
-        self.sound_directory = ''
+        self.sound_directory = ""
 
     ###########################################################################
     #                         BUILD MONITOR
@@ -146,23 +145,19 @@ class BuildMonitor(Monitor):
             if logger.level < 20:
                 # mu.draw_text(scr, f"{loop_total_time:.4f}", y_row, center_x=True, color=self.color['grey-light'], decor=self.decor['bold'])
                 # mu.draw_text(scr, str(curses.baudrate()), y_row, center_x=True, color=self.color['grey-light'], decor=self.decor['bold'])
-                mu.draw_text(
-                    scr,
-                    str(time() - sound_notify_msg_time) + ' ' + str(sound) + ' ' + str(sound_notify_msg_show),
-                    y_row,
-                    center_x=True,
-                    color=self.color['grey-light'],
-                    decor=self.decor['bold'],
-                )
+                mu.draw_text(scr,
+                             str(time() - sound_notify_msg_time) + ' ' + str(sound) + ' ' + str(sound_notify_msg_show),
+                             y_row,
+                             center_x=True,
+                             color=self.color['grey-light'],
+                             decor=self.decor['bold'])
             else:
-                mu.draw_text(
-                    scr,
-                    'BUILD MONITOR',
-                    y_row,
-                    center_x=True,
-                    color=self.color['grey-light'],
-                    decor=self.decor['bold'],
-                )
+                mu.draw_text(scr,
+                             'BUILD MONITOR',
+                             y_row,
+                             center_x=True,
+                             color=self.color['grey-light'],
+                             decor=self.decor['bold'])
             y_row += 1
 
             # Draw header divider
@@ -178,9 +173,8 @@ class BuildMonitor(Monitor):
                 build_url = self.build_info_data['url']
 
                 # INFO
-                mu.draw_horizontal_header(
-                    scr, y_row, x_col[0], term_width - 5, '-', 'INFO', self.color['normal'] | self.decor['bold']
-                )
+                mu.draw_horizontal_header(scr, y_row, x_col[0], term_width - 5, '-', 'INFO',
+                                          self.color['normal'] | self.decor['bold'])
                 y_row += 1
 
                 build_info_items = {
@@ -188,7 +182,7 @@ class BuildMonitor(Monitor):
                     'Build': self.build_info_data['displayName'],
                     'Folder': self.build_info_data['folderFullName'],
                     'Server': self.build_info_data['serverURL'],
-                    'Executor': self.build_info_data['builtOn'],
+                    'Executor': self.build_info_data['builtOn']
                 }
                 for i, (key, value) in enumerate(build_info_items.items()):
                     # Job Name
@@ -197,16 +191,18 @@ class BuildMonitor(Monitor):
                     y_row += 1
                 y_row += 1
 
-                mu.draw_horizontal_header(
-                    scr, y_row, x_col[0], term_width - 5, '-', 'STATUS', self.color['normal'] | self.decor['bold']
-                )
+                mu.draw_horizontal_header(scr, y_row, x_col[0], term_width - 5, '-', 'STATUS',
+                                          self.color['normal'] | self.decor['bold'])
                 y_row += 1
 
                 # Play a sound on job status change
                 if sound:
-                    mu.draw_text(
-                        scr, '( fx )', 1, term_width - 8, color=self.color['grey-dark'], decor=self.decor['bold']
-                    )
+                    mu.draw_text(scr,
+                                 '( fx )',
+                                 1,
+                                 term_width - 8,
+                                 color=self.color['grey-dark'],
+                                 decor=self.decor['bold'])
                 if sound and not self.playing_sound:
                     # Get the sound file name
                     status_sound = self.status_to_sound(self.build_info_data['resultText'])
@@ -223,42 +219,37 @@ class BuildMonitor(Monitor):
                     'Ended': [self.build_info_data['endDatetime'], self.color['normal'], self.decor['normal']],
                     'Elapsed': [self.build_info_data['elapsedFormatted'], self.color['normal'], self.decor['normal']],
                     'Estimated': [
-                        self.build_info_data['estimatedDurationFormatted'],
-                        self.color['normal'],
-                        self.decor['normal'],
+                        self.build_info_data['estimatedDurationFormatted'], self.color['normal'], self.decor['normal']
                     ],
                     'Refresh': [
-                        str(self.build_info_thread_interval) + ' sec',
-                        self.color['normal'],
-                        self.decor['normal'],
+                        str(self.build_info_thread_interval) + ' sec', self.color['normal'], self.decor['normal']
                     ],
-                    'Status': [self.build_info_data['resultText'], self.color[status_color], self.decor['bold']],
+                    'Status': [self.build_info_data['resultText'], self.color[status_color], self.decor['bold']]
                 }
                 for i, (key, value) in enumerate(build_info_items.items()):
                     mu.draw_text(scr, f'{key}:', y_row, x_col[0], decor=self.decor['bold'])
-                    mu.draw_text(
-                        scr,
-                        mu.truncate_text(f'{value[0]}', term_width - 5 - 12),
-                        y_row,
-                        x_col[1],
-                        color=value[1],
-                        decor=value[2],
-                    )
+                    mu.draw_text(scr,
+                                 mu.truncate_text(f'{value[0]}', term_width - 5 - 12),
+                                 y_row,
+                                 x_col[1],
+                                 color=value[1],
+                                 decor=value[2])
                     y_row += 1
             else:
                 y_row += 3
-                mu.draw_text(
-                    scr, 'NO DATA', y_row, center_x=True, color=self.color['normal'], decor=self.decor['bold']
-                )
+                mu.draw_text(scr,
+                             'NO DATA',
+                             y_row,
+                             center_x=True,
+                             color=self.color['normal'],
+                             decor=self.decor['bold'])
                 y_row += 2
-                mu.draw_text(
-                    scr,
-                    r'ಠ_ಠ  ¯\_(⊙︿⊙)_/¯',
-                    y_row,
-                    center_x=True,
-                    color=self.color['normal'],
-                    decor=self.decor['bold'],
-                )
+                mu.draw_text(scr,
+                             'ಠ_ಠ  ¯\_(⊙︿⊙)_/¯',
+                             y_row,
+                             center_x=True,
+                             color=self.color['normal'],
+                             decor=self.decor['bold'])
             y_row += 1
 
             ########################################################################################
@@ -270,9 +261,8 @@ class BuildMonitor(Monitor):
                 x_col = [3, 8, 40, 55]
 
                 # Header
-                mu.draw_horizontal_header(
-                    scr, y_row, x_col[0], term_width - 5, '-', 'STAGES', self.color['normal'] | self.decor['bold']
-                )
+                mu.draw_horizontal_header(scr, y_row, x_col[0], term_width - 5, '-', 'STAGES',
+                                          self.color['normal'] | self.decor['bold'])
                 y_row += 1
 
                 # Loop through all listed stages in build
@@ -295,7 +285,7 @@ class BuildMonitor(Monitor):
                     result_text = build_stage['status'] if 'status' in build_stage else StageStatus.UNKNOWN.value
                     status_color = self.status_to_color(build_stage['status'])
 
-                    mu.draw_text(scr, result_text.replace('_', ' '), y_row, x_col[3], color=self.color[status_color])
+                    mu.draw_text(scr, result_text.replace("_", " "), y_row, x_col[3], color=self.color[status_color])
                     y_row += 1
             else:
                 # Change the minimum window height limit (no stages section)
@@ -310,10 +300,9 @@ class BuildMonitor(Monitor):
             # SERVER STATUS
             y_row = term_height - 3
             if self.server_status_data:
-                auth_status = False if 'auth' not in self.server_status_data else self.server_status_data['auth']
-                reach_status = (
-                    False if 'reachable' not in self.server_status_data else self.server_status_data['reachable']
-                )
+                auth_status = False if 'auth' not in self.server_status_data else self.server_status_data["auth"]
+                reach_status = False if 'reachable' not in self.server_status_data else self.server_status_data[
+                    "reachable"]
                 line = f'Server Status: Reachable: {reach_status}, Authenticated: {auth_status}'
             else:
                 line = 'Server Status: NO DATA'
@@ -345,14 +334,12 @@ class BuildMonitor(Monitor):
 
             # Indicate server interaction with icon
             if self.server_interaction:
-                mu.draw_text(
-                    scr,
-                    '(R)',
-                    term_height - 2,
-                    term_width - 5,
-                    color=self.color['grey-dark'],
-                    decor=self.decor['bold'],
-                )
+                mu.draw_text(scr,
+                             '(R)',
+                             term_height - 2,
+                             term_width - 5,
+                             color=self.color['grey-dark'],
+                             decor=self.decor['bold'])
             self.server_interaction = False
 
             ########################################################################################
@@ -368,14 +355,8 @@ class BuildMonitor(Monitor):
             if self.help:
                 curses.halfdelay(255)
                 message_lines = [
-                    'A - Abort build',
-                    'L - Output build logs',
-                    'O - Open build in web browser',
-                    'P - Pause Monitor',
-                    'Q - Quit Monitor',
-                    'S - Sound notification on/off',
-                    ' ',
-                    'H - Keyboard shortcuts',
+                    'A - Abort build', 'L - Output build logs', 'O - Open build in web browser', 'P - Pause Monitor',
+                    'Q - Quit Monitor', 'S - Sound notification on/off', ' ', 'H - Keyboard shortcuts'
                 ]
                 mu.draw_message_box(scr, message_lines, 'left')
             else:
@@ -530,14 +511,10 @@ class BuildMonitor(Monitor):
         """
         logger.debug(f'Starting thread for build info for "{build_url}" ...')
         try:
-            threading.Thread(
-                target=self.__thread_build_info,
-                args=(
-                    build_url,
-                    monitor_interval,
-                ),
-                daemon=False,
-            ).start()
+            threading.Thread(target=self.__thread_build_info, args=(
+                build_url,
+                monitor_interval,
+            ), daemon=False).start()
         except Exception as error:
             logger.error(
                 f'Failed to start build info monitoring thread for {build_url}. Exception: {error}. Type: {type(error)}'
@@ -567,8 +544,8 @@ class BuildMonitor(Monitor):
         self.build_stages_thread_interval = monitor_interval
 
         # Check if this is a staged build
-        logger.debug('Checking if build is a staged build ...')
-        request_url = f'{build_url.strip("/")}/wfapi/describe'
+        logger.debug(f'Checking if build is a staged build ...')
+        request_url = f"{build_url.strip('/')}/wfapi/describe"
         return_content, _, return_success = self.rest.request(request_url, 'get', is_endpoint=False)
         if not return_success or not return_content:
             logger.debug('Failed to get build stages. This may not be a staged build')
@@ -603,14 +580,10 @@ class BuildMonitor(Monitor):
         """
         logger.debug(f'Starting thread for build stages for "{build_url}" ...')
         try:
-            threading.Thread(
-                target=self.__thread_build_stages,
-                args=(
-                    build_url,
-                    monitor_interval,
-                ),
-                daemon=False,
-            ).start()
+            threading.Thread(target=self.__thread_build_stages, args=(
+                build_url,
+                monitor_interval,
+            ), daemon=False).start()
         except Exception as error:
             logger.error(
                 f'Failed to start build info monitoring thread for {build_url}. Exception: {error}. Type: {type(error)}'

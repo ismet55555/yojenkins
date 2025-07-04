@@ -64,18 +64,19 @@ def history(debug, **kwargs):
 @cli_decorators.debug
 @cli_decorators.profile
 @click.argument('request_text', nargs=1, type=str, required=True)
-@click.option(
-    '--request-type',
-    type=click.Choice(['GET', 'POST', 'HEAD'], case_sensitive=False),
-    default='GET',
-    show_default=True,
-    required=False,
-    help='Type of Rest request',
-)
+@click.option('--request-type',
+              type=click.Choice(['GET', 'POST', 'HEAD'], case_sensitive=False),
+              default='GET',
+              show_default=True,
+              required=False,
+              help='Type of Rest request')
 @click.option('--raw', type=bool, required=False, default=False, is_flag=True, help='Return raw return text')
-@click.option(
-    '--clean-html', type=bool, required=False, default=False, is_flag=True, help='Clean any HTML tags from return'
-)
+@click.option('--clean-html',
+              type=bool,
+              required=False,
+              default=False,
+              is_flag=True,
+              help='Clean any HTML tags from return')
 def rest_request(debug, **kwargs):
     """Use this command to send Rest calls to the server.
     The request will be send with the proper authentication from your profile.
@@ -93,20 +94,16 @@ def rest_request(debug, **kwargs):
 @cli_decorators.debug
 @cli_decorators.profile
 @click.option('--text', type=str, required=False, help='Command(s) to run entered as text')
-@click.option(
-    '--file',
-    type=click.Path(file_okay=True, dir_okay=False),
-    required=False,
-    is_flag=False,
-    help='File containing command(s) to run',
-)
-@click.option(
-    '--output',
-    type=click.Path(file_okay=True, dir_okay=False),
-    required=False,
-    is_flag=False,
-    help='Save the result to this file',
-)
+@click.option('--file',
+              type=click.Path(file_okay=True, dir_okay=False),
+              required=False,
+              is_flag=False,
+              help='File containing command(s) to run')
+@click.option('--output',
+              type=click.Path(file_okay=True, dir_okay=False),
+              required=False,
+              is_flag=False,
+              help='Save the result to this file')
 @click.pass_context
 def run_script(ctx, debug, **kwargs):
     """Use this command to execute a Groovy script, as text or in a file,
@@ -119,7 +116,7 @@ def run_script(ctx, debug, **kwargs):
       - yojenkins tools script --file ./my_script.groovy
     """
     set_debug_log_level(debug)
-    if kwargs.get('text') or kwargs.get('file'):
+    if kwargs.get("text") or kwargs.get("file"):
         cli_tools.run_script(**translate_kwargs(kwargs))
     else:
         click.echo(ctx.get_help())
@@ -132,21 +129,23 @@ def run_script(ctx, debug, **kwargs):
 @click.option('--repo-owner', type=str, required=False, help='Owner/Organization of git repository')
 @click.option('--repo-name', type=str, required=False, help='Name of git repository')
 @click.option('--repo-url', type=str, required=False, help='URL of git repository. Same syntax as git clone command')
-@click.option(
-    '--repo-branch', type=str, required=False, default='main', show_default=True, help='Branch of the git repository'
-)
-@click.option(
-    '--implicit',
-    type=bool,
-    required=False,
-    default=False,
-    show_default=True,
-    is_flag=True,
-    help='Automatically allow pipelines to use libraries without @Library',
-)
-@click.option(
-    '--credential-id', type=str, required=False, help='ID of your git credentials in Jenkins credentials database'
-)
+@click.option('--repo-branch',
+              type=str,
+              required=False,
+              default='main',
+              show_default=True,
+              help='Branch of the git repository')
+@click.option('--implicit',
+              type=bool,
+              required=False,
+              default=False,
+              show_default=True,
+              is_flag=True,
+              help='Automatically allow pipelines to use libraries without @Library')
+@click.option('--credential-id',
+              type=str,
+              required=False,
+              help='ID of your git credentials in Jenkins credentials database')
 def shared_lib_setup(debug, **kwargs):
     """This sets up the Jenkins Shared Library, referencing a GitHub git repository.
 

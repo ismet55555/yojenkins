@@ -1,4 +1,4 @@
-""" "Logger Setup"""
+""""Logger Setup"""
 
 # TODO: Move to utilities
 
@@ -9,13 +9,16 @@ from logging.handlers import RotatingFileHandler
 import coloredlogs
 
 # Turn off INFO level logging for python package "jons2xml"
-logging.getLogger('dicttoxml').setLevel(logging.ERROR)
-logging.getLogger('urllib3').setLevel(logging.WARNING)
+logging.getLogger("dicttoxml").setLevel(logging.ERROR)
+logging.getLogger("urllib3").setLevel(logging.WARNING)
 
 # Setting up log file handler
-file_handler = RotatingFileHandler(
-    filename='yojenkins.log', mode='a', maxBytes=5000000, backupCount=0, delay=True, encoding='utf-8'
-)
+file_handler = RotatingFileHandler(filename='yojenkins.log',
+                                   mode='a',
+                                   maxBytes=5000000,
+                                   backupCount=0,
+                                   delay=True,
+                                   encoding="utf-8")
 
 # Also include any sys.stdout in logs
 stdout_handler = logging.StreamHandler(sys.stdout)

@@ -31,16 +31,8 @@ def info(profile: str, token: str, folder: str, **kwargs) -> None:
 
 
 @log_to_history
-def search(
-    profile: str,
-    token: str,
-    search_pattern: str,
-    search_folder: str,
-    depth: int,
-    fullname: bool,
-    opt_list: bool,
-    **kwargs,
-) -> None:
+def search(profile: str, token: str, search_pattern: str, search_folder: str, depth: int, fullname: bool,
+           opt_list: bool, **kwargs) -> None:
     """Search folders by REGEX pattern
 
     Args:
@@ -48,15 +40,17 @@ def search(
     """
     yj_obj = cu.config_yo_jenkins(profile, token)
     if cu.is_full_url(search_folder):
-        data, data_list = yj_obj.folder.search(
-            search_pattern=search_pattern, folder_url=search_folder, folder_depth=depth, fullname=fullname
-        )
+        data, data_list = yj_obj.folder.search(search_pattern=search_pattern,
+                                               folder_url=search_folder,
+                                               folder_depth=depth,
+                                               fullname=fullname)
     else:
-        data, data_list = yj_obj.folder.search(
-            search_pattern=search_pattern, folder_name=search_folder, folder_depth=depth, fullname=fullname
-        )
+        data, data_list = yj_obj.folder.search(search_pattern=search_pattern,
+                                               folder_name=search_folder,
+                                               folder_depth=depth,
+                                               fullname=fullname)
     if not data:
-        print2('No folders found', color='yellow')
+        print2("No folders found", color="yellow")
         sys.exit(1)
     data = data_list if opt_list else data
     cu.standard_out(data, **kwargs)
@@ -141,17 +135,8 @@ def browser(profile: str, token: str, folder: str) -> None:
 
 
 @log_to_history
-def config(
-    profile: str,
-    token: str,
-    opt_pretty: bool,
-    opt_yaml: bool,
-    opt_xml: bool,
-    opt_toml: bool,
-    opt_json: bool,
-    folder: str,
-    filepath: str,
-) -> None:
+def config(profile: str, token: str, opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_json: bool,
+           folder: str, filepath: str) -> None:
     """Get folder configuration
 
     Args:
@@ -159,13 +144,17 @@ def config(
     """
     yj_obj = cu.config_yo_jenkins(profile, token)
     if cu.is_full_url(folder):
-        data = yj_obj.folder.config(
-            filepath=filepath, folder_url=folder, opt_json=opt_json, opt_yaml=opt_yaml, opt_toml=opt_toml
-        )
+        data = yj_obj.folder.config(filepath=filepath,
+                                    folder_url=folder,
+                                    opt_json=opt_json,
+                                    opt_yaml=opt_yaml,
+                                    opt_toml=opt_toml)
     else:
-        data = yj_obj.folder.config(
-            filepath=filepath, folder_name=folder, opt_json=opt_json, opt_yaml=opt_yaml, opt_toml=opt_toml
-        )
+        data = yj_obj.folder.config(filepath=filepath,
+                                    folder_name=folder,
+                                    opt_json=opt_json,
+                                    opt_yaml=opt_yaml,
+                                    opt_toml=opt_toml)
     # Converting XML to dict
     # data = json.loads(json.dumps(xmltodict.parse(data)))
 
@@ -175,9 +164,8 @@ def config(
 
 
 @log_to_history
-def create(
-    profile: str, token: str, name: str, folder: str, type: str, config_file: str, config_is_json: bool
-) -> None:
+def create(profile: str, token: str, name: str, folder: str, type: str, config_file: str,
+           config_is_json: bool) -> None:
     """Create an item
 
     Args:
@@ -187,13 +175,17 @@ def create(
 
     yj_obj = cu.config_yo_jenkins(profile, token)
     if cu.is_full_url(folder):
-        yj_obj.folder.create(
-            name=name, type=type, config=config_file, folder_url=folder, config_is_json=config_is_json
-        )
+        yj_obj.folder.create(name=name,
+                             type=type,
+                             config=config_file,
+                             folder_url=folder,
+                             config_is_json=config_is_json)
     else:
-        yj_obj.folder.create(
-            name=name, type=type, config=config_file, folder_name=folder, config_is_json=config_is_json
-        )
+        yj_obj.folder.create(name=name,
+                             type=type,
+                             config=config_file,
+                             folder_name=folder,
+                             config_is_json=config_is_json)
     click.secho('success', fg='bright_green', bold=True)
 
 
