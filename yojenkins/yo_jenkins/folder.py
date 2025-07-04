@@ -431,7 +431,7 @@ class Folder:
         elif type == 'job':
             endpoint = f'createItem?name={name}'
             item_config = JenkinsItemConfig.JOB.value['blank']
-            # prefix = JenkinsItemClasses.JOB.value['prefix']
+                # prefix = JenkinsItemClasses.JOB.value['prefix']
 
         # Checking if the item exists
         if utility.item_exists_in_folder(name, folder_url, type, self.rest):
