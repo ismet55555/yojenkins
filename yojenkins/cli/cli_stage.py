@@ -63,17 +63,13 @@ def status(profile: str, token: str, name: str, job: str, number: int, url: str,
 
     # Request the data
     if valid_url_format:
-        data = yj_obj.stage.status_text(stage_name=name,
-                                        build_url=url,
-                                        job_url=job,
-                                        build_number=number,
-                                        latest=latest)
+        data = yj_obj.stage.status_text(
+            stage_name=name, build_url=url, job_url=job, build_number=number, latest=latest
+        )
     else:
-        data = yj_obj.stage.status_text(stage_name=name,
-                                        build_url=url,
-                                        job_name=job,
-                                        build_number=number,
-                                        latest=latest)
+        data = yj_obj.stage.status_text(
+            stage_name=name, build_url=url, job_name=job, build_number=number, latest=latest
+        )
 
     # Color for output
     if data.upper() in Status.UNKNOWN.value:
@@ -92,8 +88,9 @@ def status(profile: str, token: str, name: str, job: str, number: int, url: str,
 
 
 @log_to_history
-def steps(profile: str, token: str, opt_list: bool, name: str, job: str, number: int, url: str, latest: bool,
-          **kwargs) -> None:
+def steps(
+    profile: str, token: str, opt_list: bool, name: str, job: str, number: int, url: str, latest: bool, **kwargs
+) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -115,24 +112,21 @@ def steps(profile: str, token: str, opt_list: bool, name: str, job: str, number:
 
     # Request the data
     if valid_url_format:
-        data, data_list = yj_obj.stage.step_list(stage_name=name,
-                                                 build_url=url,
-                                                 job_url=job,
-                                                 build_number=number,
-                                                 latest=latest)
+        data, data_list = yj_obj.stage.step_list(
+            stage_name=name, build_url=url, job_url=job, build_number=number, latest=latest
+        )
     else:
-        data, data_list = yj_obj.stage.step_list(stage_name=name,
-                                                 build_url=url,
-                                                 job_name=job,
-                                                 build_number=number,
-                                                 latest=latest)
+        data, data_list = yj_obj.stage.step_list(
+            stage_name=name, build_url=url, job_name=job, build_number=number, latest=latest
+        )
     data = data_list if opt_list else data
     cu.standard_out(data, **kwargs)
 
 
 @log_to_history
-def logs(profile: str, token: str, name: str, job: str, number: int, url: str, latest: bool,
-         download_dir: bool) -> None:
+def logs(
+    profile: str, token: str, name: str, job: str, number: int, url: str, latest: bool, download_dir: bool
+) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -154,16 +148,10 @@ def logs(profile: str, token: str, name: str, job: str, number: int, url: str, l
 
     # Request the data
     if valid_url_format:
-        yj_obj.stage.logs(stage_name=name,
-                          build_url=url,
-                          job_url=job,
-                          build_number=number,
-                          latest=latest,
-                          download_dir=download_dir)
+        yj_obj.stage.logs(
+            stage_name=name, build_url=url, job_url=job, build_number=number, latest=latest, download_dir=download_dir
+        )
     else:
-        yj_obj.stage.logs(stage_name=name,
-                          build_url=url,
-                          job_name=job,
-                          build_number=number,
-                          latest=latest,
-                          download_dir=download_dir)
+        yj_obj.stage.logs(
+            stage_name=name, build_url=url, job_name=job, build_number=number, latest=latest, download_dir=download_dir
+        )

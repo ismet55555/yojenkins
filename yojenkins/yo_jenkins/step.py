@@ -10,7 +10,7 @@ from yojenkins.yo_jenkins.rest import Rest
 logger = logging.getLogger()
 
 
-class Step():
+class Step:
     """TODO Step"""
 
     def __init__(self, rest: Rest) -> None:

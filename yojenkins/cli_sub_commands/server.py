@@ -94,12 +94,14 @@ def quiet(debug, **kwargs):
 @server.command(short_help='\tRestart the server')
 @cli_decorators.debug
 @cli_decorators.profile
-@click.option('--force',
-              type=bool,
-              default=False,
-              required=False,
-              is_flag=True,
-              help='Force restart. Without initial quiet mode.')
+@click.option(
+    '--force',
+    type=bool,
+    default=False,
+    required=False,
+    is_flag=True,
+    help='Force restart. Without initial quiet mode.',
+)
 def restart(debug, **kwargs):
     """
     NOTE: By default this will put Jenkins into the quiet mode, wait for existing builds to be completed, and then restart Jenkins.
@@ -112,12 +114,14 @@ def restart(debug, **kwargs):
 @server.command(short_help='\tShut down the server')
 @cli_decorators.debug
 @cli_decorators.profile
-@click.option('--force',
-              type=bool,
-              default=False,
-              required=False,
-              is_flag=True,
-              help='Force shutdown. Without initial quiet mode')
+@click.option(
+    '--force',
+    type=bool,
+    default=False,
+    required=False,
+    is_flag=True,
+    help='Force shutdown. Without initial quiet mode',
+)
 def shutdown(debug, **kwargs):
     """
     NOTE: By default this will put Jenkins in a quiet mode, in preparation for a shutdown.
@@ -130,78 +134,91 @@ def shutdown(debug, **kwargs):
 
 @server.command(short_help='\tCreate a local development server using Docker')
 @cli_decorators.debug
-@click.option('--config-file',
-              default='config_as_code.yaml',
-              type=click.Path(file_okay=True, dir_okay=False),
-              required=False,
-              help='.yml/.yaml file for custom configuration as code for Jenkins server setup')
-@click.option('--plugins-file',
-              default='plugins.txt',
-              type=click.Path(file_okay=True, dir_okay=False),
-              required=False,
-              help='.txt file for custom list of all plugins to be installed on Jenkins server')
-@click.option('--protocol-schema',
-              default='http',
-              type=str,
-              required=False,
-              help='Protocol schema for Jenkins, http, https, etc.')
-@click.option('--host',
-              default='localhost',
-              type=str,
-              required=False,
-              help='Jenkins server host (localhost, 192.168.0.1, etc.)')
+@click.option(
+    '--config-file',
+    default='config_as_code.yaml',
+    type=click.Path(file_okay=True, dir_okay=False),
+    required=False,
+    help='.yml/.yaml file for custom configuration as code for Jenkins server setup',
+)
+@click.option(
+    '--plugins-file',
+    default='plugins.txt',
+    type=click.Path(file_okay=True, dir_okay=False),
+    required=False,
+    help='.txt file for custom list of all plugins to be installed on Jenkins server',
+)
+@click.option(
+    '--protocol-schema',
+    default='http',
+    type=str,
+    required=False,
+    help='Protocol schema for Jenkins, http, https, etc.',
+)
+@click.option(
+    '--host', default='localhost', type=str, required=False, help='Jenkins server host (localhost, 192.168.0.1, etc.)'
+)
 @click.option('--port', default=8080, type=int, required=False, help='Jenkins server port')
-@click.option('--image-base',
-              default='jenkins/jenkins',
-              show_default=True,
-              type=str,
-              required=False,
-              help='Base Jenkins server image')
-@click.option('--extra-setup-script',
-              default='',
-              type=click.Path(file_okay=True, dir_okay=False),
-              required=False,
-              help='Local path of additional setup shell script to be executed at image build')
-@click.option('--image-rebuild',
-              default=False,
-              type=bool,
-              required=False,
-              is_flag=True,
-              help='If image exists, rebuild existing docker image')
-@click.option('--new-volume',
-              default=False,
-              show_default=True,
-              type=bool,
-              required=False,
-              is_flag=True,
-              help='Erase existing Docker data volume from previously created servers')
-@click.option('--new-volume-name',
-              default='yojenkins-jenkins',
-              type=str,
-              required=False,
-              help='Name of the resulting Docker volume')
-@click.option('--bind-mount-dir',
-              default='',
-              type=click.Path(file_okay=False, dir_okay=True),
-              required=False,
-              help='Path of local directory to be bound inside container "/tmp/my_things" directory')
-@click.option('--container-name',
-              default='yojenkins-jenkins',
-              type=str,
-              required=False,
-              help='Name of the resulting Docker container')
+@click.option(
+    '--image-base',
+    default='jenkins/jenkins',
+    show_default=True,
+    type=str,
+    required=False,
+    help='Base Jenkins server image',
+)
+@click.option(
+    '--extra-setup-script',
+    default='',
+    type=click.Path(file_okay=True, dir_okay=False),
+    required=False,
+    help='Local path of additional setup shell script to be executed at image build',
+)
+@click.option(
+    '--image-rebuild',
+    default=False,
+    type=bool,
+    required=False,
+    is_flag=True,
+    help='If image exists, rebuild existing docker image',
+)
+@click.option(
+    '--new-volume',
+    default=False,
+    show_default=True,
+    type=bool,
+    required=False,
+    is_flag=True,
+    help='Erase existing Docker data volume from previously created servers',
+)
+@click.option(
+    '--new-volume-name',
+    default='yojenkins-jenkins',
+    type=str,
+    required=False,
+    help='Name of the resulting Docker volume',
+)
+@click.option(
+    '--bind-mount-dir',
+    default='',
+    type=click.Path(file_okay=False, dir_okay=True),
+    required=False,
+    help='Path of local directory to be bound inside container "/tmp/my_things" directory',
+)
+@click.option(
+    '--container-name',
+    default='yojenkins-jenkins',
+    type=str,
+    required=False,
+    help='Name of the resulting Docker container',
+)
 @click.option('--registry', default='', type=str, required=False, help='Registry to pull base Jenkins image from')
-@click.option('--admin-user',
-              default='admin',
-              show_default=True,
-              type=str,
-              required=False,
-              help='Set username of admin')
-@click.option('--password',
-              default='',
-              type=str,
-              required=False,
-              help='Set password for admin account [default: password]')
+@click.option(
+    '--admin-user', default='admin', show_default=True, type=str, required=False, help='Set username of admin'
+)
+@click.option(
+    '--password', default='', type=str, required=False, help='Set password for admin account [default: password]'
+)
 def server_deploy(debug, **kwargs):
     """Create a local development server using Docker
 
@@ -227,20 +244,24 @@ def server_deploy(debug, **kwargs):
 
 
 @server.command(short_help='\tRemove a local development server')
-@click.option('--remove-volume',
-              default=False,
-              show_default=True,
-              type=bool,
-              required=False,
-              is_flag=True,
-              help='Also remove the Docker volume used for current server')
-@click.option('--remove-image',
-              default=False,
-              show_default=True,
-              type=bool,
-              required=False,
-              is_flag=True,
-              help='Also remove the Docker image used for current server')
+@click.option(
+    '--remove-volume',
+    default=False,
+    show_default=True,
+    type=bool,
+    required=False,
+    is_flag=True,
+    help='Also remove the Docker volume used for current server',
+)
+@click.option(
+    '--remove-image',
+    default=False,
+    show_default=True,
+    type=bool,
+    required=False,
+    is_flag=True,
+    help='Also remove the Docker image used for current server',
+)
 @cli_decorators.debug
 def server_teardown(debug, **kwargs):
     """Remove a local development server"""

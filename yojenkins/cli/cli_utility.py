@@ -19,11 +19,16 @@ from json2xml.utils import readfromstring
 from urllib3.util import parse_url
 
 from yojenkins import __version__
+from yojenkins.utility.utility import (
+    am_i_bundled,
+    am_i_inside_docker,
+    create_new_history_file,
+    iter_data_empty_item_stripper,
+    print2,
+)  # isort:skip
 from yojenkins.yo_jenkins.auth import Auth
 from yojenkins.yo_jenkins.rest import Rest
 from yojenkins.yo_jenkins.yojenkins import YoJenkins
-
-from yojenkins.utility.utility import iter_data_empty_item_stripper, load_contents_from_local_file, am_i_inside_docker, am_i_bundled, print2, create_new_history_file  # isort:skip
 
 # Getting the logger reference
 logger = logging.getLogger()
@@ -68,8 +73,7 @@ def set_debug_log_level(debug_flag: bool) -> None:
 
 
 def platform_information() -> None:
-    """Display (Console out) current system and program information
-    """
+    """Display (Console out) current system and program information"""
     python_rev = f'(REV:{platform.python_revision()})' if platform.python_revision() else ''
 
     # System information
@@ -111,11 +115,13 @@ def config_yo_jenkins(profile: str, token: str) -> YoJenkins:
     return YoJenkins(auth)
 
 
-def standard_out(data: Union[Dict, List],
-                 opt_pretty: bool = False,
-                 opt_yaml: bool = False,
-                 opt_xml: bool = False,
-                 opt_toml: bool = False) -> None:
+def standard_out(
+    data: Union[Dict, List],
+    opt_pretty: bool = False,
+    opt_yaml: bool = False,
+    opt_xml: bool = False,
+    opt_toml: bool = False,
+) -> None:
     """Outputting the resulting data to the console.
     This funciton handles a variety of output formats.
 
@@ -238,13 +244,13 @@ def log_to_history(decorated_function) -> Callable:
             'tool_path': CLI_CMD_PATH,
             'arguments': CLI_CMD_ARGS,
             'timestamp': datetime.now().timestamp(),
-            'datetime': datetime.now().strftime("%A, %B %d, %Y %I:%M:%S"),
-            'tool_version': __version__
+            'datetime': datetime.now().strftime('%A, %B %d, %Y %I:%M:%S'),
+            'tool_version': __version__,
         }
 
         # Add line to history file
         try:
-            with open(history_file_path, 'a', encoding="utf-8") as outfile:
+            with open(history_file_path, 'a', encoding='utf-8') as outfile:
                 outfile.write(json.dumps(command_info) + '\n')
         except Exception as error:
             logger.debug(f'Failed to write command history file: {error}')

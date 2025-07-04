@@ -3,7 +3,7 @@
 import curses
 import logging
 from math import floor
-from typing import Tuple, Type
+from typing import Tuple
 
 # Getting the logger reference
 logger = logging.getLogger()
@@ -83,7 +83,7 @@ def load_curses_colors_decor() -> Tuple[dict, dict]:
         'grey-dark': [240, bkgrd_color],
         'grey-light': [248, bkgrd_color],
         'black-white': [curses.COLOR_BLACK, curses.COLOR_WHITE],
-        'white-red': [curses.COLOR_WHITE, curses.COLOR_RED]
+        'white-red': [curses.COLOR_WHITE, curses.COLOR_RED],
     }
 
     # If terminal does not support colors, reset everything to white
@@ -112,8 +112,7 @@ def load_curses_colors_decor() -> Tuple[dict, dict]:
         'protect': curses.A_PROTECT,  # Protected mode
         'invisible': curses.A_INVIS,  # Invisible or blank mode
         'alt-char': curses.A_ALTCHARSET,  # Alternate character set
-        'char':
-            curses.A_CHARTEXT  # Bit-mask to extract a character
+        'char': curses.A_CHARTEXT,  # Bit-mask to extract a character
     }
 
     # Initiating curses color and saving for quick reference
@@ -136,21 +135,21 @@ def load_keys() -> dict:
         ui_keys (dict): Dictionary of references to curses keys
     """
     ui_keys = {
-        "ABORT": (ord('a'), ord('A')),
-        "BUILD": (ord('b'), ord('B')),
-        "DOWN": (curses.KEY_DOWN, ord('j')),
-        "ENTER": (curses.KEY_ENTER, ord('\n'), ord('\r')),
-        "HELP": (ord('h'), ord('H')),
-        "LEFT": (curses.KEY_LEFT, ord('h')),
-        "LOGS": (ord('l'), ord('L')),
-        "OPEN": (ord('o'), ord('O')),
-        "PAUSE": (ord('p'), ord('P')),
-        "QUIT": (27, ord('q'), ord('Q')),
-        "RESUME": (ord('r'), ord('R')),
-        "RIGHT": (curses.KEY_RIGHT, ord('l')),
-        "SOUND": (ord('s'), ord('S')),
-        "SPACE": (32, ord(' ')),
-        "UP": (curses.KEY_UP, ord('k'))
+        'ABORT': (ord('a'), ord('A')),
+        'BUILD': (ord('b'), ord('B')),
+        'DOWN': (curses.KEY_DOWN, ord('j')),
+        'ENTER': (curses.KEY_ENTER, ord('\n'), ord('\r')),
+        'HELP': (ord('h'), ord('H')),
+        'LEFT': (curses.KEY_LEFT, ord('h')),
+        'LOGS': (ord('l'), ord('L')),
+        'OPEN': (ord('o'), ord('O')),
+        'PAUSE': (ord('p'), ord('P')),
+        'QUIT': (27, ord('q'), ord('Q')),
+        'RESUME': (ord('r'), ord('R')),
+        'RIGHT': (curses.KEY_RIGHT, ord('l')),
+        'SOUND': (ord('s'), ord('S')),
+        'SPACE': (32, ord(' ')),
+        'UP': (curses.KEY_UP, ord('k')),
     }
     return ui_keys
 
@@ -197,7 +196,7 @@ def truncate_text(text: str, length_limit: int) -> str:
     """
     truncated_text = text
     if len(text) >= length_limit - 3:
-        truncated_text = text[0:length_limit - 3] + '...'
+        truncated_text = text[0 : length_limit - 3] + '...'
 
     return truncated_text
 
@@ -242,13 +241,12 @@ def get_progress_bar(exam_progress: float, bar_char_width=60, bar_char_full='|',
 
     progress_str = []
     for i in range(bar_char_width):
-
         if i <= exam_progress * bar_char_width:
             progress_str.append(bar_char_full)
         else:
             progress_str.append(bar_char_empty)
 
-    progress_str = "".join(progress_str)
+    progress_str = ''.join(progress_str)
     return progress_str
 
 
@@ -267,13 +265,9 @@ def draw_screen_border(scr, color: list) -> None:
     scr.attroff(color)
 
 
-def draw_horizontal_header(scr,
-                           row: int,
-                           col: int,
-                           width: int,
-                           symbol: str = '-',
-                           text: str = '',
-                           color: list = []) -> None:
+def draw_horizontal_header(
+    scr, row: int, col: int, width: int, symbol: str = '-', text: str = '', color: list = []
+) -> None:
     """
     Draw a horizontal header on the screen
     Example:  `---------  HELLO  -------------`
@@ -388,14 +382,16 @@ def draw_message_box(scr, message_lines: list, justify: str = 'center') -> None:
     message_box.refresh()
 
 
-def draw_text(scr,
-              text: str = None,
-              y: int = None,
-              x: int = None,
-              color: list = None,
-              decor: int = None,
-              center_y: bool = False,
-              center_x: bool = False) -> None:
+def draw_text(
+    scr,
+    text: str = None,
+    y: int = None,
+    x: int = None,
+    color: list = None,
+    decor: int = None,
+    center_y: bool = False,
+    center_x: bool = False,
+) -> None:
     """
     Draw a text on screen.
     This is a wrapper for `addstr`

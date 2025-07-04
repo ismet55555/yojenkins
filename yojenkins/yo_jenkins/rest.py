@@ -97,11 +97,9 @@ class Rest:
 
         logger.debug(f'Checking if server is reachable: "{server_url}" ...')
 
-        request_success = self.request(target=server_url,
-                                       is_endpoint=False,
-                                       request_type='head',
-                                       auth_needed=False,
-                                       timeout=timeout)[1]
+        request_success = self.request(
+            target=server_url, is_endpoint=False, request_type='head', auth_needed=False, timeout=timeout
+        )[1]
 
         if request_success:
             logger.debug('Successfully found server is reachable')
@@ -110,20 +108,22 @@ class Rest:
             logger.debug('Failed. Server cannot be reached or is offline')
             return False
 
-    def request(self,
-                target: str,
-                request_type: Literal['get', 'post', 'head'],
-                is_endpoint: bool = True,
-                json_content: bool = True,
-                auth: Tuple = None,
-                auth_needed: bool = True,
-                new_session: bool = False,
-                params: dict = {},
-                data: dict = {},
-                json_data: dict = {},
-                headers: dict = {},
-                timeout: int = 10,
-                allow_redirect: bool = True) -> Tuple[Union[Dict, str], Dict, bool]:
+    def request(
+        self,
+        target: str,
+        request_type: Literal['get', 'post', 'head'],
+        is_endpoint: bool = True,
+        json_content: bool = True,
+        auth: Tuple = None,
+        auth_needed: bool = True,
+        new_session: bool = False,
+        params: dict = {},
+        data: dict = {},
+        json_data: dict = {},
+        headers: dict = {},
+        timeout: int = 10,
+        allow_redirect: bool = True,
+    ) -> Tuple[Union[Dict, str], Dict, bool]:
         """Utility method for a single REST requests
 
         Details: Currently supported GET, POST, HEAD
@@ -170,46 +170,57 @@ class Rest:
         start_time = perf_counter()
         try:
             if request_type.lower() == 'get':
-                response = self.session.get(request_url,
-                                            params=params,
-                                            data=data,
-                                            json=json_data,
-                                            headers=headers,
-                                            auth=auth,
-                                            timeout=timeout,
-                                            allow_redirects=allow_redirect)
+                response = self.session.get(
+                    request_url,
+                    params=params,
+                    data=data,
+                    json=json_data,
+                    headers=headers,
+                    auth=auth,
+                    timeout=timeout,
+                    allow_redirects=allow_redirect,
+                )
             elif request_type.lower() == 'post':
-                response = self.session.post(request_url,
-                                             params=params,
-                                             data=data,
-                                             json=json_data,
-                                             headers=headers,
-                                             auth=auth,
-                                             timeout=timeout,
-                                             allow_redirects=allow_redirect)
+                response = self.session.post(
+                    request_url,
+                    params=params,
+                    data=data,
+                    json=json_data,
+                    headers=headers,
+                    auth=auth,
+                    timeout=timeout,
+                    allow_redirects=allow_redirect,
+                )
             elif request_type.lower() == 'head':
-                response = self.session.head(request_url,
-                                             params=params,
-                                             data=data,
-                                             json=json_data,
-                                             headers=headers,
-                                             auth=auth,
-                                             timeout=timeout,
-                                             allow_redirects=allow_redirect)
+                response = self.session.head(
+                    request_url,
+                    params=params,
+                    data=data,
+                    json=json_data,
+                    headers=headers,
+                    auth=auth,
+                    timeout=timeout,
+                    allow_redirects=allow_redirect,
+                )
             elif request_type.lower() == 'delete':
-                response = self.session.delete(request_url,
-                                               params=params,
-                                               data=data,
-                                               json=json_data,
-                                               headers=headers,
-                                               auth=auth,
-                                               timeout=timeout,
-                                               allow_redirects=allow_redirect)
+                response = self.session.delete(
+                    request_url,
+                    params=params,
+                    data=data,
+                    json=json_data,
+                    headers=headers,
+                    auth=auth,
+                    timeout=timeout,
+                    allow_redirects=allow_redirect,
+                )
             else:
                 logger.debug(f'Request type "{request_type}" not recognized')
                 return {}, {}, False
-        except (requests.exceptions.ConnectionError, requests.exceptions.InvalidSchema,
-                requests.exceptions.RequestException) as error:
+        except (
+            requests.exceptions.ConnectionError,
+            requests.exceptions.InvalidSchema,
+            requests.exceptions.RequestException,
+        ) as error:
             logger.debug(f'Failed to make request. Exception: {error}')
             return {}, {}, False
 
@@ -229,13 +240,16 @@ class Rest:
             for i, redirect_hop in enumerate(response.history):
                 logger.debug('Request redirects:')
                 logger.debug(
-                    f'    - {i+1}/{len(response.history)}: {redirect_hop.request.method} - {redirect_hop.url} - Status: {redirect_hop.status_code}'
+                    f'    - {i + 1}/{len(response.history)}: {redirect_hop.request.method} - {redirect_hop.url} - Status: {redirect_hop.status_code}'
                 )
 
-        redirect_methods = ": " + " --> ".join([r.request.method for r in response.history] +
-                                               [response.request.method]) if response.history else ''
-        response_content_type = response.headers["Content-Type"] if "Content-Type" in response.headers else "N/A"
-        response_content_len = response.headers["Content-Length"] if "Content-Length" in response.headers else "N/A"
+        redirect_methods = (
+            ': ' + ' --> '.join([r.request.method for r in response.history] + [response.request.method])
+            if response.history
+            else ''
+        )
+        response_content_type = response.headers['Content-Type'] if 'Content-Type' in response.headers else 'N/A'
+        response_content_len = response.headers['Content-Length'] if 'Content-Length' in response.headers else 'N/A'
 
         # Final request report
         logger.debug('Request summary:')
@@ -262,7 +276,8 @@ class Rest:
         # Check the return status code
         if not response.ok:
             logger.debug(
-                f'Failed to make {request_type.upper()} request "{request_url}". Server code: {response.status_code}')
+                f'Failed to make {request_type.upper()} request "{request_url}". Server code: {response.status_code}'
+            )
             if response.headers:
                 logger.debug(f'Response headers: {response.headers}')
             return {}, {}, False
@@ -276,7 +291,7 @@ class Rest:
                     return_content = response.json()
                 except Exception as error:
                     # TODO: Specify json parse error
-                    logger.debug(f"Failed to parse request return as JSON. Possible HTML content. Exception: {error})")
+                    logger.debug(f'Failed to parse request return as JSON. Possible HTML content. Exception: {error})')
             else:
                 return_content = response.text
         else:

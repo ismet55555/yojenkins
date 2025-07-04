@@ -42,8 +42,9 @@ def info(profile: str, token: str, user_id: str, **kwargs) -> None:
 
 
 @log_to_history
-def create(profile: str, token: str, user_id: str, password: str, is_admin: bool, email: str,
-           description: str) -> None:
+def create(
+    profile: str, token: str, user_id: str, password: str, is_admin: bool, email: str, description: str
+) -> None:
     """Delete a user account
 
     Args:

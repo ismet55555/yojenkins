@@ -18,7 +18,7 @@ from yojenkins.yo_jenkins.jenkins_item_template import JenkinsItemTemplate
 logger = logging.getLogger()
 
 
-class Credential():
+class Credential:
     """Credential class"""
 
     def __init__(self, rest) -> None:
@@ -51,8 +51,8 @@ class Credential():
             store = 'system'
             logger.debug(f'Using effective credential folder name: "" = "{folder}"')
         else:
-            if "job/" not in folder:
-                folder = f"job/{folder}"
+            if 'job/' not in folder:
+                folder = f'job/{folder}'
             store = 'folder'
         return folder, store
 
@@ -67,8 +67,8 @@ class Credential():
             Effective domain name
         """
         domain_effective = domain
-        if domain in ["global"]:
-            domain_effective = "_"
+        if domain in ['global']:
+            domain_effective = '_'
             logger.debug(f'Credential domain passed: "{domain}". Using effective domain: "{domain_effective}"')
         return domain_effective
 
@@ -95,11 +95,11 @@ class Credential():
             credential_index = parsed_path.index('credentials')
             if credential_index > 2:
                 logger.debug('Failed to parse the credential URL. "credentials" keyword in URL in wrong position')
-                return "", "", ""
+                return '', '', ''
             elif credential_index == 2:
-                folder = "job/" + parsed_path[credential_index - 1]
+                folder = 'job/' + parsed_path[credential_index - 1]
             else:
-                folder = "."
+                folder = '.'
 
             # Store
             store_index = parsed_path.index('store')
@@ -112,9 +112,10 @@ class Credential():
             logger.debug(
                 f'The credential URL "{credential_url}" path does not contain any of the expected keywords: {key_words}'
             )
-            return "", "", ""
+            return '', '', ''
         logger.debug(
-            f'Successfully parsed the credential URL. Folder: "{folder}", Store: "{store}", Domain: "{domain}"')
+            f'Successfully parsed the credential URL. Folder: "{folder}", Store: "{store}", Domain: "{domain}"'
+        )
 
         return folder, store, domain
 
@@ -137,8 +138,8 @@ class Credential():
         domain = self._get_domain(domain)
 
         # Get return keys
-        if keys in ["all", "*", "full"]:
-            keys = "*"
+        if keys in ['all', '*', 'full']:
+            keys = '*'
         else:
             keys = utility.parse_and_check_input_string_list(keys, ',')
 
@@ -149,22 +150,21 @@ class Credential():
         logger.debug(f'   - Keys:   {keys}')
 
         target = f'{folder}/credentials/store/{store}/domain/{domain}/api/json?tree=credentials[{keys}]'
-        credentials_info, _, success = self.rest.request(target=target,
-                                                         request_type='get',
-                                                         is_endpoint=True,
-                                                         json_content=True)
+        credentials_info, _, success = self.rest.request(
+            target=target, request_type='get', is_endpoint=True, json_content=True
+        )
         if not success:
             fail_out('Failed to get any credentials')
 
-        if "credentials" not in credentials_info:
+        if 'credentials' not in credentials_info:
             fail_out('Failed to find "credentials" section in request return content')
-        credential_list = credentials_info["credentials"]
+        credential_list = credentials_info['credentials']
         if not any(credential_list):
             fail_out('No credentials listed for the specified folder or domain')
 
         # Get a list of only credentail names
         credential_list_name = [
-            credential["displayName"] for credential in credential_list if "displayName" in credential
+            credential['displayName'] for credential in credential_list if 'displayName' in credential
         ]
 
         logger.debug(f'Number of credentials found: {len(credential_list)}')
@@ -184,7 +184,7 @@ class Credential():
         Returns:
             Credential inforamation in dictionary format
         """
-        logger.debug(f"Getting credential info for: {credential} ...")
+        logger.debug(f'Getting credential info for: {credential} ...')
         is_endpoint = True
 
         # Check if credential is a url or name/ID
@@ -200,21 +200,26 @@ class Credential():
             folder, store = self._get_folder_store(folder)
             domain = self._get_domain(domain)
 
-            credentials_list, _ = self.list(domain=domain, keys="displayName,id", folder=folder_original)
+            credentials_list, _ = self.list(domain=domain, keys='displayName,id', folder=folder_original)
             credential_ids_match = []
             for credential_item in credentials_list:
                 for key_name in ['displayName', 'id', 'fullName']:
                     if credential_item.get(key_name) == credential.lower():
-                        credential_ids_match.append(credential_item["id"])
-                        logger.debug(f'Successfully found credential matching '
-                                     f'{key_name} "{credential}" ({credential_item["id"]})')
+                        credential_ids_match.append(credential_item['id'])
+                        logger.debug(
+                            f'Successfully found credential matching '
+                            f'{key_name} "{credential}" ({credential_item["id"]})'
+                        )
 
             if not credential_ids_match:
                 fail_out(f'Failed to find any credentials matching display name or ID: {credential}')
             if len(credential_ids_match) > 1:
-                logger.debug(f'More than one matching credential found. '
-                             f'Using the first one: {credential_ids_match[0]}')
-            target = f'{folder}/credentials/store/{store}/domain/{domain}/credential/{credential_ids_match[0]}/api/json'
+                logger.debug(
+                    f'More than one matching credential found. Using the first one: {credential_ids_match[0]}'
+                )
+            target = (
+                f'{folder}/credentials/store/{store}/domain/{domain}/credential/{credential_ids_match[0]}/api/json'
+            )
             credential_url = f'{self.rest.server_url}{folder}/credentials/store/{store}/domain/{domain}/credential/{credential_ids_match[0]}'
 
         logger.debug('Getting all credential info with the following info:')
@@ -224,10 +229,9 @@ class Credential():
         logger.debug(f'   - Credential: {credential}')
 
         # Get credential info
-        credential_info, _, success = self.rest.request(target=target,
-                                                        request_type='get',
-                                                        is_endpoint=is_endpoint,
-                                                        json_content=True)
+        credential_info, _, success = self.rest.request(
+            target=target, request_type='get', is_endpoint=is_endpoint, json_content=True
+        )
         if not success:
             fail_out('Failed to get credential information')
 
@@ -236,14 +240,16 @@ class Credential():
 
         return credential_info
 
-    def config(self,
-               credential: str,
-               folder: str = None,
-               domain: str = None,
-               filepath: str = None,
-               opt_json: bool = False,
-               opt_yaml: bool = False,
-               opt_toml: bool = False) -> str:
+    def config(
+        self,
+        credential: str,
+        folder: str = None,
+        domain: str = None,
+        filepath: str = None,
+        opt_json: bool = False,
+        opt_yaml: bool = False,
+        opt_toml: bool = False,
+    ) -> str:
         """Get the folder configuration (ie .config.xml)
 
         Args:
@@ -272,10 +278,9 @@ class Credential():
 
         target = f'{folder}/credentials/store/{store}/domain/{domain}/credential/{credential_id}/config.xml'
         logger.debug(f'Fetching XML configurations for credential: "{credential_id}" ...')
-        return_content, _, success = self.rest.request(target=target,
-                                                       request_type='get',
-                                                       json_content=False,
-                                                       is_endpoint=True)
+        return_content, _, success = self.rest.request(
+            target=target, request_type='get', json_content=False, is_endpoint=True
+        )
         logger.debug('Successfully fetched XML configurations' if success else 'Failed to fetch XML configurations')
 
         if filepath:
@@ -285,12 +290,14 @@ class Credential():
 
         return return_content
 
-    def get_template(self,
-                     cred_type: str,
-                     filepath: str = None,
-                     opt_json: bool = False,
-                     opt_yaml: bool = False,
-                     opt_toml: bool = False) -> str:
+    def get_template(
+        self,
+        cred_type: str,
+        filepath: str = None,
+        opt_json: bool = False,
+        opt_yaml: bool = False,
+        opt_toml: bool = False,
+    ) -> str:
         """Get the template file for a credential type
 
         Args:
@@ -330,7 +337,7 @@ class Credential():
         try:
             with open(config_file, 'rb') as open_file:
                 credential_config = open_file.read()
-        except (OSError, IOError, PermissionError) as error:
+        except (OSError, PermissionError) as error:
             fail_out(f'Failed to open and read file: {config_file}  Exception: {error}')
 
         try:
@@ -339,14 +346,14 @@ class Credential():
             logger.debug('Converting JSON file to XML format ...')
 
             # Convert to XML, remove root XML tag, and converting to string
-            credential_config_xml = json2xml.Json2xml(cred_config_dict, pretty=False, wrapper="root",
-                                                      attr_type=False).to_xml()
+            credential_config_xml = json2xml.Json2xml(
+                cred_config_dict, pretty=False, wrapper='root', attr_type=False
+            ).to_xml()
             credential_config_xml = list(ET.fromstring(credential_config_xml))[0]
-            credential_config_xml = ET.tostring(credential_config_xml,
-                                                encoding='utf8',
-                                                method='xml',
-                                                xml_declaration=False)
-        except JSONDecodeError as error:
+            credential_config_xml = ET.tostring(
+                credential_config_xml, encoding='utf8', method='xml', xml_declaration=False
+            )
+        except JSONDecodeError:
             logger.debug('Configuration file passed is in XML format')
             credential_config_xml = credential_config
 
@@ -362,12 +369,14 @@ class Credential():
         # print(test)
 
         target = f'{folder}/credentials/store/{store}/domain/{domain}/createCredentials'
-        _, _, success = self.rest.request(target=target,
-                                          request_type='post',
-                                          json_content=False,
-                                          is_endpoint=True,
-                                          headers={'Content-Type': 'application/xml; charset=utf-8'},
-                                          data=credential_config_xml)
+        _, _, success = self.rest.request(
+            target=target,
+            request_type='post',
+            json_content=False,
+            is_endpoint=True,
+            headers={'Content-Type': 'application/xml; charset=utf-8'},
+            data=credential_config_xml,
+        )
         if not success:
             fail_out('Failed to create credential')
         logger.debug('Successfully created credential')
