@@ -518,9 +518,7 @@ class Build:
                             return_content = self.rest.request(
                                 request_url, 'get', is_endpoint=False, json_content=False
                             )[0]
-                            new_dict = dict.fromkeys(
-                                list(map(lambda num: num.strip(), return_content.splitlines()))
-                            )
+                            new_dict = dict.fromkeys(list(map(lambda num: num.strip(), return_content.splitlines())))
 
                             diff = dict.fromkeys(x for x in new_dict if x not in old_dict)
                             diff_list = list(diff.keys())
