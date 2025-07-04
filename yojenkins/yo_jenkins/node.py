@@ -3,7 +3,7 @@
 import json
 import logging
 import os
-from typing import Tuple
+from typing import Optional
 
 import xmltodict
 
@@ -55,7 +55,7 @@ class Node:
 
         return node_info
 
-    def list(self, depth: int = 0) -> Tuple[list, list]:
+    def list(self, depth: int = 0) -> tuple[list, list]:
         """TODO Docstring
 
         Details: TODO
@@ -199,7 +199,7 @@ class Node:
 
         return success
 
-    def disable(self, node_name: str, message: str = None) -> bool:
+    def disable(self, node_name: str, message: Optional[str] = None) -> bool:
         """TODO Docstring
 
         Details: TODO
@@ -230,7 +230,7 @@ class Node:
 
         return success
 
-    def enable(self, node_name: str, message: str = None) -> bool:
+    def enable(self, node_name: str, message: Optional[str] = None) -> bool:
         """TODO Docstring
 
         Details: TODO
@@ -295,7 +295,7 @@ class Node:
 
         return return_content
 
-    def reconfig(self, node_name: str, config_file: str = None, config_is_json: bool = False) -> bool:
+    def reconfig(self, node_name: str, config_file: Optional[str] = None, config_is_json: bool = False) -> bool:
         """TODO Docstring
 
         Details: TODO

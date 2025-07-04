@@ -5,7 +5,7 @@ import os
 from datetime import datetime, timedelta
 from itertools import islice
 from time import sleep, time
-from typing import Dict, List, Tuple
+from typing import Optional
 from urllib.parse import urlencode
 
 import requests
@@ -47,9 +47,9 @@ class Build:
         build_url: str = '',
         job_name: str = '',
         job_url: str = '',
-        build_number: int = None,
+        build_number: Optional[int] = None,
         latest: bool = False,
-    ) -> Dict:
+    ) -> dict:
         """TODO Docstring
 
         Args:
@@ -173,7 +173,7 @@ class Build:
         build_url: str = '',
         job_name: str = '',
         job_url: str = '',
-        build_number: int = None,
+        build_number: Optional[int] = None,
         latest: bool = False,
     ) -> str:
         """TODO Docstring
@@ -235,7 +235,7 @@ class Build:
         build_url: str = '',
         job_name: str = '',
         job_url: str = '',
-        build_number: int = None,
+        build_number: Optional[int] = None,
         latest: bool = False,
     ) -> int:
         """TODO Docstring
@@ -276,7 +276,7 @@ class Build:
         build_url: str = '',
         job_name: str = '',
         job_url: str = '',
-        build_number: int = None,
+        build_number: Optional[int] = None,
         latest: bool = False,
     ) -> int:
         """TODO Docstring
@@ -311,9 +311,9 @@ class Build:
         build_url: str = '',
         job_name: str = '',
         job_url: str = '',
-        build_number: int = None,
+        build_number: Optional[int] = None,
         latest: bool = False,
-    ) -> Tuple[list, list]:
+    ) -> tuple[list, list]:
         """TODO Docstring
 
         Args:
@@ -362,8 +362,8 @@ class Build:
         return build_stage_list, build_stage_name_list
 
     def artifact_list(
-        self, build_url: str = '', job_name: str = '', job_url: str = '', build_number: int = None
-    ) -> List[dict]:
+        self, build_url: str = '', job_name: str = '', job_url: str = '', build_number: Optional[int] = None
+    ) -> list[dict]:
         """TODO Docstring
 
         Args:
@@ -395,9 +395,9 @@ class Build:
         build_url: str = '',
         job_name: str = '',
         job_url: str = '',
-        build_number: int = None,
+        build_number: Optional[int] = None,
         latest: bool = False,
-        tail: float = None,
+        tail: Optional[float] = None,
         download_dir: str = '',
         follow: bool = False,
     ) -> bool:
@@ -449,7 +449,7 @@ class Build:
             if tail:
                 logger.debug(f'--tail option specified with value of: {tail}')
                 tail = abs(tail)
-                logs_list = list(map(lambda num: num.strip(), return_content.splitlines()))
+                logs_list = [num.strip() for num in return_content.splitlines()]
                 number_of_lines = round(len(logs_list) * tail) if tail < 1 else round(tail)
                 start_log_number = 0 if number_of_lines > len(logs_list) else len(logs_list) - number_of_lines
                 return_content = os.linesep.join(list(islice(logs_list, start_log_number, None)))
@@ -518,7 +518,7 @@ class Build:
                             return_content = self.rest.request(
                                 request_url, 'get', is_endpoint=False, json_content=False
                             )[0]
-                            new_dict = dict.fromkeys(list(map(lambda num: num.strip(), return_content.splitlines())))
+                            new_dict = dict.fromkeys([num.strip() for num in return_content.splitlines()])
 
                             diff = dict.fromkeys(x for x in new_dict if x not in old_dict)
                             diff_list = list(diff.keys())
@@ -539,7 +539,7 @@ class Build:
         build_url: str = '',
         job_name: str = '',
         job_url: str = '',
-        build_number: int = None,
+        build_number: Optional[int] = None,
         latest: bool = False,
     ) -> bool:
         """TODO Docstring
@@ -574,7 +574,7 @@ class Build:
         build_url: str = '',
         job_name: str = '',
         job_url: str = '',
-        build_number: int = None,
+        build_number: Optional[int] = None,
         latest: bool = False,
         sound: bool = False,
     ) -> bool:
@@ -610,9 +610,9 @@ class Build:
         build_url: str = '',
         job_name: str = '',
         job_url: str = '',
-        build_number: int = None,
+        build_number: Optional[int] = None,
         latest: bool = False,
-    ) -> Tuple[list, list]:
+    ) -> tuple[list, list]:
         """TODO Docstring
 
         Args:
@@ -652,7 +652,7 @@ class Build:
         build_url: str = '',
         job_name: str = '',
         job_url: str = '',
-        build_number: int = None,
+        build_number: Optional[int] = None,
         latest: bool = False,
     ) -> int:
         """TODO Docstring

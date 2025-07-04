@@ -11,7 +11,7 @@ import time
 import webbrowser
 from pathlib import Path
 from string import Template
-from typing import Any, Dict, List, Literal, Set, Tuple, Union
+from typing import Any, Literal, Union
 from urllib.parse import urljoin, urlparse
 
 import requests
@@ -53,7 +53,7 @@ class TextStyle:
     NORMAL = '\033[0m'
 
 
-def translate_kwargs(original_kwargs: Dict[str, Any]) -> Dict[str, Any]:
+def translate_kwargs(original_kwargs: dict[str, Any]) -> dict[str, Any]:
     """Rename the key names of the provided kwargs based on a set of translation rules.
 
     Details: This is primarirly used if kwarg keys are named like
@@ -124,7 +124,7 @@ def failures_out(messages: list) -> None:
 
 def load_contents_from_local_file(
     file_type: Literal['yaml', 'toml', 'json', 'jsonl'], local_file_path: str
-) -> Union[Dict, List]:
+) -> Union[dict, list]:
     """Load a local file contents.
 
     ### TODO: Add default option to load file as plain text
@@ -144,7 +144,7 @@ def load_contents_from_local_file(
         return {}
 
     logger.debug(f"Loading specified local .{file_type} file: '{local_file_path}' ...")
-    file_contents: Union[List, Dict] = {}
+    file_contents: Union[list, dict] = {}
     try:
         with open(local_file_path) as open_file:
             if file_type == 'yaml':
@@ -163,7 +163,7 @@ def load_contents_from_local_file(
     return file_contents
 
 
-def load_contents_from_string(file_type: str, text: str) -> Dict:
+def load_contents_from_string(file_type: str, text: str) -> dict:
     """Load a local file contents.
 
     Parameters:
@@ -186,7 +186,7 @@ def load_contents_from_string(file_type: str, text: str) -> Dict:
     return contents
 
 
-def load_contents_from_remote_file_url(file_type: str, remote_file_url: str, allow_redirects: bool = True) -> Dict:
+def load_contents_from_remote_file_url(file_type: str, remote_file_url: str, allow_redirects: bool = True) -> dict:
     """Load a remote yaml file contents over HTTP.
 
     ### FIXME: Make it able to load toml, json, and yaml file types
@@ -271,7 +271,7 @@ def load_contents_from_remote_file_url(file_type: str, remote_file_url: str, all
     return file_contents
 
 
-def append_lines_to_file(filepath: str, lines_to_append: List[str], location: str = 'beginning') -> bool:
+def append_lines_to_file(filepath: str, lines_to_append: list[str], location: str = 'beginning') -> bool:
     """Add lines to the end to a text based file
 
     Details: The passed list is parsed and each list item is a separate line added
@@ -335,7 +335,7 @@ def is_list_items_in_dict(list_items: list, dict_to_check: dict) -> Union[int, N
     return None
 
 
-def iter_data_empty_item_stripper(iter_data: Union[Dict, List, Set, Tuple]) -> Union[Dict, List, Set, Tuple]:
+def iter_data_empty_item_stripper(iter_data: Union[dict, list, set, tuple]) -> Union[dict, list, set, tuple]:
     """Remove any empty data from a nested or un-nested iter item (list, dict, set, etc).
 
     Details: https://stackoverflow.com/a/27974027/11294572
@@ -680,12 +680,12 @@ def has_build_number_started(job_info: dict, build_number: int) -> bool:
 
 
 def item_subitem_list(
-    item_info: Dict,
+    item_info: dict,
     get_key_info: str,
     item_type: str,
     item_class_list: list = [],
     item_class_key: str = '_class',
-) -> Tuple[list, list]:
+) -> tuple[list, list]:
     """Given a item (job, build, etc) info, get the sub-items matching criteria.
 
     Details: <DETAILED DESCRIPTION>
@@ -804,7 +804,7 @@ def has_special_char(text: str, special_chars: str = r'@!#$%^&*<>?/\|~:') -> boo
         True if includes special characters, else False
     """
     regex = re.compile('[' + special_chars + ']')
-    includes_special_chars = regex.search(text) != None
+    includes_special_chars = regex.search(text) is not None
     if includes_special_chars:
         logger.debug(f'Item "{text}" includes special characters. Special characters: {special_chars}')
     else:
@@ -994,7 +994,7 @@ def am_i_bundled() -> bool:
     return getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS')
 
 
-def parse_and_check_input_string_list(string_list: str, join_back_char: str = '', split_char: str = ',') -> List[str]:
+def parse_and_check_input_string_list(string_list: str, join_back_char: str = '', split_char: str = ',') -> list[str]:
     """Parsing a string list into a list of strings
 
     Details:
@@ -1116,7 +1116,7 @@ def template_apply(string_template: str, is_json: bool = False, **kwargs) -> Uni
 
 def run_groovy_script(
     script_filepath: str, json_return: bool, rest: object, **kwargs
-) -> Tuple[Union[dict, str], bool, str]:
+) -> tuple[Union[dict, str], bool, str]:
     """Run a Groovy script on the server and return the response
 
     Details:
@@ -1198,7 +1198,7 @@ def run_groovy_script(
     return script_result, True, ''
 
 
-def get_item_action(item_info: dict, class_type: str) -> List[dict]:
+def get_item_action(item_info: dict, class_type: str) -> list[dict]:
     """Get the item's actions for a specific action class type
 
     Args:

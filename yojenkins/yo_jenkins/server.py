@@ -1,7 +1,6 @@
 """Server class definition"""
 
 import logging
-from typing import Dict, List, Tuple
 
 from yojenkins.utility import utility
 from yojenkins.utility.utility import fail_out
@@ -26,7 +25,7 @@ class Server:
         self.auth = auth
         self.server_base_url = auth.jenkins_profile['jenkins_server_url']
 
-    def info(self) -> Dict:
+    def info(self) -> dict:
         """Get the server information
 
         Details: Targeting the server that is specified in the selected profile
@@ -43,7 +42,7 @@ class Server:
 
         return server_info
 
-    def people(self) -> Tuple[list, list]:
+    def people(self) -> tuple[list, list]:
         """Get the list of people/accounts on the server
 
         Args:
@@ -66,7 +65,7 @@ class Server:
 
         return people_info, people_info_list
 
-    def queue_info(self) -> Dict:
+    def queue_info(self) -> dict:
         """Get all the jobs stuck in the server queue
 
         (Potentially move to jobs or build section)
@@ -88,7 +87,7 @@ class Server:
 
         return server_queue_info
 
-    def queue_list(self) -> List[str]:
+    def queue_list(self) -> list[str]:
         """Get all list of all the jobs stuck in the server queue
 
         (Potentially move to jobs or build section)
@@ -110,7 +109,7 @@ class Server:
 
         return queue_list
 
-    def plugin_list(self) -> Tuple[list, list]:
+    def plugin_list(self) -> tuple[list, list]:
         """Get the list of plugins installed on the server
 
         Args:

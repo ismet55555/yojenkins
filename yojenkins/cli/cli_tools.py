@@ -5,7 +5,6 @@ import logging
 import os
 import sys
 from pathlib import Path
-from typing import List
 
 import click
 
@@ -139,7 +138,7 @@ def history(profile: str, clear: bool) -> None:
     # Displaying the command history
     logger.debug(f'Displaying command history for profile "{profile}" ...')
 
-    def output_history_to_console(command_list: List, profile_name: str = '') -> None:
+    def output_history_to_console(command_list: list, profile_name: str = '') -> None:
         """Help to format and output to console."""
         for command_info in command_list:
             if profile_name:
@@ -149,8 +148,8 @@ def history(profile: str, clear: bool) -> None:
             datetime_str = f'{click.style("[" + command_info["datetime"] + "]", fg="green", bold=False)}'
             tool_version = f'{click.style("[" + "v" + command_info["tool_version"] + "]", fg="green", bold=False)}'
 
-            command_info = f'{profile_str} {datetime_str} {tool_version} - {command_info["tool_path"]} {command_info["arguments"]}'
-            click.echo(command_info)
+            command_info_txt = f'{profile_str} {datetime_str} {tool_version} - {command_info["tool_path"]} {command_info["arguments"]}'
+            click.echo(command_info_txt)
 
     if profile:
         output_history_to_console(contents, profile)

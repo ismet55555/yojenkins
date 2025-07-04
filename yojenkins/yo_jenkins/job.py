@@ -5,7 +5,7 @@ import logging
 import re
 from datetime import timedelta
 from time import perf_counter
-from typing import Dict, Tuple, Union
+from typing import Union
 from urllib.parse import urlencode
 
 import jenkins
@@ -99,7 +99,7 @@ class Job:
         folder_url: str = '',
         folder_depth: int = 4,
         fullname: bool = True,
-    ) -> Tuple[list, list]:
+    ) -> tuple[list, list]:
         """TODO Docstring
 
         Args:
@@ -154,7 +154,7 @@ class Job:
 
         return self.search_results, job_search_results_list
 
-    def info(self, job_name: str = '', job_url: str = '') -> Dict:
+    def info(self, job_name: str = '', job_url: str = '') -> dict:
         """TODO Docstring
 
         Args:
@@ -193,7 +193,7 @@ class Job:
 
         return job_info
 
-    def build_list(self, job_name: str = '', job_url: str = '') -> Tuple[list, list]:
+    def build_list(self, job_name: str = '', job_url: str = '') -> tuple[list, list]:
         """TODO Docstring
 
         Args:
@@ -312,7 +312,7 @@ class Job:
 
         return False
 
-    def build_trigger(self, job_name: str = '', job_url: str = '', paramters: Dict = {}) -> int:
+    def build_trigger(self, job_name: str = '', job_url: str = '', paramters: dict = {}) -> int:
         """TODO Docstring
 
         Args:
@@ -376,7 +376,7 @@ class Job:
         # TODO
         pass
 
-    def queue_info(self, build_queue_number: int = 0, build_queue_url: str = '') -> Dict:
+    def queue_info(self, build_queue_number: int = 0, build_queue_url: str = '') -> dict:
         """TODO Docstring
 
         Args:
@@ -409,7 +409,7 @@ class Job:
 
         return queue_info
 
-    def in_queue_check(self, job_name: str = '', job_url: str = '') -> Tuple[dict, int]:
+    def in_queue_check(self, job_name: str = '', job_url: str = '') -> tuple[dict, int]:
         """TODO Docstring
 
         Args:
@@ -766,7 +766,7 @@ class Job:
 
         return success
 
-    def parameters(self, job_name: str = '', job_url: str = '') -> Tuple[list, list]:
+    def parameters(self, job_name: str = '', job_url: str = '') -> tuple[list, list]:
         """TODO Docstring
 
         Args:

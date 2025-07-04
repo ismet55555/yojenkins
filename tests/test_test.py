@@ -12,4 +12,4 @@ def test_success() -> None:
 def test_failure() -> None:
     """This is just a dummy test"""
     logging.info('This is just a dummy test that FAILS')
-    assert False
+    raise AssertionError()

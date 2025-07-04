@@ -3,7 +3,7 @@
 import curses
 import logging
 from math import floor
-from typing import Tuple
+from typing import Optional
 
 # Getting the logger reference
 logger = logging.getLogger()
@@ -48,7 +48,7 @@ def logging_console(enabled: bool = True) -> None:
         logger.debug(f'    {i + 1}. {type(handler)} - Logging Level: {logging.getLevelName(handler.level)}')
 
 
-def load_curses_colors_decor() -> Tuple[dict, dict]:
+def load_curses_colors_decor() -> tuple[dict, dict]:
     """
     Load curses colors and decorations and load them in a usable
     dictionary for reference.
@@ -201,7 +201,7 @@ def truncate_text(text: str, length_limit: int) -> str:
     return truncated_text
 
 
-def get_message_box_size(term_height: int, term_width: int, message_lines: list) -> Tuple[int, int, int, int]:
+def get_message_box_size(term_height: int, term_width: int, message_lines: list) -> tuple[int, int, int, int]:
     """
     Given a message box list with each item being a message box line/row,
     this method find the right size and position of the message box for
@@ -384,11 +384,11 @@ def draw_message_box(scr, message_lines: list, justify: str = 'center') -> None:
 
 def draw_text(
     scr,
-    text: str = None,
-    y: int = None,
-    x: int = None,
-    color: list = None,
-    decor: int = None,
+    text: Optional[str] = None,
+    y: Optional[int] = None,
+    x: Optional[int] = None,
+    color: Optional[list] = None,
+    decor: Optional[int] = None,
     center_y: bool = False,
     center_x: bool = False,
 ) -> None:
@@ -415,7 +415,7 @@ def draw_text(
     decor = decor_preset['normal'] if not decor else decor
 
     # Check for NoneType
-    if text == None:
+    if text is None:
         text = 'N/A'
 
     # Get center of screen if specified

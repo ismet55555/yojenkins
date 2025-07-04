@@ -2,7 +2,7 @@
 
 import logging
 from time import perf_counter
-from typing import Dict, Literal, Tuple, Union
+from typing import Literal, Optional, Union
 
 import requests
 from requests.auth import HTTPBasicAuth
@@ -114,7 +114,7 @@ class Rest:
         request_type: Literal['get', 'post', 'head'],
         is_endpoint: bool = True,
         json_content: bool = True,
-        auth: Tuple = None,
+        auth: Optional[tuple] = None,
         auth_needed: bool = True,
         new_session: bool = False,
         params: dict = {},
@@ -123,7 +123,7 @@ class Rest:
         headers: dict = {},
         timeout: int = 10,
         allow_redirect: bool = True,
-    ) -> Tuple[Union[Dict, str], Dict, bool]:
+    ) -> tuple[Union[dict, str], dict, bool]:
         """Utility method for a single REST requests
 
         Details: Currently supported GET, POST, HEAD

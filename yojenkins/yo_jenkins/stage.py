@@ -4,7 +4,7 @@ import logging
 import os
 import threading
 from datetime import datetime, timedelta
-from typing import Dict, Tuple, Union
+from typing import Optional, Union
 
 from yojenkins.utility import utility
 from yojenkins.utility.utility import fail_out, print2
@@ -41,9 +41,9 @@ class Stage:
         build_url: str = '',
         job_name: str = '',
         job_url: str = '',
-        build_number: int = None,
+        build_number: Optional[int] = None,
         latest: bool = False,
-    ) -> Dict:
+    ) -> dict:
         """Get the stage information for specified stage
 
         Details: Ways of specifying the build:
@@ -125,7 +125,7 @@ class Stage:
         build_url: str = '',
         job_name: str = '',
         job_url: str = '',
-        build_number: int = None,
+        build_number: Optional[int] = None,
         latest: bool = False,
     ) -> str:
         """Get the status text of the specified stage
@@ -178,7 +178,7 @@ class Stage:
         job_url: str = '',
         build_number: Union[int, None] = None,
         latest: bool = False,
-    ) -> Tuple[list, list]:
+    ) -> tuple[list, list]:
         """List of steps for this stage
 
         Details: Ways of specifying the build:

@@ -231,7 +231,7 @@ def server_deploy(
         failures.append('yojenkins resources may have been installed under root or a restricted account')
         failures_out(failures)
 
-    volumes_named = [list(l.values())[0] for l in deployed['volumes']]
+    volumes_named = [next(iter(vol.values())) for vol in deployed['volumes']]
 
     print2('Successfully created containerized Jenkins server!', bold=True, color='green')
     print2(f'   - Docker image:      {deployed["image"]}', bold=True, color='green')
@@ -269,7 +269,7 @@ def server_teardown(remove_volume: bool, remove_image: bool) -> None:
         fail_out(f'Failed to load previous server deployment info file: {error}')
 
     # Filter out named volumes only
-    volumes_named_only = [list(l.values())[0] for l in deployed['volumes'] if 'named' in l]
+    volumes_named_only = [next(iter(vol.values())) for vol in deployed['volumes'] if 'named' in vol]
 
     # Create object
     djs = DockerJenkinsServer(

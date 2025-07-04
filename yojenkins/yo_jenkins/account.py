@@ -2,7 +2,6 @@
 
 import logging
 import os
-from typing import Tuple
 
 from yojenkins.utility import utility
 from yojenkins.utility.utility import fail_out
@@ -24,7 +23,7 @@ class Account:
         self.rest = rest
         self.groovy_script_directory = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'groovy_scripts')
 
-    def list(self) -> Tuple[list, list]:
+    def list(self) -> tuple[list, list]:
         """List all accounts for the server
 
         Args:
@@ -158,7 +157,7 @@ class Account:
             fail_out(f'Failed to {action} account permissions. {error}')
         return True
 
-    def permission_list(self) -> Tuple[list, list]:
+    def permission_list(self) -> tuple[list, list]:
         """Get all the available permissions and descriptions
 
         Args:

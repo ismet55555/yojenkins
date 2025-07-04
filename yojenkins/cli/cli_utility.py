@@ -9,7 +9,7 @@ from datetime import datetime
 from inspect import getfullargspec
 from pathlib import Path
 from shlex import quote
-from typing import Callable, Dict, List, Union
+from typing import Callable, Union
 
 import click
 import toml
@@ -22,7 +22,7 @@ from yojenkins import __version__
 from yojenkins.yo_jenkins.auth import Auth
 from yojenkins.yo_jenkins.rest import Rest
 from yojenkins.yo_jenkins.yojenkins import YoJenkins
-from yojenkins.utility.utility import (  # ruff: noqa
+from yojenkins.utility.utility import (
     am_i_bundled,
     am_i_inside_docker,
     create_new_history_file,
@@ -116,7 +116,7 @@ def config_yo_jenkins(profile: str, token: str) -> YoJenkins:
 
 
 def standard_out(
-    data: Union[Dict, List],
+    data: Union[dict, list],
     opt_pretty: bool = False,
     opt_yaml: bool = False,
     opt_xml: bool = False,

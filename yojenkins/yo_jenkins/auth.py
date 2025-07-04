@@ -9,7 +9,7 @@ from datetime import datetime
 from getpass import getpass
 from json.decoder import JSONDecodeError
 from pathlib import Path
-from typing import Any, Dict, Tuple
+from typing import Any
 
 import toml
 from jenkins import Jenkins as JenkinsSDK
@@ -52,7 +52,7 @@ class Auth:
         # JenkinsSDK object - Instantiated in create_auth()
         self.jenkins_sdk = None
 
-        self.jenkins_profile: Dict[str, Any] = {}
+        self.jenkins_profile: dict[str, Any] = {}
         self.jenkins_username = ''
         self.jenkins_api_token = ''
         self.authenticated = False
@@ -357,7 +357,7 @@ class Auth:
 
         return self._update_profiles(profiles=profiles)
 
-    def _detect_config_dir(self) -> Tuple[bool, str]:
+    def _detect_config_dir(self) -> tuple[bool, str]:
         """Detect/find the configuration directory in the home directory
 
         Args:
@@ -376,7 +376,7 @@ class Auth:
             return False, ''
         return True, config_dir_abs_path
 
-    def _detect_creds_file(self) -> Tuple[bool, str]:
+    def _detect_creds_file(self) -> tuple[bool, str]:
         """Detect/find the credentials profile file in the home directory
 
         Args:
@@ -404,7 +404,7 @@ class Auth:
             )
             return False, ''
 
-    def get_credentials(self, profile: str = '') -> Dict:
+    def get_credentials(self, profile: str = '') -> dict:
         """Get the contents of the credentials profiles file.
 
         Details: The order (preference) of specified profile credentials to get are the following:
@@ -494,7 +494,7 @@ class Auth:
         # PRIORITY 1 - Argument --profile
         if profile:
             if profile_is_option_text:
-                profile = list(profile_items.keys())[0]
+                profile = next(iter(profile_items.keys()))
                 profile_selected = profile_items[profile]
                 profile_selected['profile'] = profile
                 logger.debug('Successfully loaded entire profile provided through --profile')
@@ -689,7 +689,7 @@ class Auth:
 
         return True
 
-    def show_local_credentials(self) -> Dict:
+    def show_local_credentials(self) -> dict:
         """Output/Display the credentials profile file
 
         Args:
@@ -731,7 +731,7 @@ class Auth:
 
         return True
 
-    def user(self) -> Dict:
+    def user(self) -> dict:
         """Get current user information
 
         Details: Targeting the user that is specified in the selected profile

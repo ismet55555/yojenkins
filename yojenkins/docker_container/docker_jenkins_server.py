@@ -11,7 +11,7 @@ if platform.system() != 'Windows':
     from grp import getgrnam
 
 from time import perf_counter
-from typing import Any, Dict, Tuple
+from typing import Any
 
 import docker
 from docker.errors import DockerException
@@ -156,7 +156,7 @@ class DockerJenkinsServer:
         Returns:
             TODO
         """
-        deployed: Dict[str, Any] = {}
+        deployed: dict[str, Any] = {}
 
         if not self.docker_client:
             if not self.docker_client_init():
@@ -203,7 +203,6 @@ class DockerJenkinsServer:
         Returns:
             TODO
         """
-        removed = {}
 
         if not self._container_kill():
             return False
@@ -362,7 +361,7 @@ class DockerJenkinsServer:
                 logger.debug(f'    - Volume: {volume_name} - FAILED - Exception: {error}')
         return True
 
-    def _container_run(self) -> Tuple[str, str]:
+    def _container_run(self) -> tuple[str, str]:
         """TODO Docstring
 
         Details: TODO

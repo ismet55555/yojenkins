@@ -84,7 +84,6 @@ class JobMonitor(Monitor):
         keystroke = 0
 
         # Debug
-        loop_total_time = 0
 
         # Main Loop
         while True:
@@ -157,7 +156,7 @@ class JobMonitor(Monitor):
                     'Folder': self.job_info_data['folderFullName'],
                     'Server': self.job_info_data['serverURL'],
                 }
-                for i, (key, value) in enumerate(job_info_items.items()):
+                for _i, (key, value) in enumerate(job_info_items.items()):
                     mu.draw_text(scr, f'{key}:', y_row, x_col[0], decor=self.decor['bold'])
                     mu.draw_text(scr, mu.truncate_text(f'{value}', term_width - 5 - 12), y_row, x_col[1])
                     y_row += 1
@@ -191,7 +190,7 @@ class JobMonitor(Monitor):
                 y_row += 1
 
                 # Loop through all listed builds
-                for i, build in enumerate(self.builds_data):
+                for _i, build in enumerate(self.builds_data):
                     if not build:
                         break
 
@@ -204,14 +203,14 @@ class JobMonitor(Monitor):
                     mu.draw_text(scr, line, y_row, x_col[1])
 
                     # Build Run duration
-                    if build['durationFormatted'] != None:
+                    if build['durationFormatted'] is not None:
                         line = build['durationFormatted']
                     else:
                         line = build['elapsedFormatted']
                     mu.draw_text(scr, line, y_row, x_col[2])
 
                     # Build Status
-                    if 'resultText' in build and build['resultText'] != None:
+                    if 'resultText' in build and build['resultText'] is not None:
                         line = build['resultText'].replace('_', ' ')
                     else:
                         line = BuildStatus.UNKNOWN.value
@@ -345,7 +344,7 @@ class JobMonitor(Monitor):
 
             ########################################################################################
 
-            loop_total_time = perf_counter() - start_time
+            perf_counter() - start_time
 
             # Get User input
             keystroke = scr.getch()

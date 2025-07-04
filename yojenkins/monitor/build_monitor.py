@@ -411,7 +411,7 @@ class BuildMonitor(Monitor):
                 if self.build_abort > 1:  # Abort Message confirmed (pressed twice)
                     if build_url:
                         self.server_interaction = True
-                        build_number = self.build.abort(build_url=build_url)
+                        self.build.abort(build_url=build_url)
                     else:
                         # TODO: Show UI error message for missing build_url
                         pass
@@ -455,7 +455,7 @@ class BuildMonitor(Monitor):
 
             ########################################################################################
 
-            loop_total_time = perf_counter() - start_time
+            perf_counter() - start_time
 
             # Get User input
             keystroke = scr.getch()

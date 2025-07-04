@@ -5,7 +5,7 @@ import logging
 import os
 import xml.etree.ElementTree as ET
 from json.decoder import JSONDecodeError
-from typing import Dict, Tuple
+from typing import Optional
 
 from json2xml import json2xml
 from urllib3.util import parse_url
@@ -33,7 +33,7 @@ class Credential:
         self.rest = rest
 
     @staticmethod
-    def _get_folder_store(folder: str) -> Tuple[str, str]:
+    def _get_folder_store(folder: str) -> tuple[str, str]:
         """Utility method to get credential folder name and domain
 
         Args:
@@ -73,7 +73,7 @@ class Credential:
         return domain_effective
 
     @staticmethod
-    def _get_folder_store_domain_from_url(credential_url: str) -> Tuple[str, str, str]:
+    def _get_folder_store_domain_from_url(credential_url: str) -> tuple[str, str, str]:
         """Utility method to get folder name, store name and domain from a credential URL
 
         Details:
@@ -119,7 +119,7 @@ class Credential:
 
         return folder, store, domain
 
-    def list(self, domain: str, keys: str, folder: str = None) -> Tuple[list, list]:
+    def list(self, domain: str, keys: str, folder: Optional[str] = None) -> tuple[list, list]:
         """List all credentials for the specified folder and domain
 
         Details:
@@ -172,7 +172,7 @@ class Credential:
 
         return credential_list, credential_list_name
 
-    def info(self, credential: str, folder: str, domain: str) -> Dict:
+    def info(self, credential: str, folder: str, domain: str) -> dict:
         """Getting credential info
 
         Args:
@@ -243,9 +243,9 @@ class Credential:
     def config(
         self,
         credential: str,
-        folder: str = None,
-        domain: str = None,
-        filepath: str = None,
+        folder: Optional[str] = None,
+        domain: Optional[str] = None,
+        filepath: Optional[str] = None,
         opt_json: bool = False,
         opt_yaml: bool = False,
         opt_toml: bool = False,
@@ -293,7 +293,7 @@ class Credential:
     def get_template(
         self,
         cred_type: str,
-        filepath: str = None,
+        filepath: Optional[str] = None,
         opt_json: bool = False,
         opt_yaml: bool = False,
         opt_toml: bool = False,
@@ -349,7 +349,7 @@ class Credential:
             credential_config_xml = json2xml.Json2xml(
                 cred_config_dict, pretty=False, wrapper='root', attr_type=False
             ).to_xml()
-            credential_config_xml = list(ET.fromstring(credential_config_xml))[0]
+            credential_config_xml = next(iter(ET.fromstring(credential_config_xml)))
             credential_config_xml = ET.tostring(
                 credential_config_xml, encoding='utf8', method='xml', xml_declaration=False
             )
@@ -383,7 +383,7 @@ class Credential:
 
         return success
 
-    def delete(self, credential: str, folder: str = None, domain: str = None) -> bool:
+    def delete(self, credential: str, folder: Optional[str] = None, domain: Optional[str] = None) -> bool:
         """Delete a credential
 
         Args:

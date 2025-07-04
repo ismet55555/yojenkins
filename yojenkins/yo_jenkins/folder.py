@@ -4,7 +4,6 @@ import json
 import logging
 import re
 from time import perf_counter
-from typing import Dict, Tuple
 
 import xmltodict
 
@@ -92,7 +91,7 @@ class Folder:
         folder_url: str = '',
         folder_depth: int = 4,
         fullname: bool = True,
-    ) -> Tuple[list, list]:
+    ) -> tuple[list, list]:
         """Search the server for folders matching REGEX pattern
 
         Args:
@@ -141,7 +140,7 @@ class Folder:
 
         return self.search_results, folder_search_results_list
 
-    def info(self, folder_name: str = '', folder_url: str = '') -> Dict:
+    def info(self, folder_name: str = '', folder_url: str = '') -> dict:
         """Get the folder information
 
         Args:
@@ -172,7 +171,7 @@ class Folder:
 
         return folder_info
 
-    def subfolder_list(self, folder_name: str = '', folder_url: str = '') -> Tuple[list, list]:
+    def subfolder_list(self, folder_name: str = '', folder_url: str = '') -> tuple[list, list]:
         """Get the list of all sub-folders within the specified folder
 
         Args:
@@ -200,7 +199,7 @@ class Folder:
 
         return sub_folder_list, sub_folder_list_url
 
-    def jobs_list(self, folder_name: str = '', folder_url: str = '') -> Tuple[list, list]:
+    def jobs_list(self, folder_name: str = '', folder_url: str = '') -> tuple[list, list]:
         """Get the list of all jobs within the specified folder
 
         Args:
@@ -228,7 +227,7 @@ class Folder:
 
         return job_list, job_list_url
 
-    def view_list(self, folder_name: str = '', folder_url: str = '') -> Tuple[list, list]:
+    def view_list(self, folder_name: str = '', folder_url: str = '') -> tuple[list, list]:
         """Get the list of all views within the specified folder
 
         Args:
@@ -254,7 +253,7 @@ class Folder:
 
         return view_list, view_list_url
 
-    def item_list(self, folder_name: str = '', folder_url: str = '') -> Tuple[list, list]:
+    def item_list(self, folder_name: str = '', folder_url: str = '') -> tuple[list, list]:
         """Get the list of all items within the specified folder
 
         Args:
