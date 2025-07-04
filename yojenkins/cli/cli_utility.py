@@ -19,17 +19,16 @@ from json2xml.utils import readfromstring
 from urllib3.util import parse_url
 
 from yojenkins import __version__
+from yojenkins.utility.utility import (
+    am_i_bundled,
+    am_i_inside_docker,
+    create_new_history_file,
+    iter_data_empty_item_stripper,
+    print2,
+)  # isort:skip
 from yojenkins.yo_jenkins.auth import Auth
 from yojenkins.yo_jenkins.rest import Rest
 from yojenkins.yo_jenkins.yojenkins import YoJenkins
-
-from yojenkins.utility.utility import (
-    iter_data_empty_item_stripper,
-    am_i_inside_docker,
-    am_i_bundled,
-    print2,
-    create_new_history_file,
-)  # isort:skip
 
 # Getting the logger reference
 logger = logging.getLogger()
