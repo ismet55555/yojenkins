@@ -28,7 +28,7 @@ target-version = "py39"
 # Only specify exclusions beyond ruff's smart defaults
 exclude = [
     "dev_things",
-    "docs", 
+    "docs",
     "setup.py",
     "**/__main__.py",
 ]
@@ -37,7 +37,7 @@ exclude = [
 # Enable comprehensive rule sets - ruff's defaults are already good
 select = [
     "E", "W",    # pycodestyle
-    "F",         # Pyflakes  
+    "F",         # Pyflakes
     "I",         # isort
     "B",         # flake8-bugbear
     "C4",        # flake8-comprehensions
@@ -51,7 +51,7 @@ select = [
 ignore = [
     "E501",      # Line too long (handled by formatter)
     "PLR0913",   # Too many arguments
-    "PLR0915",   # Too many statements  
+    "PLR0915",   # Too many statements
     "PLR2004",   # Magic values
     "T201",      # print statements (CLI tool needs these)
     "RUF012",    # Mutable class attributes ClassVar annotation
