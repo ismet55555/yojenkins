@@ -10,15 +10,19 @@ from yojenkins.cli.cli_utility import set_debug_log_level
 from yojenkins.utility.utility import translate_kwargs
 
 
-@auth.command(short_help='\tConfigure yojenkins authentication profile(s)',
-              cls=HelpColorsCommand,
-              help_options_custom_colors={'--token': 'black'})
+@auth.command(
+    short_help='\tConfigure yojenkins authentication profile(s)',
+    cls=HelpColorsCommand,
+    help_options_custom_colors={'--token': 'black'},
+)
 @cli_decorators.debug
-@click.option('--auth-file',
-              type=click.Path(file_okay=True, dir_okay=False),
-              required=False,
-              is_flag=False,
-              help='JSON file containing one or more authentication info')
+@click.option(
+    '--auth-file',
+    type=click.Path(file_okay=True, dir_okay=False),
+    required=False,
+    is_flag=False,
+    help='JSON file containing one or more authentication info',
+)
 def configure(debug, auth_file):
     """Configure yojenkins authentication profile(s)
 
@@ -49,11 +53,9 @@ def configure(debug, auth_file):
 @auth.command(short_help='\tGenerate and/or add server API token')
 @cli_decorators.debug
 # @cli_decorators.profile
-@click.option('--profile',
-              type=str,
-              required=False,
-              is_flag=False,
-              help='yojenkins profile name or profile as JSON text')
+@click.option(
+    '--profile', type=str, required=False, is_flag=False, help='yojenkins profile name or profile as JSON text'
+)
 @click.option('--token', type=str, required=False, help='API token to add to specified --profile')
 @click.option('--name', type=str, required=False, help='Name of the generated API token')
 @click.option('--server-base-url', type=str, required=False, help='Server base URL address')

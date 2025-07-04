@@ -147,9 +147,23 @@ def shutdown(profile: str, token: str, force: bool) -> None:
 
 
 @log_to_history
-def server_deploy(config_file: str, plugins_file: str, protocol_schema: str, host: str, port: int, image_base: str,
-                  extra_setup_script: str, image_rebuild: bool, new_volume: bool, new_volume_name: str,
-                  bind_mount_dir: str, container_name: str, registry: str, admin_user: str, password: str) -> None:
+def server_deploy(
+    config_file: str,
+    plugins_file: str,
+    protocol_schema: str,
+    host: str,
+    port: int,
+    image_base: str,
+    extra_setup_script: str,
+    image_rebuild: bool,
+    new_volume: bool,
+    new_volume_name: str,
+    bind_mount_dir: str,
+    container_name: str,
+    registry: str,
+    admin_user: str,
+    password: str,
+) -> None:
     """TODO Docstring
 
     Details: TODO
@@ -157,9 +171,9 @@ def server_deploy(config_file: str, plugins_file: str, protocol_schema: str, hos
     Args:
         TODO
     """
-    msg = "Setting up a local Jenkins development server. Hold tight, this may take a minute ..."
+    msg = 'Setting up a local Jenkins development server. Hold tight, this may take a minute ...'
     if logger.level > 10:
-        spinner = yaspin(spinner=Spinners.bouncingBar, attrs=["bold"], text=msg)
+        spinner = yaspin(spinner=Spinners.bouncingBar, attrs=['bold'], text=msg)
         spinner.start()
     else:
         click.echo(msg)
@@ -167,21 +181,23 @@ def server_deploy(config_file: str, plugins_file: str, protocol_schema: str, hos
     # TODO: Check if the docker server deployment file is there. If so, show that it is being renewed.
 
     # Creat object
-    djs = DockerJenkinsServer(config_file=config_file,
-                              plugins_file=plugins_file,
-                              protocol_schema=protocol_schema,
-                              host=host,
-                              port=port,
-                              image_base=image_base,
-                              extra_setup_script=extra_setup_script,
-                              image_rebuild=image_rebuild,
-                              new_volume=new_volume,
-                              new_volume_name=new_volume_name,
-                              bind_mount_dir=bind_mount_dir,
-                              container_name=container_name,
-                              registry=registry,
-                              admin_user=admin_user,
-                              password=password if password else "password")
+    djs = DockerJenkinsServer(
+        config_file=config_file,
+        plugins_file=plugins_file,
+        protocol_schema=protocol_schema,
+        host=host,
+        port=port,
+        image_base=image_base,
+        extra_setup_script=extra_setup_script,
+        image_rebuild=image_rebuild,
+        new_volume=new_volume,
+        new_volume_name=new_volume_name,
+        bind_mount_dir=bind_mount_dir,
+        container_name=container_name,
+        registry=registry,
+        admin_user=admin_user,
+        password=password if password else 'password',
+    )
 
     # Initialize docker client
     if not djs.docker_client_init():
@@ -215,7 +231,7 @@ def server_deploy(config_file: str, plugins_file: str, protocol_schema: str, hos
         failures.append('yojenkins resources may have been installed under root or a restricted account')
         failures_out(failures)
 
-    volumes_named = [list(l.values())[0] for l in deployed["volumes"]]
+    volumes_named = [list(l.values())[0] for l in deployed['volumes']]
 
     print2('Successfully created containerized Jenkins server!', bold=True, color='green')
     print2(f'   - Docker image:      {deployed["image"]}', bold=True, color='green')
@@ -253,12 +269,12 @@ def server_teardown(remove_volume: bool, remove_image: bool) -> None:
         fail_out(f'Failed to load previous server deployment info file: {error}')
 
     # Filter out named volumes only
-    volumes_named_only = [list(l.values())[0] for l in deployed["volumes"] if 'named' in l]
+    volumes_named_only = [list(l.values())[0] for l in deployed['volumes'] if 'named' in l]
 
     # Create object
-    djs = DockerJenkinsServer(image_fullname=deployed['image'],
-                              new_volume_name=volumes_named_only[0],
-                              container_name=deployed['container'])
+    djs = DockerJenkinsServer(
+        image_fullname=deployed['image'], new_volume_name=volumes_named_only[0], container_name=deployed['container']
+    )
 
     # Initialize docker client
     if not djs.docker_client_init():

@@ -21,7 +21,7 @@ from yojenkins.utility.utility import translate_kwargs
 def info(ctx, debug, **kwargs):
     """Build information"""
     set_debug_log_level(debug)
-    if kwargs.get("job") or kwargs.get("url"):
+    if kwargs.get('job') or kwargs.get('url'):
         cli_build.info(**translate_kwargs(kwargs))
     else:
         click.echo(ctx.get_help())
@@ -38,7 +38,7 @@ def info(ctx, debug, **kwargs):
 def status(ctx, debug, **kwargs):
     """Build status text/label"""
     set_debug_log_level(debug)
-    if kwargs.get("job") or kwargs.get("url"):
+    if kwargs.get('job') or kwargs.get('url'):
         cli_build.status(**translate_kwargs(kwargs))
     else:
         click.echo(ctx.get_help())
@@ -56,7 +56,7 @@ def status(ctx, debug, **kwargs):
 def abort(ctx, debug, **kwargs):
     """Abort build"""
     set_debug_log_level(debug)
-    if kwargs.get("job") or kwargs.get("url"):
+    if kwargs.get('job') or kwargs.get('url'):
         cli_build.abort(**translate_kwargs(kwargs))
     else:
         click.echo(ctx.get_help())
@@ -74,7 +74,7 @@ def delete(ctx, debug, **kwargs):
     """Delete build"""
     # TODO: Pass a list of build numbers
     set_debug_log_level(debug)
-    if kwargs.get("job") or kwargs.get("url"):
+    if kwargs.get('job') or kwargs.get('url'):
         cli_build.delete(**translate_kwargs(kwargs))
     else:
         click.echo(ctx.get_help())
@@ -93,7 +93,7 @@ def delete(ctx, debug, **kwargs):
 def stages(ctx, debug, **kwargs):
     """Get build stages"""
     set_debug_log_level(debug)
-    if kwargs.get("job") or kwargs.get("url"):
+    if kwargs.get('job') or kwargs.get('url'):
         cli_build.stages(**translate_kwargs(kwargs))
     else:
         click.echo(ctx.get_help())
@@ -107,18 +107,22 @@ def stages(ctx, debug, **kwargs):
 @click.option('-u', '--url', type=str, required=False, help='Flexible build URL (No job info needed)')
 @click.option('--latest', type=str, required=False, is_flag=True, help='Latest build (Replaces --number)')
 @click.option('--tail', type=float, required=False, help='Last of logs. If < 1 then %, else number of lines')
-@click.option('-dd',
-              '--download-dir',
-              type=click.Path(file_okay=False, dir_okay=True),
-              required=False,
-              is_flag=False,
-              help='Download logs to directory')
-@click.option('--follow',
-              default=False,
-              type=str,
-              required=False,
-              is_flag=True,
-              help='Follow/Stream the logs as they are generated')
+@click.option(
+    '-dd',
+    '--download-dir',
+    type=click.Path(file_okay=False, dir_okay=True),
+    required=False,
+    is_flag=False,
+    help='Download logs to directory',
+)
+@click.option(
+    '--follow',
+    default=False,
+    type=str,
+    required=False,
+    is_flag=True,
+    help='Follow/Stream the logs as they are generated',
+)
 @click.pass_context
 def logs(ctx, debug, **kwargs):
     """Get build logs
@@ -134,7 +138,7 @@ def logs(ctx, debug, **kwargs):
 
     """
     set_debug_log_level(debug)
-    if kwargs.get("job") or kwargs.get("url"):
+    if kwargs.get('job') or kwargs.get('url'):
         cli_build.logs(**translate_kwargs(kwargs))
     else:
         click.echo(ctx.get_help())
@@ -152,7 +156,7 @@ def browser(ctx, debug, **kwargs):
     """Open build in web browser"""
     # TODO: Pass a list of build numbers
     set_debug_log_level(debug)
-    if kwargs.get("job") or kwargs.get("url"):
+    if kwargs.get('job') or kwargs.get('url'):
         cli_build.browser(**translate_kwargs(kwargs))
     else:
         click.echo(ctx.get_help())
@@ -171,7 +175,7 @@ def monitor(ctx, debug, **kwargs):
     """Start monitor UI"""
     # TODO: Pass a list of build numbers
     set_debug_log_level(debug)
-    if kwargs.get("job") or kwargs.get("url"):
+    if kwargs.get('job') or kwargs.get('url'):
         cli_build.monitor(**translate_kwargs(kwargs))
     else:
         click.echo(ctx.get_help())
@@ -193,7 +197,7 @@ def parameters(ctx, debug, **kwargs):
     Build parameters are the parameters that were used to start the build.
     """
     set_debug_log_level(debug)
-    if kwargs.get("job") or kwargs.get("url"):
+    if kwargs.get('job') or kwargs.get('url'):
         cli_build.parameters(**translate_kwargs(kwargs))
     else:
         click.echo(ctx.get_help())
@@ -206,11 +210,9 @@ def parameters(ctx, debug, **kwargs):
 @click.option('-n', '--number', type=int, required=False, help='Build number')
 @click.option('-u', '--url', type=str, required=False, help='Flexible build URL (No job info needed)')
 @click.option('--latest', type=str, required=False, is_flag=True, help='Latest build (Replaces --number)')
-@click.option('--follow-logs',
-              type=bool,
-              required=False,
-              is_flag=True,
-              help='Wait for build, follow logs when build starts')
+@click.option(
+    '--follow-logs', type=bool, required=False, is_flag=True, help='Wait for build, follow logs when build starts'
+)
 @click.pass_context
 def rebuild(ctx, debug, **kwargs):
     """Get build parameters
@@ -218,7 +220,7 @@ def rebuild(ctx, debug, **kwargs):
     Rebuild the specified build exactly as it ran
     """
     set_debug_log_level(debug)
-    if kwargs.get("job") or kwargs.get("url"):
+    if kwargs.get('job') or kwargs.get('url'):
         cli_build.rebuild(**translate_kwargs(kwargs))
     else:
         click.echo(ctx.get_help())
@@ -236,29 +238,27 @@ def rebuild(ctx, debug, **kwargs):
 #               required=False,
 #               help='Type of diff comparison')
 @click.option('--logs', type=bool, default=False, required=False, is_flag=True, help='Build logs diff')
-@click.option('--line-pattern',
-              type=str,
-              multiple=True,
-              required=False,
-              help='Keep part of each line that contains this REGEX pattern [Can use multiple times]')
-@click.option('--char-ignore',
-              default=0,
-              type=click.IntRange(0),
-              required=False,
-              help='Number of characters to ignore at line start')
+@click.option(
+    '--line-pattern',
+    type=str,
+    multiple=True,
+    required=False,
+    help='Keep part of each line that contains this REGEX pattern [Can use multiple times]',
+)
+@click.option(
+    '--char-ignore',
+    default=0,
+    type=click.IntRange(0),
+    required=False,
+    help='Number of characters to ignore at line start',
+)
 @click.option('--no-color', type=bool, default=False, required=False, is_flag=True, help='Show output without color')
-@click.option('--diff-only',
-              type=bool,
-              default=False,
-              required=False,
-              is_flag=True,
-              help='Show only lines that are different')
-@click.option('--diff-guide',
-              type=bool,
-              default=False,
-              required=False,
-              is_flag=True,
-              help='Show where the difference is in line')
+@click.option(
+    '--diff-only', type=bool, default=False, required=False, is_flag=True, help='Show only lines that are different'
+)
+@click.option(
+    '--diff-guide', type=bool, default=False, required=False, is_flag=True, help='Show where the difference is in line'
+)
 # @click.option('--stats-only', type=bool, default=False, required=False, is_flag=True, help='Show diff stats only')
 def diff(debug, **kwargs):
     """Get the diff comparison for two builds (info, logs)

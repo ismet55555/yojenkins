@@ -50,9 +50,10 @@ def info(profile: str, token: str, job: str, number: int, url: str, latest: bool
         url, job = job, None
     elif job and not number and not latest:
         click.echo(
-            click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
-                        fg='bright_red',
-                        bold=True))
+            click.style(
+                'INPUT ERROR: For job, either specify --number or --latest. See --help', fg='bright_red', bold=True
+            )
+        )
         sys.exit(1)
 
     yj_obj = cu.config_yo_jenkins(profile, token)
@@ -82,9 +83,10 @@ def status(profile: str, token: str, job: str, number: int, url: str, latest: bo
         url, job = job, None
     elif job and not number and not latest:
         click.echo(
-            click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
-                        fg='bright_red',
-                        bold=True))
+            click.style(
+                'INPUT ERROR: For job, either specify --number or --latest. See --help', fg='bright_red', bold=True
+            )
+        )
         sys.exit(1)
 
     yj_obj = cu.config_yo_jenkins(profile, token)
@@ -96,7 +98,7 @@ def status(profile: str, token: str, job: str, number: int, url: str, latest: bo
 
     # Color for output
     if data in Status.NONE.value:
-        data = "NONE"
+        data = 'NONE'
         output_fg = 'black'
     elif data.upper() in Status.UNKNOWN.value:
         output_fg = 'black'
@@ -129,9 +131,10 @@ def abort(profile: str, token: str, job: str, number: int, url: str, latest: boo
         url, job = job, None
     elif job and not number and not latest:
         click.echo(
-            click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
-                        fg='bright_red',
-                        bold=True))
+            click.style(
+                'INPUT ERROR: For job, either specify --number or --latest. See --help', fg='bright_red', bold=True
+            )
+        )
         sys.exit(1)
 
     yj_obj = cu.config_yo_jenkins(profile, token)
@@ -159,9 +162,10 @@ def delete(profile: str, token: str, job: str, number: int, url: str, latest: bo
         url, job = job, None
     elif job and not number and not latest:
         click.echo(
-            click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
-                        fg='bright_red',
-                        bold=True))
+            click.style(
+                'INPUT ERROR: For job, either specify --number or --latest. See --help', fg='bright_red', bold=True
+            )
+        )
         sys.exit(1)
 
     yj_obj = cu.config_yo_jenkins(profile, token)
@@ -190,9 +194,10 @@ def stages(profile: str, token: str, opt_list: bool, job: str, number: int, url:
         url, job = job, None
     elif job and not number and not latest:
         click.echo(
-            click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
-                        fg='bright_red',
-                        bold=True))
+            click.style(
+                'INPUT ERROR: For job, either specify --number or --latest. See --help', fg='bright_red', bold=True
+            )
+        )
         sys.exit(1)
 
     yj_obj = cu.config_yo_jenkins(profile, token)
@@ -206,8 +211,17 @@ def stages(profile: str, token: str, opt_list: bool, job: str, number: int, url:
 
 
 @log_to_history
-def logs(profile: str, token: str, job: str, number: int, url: str, latest: bool, tail: float, download_dir: str,
-         follow: bool) -> None:
+def logs(
+    profile: str,
+    token: str,
+    job: str,
+    number: int,
+    url: str,
+    latest: bool,
+    tail: float,
+    download_dir: str,
+    follow: bool,
+) -> None:
     """Get build logs
 
     Args:
@@ -225,29 +239,34 @@ def logs(profile: str, token: str, job: str, number: int, url: str, latest: bool
         url, job = job, None
     elif job and not number and not latest:
         click.echo(
-            click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
-                        fg='bright_red',
-                        bold=True))
+            click.style(
+                'INPUT ERROR: For job, either specify --number or --latest. See --help', fg='bright_red', bold=True
+            )
+        )
         sys.exit(1)
 
     yj_obj = cu.config_yo_jenkins(profile, token)
 
     if _verify_build_url_get_job_format(build_url=url, job=job):
-        yj_obj.build.logs(build_url=url,
-                          job_url=job,
-                          build_number=number,
-                          latest=latest,
-                          tail=tail,
-                          download_dir=download_dir,
-                          follow=follow)
+        yj_obj.build.logs(
+            build_url=url,
+            job_url=job,
+            build_number=number,
+            latest=latest,
+            tail=tail,
+            download_dir=download_dir,
+            follow=follow,
+        )
     else:
-        yj_obj.build.logs(build_url=url,
-                          job_name=job,
-                          build_number=number,
-                          latest=latest,
-                          tail=tail,
-                          download_dir=download_dir,
-                          follow=follow)
+        yj_obj.build.logs(
+            build_url=url,
+            job_name=job,
+            build_number=number,
+            latest=latest,
+            tail=tail,
+            download_dir=download_dir,
+            follow=follow,
+        )
     if download_dir:
         click.secho('success', fg='bright_green', bold=True)
 
@@ -268,9 +287,10 @@ def browser(profile: str, token: str, job: str, number: int, url: str, latest: b
         url, job = job, None
     elif job and not number and not latest:
         click.echo(
-            click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
-                        fg='bright_red',
-                        bold=True))
+            click.style(
+                'INPUT ERROR: For job, either specify --number or --latest. See --help', fg='bright_red', bold=True
+            )
+        )
         sys.exit(1)
 
     yj_obj = cu.config_yo_jenkins(profile, token)
@@ -298,9 +318,10 @@ def monitor(profile: str, token: str, job: str, number: int, url: str, latest: b
         url, job = job, None
     elif job and not number and not latest:
         click.echo(
-            click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
-                        fg='bright_red',
-                        bold=True))
+            click.style(
+                'INPUT ERROR: For job, either specify --number or --latest. See --help', fg='bright_red', bold=True
+            )
+        )
         sys.exit(1)
 
     yj_obj = cu.config_yo_jenkins(profile, token)
@@ -312,8 +333,9 @@ def monitor(profile: str, token: str, job: str, number: int, url: str, latest: b
 
 
 @log_to_history
-def parameters(profile: str, token: str, opt_list: bool, job: str, number: int, url: str, latest: bool,
-               **kwargs) -> None:
+def parameters(
+    profile: str, token: str, opt_list: bool, job: str, number: int, url: str, latest: bool, **kwargs
+) -> None:
     """Get build parameters
 
     Args:
@@ -329,9 +351,10 @@ def parameters(profile: str, token: str, opt_list: bool, job: str, number: int, 
         url, job = job, None
     elif job and not number and not latest:
         click.echo(
-            click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
-                        fg='bright_red',
-                        bold=True))
+            click.style(
+                'INPUT ERROR: For job, either specify --number or --latest. See --help', fg='bright_red', bold=True
+            )
+        )
         sys.exit(1)
 
     yj_obj = cu.config_yo_jenkins(profile, token)
@@ -362,9 +385,10 @@ def rebuild(profile: str, token: str, job: str, number: int, url: str, latest: b
         url, job = job, None
     elif job and not number and not latest:
         click.echo(
-            click.style('INPUT ERROR: For job, either specify --number or --latest. See --help',
-                        fg='bright_red',
-                        bold=True))
+            click.style(
+                'INPUT ERROR: For job, either specify --number or --latest. See --help', fg='bright_red', bold=True
+            )
+        )
         sys.exit(1)
 
     yj_obj = cu.config_yo_jenkins(profile, token)
@@ -381,8 +405,18 @@ def rebuild(profile: str, token: str, job: str, number: int, url: str, latest: b
 
 
 @log_to_history
-def diff(profile: str, token: str, build_url_1: str, build_url_2: str, logs: bool, line_pattern: tuple,
-         char_ignore: int, no_color: bool, diff_only: bool, diff_guide: bool) -> None:
+def diff(
+    profile: str,
+    token: str,
+    build_url_1: str,
+    build_url_2: str,
+    logs: bool,
+    line_pattern: tuple,
+    char_ignore: int,
+    no_color: bool,
+    diff_only: bool,
+    diff_guide: bool,
+) -> None:
     """Get the diff comparison for two builds
 
     Args:

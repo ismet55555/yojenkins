@@ -27,13 +27,9 @@ def info(debug, **kwargs):
 @click.argument('search_pattern', nargs=1, type=str, required=True)
 @click.option('-sf', '--search-folder', type=str, default='', required=False, help='Folder within which to search')
 @click.option('-d', '--depth', type=int, default=4, required=False, help='Search depth from root directory')
-@click.option('-fn',
-              '--fullname',
-              type=bool,
-              default=False,
-              required=False,
-              is_flag=True,
-              help='Search entire job path name')
+@click.option(
+    '-fn', '--fullname', type=bool, default=False, required=False, is_flag=True, help='Search entire job path name'
+)
 @cli_decorators.list
 def search(debug, **kwargs):
     """Search jobs by REGEX pattern"""
@@ -99,17 +95,17 @@ def build_exist(debug, **kwargs):
 @cli_decorators.debug
 @cli_decorators.profile
 @click.argument('job', nargs=1, type=str, required=True)
-@click.option('-p',
-              '--parameter',
-              nargs=2,
-              multiple=True,
-              required=False,
-              help='Specify key-value parameter. Can use multiple times. Use once per parameter')
-@click.option('--follow-logs',
-              type=bool,
-              required=False,
-              is_flag=True,
-              help='Wait for build, follow logs when build starts')
+@click.option(
+    '-p',
+    '--parameter',
+    nargs=2,
+    multiple=True,
+    required=False,
+    help='Specify key-value parameter. Can use multiple times. Use once per parameter',
+)
+@click.option(
+    '--follow-logs', type=bool, required=False, is_flag=True, help='Wait for build, follow logs when build starts'
+)
 def build(debug, **kwargs):
     """Build a job
 
@@ -160,19 +156,17 @@ def browser(debug, **kwargs):
 @job.command(short_help='\tGet job configuration')
 @cli_decorators.debug
 @cli_decorators.format_output
-@click.option('-j',
-              '--json',
-              type=bool,
-              default=False,
-              required=False,
-              is_flag=True,
-              help='Output config in JSON format')
+@click.option(
+    '-j', '--json', type=bool, default=False, required=False, is_flag=True, help='Output config in JSON format'
+)
 @cli_decorators.profile
 @click.argument('job', nargs=1, type=str, required=True)
-@click.option('--filepath',
-              type=click.Path(file_okay=True, dir_okay=False),
-              required=False,
-              help='Filepath to write configurations to')
+@click.option(
+    '--filepath',
+    type=click.Path(file_okay=True, dir_okay=False),
+    required=False,
+    help='Filepath to write configurations to',
+)
 def config(debug, **kwargs):
     """Get job configuration"""
     set_debug_log_level(debug)
@@ -246,17 +240,21 @@ def monitor(debug, **kwargs):
 @cli_decorators.profile
 @click.argument('name', nargs=1, type=str, required=True)
 @click.argument('folder', nargs=1, type=str, required=True)
-@click.option('--config-file',
-              default='',
-              type=click.Path(file_okay=True, dir_okay=False),
-              required=False,
-              help='Path to local config file defining job')
-@click.option('--config-is-json',
-              type=bool,
-              default=False,
-              required=False,
-              is_flag=True,
-              help='The specified file is in JSON format')
+@click.option(
+    '--config-file',
+    default='',
+    type=click.Path(file_okay=True, dir_okay=False),
+    required=False,
+    help='Path to local config file defining job',
+)
+@click.option(
+    '--config-is-json',
+    type=bool,
+    default=False,
+    required=False,
+    is_flag=True,
+    help='The specified file is in JSON format',
+)
 def create(debug, **kwargs):
     """Create a job"""
     set_debug_log_level(debug)
@@ -284,18 +282,12 @@ def parameters(debug, **kwargs):
 @click.argument('job-1', nargs=1, type=str, required=True)
 @click.argument('job-2', nargs=1, type=str, required=True)
 @click.option('--no-color', type=bool, default=False, required=False, is_flag=True, help='Show output without color')
-@click.option('--diff-only',
-              type=bool,
-              default=False,
-              required=False,
-              is_flag=True,
-              help='Show only lines that are different')
-@click.option('--diff-guide',
-              type=bool,
-              default=False,
-              required=False,
-              is_flag=True,
-              help='Show where the difference is in line')
+@click.option(
+    '--diff-only', type=bool, default=False, required=False, is_flag=True, help='Show only lines that are different'
+)
+@click.option(
+    '--diff-guide', type=bool, default=False, required=False, is_flag=True, help='Show where the difference is in line'
+)
 def diff(debug, **kwargs):
     """Get the diff comparison for two jobs
 

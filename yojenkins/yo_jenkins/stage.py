@@ -35,13 +35,15 @@ class Stage:
         self._stage_log_list_thread_lock = threading.Lock()
         self.stage_log_dict = {}
 
-    def info(self,
-             stage_name: str,
-             build_url: str = '',
-             job_name: str = '',
-             job_url: str = '',
-             build_number: int = None,
-             latest: bool = False) -> Dict:
+    def info(
+        self,
+        stage_name: str,
+        build_url: str = '',
+        job_name: str = '',
+        job_url: str = '',
+        build_number: int = None,
+        latest: bool = False,
+    ) -> Dict:
         """Get the stage information for specified stage
 
         Details: Ways of specifying the build:
@@ -64,8 +66,9 @@ class Stage:
             build_url = utility.build_url_complete(build_url)
 
         # Getting all stages
-        build_stage_list, build_stage_name_list = self.build.stage_list(build_url, job_name, job_url, build_number,
-                                                                        latest)
+        build_stage_list, build_stage_name_list = self.build.stage_list(
+            build_url, job_name, job_url, build_number, latest
+        )
         logger.debug(f'Stages found: {build_stage_name_list}')
 
         # Formate stage name from user input
@@ -78,7 +81,7 @@ class Stage:
 
         # Getting the right stage item
         logger.debug('Getting stage URL from build information ...')
-        build_stage_item = next(item for item in build_stage_list if item["name"].lower() == stage_name)
+        build_stage_item = next(item for item in build_stage_list if item['name'].lower() == stage_name)
 
         # Making the request to get stage info
         endpoint = f'{build_stage_item["url"]}'
@@ -87,21 +90,24 @@ class Stage:
             fail_out(f'Failed to fetch stage information for "{stage_name}"')
 
         # Add additional derived information for stage
-        return_content['startDatetime'] = datetime.fromtimestamp(return_content["startTimeMillis"] /
-                                                                 1000.0).strftime("%A, %B %d, %Y %I:%M:%S")
-        return_content['durationFormatted'] = str(timedelta(seconds=return_content["durationMillis"] / 1000.0))[:-3]
+        return_content['startDatetime'] = datetime.fromtimestamp(return_content['startTimeMillis'] / 1000.0).strftime(
+            '%A, %B %d, %Y %I:%M:%S'
+        )
+        return_content['durationFormatted'] = str(timedelta(seconds=return_content['durationMillis'] / 1000.0))[:-3]
         return_content['pauseDurationFormatted'] = str(
-            timedelta(seconds=return_content["pauseDurationMillis"] / 1000.0))
+            timedelta(seconds=return_content['pauseDurationMillis'] / 1000.0)
+        )
         return_content['numberOfSteps'] = len(return_content['stageFlowNodes'])
 
         # Add additional derived information for each step
-        if "stageFlowNodes" in return_content:
+        if 'stageFlowNodes' in return_content:
             # Accounting for no stage step command
             for step_info in return_content['stageFlowNodes']:
-                step_info['startDatetime'] = datetime.fromtimestamp(step_info["startTimeMillis"] /
-                                                                    1000.0).strftime("%A, %B %d, %Y %I:%M:%S")
-                step_info['durationFormatted'] = str(timedelta(seconds=step_info["durationMillis"] / 1000.0))[:-3]
-                step_info['pauseDurationFormatted'] = str(timedelta(seconds=step_info["pauseDurationMillis"] / 1000.0))
+                step_info['startDatetime'] = datetime.fromtimestamp(step_info['startTimeMillis'] / 1000.0).strftime(
+                    '%A, %B %d, %Y %I:%M:%S'
+                )
+                step_info['durationFormatted'] = str(timedelta(seconds=step_info['durationMillis'] / 1000.0))[:-3]
+                step_info['pauseDurationFormatted'] = str(timedelta(seconds=step_info['pauseDurationMillis'] / 1000.0))
 
                 # Adding the urls to the item
                 step_info['url'] = step_info['_links']['self']['href']
@@ -113,13 +119,15 @@ class Stage:
 
         return return_content
 
-    def status_text(self,
-                    stage_name: str,
-                    build_url: str = '',
-                    job_name: str = '',
-                    job_url: str = '',
-                    build_number: int = None,
-                    latest: bool = False) -> str:
+    def status_text(
+        self,
+        stage_name: str,
+        build_url: str = '',
+        job_name: str = '',
+        job_url: str = '',
+        build_number: int = None,
+        latest: bool = False,
+    ) -> str:
         """Get the status text of the specified stage
 
         Details: Ways of specifying the build:
@@ -142,12 +150,14 @@ class Stage:
             build_url = utility.build_url_complete(build_url)
 
         # Get the stage info
-        stage_info = self.info(stage_name=stage_name,
-                               build_url=build_url,
-                               job_name=job_name,
-                               job_url=job_url,
-                               build_number=build_number,
-                               latest=latest)
+        stage_info = self.info(
+            stage_name=stage_name,
+            build_url=build_url,
+            job_name=job_name,
+            job_url=job_url,
+            build_number=build_number,
+            latest=latest,
+        )
 
         if not stage_info:
             return StageStatus.NOT_FOUND.value
@@ -160,13 +170,15 @@ class Stage:
             logger.debug('Stage found, but has concluded or stopped with result')
             return stage_info['status']
 
-    def step_list(self,
-                  stage_name: str,
-                  build_url: str = '',
-                  job_name: str = '',
-                  job_url: str = '',
-                  build_number: Union[int, None] = None,
-                  latest: bool = False) -> Tuple[list, list]:
+    def step_list(
+        self,
+        stage_name: str,
+        build_url: str = '',
+        job_name: str = '',
+        job_url: str = '',
+        build_number: Union[int, None] = None,
+        latest: bool = False,
+    ) -> Tuple[list, list]:
         """List of steps for this stage
 
         Details: Ways of specifying the build:
@@ -189,21 +201,23 @@ class Stage:
             build_url = utility.build_url_complete(build_url)
 
         # Getting the stage info
-        stage_info = self.info(stage_name=stage_name,
-                               build_url=build_url,
-                               job_name=job_name,
-                               job_url=job_url,
-                               build_number=build_number,
-                               latest=latest)
+        stage_info = self.info(
+            stage_name=stage_name,
+            build_url=build_url,
+            job_name=job_name,
+            job_url=job_url,
+            build_number=build_number,
+            latest=latest,
+        )
 
         # Check if there are steps in this stage
-        if "stageFlowNodes" not in stage_info:
+        if 'stageFlowNodes' not in stage_info:
             fail_out('Failed to get stage step information. No stage steps listed')
 
         # Accounting for no stage step command
         for step_info in stage_info['stageFlowNodes']:
             if 'parameterDescription' not in step_info:
-                step_info['parameterDescription'] = "No command parameters listed"
+                step_info['parameterDescription'] = 'No command parameters listed'
 
         # Getting the stage items, and getting only the names/labels of the stages
         try:
@@ -229,7 +243,7 @@ class Stage:
         # Getting step information
         return_content = self.step.info(step_url=step['url_log'])
 
-        logger.debug(f"---> {step_index+1}/{total_steps} - {step['name']}")
+        logger.debug(f'---> {step_index + 1}/{total_steps} - {step["name"]}')
         if 'parameterDescription' in step:
             parameter = step['parameterDescription']
         else:
@@ -244,28 +258,31 @@ class Stage:
             log_list = [y for y in (x.strip() for x in log_text.splitlines()) if y]
 
             # Add extra step info to each line of log
-            log_list = [f"[STEP: {step_index+1}/{total_steps}] " + s for s in log_list]
+            log_list = [f'[STEP: {step_index + 1}/{total_steps}] ' + s for s in log_list]
 
             # Add intro to the logs of this step
-            log_list.insert(0,
-                            f"[STEP: {step_index+1}/{total_steps}] [STEP] : {step['name']} - PARAMETER: {parameter}")
+            log_list.insert(
+                0, f'[STEP: {step_index + 1}/{total_steps}] [STEP] : {step["name"]} - PARAMETER: {parameter}'
+            )
         else:
             # If no logs in step, still add step command
-            log_list = [f"[STEP: {step_index+1}/{total_steps}] [STEP] : {step['name']} - PARAMETER: {parameter}"]
+            log_list = [f'[STEP: {step_index + 1}/{total_steps}] [STEP] : {step["name"]} - PARAMETER: {parameter}']
 
         with self._stage_log_list_thread_lock:
             self.stage_log_dict[step_index] = log_list
 
         logger.debug(f'Thread stopped - Step Info - (ID: {threading.get_ident()} - INDEX: {step_index}) ...')
 
-    def logs(self,
-             stage_name: str,
-             build_url: str = '',
-             job_name: str = '',
-             job_url: str = '',
-             build_number: Union[int, None] = None,
-             latest: bool = False,
-             download_dir: bool = False) -> bool:
+    def logs(
+        self,
+        stage_name: str,
+        build_url: str = '',
+        job_name: str = '',
+        job_url: str = '',
+        build_number: Union[int, None] = None,
+        latest: bool = False,
+        download_dir: bool = False,
+    ) -> bool:
         """Prints out the console log for this specified stage
 
         Details: Ways of specifying the build:
@@ -289,25 +306,30 @@ class Stage:
             build_url = utility.build_url_complete(build_url)
 
         # Getting all stage step information
-        stage_step_list = self.step_list(stage_name=stage_name,
-                                         build_url=build_url,
-                                         job_name=job_name,
-                                         job_url=job_url,
-                                         build_number=build_number,
-                                         latest=latest)[0]
+        stage_step_list = self.step_list(
+            stage_name=stage_name,
+            build_url=build_url,
+            job_name=job_name,
+            job_url=job_url,
+            build_number=build_number,
+            latest=latest,
+        )[0]
 
         logger.debug(
-            f'Downloading logs for {len(stage_step_list)} step in the stage using {len(stage_step_list)} threads ...')
+            f'Downloading logs for {len(stage_step_list)} step in the stage using {len(stage_step_list)} threads ...'
+        )
         self.stage_log_dict = {}
         threads = []
         for i, stage_step in enumerate(stage_step_list):
-            thread = threading.Thread(target=self._thread_step_info,
-                                      args=(
-                                          i,
-                                          len(stage_step_list),
-                                          stage_step,
-                                      ),
-                                      daemon=False)
+            thread = threading.Thread(
+                target=self._thread_step_info,
+                args=(
+                    i,
+                    len(stage_step_list),
+                    stage_step,
+                ),
+                daemon=False,
+            )
             thread.start()
             threads.append(thread)
         for thread in threads:

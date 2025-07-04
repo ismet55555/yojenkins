@@ -24,9 +24,9 @@ from yojenkins.utility.utility import (
 logger = logging.getLogger()
 
 # TODO: Move all these configs to a central config file
-BUG_REPORT_URL = "https://github.com/ismet55555/yojenkins/issues/new?assignees=ismet55555&labels=bug%2Ctriage&template=bug_report.yml&title=%5BBug%5D%3A+"
-FEATURE_REQUEST_URL = "https://github.com/ismet55555/yojenkins/issues/new?assignees=ismet55555&labels=feature-request&template=feature_request.yml&title=%5BFeature-Request%5D%3A+"
-DOCS_URL = "https://www.yojenkins.com/"
+BUG_REPORT_URL = 'https://github.com/ismet55555/yojenkins/issues/new?assignees=ismet55555&labels=bug%2Ctriage&template=bug_report.yml&title=%5BBug%5D%3A+'
+FEATURE_REQUEST_URL = 'https://github.com/ismet55555/yojenkins/issues/new?assignees=ismet55555&labels=feature-request&template=feature_request.yml&title=%5BFeature-Request%5D%3A+'
+DOCS_URL = 'https://www.yojenkins.com/'
 
 
 @log_to_history
@@ -139,11 +139,11 @@ def history(profile: str, clear: bool) -> None:
     # Displaying the command history
     logger.debug(f'Displaying command history for profile "{profile}" ...')
 
-    def output_history_to_console(command_list: List, profile_name: str = "") -> None:
+    def output_history_to_console(command_list: List, profile_name: str = '') -> None:
         """Help to format and output to console."""
         for command_info in command_list:
             if profile_name:
-                if command_info["profile"] != profile_name:
+                if command_info['profile'] != profile_name:
                     continue
             profile_str = f'{click.style("[" + command_info["profile"] + "]", fg="yellow", bold=True)}'
             datetime_str = f'{click.style("[" + command_info["datetime"] + "]", fg="green", bold=False)}'
@@ -229,10 +229,9 @@ def run_script(profile: str, token: str, text: str, file: str, output: str) -> N
             fail_out(f'Failed to read specified script file ({file}). Exception: {error}')
 
     # Send the request to the server
-    content, _, success = yj_obj.rest.request(target='scriptText',
-                                              request_type='post',
-                                              data={'script': script},
-                                              json_content=False)
+    content, _, success = yj_obj.rest.request(
+        target='scriptText', request_type='post', data={'script': script}, json_content=False
+    )
 
     if not success:
         fail_out('Failed to make script run request')
@@ -245,7 +244,7 @@ def run_script(profile: str, token: str, text: str, file: str, output: str) -> N
                 open_file.write(content)
             logger.debug('Successfully wrote script result to file')
         except (OSError, PermissionError) as error:
-            fail_out(f"Failed to write script output to file. Exception: {error}")
+            fail_out(f'Failed to write script output to file. Exception: {error}')
 
     click.echo(content)
 

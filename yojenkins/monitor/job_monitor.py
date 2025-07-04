@@ -128,12 +128,9 @@ class JobMonitor(Monitor):
             if logger.level < 20:
                 pass
             else:
-                mu.draw_text(scr,
-                             'JOB MONITOR',
-                             y_row,
-                             center_x=True,
-                             color=self.color['grey-light'],
-                             decor=self.decor['bold'])
+                mu.draw_text(
+                    scr, 'JOB MONITOR', y_row, center_x=True, color=self.color['grey-light'], decor=self.decor['bold']
+                )
 
             y_row += 1
 
@@ -150,8 +147,9 @@ class JobMonitor(Monitor):
                 job_url = self.job_info_data['url']
 
                 # INFO
-                mu.draw_horizontal_header(scr, y_row, x_col[0], term_width - 5, '-', 'INFO',
-                                          self.color['normal'] | self.decor['bold'])
+                mu.draw_horizontal_header(
+                    scr, y_row, x_col[0], term_width - 5, '-', 'INFO', self.color['normal'] | self.decor['bold']
+                )
                 y_row += 1
 
                 job_info_items = {
@@ -166,19 +164,18 @@ class JobMonitor(Monitor):
                 y_row += 1
             else:
                 y_row += 3
-                mu.draw_text(scr,
-                             'NO DATA',
-                             y_row,
-                             center_x=True,
-                             color=self.color['normal'],
-                             decor=self.decor['bold'])
+                mu.draw_text(
+                    scr, 'NO DATA', y_row, center_x=True, color=self.color['normal'], decor=self.decor['bold']
+                )
                 y_row += 2
-                mu.draw_text(scr,
-                             r'ಠ_ಠ  ¯\_(⊙︿⊙)_/¯',
-                             y_row,
-                             center_x=True,
-                             color=self.color['normal'],
-                             decor=self.decor['bold'])
+                mu.draw_text(
+                    scr,
+                    r'ಠ_ಠ  ¯\_(⊙︿⊙)_/¯',
+                    y_row,
+                    center_x=True,
+                    color=self.color['normal'],
+                    decor=self.decor['bold'],
+                )
             y_row += 1
 
             ########################################################################################
@@ -188,20 +185,22 @@ class JobMonitor(Monitor):
                 x_col = [3, 12, 32, 52]
 
                 # Header
-                mu.draw_horizontal_header(scr, y_row, x_col[0], term_width - 5, '-', 'BUILDS',
-                                          self.color['normal'] | self.decor['bold'])
+                mu.draw_horizontal_header(
+                    scr, y_row, x_col[0], term_width - 5, '-', 'BUILDS', self.color['normal'] | self.decor['bold']
+                )
                 y_row += 1
 
                 # Loop through all listed builds
                 for i, build in enumerate(self.builds_data):
-                    if not build: break
+                    if not build:
+                        break
 
                     # Build name
-                    line = build["displayName"] if "displayName" in build else build["number"]
+                    line = build['displayName'] if 'displayName' in build else build['number']
                     mu.draw_text(scr, f'{build["displayName"]}', y_row, x_col[0])
 
                     # Datetime
-                    line = datetime.fromtimestamp(build['timestamp'] / 1000.0).strftime("%m/%d - %H:%M")
+                    line = datetime.fromtimestamp(build['timestamp'] / 1000.0).strftime('%m/%d - %H:%M')
                     mu.draw_text(scr, line, y_row, x_col[1])
 
                     # Build Run duration
@@ -213,7 +212,7 @@ class JobMonitor(Monitor):
 
                     # Build Status
                     if 'resultText' in build and build['resultText'] != None:
-                        line = build['resultText'].replace("_", " ")
+                        line = build['resultText'].replace('_', ' ')
                     else:
                         line = BuildStatus.UNKNOWN.value
                     status_color = self.status_to_color(line)
@@ -234,9 +233,10 @@ class JobMonitor(Monitor):
             # SERVER STATUS
             y_row = term_height - 3
             if self.server_status_data:
-                auth_status = False if 'auth' not in self.server_status_data else self.server_status_data["auth"]
-                reach_status = False if 'reachable' not in self.server_status_data else self.server_status_data[
-                    "reachable"]
+                auth_status = False if 'auth' not in self.server_status_data else self.server_status_data['auth']
+                reach_status = (
+                    False if 'reachable' not in self.server_status_data else self.server_status_data['reachable']
+                )
                 line = f'Server Status: Reachable: {reach_status}, Authenticated: {auth_status}'
             else:
                 line = 'Server Status: NO DATA'
@@ -258,12 +258,14 @@ class JobMonitor(Monitor):
 
             # Indicate server interaction
             if self.server_interaction:
-                mu.draw_text(scr,
-                             '(R)',
-                             term_height - 2,
-                             term_width - 5,
-                             color=self.color['grey-dark'],
-                             decor=self.decor['bold'])
+                mu.draw_text(
+                    scr,
+                    '(R)',
+                    term_height - 2,
+                    term_width - 5,
+                    color=self.color['grey-dark'],
+                    decor=self.decor['bold'],
+                )
             self.server_interaction = False
 
             ########################################################################################
@@ -279,8 +281,12 @@ class JobMonitor(Monitor):
             if self.help:
                 curses.halfdelay(255)
                 message_lines = [
-                    'B - Build the job', 'O - Open job in web browser', 'P - Pause Monitor', 'Q - Quit Monitor', ' ',
-                    'H - Keyboard shortcuts'
+                    'B - Build the job',
+                    'O - Open job in web browser',
+                    'P - Pause Monitor',
+                    'Q - Quit Monitor',
+                    ' ',
+                    'H - Keyboard shortcuts',
                 ]
                 mu.draw_message_box(scr, message_lines, 'left')
             else:
@@ -300,7 +306,9 @@ class JobMonitor(Monitor):
                 self.help = False
                 curses.halfdelay(255)
                 message_lines = [
-                    'Are you sure you want to build this job?', 'To build press "B"', 'To return press "R"'
+                    'Are you sure you want to build this job?',
+                    'To build press "B"',
+                    'To return press "R"',
                 ]
                 mu.draw_message_box(scr, message_lines)
                 if self.job_build > 1:  # Abort Message confirmed (pressed twice)
@@ -376,7 +384,8 @@ class JobMonitor(Monitor):
             None
         """
         logger.debug(
-            f'Thread starting - Job info - (ID: {threading.get_ident()} - Refresh Interval: {monitor_interval}s) ...')
+            f'Thread starting - Job info - (ID: {threading.get_ident()} - Refresh Interval: {monitor_interval}s) ...'
+        )
 
         # Set the monitoring thread flag up
         self.all_threads_enabled = True
@@ -411,13 +420,18 @@ class JobMonitor(Monitor):
         """
         logger.debug(f'Starting thread for job info for "{job_url}" ...')
         try:
-            threading.Thread(target=self.__thread_job_info, args=(
-                job_url,
-                monitor_interval,
-            ), daemon=False).start()
+            threading.Thread(
+                target=self.__thread_job_info,
+                args=(
+                    job_url,
+                    monitor_interval,
+                ),
+                daemon=False,
+            ).start()
         except Exception as error:
             logger.error(
-                f'Failed to start job info monitoring thread for {job_url}. Exception: {error}. Type: {type(error)}')
+                f'Failed to start job info monitoring thread for {job_url}. Exception: {error}. Type: {type(error)}'
+            )
 
         return True
 
@@ -474,14 +488,17 @@ class JobMonitor(Monitor):
                     threads = []
                     try:
                         for build_data_index, build in enumerate(
-                                self.job_info_data['builds'][:self.builds_data_number_of_builds]):
+                            self.job_info_data['builds'][: self.builds_data_number_of_builds]
+                        ):
                             # build_data_index += 1
-                            thread = threading.Thread(target=self.__thread_build_info,
-                                                      args=(
-                                                          build['url'],
-                                                          build_data_index,
-                                                      ),
-                                                      daemon=False)
+                            thread = threading.Thread(
+                                target=self.__thread_build_info,
+                                args=(
+                                    build['url'],
+                                    build_data_index,
+                                ),
+                                daemon=False,
+                            )
                             thread.start()
                             threads.append(thread)
                     except Exception as error:
@@ -516,7 +533,7 @@ class JobMonitor(Monitor):
         """
         logger.debug('Starting thread for job builds info ...')
         try:
-            threading.Thread(target=self.__thread_builds_data, args=(monitor_interval, ), daemon=False).start()
+            threading.Thread(target=self.__thread_builds_data, args=(monitor_interval,), daemon=False).start()
         except Exception as error:
             logger.error(f'Failed to start job builds info monitoring thread. Exception: {error}. Type: {type(error)}')
 

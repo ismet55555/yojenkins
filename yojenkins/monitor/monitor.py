@@ -7,7 +7,7 @@ import sys
 import threading
 from time import sleep, time
 
-if platform.system() != "Windows":
+if platform.system() != 'Windows':
     try:
         import simpleaudio
     except:
@@ -118,7 +118,7 @@ class Monitor:
 
         # Debug Terminal Size
         if logger.level == logging.DEBUG:
-            scr.addstr(1, 1, f"[Terminal Size: W:{term_width}, H:{term_height}]", self.color['grey-light'])
+            scr.addstr(1, 1, f'[Terminal Size: W:{term_width}, H:{term_height}]', self.color['grey-light'])
 
         k = 0
         ui_keys = mu.load_keys()
@@ -132,10 +132,16 @@ class Monitor:
             self.terminal_size_good = term_height >= self.height_limit and term_width >= self.width_limit
 
             message_lines = [
-                '', 'Uh-Oh! Window too small!', '', '乁( ◔ ౪◔)「    (ಥ⌣ಥ)', '',
-                f'Current: W:{term_width} x H:{term_height}', f'Needed : W:{self.width_limit} x H:{self.height_limit}',
-                '', 'To continue, resize window', ''
-                'To quit, press "Q" or "ESC"'
+                '',
+                'Uh-Oh! Window too small!',
+                '',
+                '乁( ◔ ౪◔)「    (ಥ⌣ಥ)',
+                '',
+                f'Current: W:{term_width} x H:{term_height}',
+                f'Needed : W:{self.width_limit} x H:{self.height_limit}',
+                '',
+                'To continue, resize window',
+                'To quit, press "Q" or "ESC"',
             ]
             try:
                 for y_2, line in enumerate(message_lines):
@@ -200,7 +206,7 @@ class Monitor:
         logger.debug(f'Thread starting - Play sound - (ID: {threading.get_ident()} - Sound: {sound_filepath}s) ...')
 
         # Load the file and play it
-        if platform.system() != "Windows":
+        if platform.system() != 'Windows':
             try:
                 wave_obj = simpleaudio.WaveObject.from_wave_file(sound_filepath)
                 play_obj = wave_obj.play()
@@ -234,10 +240,11 @@ class Monitor:
         """
         logger.debug(f'Playing sound file "{sound_filepath}" ...')
         try:
-            threading.Thread(target=self.__thread_play_sound, args=(sound_filepath, ), daemon=True).start()
+            threading.Thread(target=self.__thread_play_sound, args=(sound_filepath,), daemon=True).start()
         except Exception as error:
             logger.error(
-                f'Failed to start play sound thread for "{sound_filepath}". Exception: {error}. Type: {type(error)}')
+                f'Failed to start play sound thread for "{sound_filepath}". Exception: {error}. Type: {type(error)}'
+            )
             return False
 
         return True
@@ -291,7 +298,7 @@ class Monitor:
         """
         logger.debug('Starting thread for server status ...')
         try:
-            threading.Thread(target=self.__thread_server_status, args=(monitor_interval, ), daemon=False).start()
+            threading.Thread(target=self.__thread_server_status, args=(monitor_interval,), daemon=False).start()
         except Exception as error:
             logger.error(f'Failed to start server status monitoring thread. Exception: {error}. Type: {type(error)}')
             return False

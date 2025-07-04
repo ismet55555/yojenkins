@@ -64,13 +64,11 @@ class Job:
 
         # Loop through all sub-folders
         for list_item in search_list:
-
             # Check if it is not a job
             if list_item['_class'] in JenkinsItemClasses.JOB.value['class_type']:
-
                 # Get fullname, else get name
                 if fullname:
-                    dict_key = "fullname" if "fullname" in list_item else "name"
+                    dict_key = 'fullname' if 'fullname' in list_item else 'name'
                 else:
                     dict_key = 'name'
 
@@ -94,12 +92,14 @@ class Job:
             # Keep searching all sub-items for this item. Call itself for some recursion fun
             self._recursive_search(search_pattern, list_item['jobs'], level, fullname)
 
-    def search(self,
-               search_pattern: str,
-               folder_name: str = '',
-               folder_url: str = '',
-               folder_depth: int = 4,
-               fullname: bool = True) -> Tuple[list, list]:
+    def search(
+        self,
+        search_pattern: str,
+        folder_name: str = '',
+        folder_url: str = '',
+        folder_depth: int = 4,
+        fullname: bool = True,
+    ) -> Tuple[list, list]:
         """TODO Docstring
 
         Args:
@@ -130,7 +130,7 @@ class Job:
             try:
                 items = self.jenkins_sdk.get_all_jobs(folder_depth=folder_depth)
             except jenkins.JenkinsException as error:
-                error_no_html = error.args[0].split("\n")[0]
+                error_no_html = error.args[0].split('\n')[0]
                 fail_out(f'Error while getting all items. Exception: {error_no_html}')
             except Exception as error:
                 fail_out(error)
@@ -142,14 +142,15 @@ class Job:
 
         # Remove duplicates from list
         logger.debug('Removing duplicates if needed ...')
-        self.search_results = [i for n, i in enumerate(self.search_results) if i not in self.search_results[n + 1:]]
+        self.search_results = [i for n, i in enumerate(self.search_results) if i not in self.search_results[n + 1 :]]
 
         # Getting only the URLs of the stages
         job_search_results_list = [result['url'] for result in self.search_results]
 
         # Output search stats
         logger.debug(
-            f'Searched jobs: {self.search_items_count}. Search time: {perf_counter() - start_time:.3f} seconds')
+            f'Searched jobs: {self.search_items_count}. Search time: {perf_counter() - start_time:.3f} seconds'
+        )
 
         return self.search_results, job_search_results_list
 
@@ -186,8 +187,9 @@ class Job:
             job_info['serverURL'] = utility.item_url_to_server_url(job_info['url'])
             job_info['serverDomain'] = utility.item_url_to_server_url(job_info['url'], False)
 
-            job_info[
-                'folderFullName'] = 'Base Folder' if not job_info['folderFullName'] else job_info['folderFullName']
+            job_info['folderFullName'] = (
+                'Base Folder' if not job_info['folderFullName'] else job_info['folderFullName']
+            )
 
         return job_info
 
@@ -208,7 +210,8 @@ class Job:
             item_info=job_info,
             get_key_info='url',
             item_type=JenkinsItemClasses.BUILD.value['item_type'],
-            item_class_list=JenkinsItemClasses.BUILD.value['class_type'])
+            item_class_list=JenkinsItemClasses.BUILD.value['class_type'],
+        )
 
         return build_list, build_url_list
 
@@ -277,17 +280,16 @@ class Job:
             # TODO: Use requests instead of jenkins-python
             self.jenkins_sdk.set_next_build_number(job_name, build_number)
         except jenkins.JenkinsException as error:
-            error_no_html = error.args[0].split("\n")[0]
+            error_no_html = error.args[0].split('\n')[0]
             fail_out(
-                f'Failed to set next build number for job "{job_name}" to {build_number}. Exception: {error_no_html}')
+                f'Failed to set next build number for job "{job_name}" to {build_number}. Exception: {error_no_html}'
+            )
 
         return build_number
 
-    def build_number_exist(self,
-                           build_number: int,
-                           job_info: dict = {},
-                           job_name: str = '',
-                           job_url: str = '') -> Union[bool, None]:
+    def build_number_exist(
+        self, build_number: int, job_info: dict = {}, job_name: str = '', job_url: str = ''
+    ) -> Union[bool, None]:
         """TODO Docstring
 
         Args:
@@ -421,7 +423,7 @@ class Job:
 
         # Requesting all queue and searching queue (NOTE: Could use Server object)
         queue_all = self.rest.request('queue/api/json', 'get')[0]
-        logger.debug(f"Number of queued items: {len(queue_all['items'])}")
+        logger.debug(f'Number of queued items: {len(queue_all["items"])}')
         queue_matches = utility.queue_find(queue_all, job_name=job_name, job_url=job_url)
         if not queue_matches:
             return {}, 0
@@ -461,11 +463,11 @@ class Job:
         if not return_content:
             messages = [
                 'Failed to abort build queue. Specified build queue number may be wrong or build may have already started',
-                'The following jobs are currently in queue:'
+                'The following jobs are currently in queue:',
             ]
             queue_list = self.in_queue_check()
             for i, queue_item in enumerate(queue_list):
-                messages.append(f'  {i+1}. Queue ID: {queue_item["id"]} - Job URL: {queue_item["task"]["url"]}')
+                messages.append(f'  {i + 1}. Queue ID: {queue_item["id"]} - Job URL: {queue_item["task"]["url"]}')
             failures_out(messages)
 
         return True
@@ -494,13 +496,15 @@ class Job:
 
         return True
 
-    def config(self,
-               filepath: str = '',
-               job_name: str = '',
-               job_url: str = '',
-               opt_json: bool = False,
-               opt_yaml: bool = False,
-               opt_toml: bool = False) -> str:
+    def config(
+        self,
+        filepath: str = '',
+        job_name: str = '',
+        job_url: str = '',
+        opt_json: bool = False,
+        opt_yaml: bool = False,
+        opt_toml: bool = False,
+    ) -> str:
         """Get the folder XML configuration (config.xml)
 
         Args:
@@ -520,10 +524,9 @@ class Job:
             job_url = utility.name_to_url(self.rest.get_server_url(), job_name)
 
         logger.debug(f'Fetching XML configurations for job: "{job_url}" ...')
-        return_content, _, success = self.rest.request(f'{job_url.strip("/")}/config.xml',
-                                                       'get',
-                                                       json_content=False,
-                                                       is_endpoint=False)
+        return_content, _, success = self.rest.request(
+            f'{job_url.strip("/")}/config.xml', 'get', json_content=False, is_endpoint=False
+        )
         if not success:
             fail_out('Failed to get job configuration')
         logger.debug('Successfully fetched XML configurations')
@@ -693,12 +696,14 @@ class Job:
 
         return success
 
-    def create(self,
-               name: str,
-               folder_name: str = '',
-               folder_url: str = '',
-               config_file: str = 'config.xml',
-               config_is_json: bool = False) -> bool:
+    def create(
+        self,
+        name: str,
+        folder_name: str = '',
+        folder_url: str = '',
+        config_file: str = 'config.xml',
+        config_is_json: bool = False,
+    ) -> bool:
         """TODO Docstring
 
         Args:
@@ -721,7 +726,7 @@ class Job:
             fail_out('Provided item name contains special characters')
 
         # Check if job already exists
-        if utility.item_exists_in_folder(name, folder_url, "job", self.rest):
+        if utility.item_exists_in_folder(name, folder_url, 'job', self.rest):
             fail_out(f'Job "{name}" already exists in folder "{folder_url}"')
 
         if config_file:
@@ -746,11 +751,9 @@ class Job:
         logger.debug(f'Creating job "{name}" within folder "{folder_url}" "...')
         endpoint = f'createItem?name={name}'
         headers = {'Content-Type': 'application/xml; charset=utf-8'}
-        _, _, success = self.rest.request(f'{folder_url.strip("/")}/{endpoint}',
-                                          'post',
-                                          data=job_config,
-                                          headers=headers,
-                                          is_endpoint=False)
+        _, _, success = self.rest.request(
+            f'{folder_url.strip("/")}/{endpoint}', 'post', data=job_config, headers=headers, is_endpoint=False
+        )
         if not success:
             fail_out(f'Failed to create job "{name}"')
         logger.debug(f'Successfully created job "{name}"')
@@ -793,9 +796,9 @@ class Job:
             default_value_str = ''
             if not default_value:
                 if parameter['defaultParameterValue']['_class'] == 'hudson.model.BooleanParameterValue':
-                    default_value_str = " (default: False)"
+                    default_value_str = ' (default: False)'
             else:
-                default_value_str = f" (default: {default_value})"
+                default_value_str = f' (default: {default_value})'
 
             # Description of parameter
             parameter_description = parameter['description'] if parameter['description'] else 'N/A'
@@ -825,7 +828,7 @@ class Job:
         logger.debug('Getting jobs INFO diff for the following two jobs:')
         logger.debug(f'    - Job 1:   {job_1}')
         logger.debug(f'    - Job 2:   {job_2}')
-        logger.debug("Diff output options specified:")
+        logger.debug('Diff output options specified:')
         logger.debug(f'    - Show no color:   {no_color}')
         logger.debug(f'    - Show diff only:  {diff_only}')
         logger.debug(f'    - Show diff guide: {diff_guide}')
@@ -841,4 +844,4 @@ class Job:
 
         job_info_yaml_1 = yaml.safe_dump(job_info_1, default_flow_style=False, indent=2)
         job_info_yaml_2 = yaml.safe_dump(job_info_2, default_flow_style=False, indent=2)
-        diff_show(job_info_yaml_1, job_info_yaml_2, "---  JOB 1", "+++  JOB 2", (), 0, no_color, diff_only, diff_guide)
+        diff_show(job_info_yaml_1, job_info_yaml_2, '---  JOB 1', '+++  JOB 2', (), 0, no_color, diff_only, diff_guide)

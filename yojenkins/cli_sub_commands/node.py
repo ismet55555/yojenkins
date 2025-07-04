@@ -59,49 +59,63 @@ def prepare(debug):
 @click.argument('host', nargs=1, type=str, required=True)
 @click.argument('credential', nargs=1, type=str, required=True)
 @click.option('--description', type=str, required=False, help='Node description')
-@click.option('--executors',
-              default=1,
-              type=click.IntRange(1, 100),
-              required=False,
-              show_default=True,
-              help='Number of executors on node')
+@click.option(
+    '--executors',
+    default=1,
+    type=click.IntRange(1, 100),
+    required=False,
+    show_default=True,
+    help='Number of executors on node',
+)
 @click.option('--labels', type=str, required=False, help='Labels applied to agent [default: NAME]')
-@click.option('--mode',
-              type=click.Choice(['normal', 'exclusive'], case_sensitive=False),
-              default='normal',
-              show_default=True,
-              required=False,
-              help='Available to all or to specified jobs')
-@click.option('--remote-java-dir',
-              default="/usr/bin/java",
-              show_default=True,
-              type=str,
-              required=False,
-              help='Location of Java binary')
-@click.option('--remote-root-dir',
-              default="/home/jenkins",
-              show_default=True,
-              type=str,
-              required=False,
-              help='Directory where node work is kept')
-@click.option('--retention',
-              type=click.Choice(['always', 'demand'], case_sensitive=False),
-              default='always',
-              show_default=True,
-              required=False,
-              help='Always on or offline when not in use')
-@click.option('--ssh-port',
-              default=22,
-              show_default=True,
-              type=click.IntRange(1, 64738),
-              required=False,
-              help='SSH port to target')
-@click.option('--ssh-verify',
-              type=click.Choice(['known', 'trusted', 'none'], case_sensitive=False),
-              default='trusted',
-              show_default=True,
-              required=False,
-              help='SSH verification strategy')
+@click.option(
+    '--mode',
+    type=click.Choice(['normal', 'exclusive'], case_sensitive=False),
+    default='normal',
+    show_default=True,
+    required=False,
+    help='Available to all or to specified jobs',
+)
+@click.option(
+    '--remote-java-dir',
+    default='/usr/bin/java',
+    show_default=True,
+    type=str,
+    required=False,
+    help='Location of Java binary',
+)
+@click.option(
+    '--remote-root-dir',
+    default='/home/jenkins',
+    show_default=True,
+    type=str,
+    required=False,
+    help='Directory where node work is kept',
+)
+@click.option(
+    '--retention',
+    type=click.Choice(['always', 'demand'], case_sensitive=False),
+    default='always',
+    show_default=True,
+    required=False,
+    help='Always on or offline when not in use',
+)
+@click.option(
+    '--ssh-port',
+    default=22,
+    show_default=True,
+    type=click.IntRange(1, 64738),
+    required=False,
+    help='SSH port to target',
+)
+@click.option(
+    '--ssh-verify',
+    type=click.Choice(['known', 'trusted', 'none'], case_sensitive=False),
+    default='trusted',
+    show_default=True,
+    required=False,
+    help='SSH verification strategy',
+)
 # @click.option('--config-file', type=click.Path(file_okay=True, dir_okay=False), required=False, help='Path to local XML file defining agent')
 def create_permanent(debug, **kwargs):
     """
@@ -177,19 +191,17 @@ def enable(debug, **kwargs):
 @node.command(short_help='\tGet node configuration')
 @cli_decorators.debug
 @cli_decorators.format_output
-@click.option('-j',
-              '--json',
-              type=bool,
-              default=False,
-              required=False,
-              is_flag=True,
-              help='Output config in JSON format')
+@click.option(
+    '-j', '--json', type=bool, default=False, required=False, is_flag=True, help='Output config in JSON format'
+)
 @cli_decorators.profile
 @click.argument('name', nargs=1, type=str, required=True)
-@click.option('--filepath',
-              type=click.Path(file_okay=True, dir_okay=True),
-              required=False,
-              help='File/Filepath to write configurations to')
+@click.option(
+    '--filepath',
+    type=click.Path(file_okay=True, dir_okay=True),
+    required=False,
+    help='File/Filepath to write configurations to',
+)
 def config(debug, **kwargs):
     """Get node configuration"""
     set_debug_log_level(debug)
@@ -200,17 +212,21 @@ def config(debug, **kwargs):
 @cli_decorators.debug
 @cli_decorators.profile
 @click.argument('name', nargs=1, type=str, required=True)
-@click.option('--config-file',
-              type=click.Path(file_okay=True, dir_okay=True),
-              required=True,
-              help='Path to local config file defining node')
-@click.option('--config-is-json',
-              type=bool,
-              default=False,
-              show_default=True,
-              required=False,
-              is_flag=True,
-              help='The specified file is in JSON format')
+@click.option(
+    '--config-file',
+    type=click.Path(file_okay=True, dir_okay=True),
+    required=True,
+    help='Path to local config file defining node',
+)
+@click.option(
+    '--config-is-json',
+    type=bool,
+    default=False,
+    show_default=True,
+    required=False,
+    is_flag=True,
+    help='The specified file is in JSON format',
+)
 def reconfig(debug, **kwargs):
     """Reconfigure the node"""
     set_debug_log_level(debug)

@@ -46,8 +46,19 @@ def info(profile: str, token: str, credential: str, folder: str, domain: str, **
 
 
 @log_to_history
-def config(profile: str, token: str, opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool, opt_json: bool,
-           credential: str, folder: str, domain: str, filepath: str) -> None:
+def config(
+    profile: str,
+    token: str,
+    opt_pretty: bool,
+    opt_yaml: bool,
+    opt_xml: bool,
+    opt_toml: bool,
+    opt_json: bool,
+    credential: str,
+    folder: str,
+    domain: str,
+    filepath: str,
+) -> None:
     """Get credential configuration
 
     Args:
@@ -58,21 +69,32 @@ def config(profile: str, token: str, opt_pretty: bool, opt_yaml: bool, opt_xml: 
         filepath: The filepath of the credential configuration
     """
     yj_obj = cu.config_yo_jenkins(profile, token)
-    data = yj_obj.credential.config(credential=credential,
-                                    folder=folder,
-                                    domain=domain,
-                                    opt_json=opt_json,
-                                    opt_yaml=opt_yaml,
-                                    opt_toml=opt_toml,
-                                    filepath=filepath)
+    data = yj_obj.credential.config(
+        credential=credential,
+        folder=folder,
+        domain=domain,
+        opt_json=opt_json,
+        opt_yaml=opt_yaml,
+        opt_toml=opt_toml,
+        filepath=filepath,
+    )
     opt_xml = not any([opt_json, opt_yaml, opt_toml])
     data = data if opt_xml else json.loads(json.dumps(xmltodict.parse(data)))
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
 
 
 @log_to_history
-def get_template(profile: str, token: str, opt_pretty: bool, opt_yaml: bool, opt_xml: bool, opt_toml: bool,
-                 opt_json: bool, type: str, filepath: str) -> None:
+def get_template(
+    profile: str,
+    token: str,
+    opt_pretty: bool,
+    opt_yaml: bool,
+    opt_xml: bool,
+    opt_toml: bool,
+    opt_json: bool,
+    type: str,
+    filepath: str,
+) -> None:
     """Credential type template to create a credential
 
     Args:
@@ -82,11 +104,9 @@ def get_template(profile: str, token: str, opt_pretty: bool, opt_yaml: bool, opt
         filepath: The filepath to save the credential configuration
     """
     yj_obj = cu.config_yo_jenkins(profile, token)
-    data = yj_obj.credential.get_template(cred_type=type,
-                                          opt_json=opt_json,
-                                          opt_yaml=opt_yaml,
-                                          opt_toml=opt_toml,
-                                          filepath=filepath)
+    data = yj_obj.credential.get_template(
+        cred_type=type, opt_json=opt_json, opt_yaml=opt_yaml, opt_toml=opt_toml, filepath=filepath
+    )
     opt_xml = not any([opt_json, opt_yaml, opt_toml])
     data = data if opt_xml else json.loads(json.dumps(xmltodict.parse(data)))
     cu.standard_out(data, opt_pretty, opt_yaml, opt_xml, opt_toml)
