@@ -76,3 +76,4 @@ quote-style = "single"
 "tests/**" = ["PLR2004", "S101"]  # Allow magic values and asserts in tests
 "**/__init__.py" = ["F401"]       # Allow unused imports
 "setup.py" = ["ALL"]              # Ignore setup.py entirely
+"yojenkins/cli/cli_utility.py" = ["I001"]  # Skip import sorting
