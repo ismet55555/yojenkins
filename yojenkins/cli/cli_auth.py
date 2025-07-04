@@ -54,12 +54,11 @@ def token(profile: str, token: str, name: str, server_base_url: str, username: s
     else:
         # Simply display/output the newly generated API Token
         if token:
-            click.secho('Ignoring --token. Must be specfied with --profile', fg="yellow")
+            click.secho('Ignoring --token. Must be specfied with --profile', fg='yellow')
             print()
-        data = auth.generate_token(token_name=name,
-                                   server_base_url=server_base_url,
-                                   username=username,
-                                   password=password)
+        data = auth.generate_token(
+            token_name=name, server_base_url=server_base_url, username=username, password=password
+        )
     if profile:
         click.secho('success', fg='bright_green', bold=True)
     else:

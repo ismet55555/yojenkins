@@ -10,6 +10,7 @@ class Status(Enum):
         - `BuildStatus.RUNNING.value`
         - `if some_text in Status.RUNNING.value:`
     """
+
     RUNNING = ['RUNNING', 'IN_PROGRESS']
     SUCCESS = ['SUCCESS', 'SUCCEEDED']
     FAILURE = ['FAILURE', 'FAILED', 'FAIL']
@@ -31,6 +32,7 @@ class BuildStatus(Enum):
 
     Usage Examples:  `BuildStatus.RUNNING.value`
     """
+
     RUNNING = Status.RUNNING.value[0]
     SUCCESS = Status.SUCCESS.value[0]
     FAILURE = Status.FAILURE.value[0]
@@ -52,6 +54,7 @@ class StageStatus(Enum):
 
     Usage Examples:  `StageStatus.RUNNING.value`
     """
+
     RUNNING = Status.RUNNING.value[1]  # <-- Note 1
     SUCCESS = Status.SUCCESS.value[0]
     FAILURE = Status.FAILURE.value[0]
@@ -70,6 +73,7 @@ class Color(Enum):
 
     Usage Examples:  `Color.RUNNING.value`
     """
+
     ITEMS = {
         'RUNNING': 'normal',
         'SUCCESS': 'green',
@@ -81,7 +85,7 @@ class Color(Enum):
         'NOT_FOUND': 'normal',
         'NOT_RUN': 'grey-dark',
         'NONE': 'normal',
-        'UNKNOWN': 'normal'
+        'UNKNOWN': 'normal',
     }
 
 
@@ -93,6 +97,7 @@ class Sound(Enum):
 
     Usage Examples:  `Sound.RUNNING.value`
     """
+
     ITEMS = {
         'RUNNING': '',
         'SUCCESS': 'positive_alert_notification_musical_short_marimba_process_finished.wav',
@@ -104,5 +109,5 @@ class Sound(Enum):
         'NOT_FOUND': '',
         'NOT_RUN': '',
         'NONE': '',
-        'UNKNOWN': ''
+        'UNKNOWN': '',
     }

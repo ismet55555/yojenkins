@@ -7,7 +7,7 @@ import sys
 import setuptools
 
 # Package version number (Updated via bump2version tool)
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 def check_py_version():
     """Check the python version"""
@@ -104,12 +104,6 @@ setuptools.setup(
         "Environment :: Console",
         "Environment :: Console :: Curses",
         'Operating System :: OS Independent',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8',
-        'Programming Language :: Python :: 3.9',
-        'Programming Language :: Python :: 3.10',
-        'Programming Language :: Python :: 3.11',
         'Programming Language :: Python :: 3 :: Only'
     ]
 )

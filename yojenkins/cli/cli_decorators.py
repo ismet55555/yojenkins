@@ -18,13 +18,15 @@ def format_output(decorated_function: Callable) -> Callable:
         Decorated function
     """
 
-    @click.option('-p',
-                  '--pretty',
-                  type=bool,
-                  default=False,
-                  required=False,
-                  is_flag=True,
-                  help='Output in pretty human readable format')
+    @click.option(
+        '-p',
+        '--pretty',
+        type=bool,
+        default=False,
+        required=False,
+        is_flag=True,
+        help='Output in pretty human readable format',
+    )
     @click.option('-y', '--yaml', type=bool, default=False, required=False, is_flag=True, help='Output in YAML format')
     @click.option('-x', '--xml', type=bool, default=False, required=False, is_flag=True, help='Output in XML format')
     @click.option('-t', '--toml', type=bool, default=False, required=False, is_flag=True, help='Output in TOML format')
@@ -49,12 +51,9 @@ def debug(decorated_function: Callable) -> Callable:
 
     # TODO: Just call/move the debug log level update function here
 
-    @click.option('--debug',
-                  type=bool,
-                  default=False,
-                  required=False,
-                  is_flag=True,
-                  help='Enable debug level log messages')
+    @click.option(
+        '--debug', type=bool, default=False, required=False, is_flag=True, help='Enable debug level log messages'
+    )
     @functools.wraps(decorated_function)
     def wrapper(*args, **kwargs):
         return decorated_function(*args, **kwargs)
@@ -74,17 +73,17 @@ def profile(decorated_function: Callable) -> Callable:
         Decorated function
     """
 
-    @click.option('--profile',
-                  type=str,
-                  required=False,
-                  is_flag=False,
-                  help='yojenkins profile name or profile as JSON text')
-    @click.option('--token',
-                  type=str,
-                  required=False,
-                  is_flag=False,
-                  envvar="YOJENKINS_TOKEN",
-                  help='Authentication API token to use')
+    @click.option(
+        '--profile', type=str, required=False, is_flag=False, help='yojenkins profile name or profile as JSON text'
+    )
+    @click.option(
+        '--token',
+        type=str,
+        required=False,
+        is_flag=False,
+        envvar='YOJENKINS_TOKEN',
+        help='Authentication API token to use',
+    )
     @functools.wraps(decorated_function)
     def wrapper(*args, **kwargs):
         return decorated_function(*args, **kwargs)

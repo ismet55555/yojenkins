@@ -13,15 +13,91 @@ log_file_format = '[%(filename)-22s:%(lineno)4s] %(message)s'
 testpaths = ["tests"]
 python_files = ["test_*.py"]
 
-[tool.isort]
-skip_gitignore = true
-multi_line_output = 3
-line_length = 100
-include_trailing_comma = true
-supported_extensions = [".py"]
-extend_skip = ["env", "venv", ".vscode", ".pytest_cache", "docs", "dev_things"]
-
 [tool.bandit]
-# tests = ["B105", "B107"]  # List of included tests
-skips = ["B101", "B105", "B107"]  # List skipped tests
+skips = ["B101", "B105", "B107"]
 exclude = ['*_test.py', 'test_*.py', './tests', './dev_things']
+
+# ============================================================================
+# RUFF CONFIGURATION - Simplified, leveraging defaults
+# ============================================================================
+
+[tool.ruff]
+line-length = 119
+target-version = "py39"
+
+# Only specify exclusions beyond ruff's smart defaults
+exclude = [
+    "dev_things",
+    "docs",
+    "setup.py",
+    "**/__main__.py",
+]
+
+[tool.ruff.lint]
+# Enable comprehensive rule sets - ruff's defaults are already good
+select = [
+    "E", "W",    # pycodestyle
+    "F",         # Pyflakes
+    "I",         # isort
+    "B",         # flake8-bugbear
+    "C4",        # flake8-comprehensions
+    "UP",        # pyupgrade
+    "C90",       # mccabe
+    "PL",        # pylint rules
+    "RUF",       # ruff-specific
+]
+
+# Only ignore what conflicts with your current codebase
+ignore = [
+    "E501",      # Line too long (handled by formatter)
+    "PLR0913",   # Too many arguments
+    "PLR0915",   # Too many statements
+    "PLR2004",   # Magic values
+    "T201",      # print statements (CLI tool needs these)
+    "RUF012",    # Mutable class attributes ClassVar annotation
+    "B006",      # Mutable default arguments (fix manually when convenient)
+    "E712",      # Comparison to True/False (can be auto-fixed)
+    "F403",      # Undefined iport names
+]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.ruff.lint.pylint]
+max-args = 5
+max-statements = 50
+max-branches = 12
+
+[tool.ruff.lint.isort]
+known-first-party = ["yojenkins"]
+
+[tool.ruff.format]
+quote-style = "single"
+
+[tool.ruff.lint.per-file-ignores]
+# Only essential per-file ignores
+"tests/**" = ["PLR2004", "S101"]  # Allow magic values and asserts in tests
+"**/__init__.py" = ["F401"]       # Allow unused imports
+"setup.py" = ["ALL"]              # Ignore setup.py entirely
+
+# Import sorting issues
+"yojenkins/cli/cli_utility.py" = ["I001"]  # Skip import sorting (circular import fix)
+
+# Docker container - complex setup logic
+"yojenkins/docker_container/docker_jenkins_server.py" = ["PLR0911", "E722"]
+
+# Monitor files - complex UI drawing logic
+"yojenkins/monitor/build_monitor.py" = ["C901", "PLR0912", "B007", "E722"]
+"yojenkins/monitor/job_monitor.py" = ["C901", "PLR0912"]
+"yojenkins/monitor/monitor.py" = ["E722"]  # Bare except for optional import
+"yojenkins/monitor/monitor_utility.py" = ["E722", "E741"]
+
+# Utility functions - complex logic with many return paths
+"yojenkins/utility/utility.py" = ["PLR0911", "PLW2901", "C901", "PLR0912"]
+
+# Core business logic modules - complex auth/REST/build logic
+"yojenkins/yo_jenkins/auth.py" = ["C901", "PLR0912"]
+"yojenkins/yo_jenkins/build.py" = ["C901", "PLR0912"]
+"yojenkins/yo_jenkins/folder.py" = ["C901", "PLR0912"]
+"yojenkins/yo_jenkins/job.py" = ["C901", "PLR0912"]
+"yojenkins/yo_jenkins/rest.py" = ["C901", "PLR0911", "PLR0912"]

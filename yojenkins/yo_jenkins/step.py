@@ -1,7 +1,6 @@
 """Step class definition"""
 
 import logging
-from typing import Dict
 
 from yojenkins.utility.utility import fail_out
 from yojenkins.yo_jenkins.rest import Rest
@@ -10,7 +9,7 @@ from yojenkins.yo_jenkins.rest import Rest
 logger = logging.getLogger()
 
 
-class Step():
+class Step:
     """TODO Step"""
 
     def __init__(self, rest: Rest) -> None:
@@ -21,7 +20,7 @@ class Step():
         """
         self.rest = rest
 
-    def info(self, step_url: str) -> Dict:
+    def info(self, step_url: str) -> dict:
         """Get the information of the specified step
 
         Details: Step URL can be gotten with stage_step_list.

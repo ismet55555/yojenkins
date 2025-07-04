@@ -1,7 +1,6 @@
 """Server class definition"""
 
 import logging
-from typing import Dict, List, Tuple
 
 from yojenkins.utility import utility
 from yojenkins.utility.utility import fail_out
@@ -10,7 +9,7 @@ from yojenkins.utility.utility import fail_out
 logger = logging.getLogger()
 
 
-class Server():
+class Server:
     """TODO Server"""
 
     def __init__(self, rest: object, auth: object) -> None:
@@ -26,7 +25,7 @@ class Server():
         self.auth = auth
         self.server_base_url = auth.jenkins_profile['jenkins_server_url']
 
-    def info(self) -> Dict:
+    def info(self) -> dict:
         """Get the server information
 
         Details: Targeting the server that is specified in the selected profile
@@ -43,7 +42,7 @@ class Server():
 
         return server_info
 
-    def people(self) -> Tuple[list, list]:
+    def people(self) -> tuple[list, list]:
         """Get the list of people/accounts on the server
 
         Args:
@@ -60,13 +59,13 @@ class Server():
 
         try:
             people_info = people_info['users']
-            people_info_list = [f"{p['user']['fullName']}" for p in people_info]
+            people_info_list = [f'{p["user"]["fullName"]}' for p in people_info]
         except KeyError as error:
             fail_out(f'Failed to parse server people/users information. Specific keys not found: {error}')
 
         return people_info, people_info_list
 
-    def queue_info(self) -> Dict:
+    def queue_info(self) -> dict:
         """Get all the jobs stuck in the server queue
 
         (Potentially move to jobs or build section)
@@ -88,7 +87,7 @@ class Server():
 
         return server_queue_info
 
-    def queue_list(self) -> List[str]:
+    def queue_list(self) -> list[str]:
         """Get all list of all the jobs stuck in the server queue
 
         (Potentially move to jobs or build section)
@@ -110,7 +109,7 @@ class Server():
 
         return queue_list
 
-    def plugin_list(self) -> Tuple[list, list]:
+    def plugin_list(self) -> tuple[list, list]:
         """Get the list of plugins installed on the server
 
         Args:
@@ -127,7 +126,7 @@ class Server():
 
         try:
             plugins_info = plugins_info['plugins']
-            plugin_info_list = [f"{p['longName']} - {p['shortName']} - {p['version']}" for p in plugins_info]
+            plugin_info_list = [f'{p["longName"]} - {p["shortName"]} - {p["version"]}' for p in plugins_info]
         except KeyError as error:
             fail_out(f'Failed to parse server plugin information. Specific keys not found: {error}')
 
@@ -159,12 +158,10 @@ class Server():
         Returns:
             TODO
         """
-        logger.debug("Initiating server force restart ..." if force else "Initiating server safe restart ...")
-        success = self.rest.request('restart' if force else 'safeRestart',
-                                    'post',
-                                    is_endpoint=True,
-                                    json_content=True,
-                                    allow_redirect=False)[2]
+        logger.debug('Initiating server force restart ...' if force else 'Initiating server safe restart ...')
+        success = self.rest.request(
+            'restart' if force else 'safeRestart', 'post', is_endpoint=True, json_content=True, allow_redirect=False
+        )[2]
         if not success:
             fail_out('Failed to initiate server restart')
 
@@ -179,12 +176,10 @@ class Server():
         Returns:
             TODO
         """
-        logger.debug("Initiating server force shutdown ..." if force else "Initiating server safe shutdown ...")
-        success = self.rest.request('exit' if force else 'safeExit',
-                                    'post',
-                                    is_endpoint=True,
-                                    json_content=False,
-                                    allow_redirect=False)[2]
+        logger.debug('Initiating server force shutdown ...' if force else 'Initiating server safe shutdown ...')
+        success = self.rest.request(
+            'exit' if force else 'safeExit', 'post', is_endpoint=True, json_content=False, allow_redirect=False
+        )[2]
         if not success:
             fail_out('Failed to initiate server shutdown')
 
@@ -199,12 +194,14 @@ class Server():
         Returns:
             TODO
         """
-        logger.debug("Disabeling server quiet mode ..." if off else "Enabling server quiet mode ...")
-        success = self.rest.request('cancelQuietDown' if off else 'quietDown',
-                                    'post',
-                                    is_endpoint=True,
-                                    json_content=True,
-                                    allow_redirect=False)[2]
+        logger.debug('Disabeling server quiet mode ...' if off else 'Enabling server quiet mode ...')
+        success = self.rest.request(
+            'cancelQuietDown' if off else 'quietDown',
+            'post',
+            is_endpoint=True,
+            json_content=True,
+            allow_redirect=False,
+        )[2]
         if not success:
             fail_out(f'Failed to {"disable" if off else "enable"} server quiet mode')
 

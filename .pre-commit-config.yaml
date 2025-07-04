@@ -23,7 +23,7 @@ repos:
   #   -   id: check-useless-excludes
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.0.1
+    rev: v4.5.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
@@ -40,43 +40,20 @@ repos:
         args: [--branch, main]
 
   - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.16.1
+    rev: v8.18.4
     hooks:
       - id: gitleaks
 
-  - repo: https://github.com/pre-commit/mirrors-yapf
-    rev: v0.31.0
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.6.0
     hooks:
-      - id: yapf
-        name: Python Code Formatting (yapf)
-        language: python
+      - id: ruff
+        name: Python Code Linting (ruff)
+        args: [--fix]
         types: [python]
-        args: ["--style=.style.yapf", "--parallel", "--in-place"]
         verbose: true
 
-  - repo: https://github.com/PyCQA/isort
-    rev: 5.12.0
-    hooks:
-      - id: isort
-        name: Python Imports Sorting (isort)
-        language: python
-        language_version: python3
-        types_or: [python]
-        verbose: true
-
-  - repo: local
-    hooks:
-      - id: pylint
-        name: Python Code Linting (pylint)
-        entry: pylint
-        language: python
+      - id: ruff-format
+        name: Python Code Formatting (ruff)
         types: [python]
-        args:
-          [
-            "-rn", # Only display messages
-            "--rcfile=.pylintrc", # Link to your config file
-            "--load-plugins=pylint.extensions.docparams", # Load an extension
-            "--output-format=colorized", # Load an extension
-            "--fail-under=8.0",
-            # "--disable=R0913,W0511,R0912,W1309", # Disable some specific messages IDs
-          ]
+        verbose: true

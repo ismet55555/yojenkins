@@ -2,7 +2,6 @@
 
 import logging
 import os
-from typing import Tuple
 
 from yojenkins.utility import utility
 from yojenkins.utility.utility import fail_out
@@ -12,7 +11,7 @@ from yojenkins.yo_jenkins.rest import Rest
 logger = logging.getLogger()
 
 
-class Account():
+class Account:
     """Account Class"""
 
     def __init__(self, rest: Rest) -> None:
@@ -24,7 +23,7 @@ class Account():
         self.rest = rest
         self.groovy_script_directory = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'groovy_scripts')
 
-    def list(self) -> Tuple[list, list]:
+    def list(self) -> tuple[list, list]:
         """List all accounts for the server
 
         Args:
@@ -34,14 +33,14 @@ class Account():
             List of credentials in dictionary format and a list of credential names
         """
         script_filepath = os.path.join(self.groovy_script_directory, 'user_list.groovy')
-        account_list, success, error = utility.run_groovy_script(script_filepath=script_filepath,
-                                                                 json_return=True,
-                                                                 rest=self.rest)
+        account_list, success, error = utility.run_groovy_script(
+            script_filepath=script_filepath, json_return=True, rest=self.rest
+        )
         if not success:
             fail_out(f'Failed to list account. {error}')
 
         # Get a list of only account ids
-        account_list_id = [account["id"] for account in account_list if "id" in account]
+        account_list_id = [account['id'] for account in account_list if 'id' in account]
 
         logger.debug(f'Number of user accounts found: {len(account_list)}')
         logger.debug(f'Found the following user account ids: {account_list_id}')
@@ -58,9 +57,9 @@ class Account():
             Dictionary of account information
         """
         script_filepath = os.path.join(self.groovy_script_directory, 'user_list.groovy')
-        user_list, success, error = utility.run_groovy_script(script_filepath=script_filepath,
-                                                              json_return=True,
-                                                              rest=self.rest)
+        user_list, success, error = utility.run_groovy_script(
+            script_filepath=script_filepath, json_return=True, rest=self.rest
+        )
         if not success:
             fail_out(f'Failed to get account info. {error}')
         for user in user_list:
@@ -87,13 +86,12 @@ class Account():
             'password': password,
             'is_admin': 'true' if is_admin else 'false',
             'email': '' if not email else email,
-            'description': '' if not description else description
+            'description': '' if not description else description,
         }
         script_filepath = os.path.join(self.groovy_script_directory, 'user_create.groovy')
-        _, success, error = utility.run_groovy_script(script_filepath=script_filepath,
-                                                      json_return=False,
-                                                      rest=self.rest,
-                                                      **kwargs)
+        _, success, error = utility.run_groovy_script(
+            script_filepath=script_filepath, json_return=False, rest=self.rest, **kwargs
+        )
         if not success:
             fail_out(f'Failed to create account. {error}')
         return True
@@ -109,10 +107,9 @@ class Account():
         """
         kwargs = {'user_id': user_id}
         script_filepath = os.path.join(self.groovy_script_directory, 'user_delete.groovy')
-        _, success, error = utility.run_groovy_script(script_filepath=script_filepath,
-                                                      json_return=False,
-                                                      rest=self.rest,
-                                                      **kwargs)
+        _, success, error = utility.run_groovy_script(
+            script_filepath=script_filepath, json_return=False, rest=self.rest, **kwargs
+        )
         if not success:
             fail_out(f'Failed to delete account. {error}')
         return True
@@ -133,35 +130,34 @@ class Account():
         """
         # Parse comma seperated string
         permission_list = utility.parse_and_check_input_string_list(permission_id, join_back_char=', ')
-        permission_groovy_list = "[" + permission_list + "]"
+        permission_groovy_list = '[' + permission_list + ']'
 
         if action == 'add':
             logger.debug(f'Adding the following permissions to user "{user_id}": {permission_list}')
             kwargs = {
                 'user_id': user_id,
                 'permission_groovy_list': permission_groovy_list,
-                'permission_enabled': 'true'
+                'permission_enabled': 'true',
             }
         elif action == 'remove':
             logger.debug(f'Removing the following permissions from user "{user_id}": {permission_list}')
             kwargs = {
                 'user_id': user_id,
                 'permission_groovy_list': permission_groovy_list,
-                'permission_enabled': 'false'
+                'permission_enabled': 'false',
             }
         else:
             fail_out(f'Invalid permission action specified: {action}')
 
         script_filepath = os.path.join(self.groovy_script_directory, 'user_permission_add_remove.groovy')
-        _, success, error = utility.run_groovy_script(script_filepath=script_filepath,
-                                                      json_return=False,
-                                                      rest=self.rest,
-                                                      **kwargs)
+        _, success, error = utility.run_groovy_script(
+            script_filepath=script_filepath, json_return=False, rest=self.rest, **kwargs
+        )
         if not success:
             fail_out(f'Failed to {action} account permissions. {error}')
         return True
 
-    def permission_list(self) -> Tuple[list, list]:
+    def permission_list(self) -> tuple[list, list]:
         """Get all the available permissions and descriptions
 
         Args:
@@ -171,9 +167,9 @@ class Account():
             Dictionary of availabe permissions and descriptions
         """
         script_filepath = os.path.join(self.groovy_script_directory, 'user_permission_list.groovy')
-        permission_list, success, error = utility.run_groovy_script(script_filepath=script_filepath,
-                                                                    json_return=True,
-                                                                    rest=self.rest)
+        permission_list, success, error = utility.run_groovy_script(
+            script_filepath=script_filepath, json_return=True, rest=self.rest
+        )
         if not success:
             fail_out(f'Failed to list all available permissions. {error}')
 
@@ -182,11 +178,11 @@ class Account():
         for permission in permission_list:
             if 'id' in permission:
                 items = permission['id'].split('.')
-                items[-1] = items[-1].upper().replace("GENERIC", "")
+                items[-1] = items[-1].upper().replace('GENERIC', '')
                 permission['id'] = '.'.join(items)
 
         # Get a list of only permission ids
-        permission_list_ids = [permission["id"] for permission in permission_list if "id" in permission]
+        permission_list_ids = [permission['id'] for permission in permission_list if 'id' in permission]
 
         logger.debug(f'Number of permission found: {len(permission_list)}')
         logger.debug(f'Found the following permission ids: {permission_list_ids}')

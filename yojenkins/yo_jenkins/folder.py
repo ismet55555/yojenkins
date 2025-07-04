@@ -4,7 +4,6 @@ import json
 import logging
 import re
 from time import perf_counter
-from typing import Dict, Tuple
 
 import xmltodict
 
@@ -17,7 +16,7 @@ from yojenkins.yo_jenkins.jenkins_item_config import JenkinsItemConfig
 logger = logging.getLogger()
 
 
-class Folder():
+class Folder:
     """TODO Folder"""
 
     def __init__(self, rest, JenkinsSDK) -> None:
@@ -59,10 +58,9 @@ class Folder():
 
             # Check if folder
             if list_item['_class'] in JenkinsItemClasses.FOLDER.value['class_type']:
-
                 # Get fullname if specified and available, else get name
                 if fullname:
-                    dict_key = "fullname" if "fullname" in list_item else "name"
+                    dict_key = 'fullname' if 'fullname' in list_item else 'name'
                 else:
                     dict_key = 'name'
 
@@ -80,18 +78,20 @@ class Folder():
             self.search_items_count += 1
 
             # Check if the item has subitems
-            if not 'jobs' in list_item:
+            if 'jobs' not in list_item:
                 continue
 
             # Keep searching all sub-items for this item. Call itself for some recursion fun
             self.__recursive_search(search_pattern, list_item['jobs'], level, fullname)
 
-    def search(self,
-               search_pattern: str,
-               folder_name: str = '',
-               folder_url: str = '',
-               folder_depth: int = 4,
-               fullname: bool = True) -> Tuple[list, list]:
+    def search(
+        self,
+        search_pattern: str,
+        folder_name: str = '',
+        folder_url: str = '',
+        folder_depth: int = 4,
+        fullname: bool = True,
+    ) -> tuple[list, list]:
         """Search the server for folders matching REGEX pattern
 
         Args:
@@ -126,7 +126,7 @@ class Folder():
 
         # Remove duplicates from list (THANKS GeeksForGeeks.org)
         logger.debug('Removing duplicates if needed ...')
-        self.search_results = [i for n, i in enumerate(self.search_results) if i not in self.search_results[n + 1:]]
+        self.search_results = [i for n, i in enumerate(self.search_results) if i not in self.search_results[n + 1 :]]
 
         # Collect URLs only
         folder_search_results_list = []
@@ -135,11 +135,12 @@ class Folder():
 
         # Output search stats
         logger.debug(
-            f'Searched folders: {self.search_items_count}. Search time: {perf_counter() - start_time:.3f} seconds')
+            f'Searched folders: {self.search_items_count}. Search time: {perf_counter() - start_time:.3f} seconds'
+        )
 
         return self.search_results, folder_search_results_list
 
-    def info(self, folder_name: str = '', folder_url: str = '') -> Dict:
+    def info(self, folder_name: str = '', folder_url: str = '') -> dict:
         """Get the folder information
 
         Args:
@@ -155,20 +156,22 @@ class Folder():
         if folder_name and not folder_url:
             folder_url = utility.name_to_url(self.rest.get_server_url(), folder_name)
 
-        folder_info, _, success = self.rest.request(folder_url.strip('/') + '/api/json',
-                                                    request_type='get',
-                                                    is_endpoint=False)
+        folder_info, _, success = self.rest.request(
+            folder_url.strip('/') + '/api/json', request_type='get', is_endpoint=False
+        )
         if not success:
             fail_out(f'Failed to find folder info: {folder_url}')
 
         # Check if found item type/class
-        if folder_info['_class'] not in JenkinsItemClasses.FOLDER.value[
-                'class_type'] and JenkinsItemClasses.FOLDER.value['item_type'] not in folder_info:
+        if (
+            folder_info['_class'] not in JenkinsItemClasses.FOLDER.value['class_type']
+            and JenkinsItemClasses.FOLDER.value['item_type'] not in folder_info
+        ):
             fail_out(f'Folder found, but failed to match type/class. This item is "{folder_info["_class"]}"')
 
         return folder_info
 
-    def subfolder_list(self, folder_name: str = '', folder_url: str = '') -> Tuple[list, list]:
+    def subfolder_list(self, folder_name: str = '', folder_url: str = '') -> tuple[list, list]:
         """Get the list of all sub-folders within the specified folder
 
         Args:
@@ -188,14 +191,15 @@ class Folder():
             item_info=folder_info,
             get_key_info='url',
             item_type=JenkinsItemClasses.FOLDER.value['item_type'],
-            item_class_list=JenkinsItemClasses.FOLDER.value['class_type'])
+            item_class_list=JenkinsItemClasses.FOLDER.value['class_type'],
+        )
 
         logger.debug(f'Number of subfolders found in folder: {len(sub_folder_list)}')
         logger.debug(f'Sub-folders: {sub_folder_list_url}')
 
         return sub_folder_list, sub_folder_list_url
 
-    def jobs_list(self, folder_name: str = '', folder_url: str = '') -> Tuple[list, list]:
+    def jobs_list(self, folder_name: str = '', folder_url: str = '') -> tuple[list, list]:
         """Get the list of all jobs within the specified folder
 
         Args:
@@ -211,17 +215,19 @@ class Folder():
         folder_info = self.info(folder_name=folder_name, folder_url=folder_url)
 
         # Extract lists
-        job_list, job_list_url = utility.item_subitem_list(item_info=folder_info,
-                                                           get_key_info='url',
-                                                           item_type=JenkinsItemClasses.JOB.value['item_type'],
-                                                           item_class_list=JenkinsItemClasses.JOB.value['class_type'])
+        job_list, job_list_url = utility.item_subitem_list(
+            item_info=folder_info,
+            get_key_info='url',
+            item_type=JenkinsItemClasses.JOB.value['item_type'],
+            item_class_list=JenkinsItemClasses.JOB.value['class_type'],
+        )
 
         logger.debug(f'Number of jobs found within folder: {len(job_list)}')
         logger.debug(f'Jobs: {job_list_url}')
 
         return job_list, job_list_url
 
-    def view_list(self, folder_name: str = '', folder_url: str = '') -> Tuple[list, list]:
+    def view_list(self, folder_name: str = '', folder_url: str = '') -> tuple[list, list]:
         """Get the list of all views within the specified folder
 
         Args:
@@ -239,14 +245,15 @@ class Folder():
             item_info=folder_info,
             get_key_info='url',
             item_type=JenkinsItemClasses.VIEW.value['item_type'],
-            item_class_list=JenkinsItemClasses.VIEW.value['class_type'])
+            item_class_list=JenkinsItemClasses.VIEW.value['class_type'],
+        )
 
         logger.debug(f'Number of views found in folder: {len(view_list)}')
         logger.debug(f'Views: {view_list_url}')
 
         return view_list, view_list_url
 
-    def item_list(self, folder_name: str = '', folder_url: str = '') -> Tuple[list, list]:
+    def item_list(self, folder_name: str = '', folder_url: str = '') -> tuple[list, list]:
         """Get the list of all items within the specified folder
 
         Args:
@@ -271,10 +278,12 @@ class Folder():
         all_item_url = []
         for item in all_subitems:
             logger.debug(f'Searching folder for "{item["item_type"]}" items ...')
-            item_list, item_list_url = utility.item_subitem_list(item_info=folder_info,
-                                                                 get_key_info='url',
-                                                                 item_type=item['item_type'],
-                                                                 item_class_list=item['class_type'])
+            item_list, item_list_url = utility.item_subitem_list(
+                item_info=folder_info,
+                get_key_info='url',
+                item_type=item['item_type'],
+                item_class_list=item['class_type'],
+            )
             if item_list:
                 logger.debug(f'Successfully found {len(item_list)} "{item["item_type"]}" items')
                 all_item_list.extend(item_list)
@@ -313,13 +322,15 @@ class Folder():
 
         return success
 
-    def config(self,
-               filepath: str = '',
-               folder_name: str = '',
-               folder_url: str = '',
-               opt_json: bool = False,
-               opt_yaml: bool = False,
-               opt_toml: bool = False) -> str:
+    def config(
+        self,
+        filepath: str = '',
+        folder_name: str = '',
+        folder_url: str = '',
+        opt_json: bool = False,
+        opt_yaml: bool = False,
+        opt_toml: bool = False,
+    ) -> str:
         """Get the folder configuration (ie .config.xml)
 
         Args:
@@ -342,10 +353,9 @@ class Folder():
             folder_url = utility.name_to_url(self.rest.get_server_url(), folder_name)
 
         logger.debug(f'Fetching XML configurations for folder: "{folder_url}" ...')
-        return_content, _, success = self.rest.request(f'{folder_url.strip("/")}/config.xml',
-                                                       'get',
-                                                       json_content=False,
-                                                       is_endpoint=False)
+        return_content, _, success = self.rest.request(
+            f'{folder_url.strip("/")}/config.xml', 'get', json_content=False, is_endpoint=False
+        )
         if not success:
             fail_out('Failed to get folder configuration')
         logger.debug('Successfully fetched folder configuration')
@@ -357,13 +367,15 @@ class Folder():
 
         return return_content
 
-    def create(self,
-               name: str,
-               type: str = 'folder',
-               folder_name: str = '',
-               folder_url: str = '',
-               config: str = 'config.xml',
-               config_is_json: bool = False) -> bool:
+    def create(
+        self,
+        name: str,
+        type: str = 'folder',
+        folder_name: str = '',
+        folder_url: str = '',
+        config: str = 'config.xml',
+        config_is_json: bool = False,
+    ) -> bool:
         """TODO Docstring
 
         Args:
@@ -395,7 +407,7 @@ class Folder():
             try:
                 open_file = open(config, 'rb')
                 item_config = open_file.read()
-            except (OSError, IOError, PermissionError) as error:
+            except (OSError, PermissionError) as error:
                 fail_out(f'Failed to open and read "{type}" item configuration file. Exception: {error}')
 
             if config_is_json:
@@ -404,22 +416,21 @@ class Folder():
                     item_config = xmltodict.unparse(json.loads(item_config))
                 except ValueError as error:
                     fail_out(f'Failed to convert the specified JSON file to XML format. Exception: {error}')
-        else:
-            # Use blank item config
-            # FIXME: These are not valid XML configs, try json instead
-            # FIXME: This does not account for the name of the item
-            if type == 'folder':
-                endpoint = f'createItem?name={name}'
-                item_config = JenkinsItemConfig.FOLDER.value['blank']
-                # prefix = JenkinsItemClasses.FOLDER.value['prefix']
-            elif type == 'view':
-                endpoint = f'createView?name={name}'
-                item_config = JenkinsItemConfig.VIEW.value['blank']
-                # prefix = JenkinsItemClasses.VIEW.value['prefix']
-            elif type == 'job':
-                endpoint = f'createItem?name={name}'
-                item_config = JenkinsItemConfig.JOB.value['blank']
-                # prefix = JenkinsItemClasses.JOB.value['prefix']
+        # Use blank item config
+        # FIXME: These are not valid XML configs, try json instead
+        # FIXME: This does not account for the name of the item
+        elif type == 'folder':
+            endpoint = f'createItem?name={name}'
+            item_config = JenkinsItemConfig.FOLDER.value['blank']
+            # prefix = JenkinsItemClasses.FOLDER.value['prefix']
+        elif type == 'view':
+            endpoint = f'createView?name={name}'
+            item_config = JenkinsItemConfig.VIEW.value['blank']
+            # prefix = JenkinsItemClasses.VIEW.value['prefix']
+        elif type == 'job':
+            endpoint = f'createItem?name={name}'
+            item_config = JenkinsItemConfig.JOB.value['blank']
+            # prefix = JenkinsItemClasses.JOB.value['prefix']
 
         # Checking if the item exists
         if utility.item_exists_in_folder(name, folder_url, type, self.rest):
@@ -428,11 +439,13 @@ class Folder():
         # Creating the item
         logger.debug(f'Creating "{type}" item "{name}" ...')
         headers = {'Content-Type': 'application/xml; charset=utf-8'}
-        success = self.rest.request(f'{folder_url.strip("/")}/{endpoint}',
-                                    'post',
-                                    data=item_config.encode('utf-8'),
-                                    headers=headers,
-                                    is_endpoint=False)[2]
+        success = self.rest.request(
+            f'{folder_url.strip("/")}/{endpoint}',
+            'post',
+            data=item_config.encode('utf-8'),
+            headers=headers,
+            is_endpoint=False,
+        )[2]
         if not success:
             fail_out(f'Failed to create "{type}" item "{name}"')
         logger.debug(f'Successfully created "{type}" item "{name}"')
@@ -441,7 +454,7 @@ class Folder():
         try:
             if 'open_file' in locals():
                 open_file.close()
-        except (OSError, IOError):
+        except OSError:
             pass
 
         return success
@@ -473,14 +486,15 @@ class Folder():
         if utility.has_special_char(new_name):
             fail_out('The new folder name contains special characters')
 
-        if not utility.item_exists_in_folder(original_name, folder_url, "folder", self.rest):
+        if not utility.item_exists_in_folder(original_name, folder_url, 'folder', self.rest):
             fail_out(f'The original folder "{original_name}" does not exist')
 
         logger.debug(f'Copying original item "{original_name}" to new item "{new_name}" ...')
         success = self.rest.request(
             f'{folder_url.strip("/")}/createItem?name={new_name}&mode=copy&from={original_name}',
             'post',
-            is_endpoint=False)[2]
+            is_endpoint=False,
+        )[2]
         if not success:
             fail_out('Failed to copy folder')
         logger.debug('Successfully copied folder')

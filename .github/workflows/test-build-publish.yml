@@ -61,9 +61,8 @@ jobs:
         if: steps.cache-pipenv.outputs.cache-hit != 'true'
         run: pipenv sync --dev
 
-      - name: Stupid hack for installing pylint on MacOS
-        if: matrix.os == 'macos-latest'
-        run: pipenv run pip install pylint
+      - name: Install ruff
+        run: pipenv run pip install ruff
 
       # - name: Show all dependencies (pipenv)
       #   run: pipenv graph --bare
@@ -71,8 +70,12 @@ jobs:
       - name: Show all dependencies (pip)
         run: pipenv run pip list
 
-      - name: Code Linting
-        run: pipenv run pylint ./yojenkins --rcfile=.pylintrc
+      - name: Code Linting and Formatting
+        run: |
+          echo "Running ruff linter..."
+          pipenv run ruff check ./yojenkins
+          echo "Running ruff formatter check..."
+          pipenv run ruff format --check ./yojenkins
 
       - name: Build the package
         run: pipenv run python setup.py install --verbose
@@ -116,9 +119,8 @@ jobs:
         if: steps.cache-pipenv.outputs.cache-hit != 'true'
         run: pipenv sync --dev
 
-      - name: Stupid hack for installing pylint on MacOS
-        if: matrix.os == 'macos-latest'
-        run: pipenv run pip install pylint
+      - name: Install ruff
+        run: pipenv run pip install ruff
 
       - name: Install pypa/build tooling
         run: pipenv run python -m pip install build
@@ -131,12 +133,12 @@ jobs:
 
       - name: Create release version tag
         id: release
-        run: echo "::set-output name=release_version_tag::$(cat VERSION)"
+        run: echo "release_version_tag=$(cat VERSION)" >> $GITHUB_OUTPUT
 
       - name: Build a package wheel and tarball
         run: pipenv run python setup.py sdist bdist_wheel
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: pypi-distribution
           path: dist/
@@ -184,9 +186,8 @@ jobs:
         if: steps.cache-pipenv.outputs.cache-hit != 'true'
         run: pipenv sync --dev
 
-      - name: Stupid hack for installing pylint on MacOS
-        if: matrix.os == 'macos-latest'
-        run: pipenv run pip install pylint
+      - name: Install ruff
+        run: pipenv run pip install ruff
 
       # - name: Show all dependencies (pipenv)
       #   run: pipenv graph --bare
@@ -202,7 +203,7 @@ jobs:
 
       - name: Create release version tag
         id: release
-        run: echo "::set-output name=release_version_tag::$(cat VERSION)"
+        run: echo "release_version_tag=$(cat VERSION)" >> $GITHUB_OUTPUT
 
       - name: Rename binary artifact (Linux)
         if: (matrix.os == 'ubuntu-latest')
@@ -216,7 +217,7 @@ jobs:
         if: (matrix.os == 'windows-latest')
         run: mv dist/yojenkins*.exe dist/yojenkins-${{ steps.release.outputs.release_version_tag }}-windows-x86_64.exe
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: binary-${{ runner.os }}
           path: dist/
@@ -233,7 +234,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: pypi-distribution
           path: dist/
@@ -260,7 +261,7 @@ jobs:
         python-version: ['3.10']
 
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: binary-${{ runner.os }}
           path: dist/
@@ -287,7 +288,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: pypi-distribution
           path: dist/
