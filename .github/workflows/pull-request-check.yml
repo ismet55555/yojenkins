@@ -1,9 +1,10 @@
 name: Pull Request Check
 on: [pull_request]
+
 jobs:
   format:
     # Check if the PR is not from a fork
-    name: Format Code
+    name: Format and Lint Code
     if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     steps:
@@ -11,38 +12,44 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
 
-      - name: yapf setup
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install ruff
         run: |
           python -m pip install --upgrade pip
-          pip install yapf
-          pip install toml
+          pip install ruff
 
       - name: Show files
         run: ls -la
 
-      - name: yapf run
-        run: yapf --in-place --recursive --verbose .
+      - name: Run ruff linter with auto-fix
+        run: ruff check --fix .
+
+      - name: Run ruff formatter
+        run: ruff format .
 
       - name: Check for modified files
         id: git-check
-        run: echo ::set-output name=modified::$(if git diff-index --quiet HEAD --; then echo "false"; else echo "true"; fi)
+        run: echo "modified=$(if git diff-index --quiet HEAD --; then echo "false"; else echo "true"; fi)" >> $GITHUB_OUTPUT
 
       - name: Push changes
         if: steps.git-check.outputs.modified == 'true'
         run: |
-          git config --global user.name 'YAPF Checker'
-          git config --global user.email 'YAPF_CHECKER@users.noreply.github.com'
+          git config --global user.name 'Ruff Formatter'
+          git config --global user.email 'ruff_formatter@users.noreply.github.com'
           git remote set-url origin https://x-access-token:${{ secrets.YO_JENKINS_YAPF }}@github.com/${{ github.repository }}
-          git commit -am "YAPF formatting check automated changes"
+          git commit -am "Ruff formatting and linting automated changes"
           git push
-
 
   install_run:
     name: Install and Run
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]  # ! FIXME: Add windows
+        os: [ubuntu-latest, macos-latest, windows-latest]
         python-version: ['3.10']
 
     steps:
@@ -75,12 +82,9 @@ jobs:
       - name: Install dependencies if not in cache
         run: pipenv install --ignore-pipfile --dev
 
-      - name: Stupid hack for installing pylint on MacOS
+      - name: Install ruff on MacOS
         if: matrix.os == 'macos-latest'
-        run: pipenv run pip install pylint
-
-      # - name: Show all dependencies (pipenv)
-      #   run: pipenv graph --bare
+        run: pipenv run pip install ruff
 
       - name: Show all dependencies (pip)
         run: pipenv run pip list

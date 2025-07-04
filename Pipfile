@@ -16,13 +16,12 @@ mkdocs = "*"
 myst_parser = "*"
 pre-commit = "*"
 pyinstaller = "*"
-pylint = "*"
 pytest = "*"
+ruff = "*"
 setuptools = "*"
 twine = "*"
 wheel = "*"
 yamllint = "*"
-yapf = "*"
 yojenkins = {editable = true, path = "."}
 
 [packages]
