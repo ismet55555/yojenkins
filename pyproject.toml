@@ -54,6 +54,7 @@ ignore = [
     "PLR0915",   # Too many statements  
     "PLR2004",   # Magic values
     "T201",      # print statements (CLI tool needs these)
+    "RUF012",    # Mutable class attributes ClassVar annotation
 ]
 
 [tool.ruff.lint.mccabe]
