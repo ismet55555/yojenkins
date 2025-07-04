@@ -5,7 +5,7 @@ import logging
 import os
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, NoReturn, Union
+from typing import List
 
 import click
 
@@ -124,7 +124,7 @@ def history(profile: str, clear: bool) -> None:
         logger.debug(f'Removing history file: {history_file_path} ...')
         try:
             os.remove(history_file_path)
-        except (OSError, IOError, PermissionError) as error:
+        except (OSError, PermissionError) as error:
             fail_out(f'Failed to clear history file. Exception: {error}')
         logger.debug('Successfully cleared history file')
         click.secho('success', fg='bright_green', bold=True)
@@ -201,7 +201,7 @@ def rest_request(profile: str, token: str, request_text: str, request_type: str,
 
 
 @log_to_history
-def run_script(profile: str, token: str, text: str, file: str, output: str) -> Union[NoReturn, None]:
+def run_script(profile: str, token: str, text: str, file: str, output: str) -> None:
     """TODO
 
     Details: TODO:
@@ -219,13 +219,13 @@ def run_script(profile: str, token: str, text: str, file: str, output: str) -> U
     elif file:
         logger.debug(f'Loading specified script from file: {file} ...')
         try:
-            with open(os.path.join(file), 'r') as open_file:
+            with open(os.path.join(file)) as open_file:
                 script = open_file.read()
             script_size = os.path.getsize(file)
             logger.debug(f'Successfully loaded script file ({script_size} Bytes)')
-        except FileNotFoundError as error:
+        except FileNotFoundError:
             fail_out(f'Failed to find specified script file ({file})')
-        except (OSError, IOError, PermissionError) as error:
+        except (OSError, PermissionError) as error:
             fail_out(f'Failed to read specified script file ({file}). Exception: {error}')
 
     # Send the request to the server
@@ -244,14 +244,14 @@ def run_script(profile: str, token: str, text: str, file: str, output: str) -> U
             with open(output, 'w+') as open_file:
                 open_file.write(content)
             logger.debug('Successfully wrote script result to file')
-        except (OSError, IOError, PermissionError) as error:
+        except (OSError, PermissionError) as error:
             fail_out(f"Failed to write script output to file. Exception: {error}")
 
     click.echo(content)
 
 
 @log_to_history
-def shared_lib_setup(profile: str, token: str, **kwargs) -> Union[NoReturn, None]:
+def shared_lib_setup(profile: str, token: str, **kwargs) -> None:
     """Sets up a shared library on the Jenkins Server
 
     Args:

@@ -9,7 +9,7 @@ from yojenkins.utility import utility
 logger = logging.getLogger()
 
 
-class SharedLibrary():
+class SharedLibrary:
     """Class managing a Jenkins Shared Library"""
 
     def __init__(self) -> None:

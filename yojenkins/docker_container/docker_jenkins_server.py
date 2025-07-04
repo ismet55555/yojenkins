@@ -22,7 +22,7 @@ from yojenkins.utility.utility import fail_out, get_resource_path, print2
 logger = logging.getLogger()
 
 
-class DockerJenkinsServer():
+class DockerJenkinsServer:
     """Class managing containerized Jenkins instance"""
 
     def __init__(self,
@@ -94,23 +94,23 @@ class DockerJenkinsServer():
         self.extra_setup_script = extra_setup_script
         if extra_setup_script:
             logger.debug("Extra setup script for image build provided")
-            logger.debug(f'Copying extra setup script to Docker context directory ...')
+            logger.debug('Copying extra setup script to Docker context directory ...')
             source_path = os.path.abspath(extra_setup_script)
             target_path = os.path.join(self.image_dockerfile_dir, 'extra_setup_script.sh')
         else:
             logger.debug("Extra setup script for image build NOT provided")
-            logger.debug(f'Copying empty dummy script as extra setup script ...')
+            logger.debug('Copying empty dummy script as extra setup script ...')
             source_path = os.path.join(self.image_dockerfile_dir, 'dummy.sh')
             target_path = os.path.join(self.image_dockerfile_dir, 'extra_setup_script.sh')
         logger.debug(f'    - Source: {source_path}')
         logger.debug(f'    - Target: {target_path}')
         try:
             shutil.copy2(source_path, target_path)
-        except (IOError, PermissionError) as error:
+        except (OSError, PermissionError) as error:
             fail_out(f'Failed to copy "{source_path}" to "{target_path}". Exception: {error}')
 
         # Output all attributes
-        logger.debug(f'Jenkins server build attributes:')
+        logger.debug('Jenkins server build attributes:')
         for key, value in vars(self).items():
             if key in ['image_build_args', 'docker_client', 'container_env_vars']:
                 continue

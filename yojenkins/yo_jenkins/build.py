@@ -1,6 +1,5 @@
 """Build class definition"""
 
-import difflib
 import logging
 import os
 from datetime import datetime, timedelta
@@ -9,7 +8,6 @@ from time import sleep, time
 from typing import Dict, List, Tuple
 from urllib.parse import urlencode
 
-import click
 import requests
 import yaml
 
@@ -25,7 +23,7 @@ from yojenkins.yo_jenkins.status import BuildStatus
 logger = logging.getLogger()
 
 
-class Build():
+class Build:
     """Buld class"""
 
     def __init__(self, rest: Rest, auth: Auth) -> None:
@@ -93,10 +91,9 @@ class Build():
                 build_number = job_last_build_number
             elif not build_number and not latest:
                 fail_out('Failed to specify build. No build number passed and --latest flag not set')
-            else:
-                # Build number is passed
-                if build_number > job_last_build_number:
-                    fail_out('Failed to specify build. Build number exceeds last build number for this job')
+            # Build number is passed
+            elif build_number > job_last_build_number:
+                fail_out('Failed to specify build. Build number exceeds last build number for this job')
 
             logger.debug(f'Getting build info for job "{job_info["fullName"]}, build {build_number} ...')
             build_info, _, success = self.rest.request(f'{job_url.strip("/")}/{build_number}/api/json',
@@ -199,7 +196,7 @@ class Build():
         logger.debug(f'Job name: {job_name}')
 
         # Requesting all queue and searching queue (NOTE: Could use Server object)
-        logger.debug(f'Requesting all build queue items ...')
+        logger.debug('Requesting all build queue items ...')
         queue_all = self.rest.request('queue/api/json', 'get')[0]
         logger.debug(f"Number of queued items found: {len(queue_all['items'])}")
         queue_matches = utility.queue_find(queue_all, job_name=job_name, job_url=job_url)
@@ -422,103 +419,102 @@ class Build():
                 logger.debug('Successfully download build logs to file')
             except Exception as error:
                 fail_out(f'Failed to download or save logs for build. Exception: {error}')
+        elif not follow:
+            # Show build logs in console
+            logger.debug('Fetching logs from server ...')
+            return_content, _, return_success = self.rest.request(request_url,
+                                                                  'get',
+                                                                  is_endpoint=False,
+                                                                  json_content=False)
+            if not return_success or not return_content:
+                fail_out('Failed to get console logs. Build may not exist or is queued')
+
+            # If tail/last part of the log was specified
+            if tail:
+                logger.debug(f'--tail option specified with value of: {tail}')
+                tail = abs(tail)
+                logs_list = list(map(lambda num: num.strip(), return_content.splitlines()))
+                number_of_lines = round(len(logs_list) * tail) if tail < 1 else round(tail)
+                start_log_number = 0 if number_of_lines > len(logs_list) else len(logs_list) - number_of_lines
+                return_content = os.linesep.join(list(islice(logs_list, start_log_number, None)))
+                logger.debug(f'Only printing out last logs, lines {start_log_number} to {len(logs_list)} ...')
+
+            logger.debug('Printing out console text logs ...')
+            print2(return_content)
         else:
-            if not follow:
-                # Show build logs in console
-                logger.debug('Fetching logs from server ...')
-                return_content, _, return_success = self.rest.request(request_url,
-                                                                      'get',
-                                                                      is_endpoint=False,
-                                                                      json_content=False)
-                if not return_success or not return_content:
-                    fail_out('Failed to get console logs. Build may not exist or is queued')
+            # Stream the logs to console
+            log_poll_interval = 1.0
+            logger.debug(f'Following/streaming logs from server at poll interval: {log_poll_interval}s ...')
 
-                # If tail/last part of the log was specified
-                if tail:
-                    logger.debug(f'--tail option specified with value of: {tail}')
-                    tail = abs(tail)
-                    logs_list = list(map(lambda num: num.strip(), return_content.splitlines()))
-                    number_of_lines = round(len(logs_list) * tail) if tail < 1 else round(tail)
-                    start_log_number = 0 if number_of_lines > len(logs_list) else len(logs_list) - number_of_lines
-                    return_content = os.linesep.join(list(islice(logs_list, start_log_number, None)))
-                    logger.debug(f'Only printing out last logs, lines {start_log_number} to {len(logs_list)} ...')
+            # Check if Jenkins server supports progressiveText
+            _, headers, request_success = self.rest.request(
+                f"{build_url.strip('/')}/logText/progressiveText?start=0",
+                'head',
+                is_endpoint=False,
+                json_content=False)
 
-                logger.debug('Printing out console text logs ...')
-                print2(return_content)
-            else:
-                # Stream the logs to console
-                log_poll_interval = 1.0
-                logger.debug(f'Following/streaming logs from server at poll interval: {log_poll_interval}s ...')
-
-                # Check if Jenkins server supports progressiveText
-                _, headers, request_success = self.rest.request(
-                    f"{build_url.strip('/')}/logText/progressiveText?start=0",
-                    'head',
-                    is_endpoint=False,
-                    json_content=False)
-
-                if request_success and "X-Text-Size" in headers:
-                    # METHOD 1: Fetch logs using progressiveText endpoint
-                    logger.debug('Jenkins server supports requesting partial byte ranges (progressiveText)')
-                    try:
+            if request_success and "X-Text-Size" in headers:
+                # METHOD 1: Fetch logs using progressiveText endpoint
+                logger.debug('Jenkins server supports requesting partial byte ranges (progressiveText)')
+                try:
+                    progressive_text_position = headers['X-Text-Size']
+                    while True:
+                        request_url = f"{build_url.strip('/')}/logText/progressiveText?start={progressive_text_position}"
+                        return_content, headers, _ = self.rest.request(request_url,
+                                                                       'get',
+                                                                       is_endpoint=False,
+                                                                       json_content=False)
+                        logger.debug(f'Request Headers: {headers}')
+                        if len(return_content) != 0:
+                            print2(return_content.strip())
+                        if 'X-More-Data' not in headers:
+                            break
                         progressive_text_position = headers['X-Text-Size']
-                        while True:
-                            request_url = f"{build_url.strip('/')}/logText/progressiveText?start={progressive_text_position}"
-                            return_content, headers, _ = self.rest.request(request_url,
-                                                                           'get',
-                                                                           is_endpoint=False,
-                                                                           json_content=False)
-                            logger.debug(f'Request Headers: {headers}')
-                            if len(return_content) != 0:
-                                print2(return_content.strip())
-                            if 'X-More-Data' not in headers:
-                                break
-                            progressive_text_position = headers['X-Text-Size']
-                            sleep(log_poll_interval)
-                    except KeyboardInterrupt:
-                        logger.debug('Keyboard Interrupt (CTRL-C) by user. Stopping log following ...')
-                else:
-                    # METHOD 2: Fetch logs using log difference (Server does not support progressiveText)
-                    try:
-                        logger.debug(
-                            'Jenkins server does not support requesting partial byte ranges (progressiveText), '
-                            'MUST download entire log to get log message differences')
-                        old_dict = {}
-                        fetch_number = 1
-                        request_url = f"{build_url.strip('/')}/consoleText"
-                        while True:
-                            headers = self.rest.request(request_url, 'head', is_endpoint=False, json_content=False)[1]
-                            if 'content-length' not in headers:
-                                fail_out(f'Failed to find "content-length" key in server response headers: {headers}')
-                            content_length_sample_1 = int(headers['Content-Length'])
-                            sleep(1)
-                            headers = self.rest.request(request_url, 'head', is_endpoint=False, json_content=False)[1]
-                            content_length_sample_2 = int(headers['Content-Length'])
+                        sleep(log_poll_interval)
+                except KeyboardInterrupt:
+                    logger.debug('Keyboard Interrupt (CTRL-C) by user. Stopping log following ...')
+            else:
+                # METHOD 2: Fetch logs using log difference (Server does not support progressiveText)
+                try:
+                    logger.debug(
+                        'Jenkins server does not support requesting partial byte ranges (progressiveText), '
+                        'MUST download entire log to get log message differences')
+                    old_dict = {}
+                    fetch_number = 1
+                    request_url = f"{build_url.strip('/')}/consoleText"
+                    while True:
+                        headers = self.rest.request(request_url, 'head', is_endpoint=False, json_content=False)[1]
+                        if 'content-length' not in headers:
+                            fail_out(f'Failed to find "content-length" key in server response headers: {headers}')
+                        content_length_sample_1 = int(headers['Content-Length'])
+                        sleep(1)
+                        headers = self.rest.request(request_url, 'head', is_endpoint=False, json_content=False)[1]
+                        content_length_sample_2 = int(headers['Content-Length'])
 
-                            content_length_diff = content_length_sample_2 - content_length_sample_1
-                            if content_length_diff:
-                                logger.debug(
-                                    f'LOG FETCH {fetch_number}: Content length difference: {content_length_diff} bytes'
-                                )
-                                return_content = self.rest.request(request_url,
-                                                                   'get',
-                                                                   is_endpoint=False,
-                                                                   json_content=False)[0]
-                                new_dict = dict.fromkeys(
-                                    list(map(lambda num: num.strip(), return_content.splitlines())))
+                        content_length_diff = content_length_sample_2 - content_length_sample_1
+                        if content_length_diff:
+                            logger.debug(
+                                f'LOG FETCH {fetch_number}: Content length difference: {content_length_diff} bytes'
+                            )
+                            return_content = self.rest.request(request_url,
+                                                               'get',
+                                                               is_endpoint=False,
+                                                               json_content=False)[0]
+                            new_dict = dict.fromkeys(
+                                list(map(lambda num: num.strip(), return_content.splitlines())))
 
-                                diff = dict.fromkeys(x for x in new_dict if x not in old_dict)
-                                diff_list = list(diff.keys())
-                                diff_text = os.linesep.join(diff_list)
+                            diff = dict.fromkeys(x for x in new_dict if x not in old_dict)
+                            diff_list = list(diff.keys())
+                            diff_text = os.linesep.join(diff_list)
 
-                                old_dict = new_dict
-                                fetch_number += 1
+                            old_dict = new_dict
+                            fetch_number += 1
 
-                                print2(diff_text)
-                            else:
-                                logger.debug('No content length difference')
-                    except KeyboardInterrupt:
-                        logger.debug('Keyboard Interrupt (CTRL-C) by user. Stopping log following ...')
+                            print2(diff_text)
+                        else:
+                            logger.debug('No content length difference')
+                except KeyboardInterrupt:
+                    logger.debug('Keyboard Interrupt (CTRL-C) by user. Stopping log following ...')
         return True
 
     def browser_open(self,

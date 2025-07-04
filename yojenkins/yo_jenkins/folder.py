@@ -17,7 +17,7 @@ from yojenkins.yo_jenkins.jenkins_item_config import JenkinsItemConfig
 logger = logging.getLogger()
 
 
-class Folder():
+class Folder:
     """TODO Folder"""
 
     def __init__(self, rest, JenkinsSDK) -> None:
@@ -80,7 +80,7 @@ class Folder():
             self.search_items_count += 1
 
             # Check if the item has subitems
-            if not 'jobs' in list_item:
+            if 'jobs' not in list_item:
                 continue
 
             # Keep searching all sub-items for this item. Call itself for some recursion fun
@@ -395,7 +395,7 @@ class Folder():
             try:
                 open_file = open(config, 'rb')
                 item_config = open_file.read()
-            except (OSError, IOError, PermissionError) as error:
+            except (OSError, PermissionError) as error:
                 fail_out(f'Failed to open and read "{type}" item configuration file. Exception: {error}')
 
             if config_is_json:
@@ -404,21 +404,20 @@ class Folder():
                     item_config = xmltodict.unparse(json.loads(item_config))
                 except ValueError as error:
                     fail_out(f'Failed to convert the specified JSON file to XML format. Exception: {error}')
-        else:
-            # Use blank item config
-            # FIXME: These are not valid XML configs, try json instead
-            # FIXME: This does not account for the name of the item
-            if type == 'folder':
-                endpoint = f'createItem?name={name}'
-                item_config = JenkinsItemConfig.FOLDER.value['blank']
-                # prefix = JenkinsItemClasses.FOLDER.value['prefix']
-            elif type == 'view':
-                endpoint = f'createView?name={name}'
-                item_config = JenkinsItemConfig.VIEW.value['blank']
-                # prefix = JenkinsItemClasses.VIEW.value['prefix']
-            elif type == 'job':
-                endpoint = f'createItem?name={name}'
-                item_config = JenkinsItemConfig.JOB.value['blank']
+        # Use blank item config
+        # FIXME: These are not valid XML configs, try json instead
+        # FIXME: This does not account for the name of the item
+        elif type == 'folder':
+            endpoint = f'createItem?name={name}'
+            item_config = JenkinsItemConfig.FOLDER.value['blank']
+            # prefix = JenkinsItemClasses.FOLDER.value['prefix']
+        elif type == 'view':
+            endpoint = f'createView?name={name}'
+            item_config = JenkinsItemConfig.VIEW.value['blank']
+            # prefix = JenkinsItemClasses.VIEW.value['prefix']
+        elif type == 'job':
+            endpoint = f'createItem?name={name}'
+            item_config = JenkinsItemConfig.JOB.value['blank']
                 # prefix = JenkinsItemClasses.JOB.value['prefix']
 
         # Checking if the item exists
@@ -441,7 +440,7 @@ class Folder():
         try:
             if 'open_file' in locals():
                 open_file.close()
-        except (OSError, IOError):
+        except OSError:
             pass
 
         return success

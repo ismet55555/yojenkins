@@ -174,7 +174,7 @@ class JobMonitor(Monitor):
                              decor=self.decor['bold'])
                 y_row += 2
                 mu.draw_text(scr,
-                             'ಠ_ಠ  ¯\_(⊙︿⊙)_/¯',
+                             r'ಠ_ಠ  ¯\_(⊙︿⊙)_/¯',
                              y_row,
                              center_x=True,
                              color=self.color['normal'],

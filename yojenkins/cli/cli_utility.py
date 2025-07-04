@@ -23,7 +23,7 @@ from yojenkins.yo_jenkins.auth import Auth
 from yojenkins.yo_jenkins.rest import Rest
 from yojenkins.yo_jenkins.yojenkins import YoJenkins
 
-from yojenkins.utility.utility import iter_data_empty_item_stripper, load_contents_from_local_file, am_i_inside_docker, am_i_bundled, print2, create_new_history_file  # isort:skip
+from yojenkins.utility.utility import iter_data_empty_item_stripper, am_i_inside_docker, am_i_bundled, print2, create_new_history_file  # isort:skip
 
 # Getting the logger reference
 logger = logging.getLogger()

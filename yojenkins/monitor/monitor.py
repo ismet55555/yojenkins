@@ -289,7 +289,7 @@ class Monitor:
         Returns:
             True if successful, else False
         """
-        logger.debug(f'Starting thread for server status ...')
+        logger.debug('Starting thread for server status ...')
         try:
             threading.Thread(target=self.__thread_server_status, args=(monitor_interval, ), daemon=False).start()
         except Exception as error:

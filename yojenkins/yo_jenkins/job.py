@@ -22,7 +22,7 @@ from yojenkins.yo_jenkins.jenkins_item_config import JenkinsItemConfig
 logger = logging.getLogger()
 
 
-class Job():
+class Job:
     """TODO Job"""
 
     def __init__(self, rest, Folder, JenkinsSDK, auth, Build) -> None:
@@ -730,7 +730,7 @@ class Job():
             try:
                 open_file = open(config_file, 'rb')
                 job_config = open_file.read()
-            except (OSError, IOError, PermissionError) as error:
+            except (OSError, PermissionError) as error:
                 fail_out(f'Failed to open and read file. Exception: {error}')
 
             if config_is_json:
@@ -758,7 +758,7 @@ class Job():
         try:
             if 'open_file' in locals():
                 open_file.close()
-        except (OSError, IOError):
+        except OSError:
             pass
 
         return success
@@ -793,7 +793,7 @@ class Job():
             default_value_str = ''
             if not default_value:
                 if parameter['defaultParameterValue']['_class'] == 'hudson.model.BooleanParameterValue':
-                    default_value_str = f" (default: False)"
+                    default_value_str = " (default: False)"
             else:
                 default_value_str = f" (default: {default_value})"
 
@@ -822,7 +822,7 @@ class Job():
             diff_only:   Only show the lines that have changed
             diff_guide:  Show diff guide, showing where exactly difference is in line
         """
-        logger.debug(f'Getting jobs INFO diff for the following two jobs:')
+        logger.debug('Getting jobs INFO diff for the following two jobs:')
         logger.debug(f'    - Job 1:   {job_1}')
         logger.debug(f'    - Job 2:   {job_2}')
         logger.debug("Diff output options specified:")

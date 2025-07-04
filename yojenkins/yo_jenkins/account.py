@@ -12,7 +12,7 @@ from yojenkins.yo_jenkins.rest import Rest
 logger = logging.getLogger()
 
 
-class Account():
+class Account:
     """Account Class"""
 
     def __init__(self, rest: Rest) -> None:

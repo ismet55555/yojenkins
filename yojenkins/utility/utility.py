@@ -23,7 +23,6 @@ from urllib3.util import parse_url
 from yaspin import yaspin
 from yaspin.spinners import Spinners
 
-from yojenkins import __version__
 from yojenkins.yo_jenkins.jenkins_item_classes import JenkinsItemClasses
 
 logger = logging.getLogger()
@@ -146,7 +145,7 @@ def load_contents_from_local_file(file_type: Literal['yaml', 'toml', 'json', 'js
     logger.debug(f"Loading specified local .{file_type} file: '{local_file_path}' ...")
     file_contents: Union[List, Dict] = {}
     try:
-        with open(local_file_path, "r") as open_file:
+        with open(local_file_path) as open_file:
             if file_type == "yaml":
                 file_contents = yaml.safe_load(open_file)
             elif file_type == "toml":
@@ -207,7 +206,7 @@ def load_contents_from_remote_file_url(file_type: str, remote_file_url: str, all
     # Check requested file extension
     remote_file_ext = Path(remote_file_url).suffix
     file_ext_accepted = [".yml", ".yaml", ".conf"]
-    if not remote_file_ext in file_ext_accepted:
+    if remote_file_ext not in file_ext_accepted:
         logger.debug(
             f'Remote file requested "{remote_filename}"" is not one of the accepted file types: {file_ext_accepted}')
         return {}
@@ -369,7 +368,7 @@ def is_credential_id_format(text: str) -> bool:
     regex_pattern = (r"^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$")
     cred_match = re.match(regex_pattern, text)
     if cred_match:
-        logger.debug(f"Successfully identified credential ID format")
+        logger.debug("Successfully identified credential ID format")
         return True
     return False
 
@@ -667,7 +666,7 @@ def has_build_number_started(job_info: dict, build_number: int) -> bool:
     if "builds" not in job_info:
         return False
     for build in job_info["builds"]:
-        if not "number" in build:
+        if "number" not in build:
             continue
         if build["number"] == build_number:
             logger.debug(f"Successfully found the build {build_number} was previously started")
@@ -792,7 +791,7 @@ def browser_open(url: str, new: int = 2, autoraise: bool = True) -> bool:
     return True
 
 
-def has_special_char(text: str, special_chars: str = "@!#$%^&*<>?/\|~:") -> bool:
+def has_special_char(text: str, special_chars: str = r"@!#$%^&*<>?/\|~:") -> bool:
     """Check if passed text string contains any special characters.
 
     Args:
@@ -811,7 +810,7 @@ def has_special_char(text: str, special_chars: str = "@!#$%^&*<>?/\|~:") -> bool
     return includes_special_chars
 
 
-def remove_special_char(text: str, special_chars: str = "@!#$%^&*<>?/\|~:") -> str:
+def remove_special_char(text: str, special_chars: str = r"@!#$%^&*<>?/\|~:") -> str:
     """Remove any special characters from text string.
 
     Args:
@@ -981,7 +980,7 @@ def am_i_inside_docker() -> bool:
         True if running in docker container, else False
     """
     path = "/proc/self/cgroup"
-    return (os.path.exists("/.dockerenv") or os.path.isfile(path) and any("docker" in line for line in open(path)))
+    return (os.path.exists("/.dockerenv") or (os.path.isfile(path) and any("docker" in line for line in open(path))))
 
 
 def am_i_bundled() -> bool:
@@ -1063,7 +1062,7 @@ def write_xml_to_file(
         with open(filepath, "w+") as file:
             file.write(content_to_write)
         logger.debug("Successfully wrote configurations to file")
-    except Exception as error:
+    except Exception:
         logger.debug("Failed to write configurations to file. Exception: {error}")
         return False
 
@@ -1135,9 +1134,9 @@ def run_groovy_script(script_filepath: str, json_return: bool, rest: object,
     """
     logger.debug(f"Loading Groovy script: {script_filepath}")
     try:
-        with open(script_filepath, "r") as open_file:
+        with open(script_filepath) as open_file:
             script = open_file.read()
-    except (FileNotFoundError, IOError, PermissionError) as error:
+    except (OSError, FileNotFoundError, PermissionError) as error:
         logger.debug(f"Failed to find or read specified Groovy script file ({script_filepath}). Exception: {error}")
         return (
             {},
@@ -1189,7 +1188,7 @@ def run_groovy_script(script_filepath: str, json_return: bool, rest: object,
     if json_return:
         try:
             script_result = json.loads(script_result)
-        except json.JSONDecodeError as error:
+        except json.JSONDecodeError:
             logger.debug("Failed to parse response to JSON format")
             return {}, False, "Failed to parse response to JSON format"
 
@@ -1238,7 +1237,7 @@ def create_new_history_file(file_path: str) -> None:
             # json.dump({}, open_file)
             open_file.write("")
 
-    except (FileNotFoundError, IOError, PermissionError) as error:
+    except (OSError, FileNotFoundError, PermissionError) as error:
         fail_out(f"Failed to create history file ({file_path}). Exception: {error}")
     except Exception as error:
         logger.exception(f"Failed to create new command history file. Exception: {error}")
@@ -1256,7 +1255,7 @@ def wait_for_build_and_follow_logs(yj_obj: object, queue_id: int) -> None:
     """
     msg = f"Build is in queue with queue ID {queue_id}. Waiting for build to run ..."
     if logger.level > 10:
-        spinner = yaspin(spinner=getattr(Spinners, "bouncingBar"), attrs=["bold"], text=msg)
+        spinner = yaspin(spinner=Spinners.bouncingBar, attrs=["bold"], text=msg)
         spinner.start()
     else:
         logger.info(msg)

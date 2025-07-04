@@ -16,7 +16,7 @@ from yojenkins.yo_jenkins.rest import Rest
 logger = logging.getLogger()
 
 
-class Node():
+class Node:
     """TODO Node"""
 
     def __init__(self, rest: Rest) -> None:
@@ -313,7 +313,7 @@ class Node():
             with open(config_file, 'rb') as file:
                 node_config = file.read()
             logger.debug('Successfully read configuration file')
-        except (OSError, IOError, PermissionError) as error:
+        except (OSError, PermissionError) as error:
             fail_out(f'Failed to open and read node configuration file. Exception: {error}')
 
         if config_is_json:

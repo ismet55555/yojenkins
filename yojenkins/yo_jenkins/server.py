@@ -10,7 +10,7 @@ from yojenkins.utility.utility import fail_out
 logger = logging.getLogger()
 
 
-class Server():
+class Server:
     """TODO Server"""
 
     def __init__(self, rest: object, auth: object) -> None:

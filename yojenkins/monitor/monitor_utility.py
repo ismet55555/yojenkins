@@ -3,7 +3,7 @@
 import curses
 import logging
 from math import floor
-from typing import Tuple, Type
+from typing import Tuple
 
 # Getting the logger reference
 logger = logging.getLogger()

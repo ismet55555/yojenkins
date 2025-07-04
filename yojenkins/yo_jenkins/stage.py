@@ -14,7 +14,7 @@ from yojenkins.yo_jenkins.status import StageStatus
 logger = logging.getLogger()
 
 
-class Stage():
+class Stage:
     """Handeling of Jenkins stage functionality"""
 
     def __init__(self, rest: object, build: object, step: object) -> None:
@@ -73,7 +73,7 @@ class Stage():
         stage_name = stage_name.lower().strip()
 
         # Check if lowercase stage name is in list of stages in this build
-        if not stage_name in [x.lower() for x in build_stage_name_list]:
+        if stage_name not in [x.lower() for x in build_stage_name_list]:
             fail_out(f'Failed to find stage name "{stage_name}" among listed stages')
 
         # Getting the right stage item
@@ -202,7 +202,7 @@ class Stage():
 
         # Accounting for no stage step command
         for step_info in stage_info['stageFlowNodes']:
-            if not 'parameterDescription' in step_info:
+            if 'parameterDescription' not in step_info:
                 step_info['parameterDescription'] = "No command parameters listed"
 
         # Getting the stage items, and getting only the names/labels of the stages
@@ -329,7 +329,7 @@ class Stage():
                 with open(os.path.join(download_dir, filename), 'w+') as file:
                     file.write(stage_log_text)
                 logger.debug('Successfully write build logs to file')
-            except (IOError, PermissionError) as error:
+            except (OSError, PermissionError) as error:
                 fail_out(f'Failed to write logs to file. Exception: {error}')
         else:
             # Output to console

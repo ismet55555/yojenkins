@@ -159,7 +159,7 @@ def server_deploy(config_file: str, plugins_file: str, protocol_schema: str, hos
     """
     msg = "Setting up a local Jenkins development server. Hold tight, this may take a minute ..."
     if logger.level > 10:
-        spinner = yaspin(spinner=getattr(Spinners, "bouncingBar"), attrs=["bold"], text=msg)
+        spinner = yaspin(spinner=Spinners.bouncingBar, attrs=["bold"], text=msg)
         spinner.start()
     else:
         click.echo(msg)
@@ -210,7 +210,7 @@ def server_deploy(config_file: str, plugins_file: str, protocol_schema: str, hos
     try:
         with open(os.path.join(filepath), 'w') as file:
             json.dump(deployed, file, indent=4, sort_keys=True)
-    except (IOError, PermissionError) as error:
+    except (OSError, PermissionError) as error:
         failures = [f'Server deployed, however failed to write server deploy information to file: {error}']
         failures.append('yojenkins resources may have been installed under root or a restricted account')
         failures_out(failures)
@@ -242,14 +242,14 @@ def server_teardown(remove_volume: bool, remove_image: bool) -> None:
     logger.debug(f'Detecting server deployment info file: {filepath} ...')
     deployed = {}
     try:
-        with open(os.path.join(filepath), 'r') as file:
+        with open(os.path.join(filepath)) as file:
             deployed = json.load(file)
         logger.debug(f'Successfully found and loaded server deployment info file: {deployed}')
     except (FileNotFoundError, FileExistsError):
         failures = ['Failed to find server deployment info file']
         failures.append('If you think there was a previously successfull deployment, use Docker to remove it manually')
         failures_out(failures)
-    except (IOError, PermissionError) as error:
+    except (OSError, PermissionError) as error:
         fail_out(f'Failed to load previous server deployment info file: {error}')
 
     # Filter out named volumes only

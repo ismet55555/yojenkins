@@ -11,7 +11,7 @@ logger = logging.getLogger()
 #       https://pip.pypa.io/en/latest/user_guide/#using-pip-from-your-program
 
 
-class Package():
+class Package:
     """Class managing updating of this software"""
 
     @staticmethod

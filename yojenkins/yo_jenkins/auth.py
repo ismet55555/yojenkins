@@ -266,7 +266,7 @@ class Auth:
             profiles = {}
 
             logger.debug(f'Credentials profile file NOT found: "{creds_file_abs_path}"')
-            logger.debug(f'Creating a new credentials file ...')
+            logger.debug('Creating a new credentials file ...')
 
         # Check if user passed authentication info file
         if auth_file:
@@ -480,14 +480,13 @@ class Auth:
                 profile_selected = profile_items[profile]
                 profile_selected['profile'] = profile
                 logger.debug('Successfully loaded entire profile provided through --profile')
+            elif profile in profile_items:
+                profile_selected = profile_items[profile]
+                profile_selected['profile'] = profile
+                logger.debug(f'Successfully matched specified --profile "{profile}"')
             else:
-                if profile in profile_items:
-                    profile_selected = profile_items[profile]
-                    profile_selected['profile'] = profile
-                    logger.debug(f'Successfully matched specified --profile "{profile}"')
-                else:
-                    fail_out(f'Failed to find the profile "{profile}" within all loaded '
-                             f'profiles: {", ".join(list(profile_items.keys()))}')
+                fail_out(f'Failed to find the profile "{profile}" within all loaded '
+                         f'profiles: {", ".join(list(profile_items.keys()))}')
         else:
             logger.debug('Argument "--profile" was not specified')
 
@@ -524,7 +523,7 @@ class Auth:
             for profile, profile_values in profile_items.items():
                 if 'active' in profile_values:
                     if profile_values['active'] == True:
-                        profile_selected = profile_items[profile]
+                        profile_selected = profile_values
                         profile_selected['profile'] = profile
                         logger.debug(f'Successfully selected active profile: "{profile}"')
                         break
@@ -561,7 +560,7 @@ class Auth:
             fail_out('No credential profile loaded')
 
         # Check if server url has a protocol schema
-        url_protocol_schema = re.findall('(\w+)://', self.jenkins_profile["jenkins_server_url"])
+        url_protocol_schema = re.findall(r'(\w+)://', self.jenkins_profile["jenkins_server_url"])
         if not url_protocol_schema:
             fail_out('Failed to find a valid server URL protocol schema (ie. http://, https://, etc) '
                      f'in the loaded profile server url: "{self.jenkins_profile["jenkins_server_url"]}"')
@@ -664,7 +663,7 @@ class Auth:
         success, config_filepath = self._detect_creds_file()
         if not success:
             # If no configuration file found
-            fail_out(f'Failed to find a valid credentials file')
+            fail_out('Failed to find a valid credentials file')
 
         # Loading configurations file
         return utility.load_contents_from_local_file("toml", config_filepath)

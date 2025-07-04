@@ -5,6 +5,7 @@ import logging
 import os
 import sys
 import threading
+
 #  from pprint import pprint
 from time import perf_counter, sleep, time
 
@@ -245,7 +246,7 @@ class BuildMonitor(Monitor):
                              decor=self.decor['bold'])
                 y_row += 2
                 mu.draw_text(scr,
-                             'ಠ_ಠ  ¯\_(⊙︿⊙)_/¯',
+                             r'ಠ_ಠ  ¯\_(⊙︿⊙)_/¯',
                              y_row,
                              center_x=True,
                              color=self.color['normal'],
@@ -544,7 +545,7 @@ class BuildMonitor(Monitor):
         self.build_stages_thread_interval = monitor_interval
 
         # Check if this is a staged build
-        logger.debug(f'Checking if build is a staged build ...')
+        logger.debug('Checking if build is a staged build ...')
         request_url = f"{build_url.strip('/')}/wfapi/describe"
         return_content, _, return_success = self.rest.request(request_url, 'get', is_endpoint=False)
         if not return_success or not return_content:

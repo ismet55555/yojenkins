@@ -18,7 +18,7 @@ from yojenkins.yo_jenkins.jenkins_item_template import JenkinsItemTemplate
 logger = logging.getLogger()
 
 
-class Credential():
+class Credential:
     """Credential class"""
 
     def __init__(self, rest) -> None:
@@ -330,7 +330,7 @@ class Credential():
         try:
             with open(config_file, 'rb') as open_file:
                 credential_config = open_file.read()
-        except (OSError, IOError, PermissionError) as error:
+        except (OSError, PermissionError) as error:
             fail_out(f'Failed to open and read file: {config_file}  Exception: {error}')
 
         try:
@@ -346,7 +346,7 @@ class Credential():
                                                 encoding='utf8',
                                                 method='xml',
                                                 xml_declaration=False)
-        except JSONDecodeError as error:
+        except JSONDecodeError:
             logger.debug('Configuration file passed is in XML format')
             credential_config_xml = credential_config
 
