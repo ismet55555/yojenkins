@@ -10,7 +10,7 @@ from time import sleep, time
 if platform.system() != 'Windows':
     try:
         import simpleaudio
-    except:
+    except ImportError:
         pass
 else:
     import winsound
@@ -64,6 +64,12 @@ class Monitor:
         self.paused = False
 
         self.server_interaction = False
+
+        # Reusable temporary message box
+        self.message_box_temp_duration = 1  # sec
+        self._temp_message_lines = []
+        self._temp_message_start = 0
+        self._temp_message_active = False
 
     def __del__(self):
         """Object destructor. Called at object end of life"""
@@ -185,6 +191,34 @@ class Monitor:
             if status_text.strip().upper() in status_item.value:
                 return Sound.ITEMS.value[status_item.name]
         return Sound.ITEMS.value['UNKNOWN']
+
+    ###########################################################################
+    #                     TEMPORARY MESSAGE BOX
+    ###########################################################################
+
+    def show_temp_message(self, lines: list, duration: float = None) -> None:
+        """Show a temporary message box on screen for a specified duration.
+
+        Args:
+            lines: List of strings to display in the message box
+            duration: How long to show the message (seconds). Defaults to message_box_temp_duration.
+        """
+        self._temp_message_lines = lines
+        self._temp_message_start = time()
+        self._temp_message_duration = duration or self.message_box_temp_duration
+        self._temp_message_active = True
+
+    def get_temp_message(self) -> list:
+        """Get the current temporary message lines if still within display duration.
+
+        Returns:
+            List of message lines if active and within duration, else empty list.
+        """
+        if self._temp_message_active:
+            if time() - self._temp_message_start < self._temp_message_duration:
+                return self._temp_message_lines
+            self._temp_message_active = False
+        return []
 
     ###########################################################################
     #                         PLAY SOUND EFFECT

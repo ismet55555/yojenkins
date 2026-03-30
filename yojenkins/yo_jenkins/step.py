@@ -2,7 +2,7 @@
 
 import logging
 
-from yojenkins.utility.utility import fail_out
+from yojenkins.yo_jenkins.exceptions import RequestError
 from yojenkins.yo_jenkins.rest import Rest
 
 # Getting the logger reference
@@ -35,6 +35,6 @@ class Step:
         request_url = f'{step_url.strip("/")}'
         return_content = self.rest.request(request_url, 'get', is_endpoint=True)[0]
         if not return_content:
-            fail_out(f'Failed to get step info for: {request_url}')
+            raise RequestError(f'Failed to get step info for: {request_url}')
 
         return return_content

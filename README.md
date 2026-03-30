@@ -54,6 +54,37 @@ With **`yojenkins`** you can manage:
 
 _For a complete CLI command outline, see [section below](#complete-cli-outline)_
 
+## :globe_with_meridians: Web Application
+
+yojenkins also includes an optional web UI for browser-based Jenkins management.
+
+**Quick start:**
+
+```bash
+pip install yojenkins[web]
+yojenkins serve
+```
+
+Opens a local server at `http://127.0.0.1:8090` with both the REST API and React frontend.
+
+| Flag             | Description                          |
+|------------------|--------------------------------------|
+| `--host`         | Bind address (default: 127.0.0.1)    |
+| `--port`         | Port (default: 8090)                 |
+| `--no-frontend`  | API-only mode, skip frontend         |
+| `--build`        | Force rebuild the frontend           |
+| `--reload`       | Auto-reload for development          |
+
+**Environment variables:**
+
+| Variable                | Description                                              |
+|-------------------------|----------------------------------------------------------|
+| `YOJENKINS_SECRET_KEY`  | JWT signing key. Random per-restart if unset.            |
+| `YOJENKINS_DEMO_MODE`   | Set to `1` to enable demo login (user/token: demo).     |
+| `YOJENKINS_STATIC_DIR`  | Override path to built frontend assets.                  |
+
+**API docs:** Visit `/docs` on the running server for the interactive Swagger UI.
+
 ## :blue_book: Documentation
 
 For all information and documentation, please visit [yojenkins.com](https://yojenkins.com)
@@ -215,6 +246,9 @@ yojenkins
     |
     |-- step        Manage stage steps
     |     |--- info  Step information
+    |
+    |
+    |-- serve       Start the web application server
     |
     |
     |-- tools       Tools and more

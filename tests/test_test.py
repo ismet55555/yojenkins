@@ -1,15 +1,6 @@
-"""This is just a set of dummy tests"""
-
-import logging
+"""Basic sanity test to verify test infrastructure works."""
 
 
-def test_success() -> None:
-    """This is just a dummy test"""
-    logging.info('This is just a dummy test that SUCCEEDS')
+def test_sanity():
+    """Verify pytest is configured and running correctly."""
     assert True
-
-
-def test_failure() -> None:
-    """This is just a dummy test"""
-    logging.info('This is just a dummy test that FAILS')
-    raise AssertionError()

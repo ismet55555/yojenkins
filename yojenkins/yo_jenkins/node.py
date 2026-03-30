@@ -2,13 +2,14 @@
 
 import json
 import logging
-import os
+from pathlib import Path
 from typing import Optional
 
 import xmltodict
 
 from yojenkins.utility import utility
-from yojenkins.utility.utility import fail_out, print2
+from yojenkins.utility.utility import print2
+from yojenkins.yo_jenkins.exceptions import NotFoundError, RequestError, ValidationError
 from yojenkins.yo_jenkins.jenkins_item_classes import JenkinsItemClasses
 from yojenkins.yo_jenkins.rest import Rest
 
@@ -51,7 +52,7 @@ class Node:
             json_content=True,
         )
         if not success:
-            fail_out(f'Failed to find node info for "{node_name}"')
+            raise NotFoundError(f'Failed to find node info for "{node_name}"')
 
         return node_info
 
@@ -71,10 +72,10 @@ class Node:
             target=f'computer/api/json?depth={depth}', request_type='get', is_endpoint=True, json_content=True
         )
         if not success:
-            fail_out('Failed to get any nodes')
+            raise RequestError('Failed to get any nodes')
 
         if 'computer' not in nodes_info:
-            fail_out('Failed to find "computer" section in return content')
+            raise RequestError('Failed to find "computer" section in return content')
 
         node_list, node_list_name = utility.item_subitem_list(
             item_info=nodes_info,
@@ -104,7 +105,7 @@ class Node:
 
         # Checking name for special characters
         if utility.has_special_char(kwargs['name']):
-            fail_out('Provided node name contains special characters')
+            raise ValidationError('Provided node name contains special characters')
 
         # Processing labels
         if kwargs['labels']:
@@ -174,7 +175,7 @@ class Node:
             target='computer/doCreateItem', request_type='post', is_endpoint=True, data=params
         )[2]
         if not success:
-            fail_out('Failed to create permanent node')
+            raise RequestError('Failed to create permanent node')
         logger.debug('Successfully created permanent node')
 
         return success
@@ -195,7 +196,7 @@ class Node:
             target=f'computer/{node_name}/doDelete', request_type='post', is_endpoint=True, json_content=False
         )[2]
         if not success:
-            fail_out(f'Failed to delete node "{node_name}"')
+            raise RequestError(f'Failed to delete node "{node_name}"')
 
         return success
 
@@ -226,7 +227,7 @@ class Node:
             json_content=False,
         )[2]
         if not success:
-            fail_out(f'Failed to disable node "{node_name}"')
+            raise RequestError(f'Failed to disable node "{node_name}"')
 
         return success
 
@@ -257,7 +258,7 @@ class Node:
             json_content=False,
         )[2]
         if not success:
-            fail_out(f'Failed to enable node "{node_name}"')
+            raise RequestError(f'Failed to enable node "{node_name}"')
 
         return success
 
@@ -286,12 +287,12 @@ class Node:
             f'computer/{node_name}/config.xml', 'get', json_content=False, is_endpoint=True
         )
         if not success:
-            fail_out(f'Failed to fetch node configurations for node "{node_name}"')
+            raise RequestError(f'Failed to fetch node configurations for node "{node_name}"')
 
         if filepath:
             write_success = utility.write_xml_to_file(return_content, filepath, opt_json, opt_yaml, opt_toml)
             if not write_success:
-                fail_out('Failed to write node configurations to file')
+                raise RequestError('Failed to write node configurations to file')
 
         return return_content
 
@@ -310,8 +311,8 @@ class Node:
         logger.debug(f'Using the following specified configuration file: {config_file}')
 
         logger.debug(f'Checking if file exists: {config_file} ...')
-        if not os.path.isfile(config_file):
-            fail_out('Specified node configuration file does not exist')
+        if not Path(config_file).is_file():
+            raise ValidationError('Specified node configuration file does not exist')
 
         logger.debug(f'Reading configuration file: {config_file} ...')
         try:
@@ -319,23 +320,32 @@ class Node:
                 node_config = file.read()
             logger.debug('Successfully read configuration file')
         except (OSError, PermissionError) as error:
-            fail_out(f'Failed to open and read node configuration file. Exception: {error}')
+            raise RequestError(f'Failed to open and read node configuration file. Exception: {error}')
 
-        if config_is_json:
+        # Auto-detect JSON format (or use explicit flag)
+        is_json = config_is_json
+        if not is_json:
+            try:
+                json.loads(node_config)
+                is_json = True
+                logger.debug('Auto-detected JSON config format')
+            except (ValueError, TypeError):
+                pass
+        if is_json:
             logger.debug('Converting the specified JSON file to XML format ...')
             try:
                 node_config = xmltodict.unparse(json.loads(node_config))
             except Exception as error:
-                fail_out(f'Failed to convert the specified JSON file to XML format. Exception: {error}')
+                raise RequestError(f'Failed to convert the specified JSON file to XML format. Exception: {error}')
 
         success = self.rest.request(
             target=f'computer/{node_name}/config.xml',
             request_type='post',
             is_endpoint=True,
-            data=node_config.encode('utf-8'),
+            data=node_config.encode('utf-8') if isinstance(node_config, str) else node_config,
             json_content=False,
         )[2]
         if not success:
-            fail_out(f'Failed to reconfigure node "{node_name}"')
+            raise RequestError(f'Failed to reconfigure node "{node_name}"')
 
         return success

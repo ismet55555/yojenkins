@@ -117,4 +117,5 @@ def permission_list(debug, **kwargs):
 def password_reset(debug, **kwargs):
     """Reset a user password"""
     set_debug_log_level(debug)
-    click.secho('TODO :-/', fg='yellow')
+    click.secho('Not yet implemented', fg='yellow', err=True)
+    raise SystemExit(1)

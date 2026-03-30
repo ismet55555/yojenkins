@@ -2,9 +2,9 @@
 
 import curses
 import logging
-import os
 import sys
 import threading
+from pathlib import Path
 
 #  from pprint import pprint
 from time import perf_counter, sleep, time
@@ -54,11 +54,11 @@ class BuildMonitor(Monitor):
         # Aborting build flag
         self.build_abort = 0
 
+        # Skip sound on first draw cycle (avoid playing sound at startup)
+        self._initial_draw = True
+
         # Output build logs to console
         self.build_logs = False
-
-        # Temporary message box on screen
-        self.message_box_temp_duration = 1  # sec
 
         self.sound_directory = ''
 
@@ -87,10 +87,8 @@ class BuildMonitor(Monitor):
         ui_keys = mu.load_keys()
 
         # Sound effect related
-        self.sound_directory = get_resource_path(os.path.join('resources', 'sound'))
-        sound_notify_msg_time = 0
-        sound_notify_msg_show = False
-        sound_notify_msg_box_timing = False
+        sound_path = get_resource_path(str(Path('resources') / 'sound'))
+        self.sound_directory = Path(sound_path) if sound_path else ''
         status_sound_last = ''
 
         # User key input (ASCII value)
@@ -125,7 +123,8 @@ class BuildMonitor(Monitor):
                     self.build.browser_open(build_url=build_url)
             elif keystroke in ui_keys['SOUND']:
                 sound = not sound
-                sound_notify_msg_show = True
+                state = 'ON' if sound else 'OFF'
+                self.show_temp_message([f'Sound notification {state}'])
             elif keystroke in ui_keys['LOGS']:
                 self.build_logs = True
 
@@ -148,7 +147,7 @@ class BuildMonitor(Monitor):
                 # mu.draw_text(scr, str(curses.baudrate()), y_row, center_x=True, color=self.color['grey-light'], decor=self.decor['bold'])
                 mu.draw_text(
                     scr,
-                    str(time() - sound_notify_msg_time) + ' ' + str(sound) + ' ' + str(sound_notify_msg_show),
+                    str(sound) + ' ' + str(self._temp_message_active),
                     y_row,
                     center_x=True,
                     color=self.color['grey-light'],
@@ -207,13 +206,16 @@ class BuildMonitor(Monitor):
                     mu.draw_text(
                         scr, '( fx )', 1, term_width - 8, color=self.color['grey-dark'], decor=self.decor['bold']
                     )
-                if sound and not self.playing_sound:
+                if sound and not self.playing_sound and not self._initial_draw:
                     # Get the sound file name
                     status_sound = self.status_to_sound(self.build_info_data['resultText'])
                     if status_sound_last != status_sound and status_sound:
                         # FIXME: Only check file names, not status text
-                        self.play_sound_thread_on(os.path.join(self.sound_directory, status_sound))
+                        self.play_sound_thread_on(str(self.sound_directory / status_sound))
                         status_sound_last = status_sound
+                if self._initial_draw and self.build_info_data:
+                    status_sound_last = self.status_to_sound(self.build_info_data['resultText'])
+                    self._initial_draw = False
 
                 # Status text color
                 status_color = self.status_to_color(self.build_info_data['resultText'])
@@ -280,7 +282,7 @@ class BuildMonitor(Monitor):
                     # Stage number
                     try:
                         mu.draw_text(scr, f'{i + 1}.', y_row, x_col[0])
-                    except:
+                    except curses.error:
                         break
 
                     # Stage name
@@ -381,17 +383,10 @@ class BuildMonitor(Monitor):
             else:
                 halfdelay_normal = True
 
-            # Sound effect notification on/off (Toggle)
-            if sound_notify_msg_show:
-                sound_notify_msg_show = False
-                sound_notify_msg_time = time()
-                sound_notify_msg_box_timing = True
-            if sound_notify_msg_box_timing:
-                if time() - sound_notify_msg_time < self.message_box_temp_duration:
-                    state = 'ON' if sound else 'OFF'
-                    mu.draw_message_box(scr, [f'Sound notification {state}'])
-                else:
-                    sound_notify_msg_box_timing = False
+            # Temporary message box (e.g., sound toggle notification)
+            temp_msg = self.get_temp_message()
+            if temp_msg:
+                mu.draw_message_box(scr, temp_msg)
 
             # Pause message box
             if self.paused:
