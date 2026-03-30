@@ -2,7 +2,6 @@
 
 import json
 import logging
-import os
 import sys
 from pathlib import Path
 
@@ -116,13 +115,13 @@ def history(profile: str, clear: bool) -> None:
         profile: The name of the profile to to filter history with
         clear:   Clearing the history file
     """
-    history_file_path = os.path.join(os.path.join(Path.home(), cu.CONFIG_DIR_NAME), cu.HISTORY_FILE_NAME)
+    history_file_path = Path.home() / cu.CONFIG_DIR_NAME / cu.HISTORY_FILE_NAME
 
     # Clearing the history file if requested
     if clear:
         logger.debug(f'Removing history file: {history_file_path} ...')
         try:
-            os.remove(history_file_path)
+            history_file_path.unlink()
         except (OSError, PermissionError) as error:
             fail_out(f'Failed to clear history file. Exception: {error}')
         logger.debug('Successfully cleared history file')
@@ -218,9 +217,9 @@ def run_script(profile: str, token: str, text: str, file: str, output: str) -> N
     elif file:
         logger.debug(f'Loading specified script from file: {file} ...')
         try:
-            with open(os.path.join(file)) as open_file:
+            with open(file) as open_file:
                 script = open_file.read()
-            script_size = os.path.getsize(file)
+            script_size = Path(file).stat().st_size
             logger.debug(f'Successfully loaded script file ({script_size} Bytes)')
         except FileNotFoundError:
             fail_out(f'Failed to find specified script file ({file})')

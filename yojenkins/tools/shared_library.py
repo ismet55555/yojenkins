@@ -1,7 +1,7 @@
 """Jenkins Shared Library Management"""
 
 import logging
-import os
+from pathlib import Path
 
 from yojenkins.utility import utility
 
@@ -21,7 +21,7 @@ class SharedLibrary:
         Returns:
             None
         """
-        self.groovy_script_directory = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'groovy_scripts')
+        self.groovy_script_directory = Path(__file__).resolve().parent / 'groovy_scripts'
 
     def setup(
         self,
@@ -77,7 +77,7 @@ class SharedLibrary:
             'implicit': 'true' if implicit else 'false',
             'credential_id': credential_id,
         }
-        script_filepath = os.path.join(self.groovy_script_directory, 'shared_lib_setup.groovy')
+        script_filepath = self.groovy_script_directory / 'shared_lib_setup.groovy'
         _, success, error = utility.run_groovy_script(
             script_filepath=script_filepath, json_return=False, rest=rest, **kwargs
         )

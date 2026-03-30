@@ -2,9 +2,9 @@
 
 import curses
 import logging
-import os
 import sys
 import threading
+from pathlib import Path
 
 #  from pprint import pprint
 from time import perf_counter, sleep, time
@@ -87,7 +87,8 @@ class BuildMonitor(Monitor):
         ui_keys = mu.load_keys()
 
         # Sound effect related
-        self.sound_directory = get_resource_path(os.path.join('resources', 'sound'))
+        sound_path = get_resource_path(str(Path('resources') / 'sound'))
+        self.sound_directory = Path(sound_path) if sound_path else ''
         sound_notify_msg_time = 0
         sound_notify_msg_show = False
         sound_notify_msg_box_timing = False
@@ -212,7 +213,7 @@ class BuildMonitor(Monitor):
                     status_sound = self.status_to_sound(self.build_info_data['resultText'])
                     if status_sound_last != status_sound and status_sound:
                         # FIXME: Only check file names, not status text
-                        self.play_sound_thread_on(os.path.join(self.sound_directory, status_sound))
+                        self.play_sound_thread_on(str(self.sound_directory / status_sound))
                         status_sound_last = status_sound
 
                 # Status text color
@@ -280,7 +281,7 @@ class BuildMonitor(Monitor):
                     # Stage number
                     try:
                         mu.draw_text(scr, f'{i + 1}.', y_row, x_col[0])
-                    except:
+                    except curses.error:
                         break
 
                     # Stage name

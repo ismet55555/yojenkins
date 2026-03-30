@@ -31,13 +31,15 @@ def get_requirements():
 
 def get_pipfile_requirements():
     """Load packages from Pipfile"""
-    from toml import loads
+    try:
+        import tomllib
+    except ModuleNotFoundError:
+        import tomli as tomllib
 
     # Loading Pipfile
     try:
-        with open ('Pipfile', 'r') as open_file:
-            pipfile = open_file.read()
-        pipfile_toml = loads(pipfile)
+        with open('Pipfile', 'rb') as open_file:
+            pipfile_toml = tomllib.load(open_file)
     except FileNotFoundError:
         return []
 

@@ -1,5 +1,5 @@
 """Job click sub-command"""
-# pylint: skip-file
+
 
 import click
 
@@ -139,8 +139,8 @@ def queue_check(debug, **kwargs):
 def queue_cancel(debug, **kwargs):
     """Cancel this job in queue"""
     set_debug_log_level(debug)
-    # cli_job.queue_cancel(**translate_kwargs(kwargs))
-    click.secho('TODO :-/', fg='yellow')
+    click.secho('Not yet implemented', fg='yellow', err=True)
+    raise SystemExit(1)
 
 
 @job.command(short_help='\tOpen job in web browser')

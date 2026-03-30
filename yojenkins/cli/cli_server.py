@@ -2,7 +2,6 @@
 
 import json
 import logging
-import os
 from pathlib import Path
 
 import click
@@ -219,12 +218,12 @@ def server_deploy(
         failures_out(failures)
 
     # Write current server docker attributes to file
-    filepath = os.path.join(Path.home(), CONFIG_DIR_NAME, 'last_deploy_info.json')
+    filepath = Path.home() / CONFIG_DIR_NAME / 'last_deploy_info.json'
     if not filepath:
         fail_out('Failed to find yojenkins module included data directory')
     logger.debug(f'Writing server deploy information to file: {filepath}')
     try:
-        with open(os.path.join(filepath), 'w') as file:
+        with open(filepath, 'w') as file:
             json.dump(deployed, file, indent=4, sort_keys=True)
     except (OSError, PermissionError) as error:
         failures = [f'Server deployed, however failed to write server deploy information to file: {error}']
@@ -254,11 +253,11 @@ def server_teardown(remove_volume: bool, remove_image: bool) -> None:
         TODO
     """
     # Load deployment info file with deployment information
-    filepath = os.path.join(Path.home(), CONFIG_DIR_NAME, 'last_deploy_info.json')
+    filepath = Path.home() / CONFIG_DIR_NAME / 'last_deploy_info.json'
     logger.debug(f'Detecting server deployment info file: {filepath} ...')
     deployed = {}
     try:
-        with open(os.path.join(filepath)) as file:
+        with open(filepath) as file:
             deployed = json.load(file)
         logger.debug(f'Successfully found and loaded server deployment info file: {deployed}')
     except (FileNotFoundError, FileExistsError):
@@ -285,6 +284,6 @@ def server_teardown(remove_volume: bool, remove_image: bool) -> None:
         fail_out('Failed to remove Jenkins server')
 
     # Remove the deployment info file
-    os.remove(filepath)
+    filepath.unlink()
 
     print2(f'Successfully removed Jenkins server: {deployed["address"]}', bold=True, color='green')

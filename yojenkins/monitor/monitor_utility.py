@@ -96,7 +96,7 @@ def load_curses_colors_decor() -> tuple[dict, dict]:
     for index, (key, value) in enumerate(color_definition.items()):
         try:
             curses.init_pair(index + 1, value[0], value[1])
-        except:
+        except Exception:
             curses.init_pair(index + 1, 0, 0)
         color[key] = curses.color_pair(index + 1)
 

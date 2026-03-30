@@ -1,5 +1,5 @@
 """Main entry point for program"""
-# pylint: skip-file
+
 
 import logging
 import sys

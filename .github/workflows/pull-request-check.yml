@@ -95,5 +95,8 @@ jobs:
       - name: Build the package
         run: pipenv run python setup.py install --verbose
 
+      - name: Run Tests with Coverage
+        run: pipenv run pytest -v --cov=yojenkins --cov-report=term-missing --cov-fail-under=90 -m "not docker"
+
       - name: Testing --help
         run: pipenv run yojenkins --help

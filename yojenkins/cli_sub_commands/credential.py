@@ -1,5 +1,5 @@
 """Credential click sub-command"""
-# pylint: skip-file
+
 
 import click
 
@@ -121,7 +121,8 @@ def delete(debug, **kwargs):
 def update(debug):
     """Reconfigure existing credentials"""
     set_debug_log_level(debug)
-    click.secho('TODO :-/', fg='yellow')
+    click.secho('Not yet implemented', fg='yellow', err=True)
+    raise SystemExit(1)
 
 
 @credential.command(short_help='\tMove a credential to another folder/domain')
@@ -129,4 +130,5 @@ def update(debug):
 def move(debug):
     """Move a credential to another folder/domain"""
     set_debug_log_level(debug)
-    click.secho('TODO :-/', fg='yellow')
+    click.secho('Not yet implemented', fg='yellow', err=True)
+    raise SystemExit(1)

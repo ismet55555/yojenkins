@@ -10,7 +10,7 @@ from time import sleep, time
 if platform.system() != 'Windows':
     try:
         import simpleaudio
-    except:
+    except ImportError:
         pass
 else:
     import winsound

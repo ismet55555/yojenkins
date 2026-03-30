@@ -4,10 +4,12 @@ import logging
 import os
 import threading
 from datetime import datetime, timedelta
+from pathlib import Path
 from typing import Optional, Union
 
 from yojenkins.utility import utility
-from yojenkins.utility.utility import fail_out, print2
+from yojenkins.utility.utility import print2
+from yojenkins.yo_jenkins.exceptions import NotFoundError, RequestError
 from yojenkins.yo_jenkins.status import StageStatus
 
 # Getting the logger reference
@@ -77,7 +79,7 @@ class Stage:
 
         # Check if lowercase stage name is in list of stages in this build
         if stage_name not in [x.lower() for x in build_stage_name_list]:
-            fail_out(f'Failed to find stage name "{stage_name}" among listed stages')
+            raise NotFoundError(f'Failed to find stage name "{stage_name}" among listed stages')
 
         # Getting the right stage item
         logger.debug('Getting stage URL from build information ...')
@@ -87,7 +89,7 @@ class Stage:
         endpoint = f'{build_stage_item["url"]}'
         return_content = self.rest.request(endpoint, 'get', is_endpoint=True)[0]
         if not return_content:
-            fail_out(f'Failed to fetch stage information for "{stage_name}"')
+            raise RequestError(f'Failed to fetch stage information for "{stage_name}"')
 
         # Add additional derived information for stage
         return_content['startDatetime'] = datetime.fromtimestamp(return_content['startTimeMillis'] / 1000.0).strftime(
@@ -212,7 +214,7 @@ class Stage:
 
         # Check if there are steps in this stage
         if 'stageFlowNodes' not in stage_info:
-            fail_out('Failed to get stage step information. No stage steps listed')
+            raise RequestError('Failed to get stage step information. No stage steps listed')
 
         # Accounting for no stage step command
         for step_info in stage_info['stageFlowNodes']:
@@ -224,7 +226,7 @@ class Stage:
             step_list = stage_info['stageFlowNodes']
             step_name_list = [s['name'] for s in step_list]
         except KeyError as error:
-            fail_out(f'Failed to parse stage information. Specific keys not found: {error}')
+            raise RequestError(f'Failed to parse stage information. Specific keys not found: {error}')
 
         return step_list, step_name_list
 
@@ -348,11 +350,11 @@ class Stage:
             filename = f'build-logs_{datetime.now().strftime("%m-%d-%Y_%I-%M-%S")}{self.build_logs_extension}'
             logger.debug(f'Saving console text logs to local file "{filename}" ...')
             try:
-                with open(os.path.join(download_dir, filename), 'w+') as file:
+                with open(Path(download_dir) / filename, 'w+') as file:
                     file.write(stage_log_text)
                 logger.debug('Successfully write build logs to file')
             except (OSError, PermissionError) as error:
-                fail_out(f'Failed to write logs to file. Exception: {error}')
+                raise RequestError(f'Failed to write logs to file. Exception: {error}')
         else:
             # Output to console
             logger.debug('Printing out console text logs ...')
