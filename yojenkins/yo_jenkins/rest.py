@@ -15,7 +15,7 @@ logger = logging.getLogger()
 class Rest:
     """Handeling of REST requests"""
 
-    def __init__(self, username: str = '', api_token: str = '', server_url: str = '', session=None) -> None:
+    def __init__(self, username: str = '', api_token: str = '', server_url: str = '', session=None, verify_ssl: bool = True) -> None:
         """TODO Docstring
 
         Args:
@@ -40,6 +40,9 @@ class Rest:
         self.username: str = username
         self.api_token: str = api_token
         self.server_url: str = server_url
+
+        # SSL/TLS verification
+        self.verify_ssl: bool = verify_ssl
 
         # Flag signaling if this object has authentication credentials to server
         self.has_credentials = False
@@ -179,6 +182,7 @@ class Rest:
                     auth=auth,
                     timeout=timeout,
                     allow_redirects=allow_redirect,
+                    verify=self.verify_ssl,
                 )
             elif request_type.lower() == 'post':
                 response = self.session.post(
@@ -190,6 +194,7 @@ class Rest:
                     auth=auth,
                     timeout=timeout,
                     allow_redirects=allow_redirect,
+                    verify=self.verify_ssl,
                 )
             elif request_type.lower() == 'head':
                 response = self.session.head(
@@ -201,6 +206,7 @@ class Rest:
                     auth=auth,
                     timeout=timeout,
                     allow_redirects=allow_redirect,
+                    verify=self.verify_ssl,
                 )
             elif request_type.lower() == 'delete':
                 response = self.session.delete(
@@ -212,6 +218,7 @@ class Rest:
                     auth=auth,
                     timeout=timeout,
                     allow_redirects=allow_redirect,
+                    verify=self.verify_ssl,
                 )
             else:
                 logger.debug(f'Request type "{request_type}" not recognized')

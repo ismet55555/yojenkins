@@ -3,7 +3,7 @@
 import logging
 
 from yojenkins.utility import utility
-from yojenkins.utility.utility import fail_out
+from yojenkins.yo_jenkins.exceptions import RequestError
 
 # Getting the logger reference
 logger = logging.getLogger()
@@ -38,7 +38,7 @@ class Server:
         """
         server_info, _, success = self.rest.request('api/json', 'get')
         if not success:
-            fail_out('Failed to fetch server information')
+            raise RequestError('Failed to fetch server information')
 
         return server_info
 
@@ -55,13 +55,13 @@ class Server:
 
         people_info, _, success = self.rest.request('asynchPeople/api/json?depth=1', 'get', is_endpoint=True)
         if not success:
-            fail_out('Failed to fetch server people/users information')
+            raise RequestError('Failed to fetch server people/users information')
 
         try:
             people_info = people_info['users']
             people_info_list = [f'{p["user"]["fullName"]}' for p in people_info]
         except KeyError as error:
-            fail_out(f'Failed to parse server people/users information. Specific keys not found: {error}')
+            raise RequestError(f'Failed to parse server people/users information. Specific keys not found: {error}')
 
         return people_info, people_info_list
 
@@ -83,7 +83,7 @@ class Server:
         # Making the request
         server_queue_info, _, success = self.rest.request('queue/api/json', 'get')
         if not success:
-            fail_out('Failed to get server queue info')
+            raise RequestError('Failed to get server queue info')
 
         return server_queue_info
 
@@ -122,13 +122,13 @@ class Server:
 
         plugins_info, _, success = self.rest.request('pluginManager/api/json?depth=2', 'get', is_endpoint=True)
         if not success:
-            fail_out('Failed to fetch server plugin information')
+            raise RequestError('Failed to fetch server plugin information')
 
         try:
             plugins_info = plugins_info['plugins']
             plugin_info_list = [f'{p["longName"]} - {p["shortName"]} - {p["version"]}' for p in plugins_info]
         except KeyError as error:
-            fail_out(f'Failed to parse server plugin information. Specific keys not found: {error}')
+            raise RequestError(f'Failed to parse server plugin information. Specific keys not found: {error}')
 
         return plugins_info, plugin_info_list
 
@@ -144,7 +144,7 @@ class Server:
         logger.debug(f'Opening in server home page in browser: "{self.server_base_url}" ...')
         success = utility.browser_open(url=self.server_base_url)
         if not success:
-            fail_out('Failed to open server home page in browser')
+            raise RequestError('Failed to open server home page in browser')
         logger.debug('Successfully opened in web browser')
 
         return success
@@ -163,7 +163,7 @@ class Server:
             'restart' if force else 'safeRestart', 'post', is_endpoint=True, json_content=True, allow_redirect=False
         )[2]
         if not success:
-            fail_out('Failed to initiate server restart')
+            raise RequestError('Failed to initiate server restart')
 
         return success
 
@@ -181,7 +181,7 @@ class Server:
             'exit' if force else 'safeExit', 'post', is_endpoint=True, json_content=False, allow_redirect=False
         )[2]
         if not success:
-            fail_out('Failed to initiate server shutdown')
+            raise RequestError('Failed to initiate server shutdown')
 
         return success
 
@@ -203,6 +203,6 @@ class Server:
             allow_redirect=False,
         )[2]
         if not success:
-            fail_out(f'Failed to {"disable" if off else "enable"} server quiet mode')
+            raise RequestError(f'Failed to {"disable" if off else "enable"} server quiet mode')
 
         return success

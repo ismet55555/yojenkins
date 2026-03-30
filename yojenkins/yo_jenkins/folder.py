@@ -8,7 +8,7 @@ from time import perf_counter
 import xmltodict
 
 from yojenkins.utility import utility
-from yojenkins.utility.utility import fail_out
+from yojenkins.yo_jenkins.exceptions import NotFoundError, RequestError, ValidationError
 from yojenkins.yo_jenkins.jenkins_item_classes import JenkinsItemClasses
 from yojenkins.yo_jenkins.jenkins_item_config import JenkinsItemConfig
 
@@ -151,7 +151,7 @@ class Folder:
             Folder information
         """
         if not folder_name and not folder_url:
-            fail_out('Failed to get folder information. No folder name or folder url received')
+            raise ValidationError('Failed to get folder information. No folder name or folder url received')
 
         if folder_name and not folder_url:
             folder_url = utility.name_to_url(self.rest.get_server_url(), folder_name)
@@ -160,14 +160,14 @@ class Folder:
             folder_url.strip('/') + '/api/json', request_type='get', is_endpoint=False
         )
         if not success:
-            fail_out(f'Failed to find folder info: {folder_url}')
+            raise NotFoundError(f'Failed to find folder info: {folder_url}')
 
         # Check if found item type/class
         if (
             folder_info['_class'] not in JenkinsItemClasses.FOLDER.value['class_type']
             and JenkinsItemClasses.FOLDER.value['item_type'] not in folder_info
         ):
-            fail_out(f'Folder found, but failed to match type/class. This item is "{folder_info["_class"]}"')
+            raise NotFoundError(f'Folder found, but failed to match type/class. This item is "{folder_info["_class"]}"')
 
         return folder_info
 
@@ -307,7 +307,7 @@ class Folder:
             True if successfull, else False
         """
         if not folder_name and not folder_url:
-            fail_out('Failed to get folder information. No folder name or folder url received')
+            raise ValidationError('Failed to get folder information. No folder name or folder url received')
 
         if folder_url:
             folder_url = folder_url.strip('/')
@@ -317,7 +317,7 @@ class Folder:
         logger.debug(f'Opening folder in web browser: "{folder_url}" ...')
         success = utility.browser_open(url=folder_url)
         if not success:
-            fail_out('Failed to open folder in web browser')
+            raise RequestError('Failed to open folder in web browser')
         logger.debug('Successfully opened folder in web browser')
 
         return success
@@ -345,7 +345,7 @@ class Folder:
             Folder config.xml contents
         """
         if not folder_name and not folder_url:
-            fail_out('Failed to get folder information. No folder name or folder url received')
+            raise ValidationError('Failed to get folder information. No folder name or folder url received')
 
         if folder_url:
             folder_url = folder_url.strip('/')
@@ -357,13 +357,13 @@ class Folder:
             f'{folder_url.strip("/")}/config.xml', 'get', json_content=False, is_endpoint=False
         )
         if not success:
-            fail_out('Failed to get folder configuration')
+            raise RequestError('Failed to get folder configuration')
         logger.debug('Successfully fetched folder configuration')
 
         if filepath:
             write_success = utility.write_xml_to_file(return_content, filepath, opt_json, opt_yaml, opt_toml)
             if not write_success:
-                fail_out('Failed to write configuration file')
+                raise RequestError('Failed to write configuration file')
 
         return return_content
 
@@ -385,7 +385,7 @@ class Folder:
             TODO
         """
         if not folder_name and not folder_url:
-            fail_out('Failed to get folder information. No folder name or folder url received')
+            raise ValidationError('Failed to get folder information. No folder name or folder url received')
 
         if folder_url:
             folder_url = folder_url.strip('/')
@@ -393,13 +393,13 @@ class Folder:
             folder_url = utility.name_to_url(self.rest.get_server_url(), folder_name)
 
         if not name:
-            fail_out('The item name is a blank')
+            raise ValidationError('The item name is a blank')
         if utility.has_special_char(name):
-            fail_out('The item name contains special characters')
+            raise ValidationError('The item name contains special characters')
 
         supported_create_items = ['folder', 'view', 'job']
         if type.strip().lower() not in supported_create_items:
-            fail_out(f'Failed to match supported "{type}" items to create: {", ".join(supported_create_items)}')
+            raise ValidationError(f'Failed to match supported "{type}" items to create: {", ".join(supported_create_items)}')
 
         if config:
             # Use item configuration from file if provided
@@ -408,14 +408,14 @@ class Folder:
                 open_file = open(config, 'rb')
                 item_config = open_file.read()
             except (OSError, PermissionError) as error:
-                fail_out(f'Failed to open and read "{type}" item configuration file. Exception: {error}')
+                raise RequestError(f'Failed to open and read "{type}" item configuration file. Exception: {error}')
 
             if config_is_json:
                 logger.debug('Converting the specified JSON file to XML format ...')
                 try:
                     item_config = xmltodict.unparse(json.loads(item_config))
                 except ValueError as error:
-                    fail_out(f'Failed to convert the specified JSON file to XML format. Exception: {error}')
+                    raise RequestError(f'Failed to convert the specified JSON file to XML format. Exception: {error}')
         # Use blank item config
         # FIXME: These are not valid XML configs, try json instead
         # FIXME: This does not account for the name of the item
@@ -434,7 +434,7 @@ class Folder:
 
         # Checking if the item exists
         if utility.item_exists_in_folder(name, folder_url, type, self.rest):
-            fail_out(f'The new "{type}" item "{name}" exists within the folder')
+            raise ValidationError(f'The new "{type}" item "{name}" exists within the folder')
 
         # Creating the item
         logger.debug(f'Creating "{type}" item "{name}" ...')
@@ -447,7 +447,7 @@ class Folder:
             is_endpoint=False,
         )[2]
         if not success:
-            fail_out(f'Failed to create "{type}" item "{name}"')
+            raise RequestError(f'Failed to create "{type}" item "{name}"')
         logger.debug(f'Successfully created "{type}" item "{name}"')
 
         # Close the potentially open item configuration file
@@ -469,7 +469,7 @@ class Folder:
             TODO
         """
         if not folder_name and not folder_url:
-            fail_out('Failed to get folder information. No folder name or folder url received')
+            raise ValidationError('Failed to get folder information. No folder name or folder url received')
 
         if folder_url:
             folder_url = folder_url.strip('/')
@@ -477,17 +477,17 @@ class Folder:
             folder_url = utility.name_to_url(self.rest.get_server_url(), folder_name)
 
         if not original_name:
-            fail_out('The original folder name is a blank')
+            raise ValidationError('The original folder name is a blank')
         if utility.has_special_char(original_name):
-            fail_out('The original folder name contains special characters')
+            raise ValidationError('The original folder name contains special characters')
 
         if not new_name:
-            fail_out('New folder name is a blank')
+            raise ValidationError('New folder name is a blank')
         if utility.has_special_char(new_name):
-            fail_out('The new folder name contains special characters')
+            raise ValidationError('The new folder name contains special characters')
 
         if not utility.item_exists_in_folder(original_name, folder_url, 'folder', self.rest):
-            fail_out(f'The original folder "{original_name}" does not exist')
+            raise NotFoundError(f'The original folder "{original_name}" does not exist')
 
         logger.debug(f'Copying original item "{original_name}" to new item "{new_name}" ...')
         success = self.rest.request(
@@ -496,7 +496,7 @@ class Folder:
             is_endpoint=False,
         )[2]
         if not success:
-            fail_out('Failed to copy folder')
+            raise RequestError('Failed to copy folder')
         logger.debug('Successfully copied folder')
 
         return success
@@ -512,7 +512,7 @@ class Folder:
             True if successfull, else False
         """
         if not folder_name and not folder_url:
-            fail_out('Failed to get folder information. No folder name or folder url received')
+            raise ValidationError('Failed to get folder information. No folder name or folder url received')
 
         if folder_url:
             folder_url = folder_url.strip('/')
@@ -522,7 +522,7 @@ class Folder:
         logger.debug(f'Deleting folder: "{folder_url}" ...')
         success = self.rest.request(f'{folder_url.strip("/")}/doDelete', 'post', is_endpoint=False)[2]
         if not success:
-            fail_out('Failed to delete folder')
+            raise RequestError('Failed to delete folder')
         logger.debug('Successfully deleted folder')
 
         return success

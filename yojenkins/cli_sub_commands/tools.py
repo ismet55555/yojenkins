@@ -1,5 +1,5 @@
 """Tools click sub-command"""
-# pylint: skip-file
+
 
 import click
 
@@ -15,23 +15,6 @@ def docs(debug):
     """Open browser to the documentation"""
     set_debug_log_level(debug)
     cli_tools.documentation()
-
-
-# @tools.command(short_help='\tUpgrade yojenkins')
-# @cli_decorators.debug
-# @click.option('--user', type=bool, required=False, is_flag=True, help='Install to the Python user install directory for your platform')
-# @click.option('--proxy', type=str, required=False, help='Specify a proxy in the form [user:passwd@]proxy.server:port')
-# def upgrade(debug, user, proxy):
-#     """Install the latest version of yojenkins. This is a thin wrapper to 'pip install'"""
-#     set_debug_log_level(debug)
-#     cli_tools.upgrade(user, proxy)
-
-# @tools.command(short_help='\tRemove yojenkins')
-# @cli_decorators.debug
-# def remove(debug):
-#     """Uninstall yojenkins using pip"""
-#     set_debug_log_level(debug)
-#     cli_tools.remove()
 
 
 @tools.command(short_help='\tReport a bug')

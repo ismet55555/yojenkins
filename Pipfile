@@ -11,12 +11,16 @@ python_version = "3"
 
 [dev-packages]
 bump2version = "*"
+freezegun = "*"
 macholib = {version = "*", platform_system = "== 'Darwin'"}
 mkdocs = "*"
 myst_parser = "*"
 pre-commit = "*"
 pyinstaller = "*"
 pytest = "*"
+pytest-cov = "*"
+pytest-mock = "*"
+responses = "*"
 ruff = "*"
 setuptools = "*"
 twine = "*"
@@ -28,6 +32,7 @@ yojenkins = {editable = true, path = "."}
 click = "*"
 click-help-colors = "*"
 coloredlogs = "*"
+defusedxml = "*"
 docker = "*"
 json2xml = "*"
 pypiwin32 = {version = "*", markers = "sys_platform == 'win32' or platform_system == 'Windows' or os_name =='nt'"}
@@ -35,7 +40,8 @@ python-jenkins = "*"
 pywin32 = {version = "*", markers = "sys_platform == 'win32' or platform_system == 'Windows' or os_name =='nt'"}
 pyyaml = "*"
 requests_futures = "*"
-toml = "*"
+tomli = {version = "*", markers = "python_version < '3.11'"}
+tomli-w = "*"
 windows-curses = {version = "*", markers = "sys_platform == 'win32' or platform_system == 'Windows' or os_name =='nt'"}
 xmltodict = "*"
 yaspin = "*"

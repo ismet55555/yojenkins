@@ -1,5 +1,5 @@
 """Folder click sub-command"""
-# pylint: skip-file
+
 
 import click
 

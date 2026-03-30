@@ -1,5 +1,5 @@
 """Build click sub-command"""
-# pylint: skip-file
+
 
 import click
 
@@ -231,12 +231,6 @@ def rebuild(ctx, debug, **kwargs):
 @cli_decorators.profile
 @click.argument('build-url-1', nargs=1, type=str, required=True)
 @click.argument('build-url-2', nargs=1, type=str, required=True)
-# @click.option('--type',
-#               type=click.Choice(['info', 'logs'], case_sensitive=False),
-#               default="info",
-#               show_default=True,
-#               required=False,
-#               help='Type of diff comparison')
 @click.option('--logs', type=bool, default=False, required=False, is_flag=True, help='Build logs diff')
 @click.option(
     '--line-pattern',
