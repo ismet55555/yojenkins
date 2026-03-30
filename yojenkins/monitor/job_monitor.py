@@ -53,9 +53,6 @@ class JobMonitor(Monitor):
         # Building a job flag
         self.job_build = 0
 
-        # Temporary message box on screen
-        self.message_box_temp_duration = 1  # sec
-
     ###########################################################################
     #                         BUILD MONITOR
     ###########################################################################
@@ -313,7 +310,16 @@ class JobMonitor(Monitor):
                 if self.job_build > 1:  # Abort Message confirmed (pressed twice)
                     if job_url:
                         self.server_interaction = True
-                        self.job.build_trigger(job_url=job_url)
+                        # Extract default parameters for parameterized jobs
+                        params = {}
+                        with self._job_info_thread_lock:
+                            if self.job_info_data:
+                                for action in self.job_info_data.get('actions', []):
+                                    if 'parameterDefinitions' in action:
+                                        for p in action['parameterDefinitions']:
+                                            default = p.get('defaultParameterValue', {}).get('value')
+                                            params[p['name']] = default if default is not None else ''
+                        self.job.build_trigger(job_url=job_url, paramters=params)
                     else:
                         pass
                     self.job_build = 0
@@ -328,7 +334,7 @@ class JobMonitor(Monitor):
                 mu.draw_message_box(scr, message_lines)
                 # Quit Message confirmed (pressed twice)
                 if self.quit > 1:
-                    self.all_threads_enabled = False
+                    self.all_threads_off()
                     return True
             else:
                 halfdelay_normal = True
@@ -337,9 +343,9 @@ class JobMonitor(Monitor):
             if halfdelay_normal:
                 curses.halfdelay(self.halfdelay_screen_refresh)
 
-            # Straight exist program
+            # Straight exit program
             if self.exit:
-                self.all_threads_enabled = False
+                self.all_threads_off()
                 sys.exit(0)
 
             ########################################################################################
@@ -532,7 +538,9 @@ class JobMonitor(Monitor):
         """
         logger.debug('Starting thread for job builds info ...')
         try:
-            threading.Thread(target=self.__thread_builds_data, args=(monitor_interval,), daemon=False).start()
+            t = threading.Thread(target=self.__thread_builds_data, args=(monitor_interval,), daemon=True)
+            t.start()
+            self._threads.append(t)
         except Exception as error:
             logger.error(f'Failed to start job builds info monitoring thread. Exception: {error}. Type: {type(error)}')
 

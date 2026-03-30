@@ -4,18 +4,18 @@ import json
 import logging
 import os
 import re
-import sys
 from datetime import datetime
 from getpass import getpass
 from json.decoder import JSONDecodeError
 from pathlib import Path
 from typing import Any
 
-import toml
 from jenkins import Jenkins as JenkinsSDK
 
 from yojenkins.utility import utility
-from yojenkins.utility.utility import TextStyle, fail_out, failures_out, print2
+from yojenkins.utility._compat import tomli_w
+from yojenkins.utility.utility import TextStyle, print2
+from yojenkins.yo_jenkins.exceptions import AuthenticationError, RequestError, ValidationError
 from yojenkins.yo_jenkins.rest import Rest
 
 # Getting the logger reference
@@ -70,16 +70,19 @@ class Auth:
             True if successfull, else False
         """
         # Storing configurations in file
-        output_path = os.path.join(Path.home(), CONFIG_DIR_NAME, CREDS_FILE_NAME)
+        output_path = Path.home() / CONFIG_DIR_NAME / CREDS_FILE_NAME
         logger.debug(f'Saving new file (TOML format): "{output_path}" ...')
-        with open(os.path.join(output_path), 'w') as file:  # Overwrite previous content
-            toml.dump(profiles, file)
+        with open(output_path, 'w') as file:  # Overwrite previous content
+            file.write(tomli_w.dumps(profiles))
 
         # Add top file prefix for TOML file format
         lines_new = [f'# -*- mode: toml -*-{os.linesep}', f'# vim: set filetype=toml{os.linesep}']
         success = utility.append_lines_to_file(output_path, lines_new, 'beginning')
         if not success:
             return False
+
+        # Restrict credential file to owner-only read/write
+        os.chmod(output_path, 0o600)
 
         return True
 
@@ -112,17 +115,17 @@ class Auth:
         if not token_name:
             prompt_text = TextStyle.BOLD + TextStyle.YELLOW + 'Enter desired API TOKEN NAME: ' + TextStyle.NORMAL
             token_name = input(prompt_text)
-            logger.debug(f'User input: {token_name}')
+            logger.debug('User provided token name')
 
         if not server_base_url:
             prompt_text = TextStyle.BOLD + TextStyle.YELLOW + 'Enter Jenkins SERVER BASE URL: ' + TextStyle.NORMAL
             server_base_url = input(prompt_text)
-            logger.debug(f'User input: {server_base_url}')
+            logger.debug('User provided server base URL')
 
         if not username:
             prompt_text = TextStyle.BOLD + TextStyle.YELLOW + 'Enter Jenkins server USERNAME: ' + TextStyle.NORMAL
             username = input(prompt_text)
-            logger.debug(f'User input: {username}')
+            logger.debug('User provided username')
 
         if not password:
             prompt_text = TextStyle.BOLD + TextStyle.YELLOW + f'Enter "{username}" PASSWORD: ' + TextStyle.NORMAL
@@ -139,7 +142,7 @@ class Auth:
             new_session=True,
         )
         if not success:
-            fail_out(
+            raise RequestError(
                 'Failed to generate API token. Crumb issuer failed. Check server base URL, username, or password.'
             )
         crumb_value = re.sub(re.compile('<.*?>|Jenkins-Crumb'), '', request_return_text)
@@ -163,14 +166,16 @@ class Auth:
             headers=headers,
         )
         if not success:
-            fail_out('Failed to generate API token. Request failed')
+            raise RequestError('Failed to generate API token. Request failed')
 
         generated_token = ''
         try:
             generated_token = request_return_content['data']['tokenValue']
             logger.debug(f'Successfully generated server API token "{token_name}"!')
         except KeyError:
-            fail_out('Failed to generate API token. Failed to find "tokenValue" in the POST request return header')
+            raise RequestError(
+                'Failed to generate API token. Failed to find "tokenValue" in the POST request return header'
+            )
 
         return generated_token
 
@@ -188,7 +193,7 @@ class Auth:
         # Check if the credential config file exists
         file_exists, file_path = self._detect_creds_file()
         if not file_exists:
-            fail_out('Credential configuration ')
+            raise RequestError('Credential configuration ')
 
         # Load the current cred config file
         profiles = utility.load_contents_from_local_file('toml', file_path)
@@ -197,7 +202,7 @@ class Auth:
 
         # Check if the profile exists
         if profile_name not in profiles:
-            fail_out(f'Profile "{profile_name}" does not exist in the credentials file')
+            raise ValidationError(f'Profile "{profile_name}" does not exist in the credentials file')
 
         profile_info = profiles[profile_name]
         logger.debug(f'Profile "{profile_name}" loaded')
@@ -229,7 +234,7 @@ class Auth:
 
         success = self._update_profiles(profiles=profiles)
         if not success:
-            fail_out(f'Failed to add new API token to profile "{profile_name}"')
+            raise RequestError(f'Failed to add new API token to profile "{profile_name}"')
 
         return api_token
 
@@ -245,8 +250,8 @@ class Auth:
         Returns:
             This is a description of what is returned.
         """
-        config_dir_abs_path = os.path.join(Path.home(), CONFIG_DIR_NAME)
-        creds_file_abs_path = os.path.join(config_dir_abs_path, CREDS_FILE_NAME)
+        config_dir_abs_path = Path.home() / CONFIG_DIR_NAME
+        creds_file_abs_path = config_dir_abs_path / CREDS_FILE_NAME
 
         # Checking if credential config file exists
         file_exists, file_path = self._detect_creds_file()
@@ -274,7 +279,7 @@ class Auth:
             # Load the authentication setup JSON file
             setup_info = utility.load_contents_from_local_file('json', auth_file)
             if not setup_info:
-                fail_out(f'Failed to load authentication setup JSON info file: {auth_file}')
+                raise RequestError(f'Failed to load authentication setup JSON info file: {auth_file}')
 
             print2(f'Adding {len(setup_info)} authentication profile(s) specified in file "{auth_file}" ...')
 
@@ -367,14 +372,14 @@ class Auth:
             Success, Directory path of the credentials profile file
         """
         home_dir = Path.home()
-        if not os.path.exists(home_dir):
+        if not home_dir.exists():
             logger.debug(f'Home directory does not exist: {home_dir}')
             return False, ''
-        config_dir_abs_path = os.path.join(home_dir, CONFIG_DIR_NAME)
-        if not os.path.exists(config_dir_abs_path):
+        config_dir_abs_path = home_dir / CONFIG_DIR_NAME
+        if not config_dir_abs_path.exists():
             logger.debug(f'Configuration directory does not exist: {config_dir_abs_path}')
             return False, ''
-        return True, config_dir_abs_path
+        return True, str(config_dir_abs_path)
 
     def _detect_creds_file(self) -> tuple[bool, str]:
         """Detect/find the credentials profile file in the home directory
@@ -387,16 +392,16 @@ class Auth:
         """
         if not self._detect_config_dir()[0]:
             return False, ''
-        config_dir_abs_path = os.path.join(Path.home(), CONFIG_DIR_NAME)
+        config_dir_abs_path = Path.home() / CONFIG_DIR_NAME
 
         # Seeing if configuration file is in specified directories
-        if os.path.exists(os.path.join(config_dir_abs_path, CREDS_FILE_NAME)):
+        creds_path = config_dir_abs_path / CREDS_FILE_NAME
+        if creds_path.exists():
             logger.debug(
                 f'Successfully found credential file "{CREDS_FILE_NAME}" found in user '
                 f'configuration directory: {config_dir_abs_path}'
             )
-            config_filepath = os.path.join(config_dir_abs_path, CREDS_FILE_NAME)
-            return True, config_filepath
+            return True, str(creds_path)
         else:
             logger.debug(
                 f'Failed to find credential file "{CREDS_FILE_NAME}" in user '
@@ -431,12 +436,12 @@ class Auth:
             # For security reasons do not show what user intendent to provide
             if profile:
                 if profile.startswith('{'):
-                    fail_out(
+                    raise ValidationError(
                         'Specified profile option is not valid. Its value begins with '
                         'a "{" symbol indicating user attempted to provide profile info '
                         'via --profile option. Please check option input structure.'
                     )
-            creds_file_abs_path = os.path.join(Path.home(), CONFIG_DIR_NAME, CREDS_FILE_NAME)
+            creds_file_abs_path = str(Path.home() / CONFIG_DIR_NAME / CREDS_FILE_NAME)
 
             # Check if credentials file existis on system
             if not self._detect_creds_file()[0]:
@@ -447,7 +452,7 @@ class Auth:
             # Loading configurations file
             creds_info = utility.load_contents_from_local_file('toml', creds_file_abs_path)
             if not creds_info:
-                fail_out(f'Failed to load credentials file: {creds_file_abs_path}')
+                raise RequestError(f'Failed to load credentials file: {creds_file_abs_path}')
 
             # Get the listed profiles
             profile_items_all = creds_info
@@ -471,7 +476,7 @@ class Auth:
         else:
             for i, (profile_name, profile_values) in enumerate(profile_items_all.items()):
                 if not isinstance(profile_values, dict):
-                    fail_out(
+                    raise ValidationError(
                         'Failed to find specified profile as the correct '
                         'key-value structure. Please check profile structure'
                     )
@@ -481,11 +486,9 @@ class Auth:
                 else:
                     logger.debug(f'    - Profile {i + 1} of {len(profile_items_all)}: "{profile_name}" - IGNORED')
         if not profile_items:
-            failures_out(
-                [
-                    'Failed to find any valid profiles in the provided credentials',
-                    f'A valid profile must have at least the follwing keys: {", ".join(REQUIRED_PROFILE_KEYS)}',
-                ]
+            raise AuthenticationError(
+                'Failed to find any valid profiles in the provided credentials. '
+                f'A valid profile must have at least the follwing keys: {", ".join(REQUIRED_PROFILE_KEYS)}'
             )
 
         # Select the credential profile
@@ -503,7 +506,7 @@ class Auth:
                 profile_selected['profile'] = profile
                 logger.debug(f'Successfully matched specified --profile "{profile}"')
             else:
-                fail_out(
+                raise ValidationError(
                     f'Failed to find the profile "{profile}" within all loaded '
                     f'profiles: {", ".join(list(profile_items.keys()))}'
                 )
@@ -522,7 +525,7 @@ class Auth:
                         f'Successfully matched set {PROFILE_ENV_VAR} environmental variable value "{profile}"'
                     )
                 else:
-                    fail_out(
+                    raise ValidationError(
                         f'Failed to find the set environmental variable {PROFILE_ENV_VAR} "{profile}" '
                         'in the profiles loaded'
                     )
@@ -552,7 +555,7 @@ class Auth:
                         break
 
         if not profile_selected:
-            fail_out('No active user profiles found. If no profile was set up, please configure one')
+            raise AuthenticationError('No active user profiles found. If no profile was set up, please configure one')
 
         # Show the partial info of the loaded profile
         self.jenkins_profile = profile_selected
@@ -580,12 +583,12 @@ class Auth:
         if profile_info:
             self.jenkins_profile = profile_info
         if not self.jenkins_profile:
-            fail_out('No credential profile loaded')
+            raise AuthenticationError('No credential profile loaded')
 
         # Check if server url has a protocol schema
         url_protocol_schema = re.findall(r'(\w+)://', self.jenkins_profile['jenkins_server_url'])
         if not url_protocol_schema:
-            fail_out(
+            raise ValidationError(
                 'Failed to find a valid server URL protocol schema (ie. http://, https://, etc) '
                 f'in the loaded profile server url: "{self.jenkins_profile["jenkins_server_url"]}"'
             )
@@ -607,14 +610,8 @@ class Auth:
             )
             print2('')
 
-            # NOTE: Below dead code is to potentially check length of the api_token
-            # if len(self.jenkins_profile['api_token']) < 5:
-            #     logger.debug(f'The entered API Token has a length of {len(self.jenkins_profile["api_token"])}, which is too short')
-            #     return False
-
         # Load the token or password
         if token:
-            #  logger.debug('API Token / Password loaded via --token CLI option')
             self.jenkins_profile['api_token'] = token
             self.jenkins_api_token = token
             hidden_token = 'Loaded via --token'
@@ -633,7 +630,7 @@ class Auth:
                 timeout=10,
             )
         except Exception as error:
-            fail_out(f'Internal Error: Failed to create Jenkins object. Exception: {error}')
+            raise RequestError(f'Internal Error: Failed to create Jenkins object. Exception: {error}')
 
         # Update the credentials in Rest object
         self.rest.set_credentials(
@@ -644,48 +641,16 @@ class Auth:
 
         # Check network connection
         if not self.rest.is_reachable():
-            print2(
-                f'Jenkins server connection failed (Server: {self.jenkins_profile["jenkins_server_url"]})',
-                bold=True,
-                color='red',
+            raise AuthenticationError(
+                f'Jenkins server connection failed: {self.jenkins_profile["jenkins_server_url"]}'
             )
-            print2('Possible causes:', bold=True, color='red')
-            print2(
-                f'  - Wrong Jenkins server URL: {self.jenkins_profile["jenkins_server_url"]}', bold=True, color='red'
-            )
-            print2('  - Network/Internet is down', bold=True, color='red')
-            print2('  - Server container is down', bold=True, color='red')
-            print2('Possible solutions:', bold=True, color='red')
-            print2('   - Fix yo network connection to server', bold=True, color='red')
-            print2('   - Check if the server container or container engine is up and running', bold=True, color='red')
-            sys.exit(1)
 
         # Checking authentication
         logger.debug(f'Checking authentication to Jenkins server: {self.jenkins_profile["jenkins_server_url"]} ...')
         if not self.verify():
-            # TODO: Move this message to cli_auth.py, only return bool
-            print2(
-                f'Jenkins server authentication failed (Username: {self.jenkins_profile["username"]})',
-                bold=True,
-                color='red',
+            raise AuthenticationError(
+                f'Jenkins server authentication failed for user: {self.jenkins_profile["username"]}'
             )
-            print2('Possible causes:', bold=True, color='red')
-            print2(
-                f'    - Wrong Jenkins server URL: {self.jenkins_profile["jenkins_server_url"]}', bold=True, color='red'
-            )
-            print2(f'    - Incorrect username: {self.jenkins_profile["username"]}', bold=True, color='red')
-            print2('    - Incorrect, removed, or expired API Token', bold=True, color='red')
-            print2(
-                f'    - Username, {self.jenkins_profile["username"]}, does not have permission', bold=True, color='red'
-            )
-            print2('    - Jenkins server is still in the process of starting up', bold=True, color='red')
-            print2('Possible solutions:', bold=True, color='red')
-            print2('    - yojenkins auth token', bold=True, color='red')
-            print2('    - yojenkins auth configure', bold=True, color='red')
-            print2('    - Manually create or update credentials file in home directory', bold=True, color='red')
-            print2('    - Go to Jenkins Web UI and check user configurations', bold=True, color='red')
-            print2('    - Give Jenkins server a little to start up', bold=True, color='red')
-            sys.exit(1)
 
         return True
 
@@ -701,7 +666,7 @@ class Auth:
         success, config_filepath = self._detect_creds_file()
         if not success:
             # If no configuration file found
-            fail_out('Failed to find a valid credentials file')
+            raise RequestError('Failed to find a valid credentials file')
 
         # Loading configurations file
         return utility.load_contents_from_local_file('toml', config_filepath)
@@ -720,13 +685,15 @@ class Auth:
         try:
             request_url = self.jenkins_profile['jenkins_server_url'].strip('/') + '/me/api/json'
         except KeyError:
-            fail_out('Failed to find profile key "jenkins_server_url". Profile may not have loaded correctly')
+            raise AuthenticationError(
+                'Failed to find profile key "jenkins_server_url". Profile may not have loaded correctly'
+            )
         request_success = self.rest.request(target=request_url, is_endpoint=False, request_type='head')[2]
         if not request_success:
             messages = ['Failed server authentication with specified user credentials']
             if 'YOJENKINS_TOKEN' in os.environ:
                 messages.append('   - NOTE: Environmental variable YOJENKINS_TOKEN is defined')
-            failures_out(messages)
+            raise AuthenticationError('. '.join(messages))
         logger.debug('Successfully authenticated with specified user credentials')
 
         return True
@@ -744,5 +711,5 @@ class Auth:
         """
         data = self.rest.request('me/api/json', 'get')[0]
         if not data:
-            fail_out('Failed to get user information')
+            raise RequestError('Failed to get user information')
         return data

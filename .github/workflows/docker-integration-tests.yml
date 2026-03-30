@@ -1,0 +1,57 @@
+name: Docker Integration Tests
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  docker-integration:
+    name: Integration Tests (Docker)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Update apt package repositories
+        run: sudo apt-get update
+
+      - name: Install Linux simpleaudio dependency
+        run: sudo apt-get install -y python3-dev libasound2-dev
+
+      - name: Install/Upgrade Python tooling
+        run: python -m pip install --upgrade pip pipenv virtualenv wheel setuptools
+
+      - id: cache-pipenv
+        uses: actions/cache@v3
+        with:
+          path: ~/.local/share/virtualenvs
+          key: ${{ runner.os }}-pipenv-${{ hashFiles('**/Pipfile.lock') }}
+
+      - name: Install dependencies
+        run: pipenv install --ignore-pipfile --dev
+
+      - name: Build the package
+        run: pipenv run python setup.py install --verbose
+
+      - name: Verify Docker is available
+        run: docker info
+
+      - name: Run Docker integration tests
+        run: pipenv run pytest -v -m docker --tb=short --log-cli-level=INFO
+
+      - name: Cleanup Docker artifacts
+        if: always()
+        run: |
+          docker rm -f yojenkins-integration-test || true
+          docker volume rm yojenkins-integration-vol || true
+          docker rmi yojenkins-integration:latest || true

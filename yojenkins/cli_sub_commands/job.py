@@ -1,5 +1,4 @@
 """Job click sub-command"""
-# pylint: skip-file
 
 import click
 
@@ -106,6 +105,7 @@ def build_exist(debug, **kwargs):
 @click.option(
     '--follow-logs', type=bool, required=False, is_flag=True, help='Wait for build, follow logs when build starts'
 )
+@click.option('--monitor', type=bool, required=False, is_flag=True, help='Wait for build, then open build monitor UI')
 def build(debug, **kwargs):
     """Build a job
 
@@ -115,6 +115,7 @@ def build(debug, **kwargs):
       - yojenkins job build my_job
       - yojenkins job build my_job --parameter MY_PARAM "my param value"
       - yojenkins job build my_job --follow-logs
+      - yojenkins job build my_job --monitor
     """
     set_debug_log_level(debug)
     cli_job.build(**translate_kwargs(kwargs))
@@ -139,8 +140,8 @@ def queue_check(debug, **kwargs):
 def queue_cancel(debug, **kwargs):
     """Cancel this job in queue"""
     set_debug_log_level(debug)
-    # cli_job.queue_cancel(**translate_kwargs(kwargs))
-    click.secho('TODO :-/', fg='yellow')
+    click.secho('Not yet implemented', fg='yellow', err=True)
+    raise SystemExit(1)
 
 
 @job.command(short_help='\tOpen job in web browser')
@@ -253,7 +254,7 @@ def monitor(debug, **kwargs):
     default=False,
     required=False,
     is_flag=True,
-    help='The specified file is in JSON format',
+    help='[Deprecated: format is auto-detected] The specified file is in JSON format',
 )
 def create(debug, **kwargs):
     """Create a job"""

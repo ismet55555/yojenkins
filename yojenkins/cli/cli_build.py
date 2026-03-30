@@ -7,7 +7,12 @@ import click
 
 from yojenkins.cli import cli_utility as cu
 from yojenkins.cli.cli_utility import log_to_history
-from yojenkins.utility.utility import is_complete_build_url, wait_for_build_and_follow_logs
+from yojenkins.utility.utility import (
+    browser_open,
+    is_complete_build_url,
+    wait_for_build_and_follow_logs,
+    wait_for_build_and_monitor,
+)
 from yojenkins.yo_jenkins.status import Status
 
 # Getting the logger reference
@@ -46,12 +51,16 @@ def info(profile: str, token: str, job: str, number: int, url: str, latest: bool
         url:     The build url to get info on
         latest:  Option to get the latest build
     """
+    job = cu.resolve_stdin(job) if job else job
     if url is None and job and is_complete_build_url(job):
         url, job = job, None
     elif job and not number and not latest:
+        hint = ' (Did you mean a full URL with http:// prefix?)' if '/' in job and not job.startswith('http') else ''
         click.echo(
             click.style(
-                'INPUT ERROR: For job, either specify --number or --latest. See --help', fg='bright_red', bold=True
+                f'INPUT ERROR: For job name, specify --number or --latest.{hint} See --help',
+                fg='bright_red',
+                bold=True,
             )
         )
         sys.exit(1)
@@ -79,12 +88,16 @@ def status(profile: str, token: str, job: str, number: int, url: str, latest: bo
         url: The build url to get info on
         latest: Option to get the latest build
     """
+    job = cu.resolve_stdin(job) if job else job
     if url is None and job and is_complete_build_url(job):
         url, job = job, None
     elif job and not number and not latest:
+        hint = ' (Did you mean a full URL with http:// prefix?)' if '/' in job and not job.startswith('http') else ''
         click.echo(
             click.style(
-                'INPUT ERROR: For job, either specify --number or --latest. See --help', fg='bright_red', bold=True
+                f'INPUT ERROR: For job name, specify --number or --latest.{hint} See --help',
+                fg='bright_red',
+                bold=True,
             )
         )
         sys.exit(1)
@@ -130,9 +143,12 @@ def abort(profile: str, token: str, job: str, number: int, url: str, latest: boo
     if url is None and job and is_complete_build_url(job):
         url, job = job, None
     elif job and not number and not latest:
+        hint = ' (Did you mean a full URL with http:// prefix?)' if '/' in job and not job.startswith('http') else ''
         click.echo(
             click.style(
-                'INPUT ERROR: For job, either specify --number or --latest. See --help', fg='bright_red', bold=True
+                f'INPUT ERROR: For job name, specify --number or --latest.{hint} See --help',
+                fg='bright_red',
+                bold=True,
             )
         )
         sys.exit(1)
@@ -161,9 +177,12 @@ def delete(profile: str, token: str, job: str, number: int, url: str, latest: bo
     if url is None and job and is_complete_build_url(job):
         url, job = job, None
     elif job and not number and not latest:
+        hint = ' (Did you mean a full URL with http:// prefix?)' if '/' in job and not job.startswith('http') else ''
         click.echo(
             click.style(
-                'INPUT ERROR: For job, either specify --number or --latest. See --help', fg='bright_red', bold=True
+                f'INPUT ERROR: For job name, specify --number or --latest.{hint} See --help',
+                fg='bright_red',
+                bold=True,
             )
         )
         sys.exit(1)
@@ -193,9 +212,12 @@ def stages(profile: str, token: str, opt_list: bool, job: str, number: int, url:
     if url is None and job and is_complete_build_url(job):
         url, job = job, None
     elif job and not number and not latest:
+        hint = ' (Did you mean a full URL with http:// prefix?)' if '/' in job and not job.startswith('http') else ''
         click.echo(
             click.style(
-                'INPUT ERROR: For job, either specify --number or --latest. See --help', fg='bright_red', bold=True
+                f'INPUT ERROR: For job name, specify --number or --latest.{hint} See --help',
+                fg='bright_red',
+                bold=True,
             )
         )
         sys.exit(1)
@@ -235,12 +257,16 @@ def logs(
         download_dir: Option to download the log to a directory
         follow: Option to follow the log
     """
+    job = cu.resolve_stdin(job) if job else job
     if url is None and job and is_complete_build_url(job):
         url, job = job, None
     elif job and not number and not latest:
+        hint = ' (Did you mean a full URL with http:// prefix?)' if '/' in job and not job.startswith('http') else ''
         click.echo(
             click.style(
-                'INPUT ERROR: For job, either specify --number or --latest. See --help', fg='bright_red', bold=True
+                f'INPUT ERROR: For job name, specify --number or --latest.{hint} See --help',
+                fg='bright_red',
+                bold=True,
             )
         )
         sys.exit(1)
@@ -286,12 +312,20 @@ def browser(profile: str, token: str, job: str, number: int, url: str, latest: b
     if url is None and job and is_complete_build_url(job):
         url, job = job, None
     elif job and not number and not latest:
+        hint = ' (Did you mean a full URL with http:// prefix?)' if '/' in job and not job.startswith('http') else ''
         click.echo(
             click.style(
-                'INPUT ERROR: For job, either specify --number or --latest. See --help', fg='bright_red', bold=True
+                f'INPUT ERROR: For job name, specify --number or --latest.{hint} See --help',
+                fg='bright_red',
+                bold=True,
             )
         )
         sys.exit(1)
+
+    # If we have a complete build URL and no job name to resolve, skip auth
+    if url and cu.is_full_url(url) and not job and not number and not latest:
+        browser_open(url)
+        return
 
     yj_obj = cu.config_yo_jenkins(profile, token)
 
@@ -317,9 +351,12 @@ def monitor(profile: str, token: str, job: str, number: int, url: str, latest: b
     if url is None and job and is_complete_build_url(job):
         url, job = job, None
     elif job and not number and not latest:
+        hint = ' (Did you mean a full URL with http:// prefix?)' if '/' in job and not job.startswith('http') else ''
         click.echo(
             click.style(
-                'INPUT ERROR: For job, either specify --number or --latest. See --help', fg='bright_red', bold=True
+                f'INPUT ERROR: For job name, specify --number or --latest.{hint} See --help',
+                fg='bright_red',
+                bold=True,
             )
         )
         sys.exit(1)
@@ -350,9 +387,12 @@ def parameters(
     if url is None and job and is_complete_build_url(job):
         url, job = job, None
     elif job and not number and not latest:
+        hint = ' (Did you mean a full URL with http:// prefix?)' if '/' in job and not job.startswith('http') else ''
         click.echo(
             click.style(
-                'INPUT ERROR: For job, either specify --number or --latest. See --help', fg='bright_red', bold=True
+                f'INPUT ERROR: For job name, specify --number or --latest.{hint} See --help',
+                fg='bright_red',
+                bold=True,
             )
         )
         sys.exit(1)
@@ -368,7 +408,9 @@ def parameters(
 
 
 @log_to_history
-def rebuild(profile: str, token: str, job: str, number: int, url: str, latest: bool, follow_logs: bool) -> None:
+def rebuild(
+    profile: str, token: str, job: str, number: int, url: str, latest: bool, follow_logs: bool, monitor: bool = False
+) -> None:
     """Rebuild a build with same setup/parameters
 
     Args:
@@ -379,14 +421,18 @@ def rebuild(profile: str, token: str, job: str, number: int, url: str, latest: b
         url:     The build URL
         latest:  Option to get the latest build
         follow_logs: Waits for the job build, then follows resulting logs
+        monitor: Waits for the job build, then opens build monitor UI
     """
 
     if url is None and job and is_complete_build_url(job):
         url, job = job, None
     elif job and not number and not latest:
+        hint = ' (Did you mean a full URL with http:// prefix?)' if '/' in job and not job.startswith('http') else ''
         click.echo(
             click.style(
-                'INPUT ERROR: For job, either specify --number or --latest. See --help', fg='bright_red', bold=True
+                f'INPUT ERROR: For job name, specify --number or --latest.{hint} See --help',
+                fg='bright_red',
+                bold=True,
             )
         )
         sys.exit(1)
@@ -398,6 +444,9 @@ def rebuild(profile: str, token: str, job: str, number: int, url: str, latest: b
     else:
         data = yj_obj.build.rebuild(build_url=url, job_name=job, build_number=number, latest=latest)
 
+    if monitor:
+        wait_for_build_and_monitor(yj_obj, data)
+        return
     if not follow_logs:
         click.secho(f'success. queue number: {data}', fg='bright_green', bold=True)
         return

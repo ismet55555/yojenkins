@@ -12,20 +12,21 @@ from shlex import quote
 from typing import Callable, Union
 
 import click
-import toml
 import yaml
 from json2xml import json2xml
 from json2xml.utils import readfromstring
-from urllib3.util import parse_url
 
 from yojenkins import __version__
+from yojenkins.utility._compat import tomli_w
 from yojenkins.yo_jenkins.auth import Auth
+from yojenkins.yo_jenkins.exceptions import YoJenkinsException
 from yojenkins.yo_jenkins.rest import Rest
 from yojenkins.yo_jenkins.yojenkins import YoJenkins
 from yojenkins.utility.utility import (
     am_i_bundled,
     am_i_inside_docker,
     create_new_history_file,
+    is_full_url,  # noqa: F401 - used by cli_sub_commands via cu.is_full_url
     iter_data_empty_item_stripper,
     print2,
 )
@@ -41,6 +42,18 @@ MAX_PROFILE_HISTORY_LENGTH = 1000
 
 CLI_CMD_PATH = sys.argv[0]
 CLI_CMD_ARGS = ' '.join([quote(arg) for arg in sys.argv[1:]])
+
+
+def resolve_stdin(value: str) -> str:
+    """If value is '-', read from stdin and return stripped content.
+
+    Enables piping: echo "myJob" | yojenkins build info -
+    """
+    if value == '-':
+        if sys.stdin.isatty():
+            return value  # No piped input, treat '-' as literal
+        return click.get_text_stream('stdin').read().strip()
+    return value
 
 
 def set_debug_log_level(debug_flag: bool) -> None:
@@ -101,17 +114,8 @@ def config_yo_jenkins(profile: str, token: str) -> YoJenkins:
         Initialized YoJenkins object
     """
     auth = Auth(Rest())
-
-    # Get the credential profile
-    if not auth.get_credentials(profile):
-        click.secho('Failed to find any credentials', fg='bright_red', bold=True)
-        sys.exit(1)
-
-    # Create authentication
-    if not auth.create_auth(token=token):
-        click.secho('Failed authentication', fg='bright_red', bold=True)
-        sys.exit(1)
-
+    auth.get_credentials(profile)
+    auth.create_auth(token=token)
     return YoJenkins(auth)
 
 
@@ -157,7 +161,7 @@ def standard_out(
         # TOML format
         data = {'item': data} if isinstance(data, list) else data
         logger.debug('Outputting TOML format ...')
-        print2(toml.dumps(data))
+        print2(tomli_w.dumps(data))
     else:
         # JSON format
         logger.debug('Outputting JSON format ...')
@@ -165,34 +169,6 @@ def standard_out(
             print2(json.dumps(data, indent=4, sort_keys=True))
         else:
             print2(json.dumps(data))
-
-
-def is_full_url(url: str) -> bool:
-    """Check if the provided url is a full and valide URL
-
-    ### DUPLICATE: See yojenkins.utility.utility
-
-    Args:
-        url: The URL to check
-
-    Returns:
-        True if full and valid, else False
-    """
-    # TODO: Remove this function from this file
-    #       Do url check within the class, not within the cli to not keep repeating it
-    #       In classes use yojenkins.utility.utility.is_full_url()
-
-    parsed_url = parse_url(url)
-    if all([parsed_url.scheme, parsed_url.netloc, parsed_url.path]):
-        is_valid_url = True
-    else:
-        is_valid_url = False
-    logger.debug(f'Is valid URL format: {is_valid_url} - {url}')
-    logger.debug(f'    - scheme:  {parsed_url.scheme} - {"OK" if parsed_url.scheme else "MISSING"}')
-    logger.debug(f'    - netloc:  {parsed_url.netloc} - {"OK" if parsed_url.netloc else "MISSING"}')
-    logger.debug(f'    - path:    {parsed_url.path} - {"OK" if parsed_url.path else "MISSING"}')
-
-    return is_valid_url
 
 
 def server_target_check(target: str) -> bool:
@@ -220,41 +196,60 @@ def log_to_history(decorated_function) -> Callable:
         arg_index = -1
 
     def wrapper(*args, **kwargs) -> None:
-        # Get the profile name for the command
-        if 'profile' in kwargs:
-            profile_name = kwargs['profile']
-        elif arg_index >= 0:
-            profile_name = args[arg_index]
-        else:
-            # If no profile is used by the decorated function, use the default profile name
-            profile_name = DEFAULT_PROFILE_NAME
+        # Check if history tracking is disabled
+        history_disabled = os.environ.get('YOJENKINS_DISABLE_HISTORY', '').lower() in ('1', 'true', 'yes')
+        if not history_disabled:
+            config_path = Path.home() / CONFIG_DIR_NAME / 'config'
+            if config_path.is_file():
+                try:
+                    with open(config_path) as f:
+                        for line in f:
+                            if line.strip() == 'history_enabled=false':
+                                history_disabled = True
+                                break
+                except Exception:
+                    pass
 
-        if profile_name is None:
-            # If function has profile argument, but none was passed, use the default profile name
-            profile_name = DEFAULT_PROFILE_NAME
+        if not history_disabled:
+            # Get the profile name for the command
+            if 'profile' in kwargs:
+                profile_name = kwargs['profile']
+            elif arg_index >= 0:
+                profile_name = args[arg_index]
+            else:
+                # If no profile is used by the decorated function, use the default profile name
+                profile_name = DEFAULT_PROFILE_NAME
 
-        # Check if history file exists, if not create it
-        history_file_path = os.path.join(os.path.join(Path.home(), CONFIG_DIR_NAME), HISTORY_FILE_NAME)
-        if not os.path.isfile(history_file_path):
-            create_new_history_file(history_file_path)
+            if profile_name is None:
+                # If function has profile argument, but none was passed, use the default profile name
+                profile_name = DEFAULT_PROFILE_NAME
 
-        logger.debug(f'Logging command to command history file: "{history_file_path}" ...')
-        command_info = {
-            'profile': profile_name,
-            'tool_path': CLI_CMD_PATH,
-            'arguments': CLI_CMD_ARGS,
-            'timestamp': datetime.now().timestamp(),
-            'datetime': datetime.now().strftime('%A, %B %d, %Y %I:%M:%S'),
-            'tool_version': __version__,
-        }
+            # Check if history file exists, if not create it
+            history_file_path = Path.home() / CONFIG_DIR_NAME / HISTORY_FILE_NAME
+            if not history_file_path.is_file():
+                create_new_history_file(history_file_path)
 
-        # Add line to history file
+            logger.debug(f'Logging command to command history file: "{history_file_path}" ...')
+            command_info = {
+                'profile': profile_name,
+                'tool_path': CLI_CMD_PATH,
+                'arguments': CLI_CMD_ARGS,
+                'timestamp': datetime.now().timestamp(),
+                'datetime': datetime.now().strftime('%A, %B %d, %Y %I:%M:%S'),
+                'tool_version': __version__,
+            }
+
+            # Add line to history file
+            try:
+                with open(history_file_path, 'a', encoding='utf-8') as outfile:
+                    outfile.write(json.dumps(command_info) + '\n')
+            except Exception as error:
+                logger.debug(f'Failed to write command history file: {error}')
+
         try:
-            with open(history_file_path, 'a', encoding='utf-8') as outfile:
-                outfile.write(json.dumps(command_info) + '\n')
-        except Exception as error:
-            logger.debug(f'Failed to write command history file: {error}')
-
-        return decorated_function(*args, **kwargs)
+            return decorated_function(*args, **kwargs)
+        except YoJenkinsException as exc:
+            click.secho(str(exc), fg='bright_red', bold=True)
+            sys.exit(1)
 
     return wrapper

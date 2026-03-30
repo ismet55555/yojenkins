@@ -176,3 +176,12 @@ config.yaml
 docs/site/**
 
 NOTES.md
+
+# Claude Code local settings (machine-specific permissions)
+.claude/settings.local.json
+
+# Vite build cache
+webapp/.vite/
+
+# Generated integration test JCasC config
+integration_test_casc.yaml

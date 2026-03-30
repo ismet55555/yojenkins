@@ -3,7 +3,7 @@ requires = ["setuptools >= 43.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.pytest.ini_options]
-addopts = "-p no:warnings"
+addopts = "-p no:warnings --strict-markers"
 console_output_style = "classic"
 log_level = "INFO"
 log_format = '[%(filename)-22s:%(lineno)4s] %(message)s'
@@ -12,6 +12,25 @@ log_file = "yojenkins_test_log.log"
 log_file_format = '[%(filename)-22s:%(lineno)4s] %(message)s'
 testpaths = ["tests"]
 python_files = ["test_*.py"]
+markers = [
+    "slow: requires Docker or long-running operations",
+    "docker: requires Docker daemon",
+    "e2e: end-to-end CLI tests",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["yojenkins"]
+omit = ["yojenkins/__main__.py", "tests/integration/*"]
+
+[tool.coverage.report]
+fail_under = 90
+show_missing = true
+exclude_lines = [
+    "pragma: no cover",
+    "if __name__",
+    "if platform.system",
+]
 
 [tool.bandit]
 skips = ["B101", "B105", "B107"]

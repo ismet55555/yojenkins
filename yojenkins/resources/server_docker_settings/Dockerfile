@@ -50,6 +50,6 @@ COPY --chown=jenkins:jenkins ./${JENKINS_CONFIG_FILE} /var/jenkins_home/casc.yam
 # Copy and run extra/custom setup script passed by user
 USER root
 COPY extra_setup_script.sh /usr/local/bin/
-RUN chmod 766 /usr/local/bin/extra_setup_script.sh
+RUN chmod 755 /usr/local/bin/extra_setup_script.sh
 RUN /usr/local/bin/extra_setup_script.sh
 USER jenkins

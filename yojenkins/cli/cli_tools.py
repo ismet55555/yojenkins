@@ -2,7 +2,6 @@
 
 import json
 import logging
-import os
 import sys
 from pathlib import Path
 
@@ -107,7 +106,7 @@ def feature_request() -> None:
         logger.debug('Failed to open in web browser')
 
 
-def history(profile: str, clear: bool) -> None:
+def history(profile: str, clear: bool, enable: bool = False, disable: bool = False) -> None:
     """Display the command history and clearing the history file if requested.
 
     ### TODO: Ability to clear only for a specific profile.
@@ -115,14 +114,31 @@ def history(profile: str, clear: bool) -> None:
     Args:
         profile: The name of the profile to to filter history with
         clear:   Clearing the history file
+        enable:  Enable history tracking
+        disable: Disable history tracking
     """
-    history_file_path = os.path.join(os.path.join(Path.home(), cu.CONFIG_DIR_NAME), cu.HISTORY_FILE_NAME)
+    config_path = Path.home() / cu.CONFIG_DIR_NAME / 'config'
+
+    if enable or disable:
+        config_path.parent.mkdir(parents=True, exist_ok=True)
+        lines = []
+        if config_path.is_file():
+            with open(config_path) as f:
+                lines = [l for l in f.readlines() if not l.strip().startswith('history_enabled=')]
+        lines.append(f'history_enabled={"true" if enable else "false"}\n')
+        with open(config_path, 'w') as f:
+            f.writelines(lines)
+        state = 'enabled' if enable else 'disabled'
+        click.secho(f'History tracking {state}', fg='bright_green', bold=True)
+        sys.exit(0)
+
+    history_file_path = Path.home() / cu.CONFIG_DIR_NAME / cu.HISTORY_FILE_NAME
 
     # Clearing the history file if requested
     if clear:
         logger.debug(f'Removing history file: {history_file_path} ...')
         try:
-            os.remove(history_file_path)
+            history_file_path.unlink()
         except (OSError, PermissionError) as error:
             fail_out(f'Failed to clear history file. Exception: {error}')
         logger.debug('Successfully cleared history file')
@@ -218,9 +234,9 @@ def run_script(profile: str, token: str, text: str, file: str, output: str) -> N
     elif file:
         logger.debug(f'Loading specified script from file: {file} ...')
         try:
-            with open(os.path.join(file)) as open_file:
+            with open(file) as open_file:
                 script = open_file.read()
-            script_size = os.path.getsize(file)
+            script_size = Path(file).stat().st_size
             logger.debug(f'Successfully loaded script file ({script_size} Bytes)')
         except FileNotFoundError:
             fail_out(f'Failed to find specified script file ({file})')

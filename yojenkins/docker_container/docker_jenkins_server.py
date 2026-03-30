@@ -1,10 +1,11 @@
 """Containerized Jenkins instance Management"""
 
 import logging
-import os
 import platform
+import secrets
 import shutil
 from datetime import datetime
+from pathlib import Path
 
 if platform.system() != 'Windows':
     # Non-windows systems get group ID
@@ -14,7 +15,7 @@ from time import perf_counter
 from typing import Any
 
 import docker
-from docker.errors import DockerException
+from docker.errors import DockerException, ImageNotFound
 
 from yojenkins.utility.utility import fail_out, get_resource_path, print2
 
@@ -42,7 +43,7 @@ class DockerJenkinsServer:
         container_name: str = 'yojenkins-jenkins',
         registry: str = '',
         admin_user: str = 'admin',
-        password: str = 'password',
+        password: str = '',
     ):
         """Object constructor method, called at object creation
 
@@ -63,7 +64,8 @@ class DockerJenkinsServer:
         self.docker_registry = registry
         self.image_base_image = image_base
         self.image_base_version = 'latest'
-        self.image_dockerfile_dir = get_resource_path(os.path.join('resources', 'server_docker_settings'))
+        dockerfile_path = get_resource_path(str(Path('resources') / 'server_docker_settings'))
+        self.image_dockerfile_dir = Path(dockerfile_path) if dockerfile_path else ''
         self.image_fullname = image_fullname
         self.image_rebuild = image_rebuild
         self.image_build_args = {
@@ -75,7 +77,7 @@ class DockerJenkinsServer:
             'JENKINS_HOSTNAME': host,
             'JENKINS_PORT': f'{port}',
             'JENKINS_ADMIN_ID': admin_user,
-            'JENKINS_ADMIN_PASSWORD': password,
+            'JENKINS_ADMIN_PASSWORD': password if password else secrets.token_urlsafe(16),
         }
 
         # Container Related
@@ -97,13 +99,13 @@ class DockerJenkinsServer:
         if extra_setup_script:
             logger.debug('Extra setup script for image build provided')
             logger.debug('Copying extra setup script to Docker context directory ...')
-            source_path = os.path.abspath(extra_setup_script)
-            target_path = os.path.join(self.image_dockerfile_dir, 'extra_setup_script.sh')
+            source_path = Path(extra_setup_script).resolve()
+            target_path = self.image_dockerfile_dir / 'extra_setup_script.sh'
         else:
             logger.debug('Extra setup script for image build NOT provided')
             logger.debug('Copying empty dummy script as extra setup script ...')
-            source_path = os.path.join(self.image_dockerfile_dir, 'dummy.sh')
-            target_path = os.path.join(self.image_dockerfile_dir, 'extra_setup_script.sh')
+            source_path = self.image_dockerfile_dir / 'dummy.sh'
+            target_path = self.image_dockerfile_dir / 'extra_setup_script.sh'
         logger.debug(f'    - Source: {source_path}')
         logger.debug(f'    - Target: {target_path}')
         try:
@@ -231,7 +233,7 @@ class DockerJenkinsServer:
         logger.debug(f'Dockerfile context directory: {self.image_dockerfile_dir}')
         try:
             _, build_logs = self.docker_client.images.build(
-                path=self.image_dockerfile_dir,
+                path=str(self.image_dockerfile_dir),
                 tag=self.image_fullname,
                 rm=True,
                 buildargs=self.image_build_args,
@@ -284,6 +286,9 @@ class DockerJenkinsServer:
         logger.debug(f'Removing image: {self.image_fullname} ...')
         try:
             self.docker_client.images.remove(self.image_fullname)
+        except ImageNotFound:
+            logger.debug(f'Image not found (nothing to remove): {self.image_fullname}')
+            return True
         except DockerException as error:
             logger.debug(f'Failed to remove image: {self.image_fullname}. Exception: {error}')
             return False
@@ -320,7 +325,7 @@ class DockerJenkinsServer:
                     volume_handle.remove(force=True)
                 else:
                     logger.debug(f'Using found matching/existing named volume: {volume_name}')
-            except:
+            except Exception:
                 logger.debug(f'Creating new named volume: {volume_name}')
                 self.docker_client.volumes.create(name=volume_name, driver='local')
                 logger.debug('Successfully created!')
@@ -372,11 +377,14 @@ class DockerJenkinsServer:
         Returns:
             TODO
         """
-        # Getting docker group id (Unix only)
+        # Getting docker group id (Unix only, may not exist on macOS with Docker Desktop)
+        docker_gid = None
         if platform.system() != 'Windows':
-            docker_gid = [getgrnam('docker').gr_gid]
-        else:
-            docker_gid = None
+            try:
+                docker_gid = [getgrnam('docker').gr_gid]
+            except KeyError:
+                logger.debug('Docker group not found (common on macOS with Docker Desktop)')
+                docker_gid = None
 
         logger.debug(f'Local docker service group id found: {docker_gid}')
 

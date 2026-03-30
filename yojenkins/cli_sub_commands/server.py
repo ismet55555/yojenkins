@@ -1,5 +1,4 @@
 """Server click sub-command"""
-# pylint: skip-file
 
 import click
 
@@ -267,10 +266,3 @@ def server_teardown(debug, **kwargs):
     """Remove a local development server"""
     set_debug_log_level(debug)
     cli_server.server_teardown(**translate_kwargs(kwargs))
-
-
-# @server.command(short_help='\tCheck if a locally deployed development server is running')
-# @cli_decorators.debug
-# def server_check(debug):
-#     set_debug_log_level(debug)
-#     click.secho('TODO :-/', fg='yellow')

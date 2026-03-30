@@ -1,5 +1,6 @@
 """General utility and tools."""
 
+import ast
 import difflib
 import json
 import logging
@@ -15,15 +16,14 @@ from typing import Any, Literal, Union
 from urllib.parse import urljoin, urlparse
 
 import requests
-import toml
 import xmltodict
 import yaml
-from click import echo, secho, style
+from click import secho, style
 from urllib3.util import parse_url
 from yaspin import yaspin
 from yaspin.spinners import Spinners
 
-from yojenkins.yo_jenkins.jenkins_item_classes import JenkinsItemClasses
+from yojenkins.utility._compat import tomli_w, tomllib
 
 logger = logging.getLogger()
 
@@ -37,20 +37,6 @@ KWARG_TRANSLATE_MAP = {
     'json': 'opt_json',
     'id': 'opt_id',
 }
-
-
-class TextStyle:
-    """Text style definitions."""
-
-    HEADER = '\033[95m'
-    BLUE = '\033[94m'
-    CYAN = '\033[96m'
-    GREEN = '\033[92m'
-    YELLOW = '\033[93m'
-    RED = '\033[91m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
-    NORMAL = '\033[0m'
 
 
 def translate_kwargs(original_kwargs: dict[str, Any]) -> dict[str, Any]:
@@ -77,51 +63,6 @@ def translate_kwargs(original_kwargs: dict[str, Any]) -> dict[str, Any]:
     return new_kwargs
 
 
-def print2(message: str, bold: bool = False, color: str = 'reset') -> None:
-    """Print a message to the console using click.
-
-    Details:
-        - Colors: `black` (might be a gray), `red`, `green`, `yellow` (might be an orange), `blue`,
-          `magenta`, `cyan`, `white` (might be light gray), `reset` (reset the color code only)
-
-    Example Usage:
-        - `print2("Hey there!", bold=True, color="green")`
-
-    Args:
-        message: Message to print to console
-        bold   : Whether to bold the message
-        color  : Color to use for the message ()
-    """
-    echo(style(message, fg=color, bold=bold))
-
-
-def fail_out(message: str) -> None:
-    """Output one failure message to the console, then exit.
-
-    Example Usage:
-        - `fail_out("Something went wrong!")`
-
-    Args:
-        message: Message to output to console
-    """
-    echo(style(message, fg='bright_red', bold=True))
-    sys.exit(1)
-
-
-def failures_out(messages: list) -> None:
-    """Output multiple failure messages to the console, then exit.
-
-    Example Usage:
-        - `failures_out(["Oh no!", "This is not good!"])`
-
-    Args:
-        message: Multiple messages to output to console
-    """
-    for message in messages:
-        echo(style(message, fg='bright_red', bold=True))
-    sys.exit(1)
-
-
 def load_contents_from_local_file(
     file_type: Literal['yaml', 'toml', 'json', 'jsonl'], local_file_path: str
 ) -> Union[dict, list]:
@@ -136,7 +77,7 @@ def load_contents_from_local_file(
         file_contents
     """
     # Check if file exists
-    if not os.path.isfile(local_file_path):
+    if not Path(local_file_path).is_file():
         fail_out(f'Failed to find file: {local_file_path}')
 
     # Check if file is completely empty
@@ -150,7 +91,7 @@ def load_contents_from_local_file(
             if file_type == 'yaml':
                 file_contents = yaml.safe_load(open_file)
             elif file_type == 'toml':
-                file_contents = toml.load(open_file)
+                file_contents = tomllib.loads(open_file.read())
             elif file_type == 'json':
                 file_contents = json.loads(open_file.read())
             elif file_type == 'jsonl':
@@ -177,7 +118,7 @@ def load_contents_from_string(file_type: str, text: str) -> dict:
     if file_type == 'yaml':
         contents = yaml.safe_load(text)
     elif file_type == 'toml':
-        contents = toml.loads(text)
+        contents = tomllib.loads(text)
     elif file_type == 'json':
         contents = json.loads(text)
     else:
@@ -216,7 +157,7 @@ def load_contents_from_remote_file_url(file_type: str, remote_file_url: str, all
     # Get request headers
     logger.debug(f'Getting remote file HTTP request headers for "{remote_file_url}" ...')
     try:
-        return_content = requests.head(remote_file_url)
+        return_content = requests.head(remote_file_url, timeout=10)
     except Exception as error:
         logger.debug(f'Failed to request headers. Exception: {error}')
         return {}
@@ -251,7 +192,7 @@ def load_contents_from_remote_file_url(file_type: str, remote_file_url: str, all
 
     # Downloading the file content
     logger.debug(f"Requesting remote file: '{remote_file_url}' ...")
-    remote_request = requests.get(remote_file_url, allow_redirects=allow_redirects)
+    remote_request = requests.get(remote_file_url, allow_redirects=allow_redirects, timeout=10)
 
     # Check if no error from downloading
     if remote_request.status_code == requests.codes.ok:
@@ -288,7 +229,7 @@ def append_lines_to_file(filepath: str, lines_to_append: list[str], location: st
     location = location.lower()
 
     # Check if file exists
-    if not os.path.isfile(filepath):
+    if not Path(filepath).is_file():
         logger.debug(f'Failed to find file: {filepath}')
         return False
 
@@ -579,7 +520,8 @@ def is_complete_build_url(build_url: str) -> bool:
     is_complete = True
     try:
         int(url_path_split_list[-1])
-        if url_path_split_list[-3] != 'job':
+        # Verify 'job' appears somewhere before the build number (supports nested folders)
+        if 'job' not in url_path_split_list[:-1]:
             is_complete = False
     except (ValueError, IndexError):
         is_complete = False
@@ -837,6 +779,8 @@ def queue_find(all_queue_info: dict, job_name: str = '', job_url: str = '', firs
     Returns:
         TODO
     """
+    from yojenkins.yo_jenkins.jenkins_item_classes import JenkinsItemClasses  # noqa: PLC0415, I001 — deferred to avoid circular import
+
     if not job_name and not job_url:
         logger.debug('=No job name or job URL provided')
         return []
@@ -885,14 +829,14 @@ def get_resource_path(relative_path: str) -> str:
     """
     # Get the path in python site packages
     resource_dir = get_project_dir()
-    resource_path = os.path.abspath(os.path.join(resource_dir, relative_path))
+    resource_path = (Path(resource_dir) / relative_path).resolve()
 
     # If the file has not been found and it is on windows, try APPDATA directory
-    if not os.path.exists(resource_path):
+    if not resource_path.exists():
         logger.debug(f'Failed to find resource "{relative_path}" in: {resource_dir}')
         return ''
     logger.debug(f'Successfully found existing resource: {resource_path}')
-    return resource_path
+    return str(resource_path)
 
 
 def get_project_dir(sample_path: str = 'resources') -> str:
@@ -917,9 +861,9 @@ def get_project_dir(sample_path: str = 'resources') -> str:
     else:
         project_dir = 'yojenkins'
         possible_dirs = {
-            'relative': os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')),
+            'relative': str(Path(__file__).resolve().parent.parent.parent),
             'sys_dirs': sysconfig.get_paths()['purelib'],
-            'cwd': os.getcwd(),
+            'cwd': str(Path.cwd()),
         }
         # NOTE: "site" module does not work with pyinstaller bundle (AttributeError)
         # 'usr_dirs': site.getusersitepackages(),
@@ -935,8 +879,8 @@ def get_project_dir(sample_path: str = 'resources') -> str:
     logger.debug('Searching project resource directory ...')
     resource_dir_path = ''
     for possible_dir in dirs:
-        if os.path.exists(os.path.join(possible_dir, project_dir, sample_path)):
-            resource_dir_path = os.path.join(possible_dir, project_dir)
+        if (Path(possible_dir) / project_dir / sample_path).exists():
+            resource_dir_path = str(Path(possible_dir) / project_dir)
             logger.debug(f'    - {possible_dir} - FOUND')
             break
         logger.debug(f'    - {possible_dir} - NOT FOUND')
@@ -959,6 +903,8 @@ def item_exists_in_folder(item_name: str, folder_url: str, item_type: str, rest:
     Returns:
         True if the item exists, False if not
     """
+    from yojenkins.yo_jenkins.jenkins_item_classes import JenkinsItemClasses  # noqa: PLC0415, I001 — deferred to avoid circular import
+
     item_type_info = getattr(JenkinsItemClasses, item_type.upper())
     prefix = item_type_info.value['prefix']
 
@@ -982,7 +928,7 @@ def am_i_inside_docker() -> bool:
         True if running in docker container, else False
     """
     path = '/proc/self/cgroup'
-    return os.path.exists('/.dockerenv') or (os.path.isfile(path) and any('docker' in line for line in open(path)))
+    return Path('/.dockerenv').exists() or (Path(path).is_file() and any('docker' in line for line in open(path)))
 
 
 def am_i_bundled() -> bool:
@@ -1057,7 +1003,7 @@ def write_xml_to_file(
         content_to_write = yaml.dump(content_to_write)
     elif opt_toml:
         logger.debug('Converting content to TOML ...')
-        content_to_write = toml.dumps(content_to_write)
+        content_to_write = tomli_w.dumps(content_to_write)
 
     logger.debug(f'Writing fetched configuration to "{filepath}" ...')
     try:
@@ -1167,7 +1113,7 @@ def run_groovy_script(
 
     # Check for yojenkins Groovy script error flag
     if 'yojenkins groovy script failed' in script_result:
-        groovy_return = eval(script_result.strip(os.linesep))
+        groovy_return = ast.literal_eval(script_result.strip(os.linesep))
         logger.debug('Failed to execute Groovy script')
         logger.debug(f'Groovy Exception: {groovy_return[1]}')
         logger.debug(groovy_return[2])
@@ -1226,13 +1172,13 @@ def create_new_history_file(file_path: str) -> None:
     """
     try:
         # Creating configuration directory if it does not exist
-        config_dir_abs_path = os.path.join(Path.home(), CONFIG_DIR_NAME)
+        config_dir_abs_path = Path.home() / CONFIG_DIR_NAME
 
-        if not os.path.exists(config_dir_abs_path):
+        if not config_dir_abs_path.exists():
             logger.debug('Configuration directory does not exist. Creating it ...')
-            os.makedirs(config_dir_abs_path)
+            config_dir_abs_path.mkdir(parents=True, mode=0o700)
 
-        if not os.path.exists(file_path):
+        if not Path(file_path).exists():
             logger.debug(f'Command history file NOT found: "{file_path}"')
             logger.debug('Creating a new command history file ...')
 
@@ -1285,6 +1231,49 @@ def wait_for_build_and_follow_logs(yj_obj: object, queue_id: int) -> None:
         job_url=queue_data['jobUrl'],
         build_number=build_number,
         follow=True,
+    )
+
+
+def wait_for_build_and_monitor(yj_obj: object, queue_id: int, sound: bool = False) -> None:
+    """Wait for build to leave queue, then launch the build monitor UI
+
+    Details:
+        Will only use loading spinner when not in logger debug mode
+
+    Args:
+        yj_obj:   YoJenkins object
+        queue_id: Build queue ID
+        sound:    Play sound on build status change
+    """
+    msg = f'Build is in queue with queue ID {queue_id}. Waiting for build to run ...'
+    if logger.level > 10:
+        spinner = yaspin(spinner=Spinners.bouncingBar, attrs=['bold'], text=msg)
+        spinner.start()
+    else:
+        logger.info(msg)
+
+    while True:
+        queue_data = yj_obj.job.queue_info(build_queue_number=queue_id)
+        if 'executable' in queue_data:
+            break
+        if queue_data.get('stuck'):
+            fail_out(
+                f'Build is stuck in queue as queue number {queue_id}',
+                fg='bright_red',
+                bold=True,
+            )
+        time.sleep(2)
+
+    if logger.level > 10:
+        spinner.stop()
+
+    build_number = queue_data['executable']['number']
+    job_url = queue_data['jobUrl']
+    print2(f'Running with build number {build_number}. Starting build monitor ...')
+    yj_obj.build.monitor(
+        job_url=job_url,
+        build_number=build_number,
+        sound=sound,
     )
 
 
@@ -1388,3 +1377,7 @@ def diff_show(
 
     print('-' * 51)
     print(f'\n  Similarity: {diff_ratio:.1f}%')
+
+
+# Backward compatibility: re-export functions moved to output.py
+from yojenkins.utility.output import TextStyle, fail_out, failures_out, print2  # noqa: E402, F401

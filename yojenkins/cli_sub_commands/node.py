@@ -1,5 +1,4 @@
 """Node click sub-command"""
-# pylint: skip-file
 
 import click
 
@@ -28,7 +27,7 @@ def info(debug, **kwargs):
 def status(debug, **kwargs):
     """Node status"""
     set_debug_log_level(debug)
-    click.secho(**translate_kwargs(kwargs))
+    cli_node.status(**translate_kwargs(kwargs))
 
 
 @node.command(short_help='\tList all nodes')
@@ -48,7 +47,8 @@ def list(debug, **kwargs):
 def prepare(debug):
     """Prepare a remote machine to become a node"""
     set_debug_log_level(debug)
-    click.secho('TODO :-/', fg='yellow')
+    click.secho('Not yet implemented', fg='yellow', err=True)
+    raise SystemExit(1)
     #  cli_node.prepare()
 
 
@@ -153,7 +153,8 @@ def create_permanent(debug, **kwargs):
 def create_ephemeral(debug):
     """Setup a local or remote ephemeral/as-needed node"""
     set_debug_log_level(debug)
-    click.secho('TODO :-/', fg='yellow')
+    click.secho('Not yet implemented', fg='yellow', err=True)
+    raise SystemExit(1)
 
 
 @node.command(short_help='\tDelete a node')
@@ -225,7 +226,7 @@ def config(debug, **kwargs):
     show_default=True,
     required=False,
     is_flag=True,
-    help='The specified file is in JSON format',
+    help='[Deprecated: format is auto-detected] The specified file is in JSON format',
 )
 def reconfig(debug, **kwargs):
     """Reconfigure the node"""
@@ -239,4 +240,5 @@ def reconfig(debug, **kwargs):
 def logs(debug, **kwargs):
     """Node logs"""
     set_debug_log_level(debug)
-    click.secho('TODO :-/', fg='yellow')
+    click.secho('Not yet implemented', fg='yellow', err=True)
+    raise SystemExit(1)

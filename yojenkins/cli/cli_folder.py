@@ -9,7 +9,7 @@ import xmltodict
 
 from yojenkins.cli import cli_utility as cu
 from yojenkins.cli.cli_utility import log_to_history
-from yojenkins.utility.utility import print2
+from yojenkins.utility.utility import browser_open, print2
 
 # Getting the logger reference
 logger = logging.getLogger()
@@ -133,11 +133,11 @@ def browser(profile: str, token: str, folder: str) -> None:
     Args:
         TODO
     """
-    yj_obj = cu.config_yo_jenkins(profile, token)
     if cu.is_full_url(folder):
-        yj_obj.folder.browser_open(folder_url=folder)
-    else:
-        yj_obj.folder.browser_open(folder_name=folder)
+        browser_open(folder)
+        return
+    yj_obj = cu.config_yo_jenkins(profile, token)
+    yj_obj.folder.browser_open(folder_name=folder)
 
 
 @log_to_history

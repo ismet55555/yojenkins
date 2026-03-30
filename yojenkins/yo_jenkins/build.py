@@ -4,6 +4,7 @@ import logging
 import os
 from datetime import datetime, timedelta
 from itertools import islice
+from pathlib import Path
 from time import sleep, time
 from typing import Optional
 from urllib.parse import urlencode
@@ -13,8 +14,9 @@ import yaml
 
 from yojenkins.monitor import BuildMonitor
 from yojenkins.utility import utility
-from yojenkins.utility.utility import diff_show, fail_out, failures_out, print2
+from yojenkins.utility.utility import diff_show, print2
 from yojenkins.yo_jenkins.auth import Auth
+from yojenkins.yo_jenkins.exceptions import NotFoundError, RequestError, ValidationError
 from yojenkins.yo_jenkins.jenkins_item_classes import JenkinsItemClasses
 from yojenkins.yo_jenkins.rest import Rest
 from yojenkins.yo_jenkins.status import BuildStatus
@@ -63,26 +65,26 @@ class Build:
             request_url = f'{build_url.strip("/")}/api/json'
             build_info = self.rest.request(request_url, 'get', is_endpoint=False)[0]
             if not build_info:
-                fail_out(f'Failed to get build info for provided build url ({build_url})')
+                raise NotFoundError(f'Failed to get build info for provided build url ({build_url})')
         else:
             if not job_name and not job_url:
-                fail_out('No job name, job url, and build url provided')
+                raise ValidationError('No job name, job url, and build url provided')
 
             if job_name and not job_url:
                 job_url = utility.name_to_url(self.rest.get_server_url(), job_name)
 
             job_info, _, success = self.rest.request(f'{job_url.strip("/")}/api/json', 'get', is_endpoint=False)
             if not success:
-                fail_out(f'Failed getting build info, because failed to request job info: {job_url}')
+                raise RequestError(f'Failed getting build info, because failed to request job info: {job_url}')
 
             # Check if found item type/class is a build
             if job_info['_class'] not in JenkinsItemClasses.JOB.value['class_type']:
-                fail_out(f'Failed to match job type/class. The found item is "{job_info["_class"]}"')
+                raise RequestError(f'Failed to match job type/class. The found item is "{job_info["_class"]}"')
 
             try:
                 job_last_build_number = job_info['lastBuild']['number'] if 'lastBuild' in job_info else 0
             except TypeError:
-                fail_out('Failed to find previous builds. This job may not have any past builds')
+                raise RequestError('Failed to find previous builds. This job may not have any past builds')
 
             # If build number is not passed, get the latest build number for job
             if not build_number and latest:
@@ -92,21 +94,23 @@ class Build:
                 )
                 build_number = job_last_build_number
             elif not build_number and not latest:
-                fail_out('Failed to specify build. No build number passed and --latest flag not set')
+                raise ValidationError('Failed to specify build. No build number passed and --latest flag not set')
             # Build number is passed
             elif build_number > job_last_build_number:
-                fail_out('Failed to specify build. Build number exceeds last build number for this job')
+                raise ValidationError('Failed to specify build. Build number exceeds last build number for this job')
 
             logger.debug(f'Getting build info for job "{job_info["fullName"]}, build {build_number} ...')
             build_info, _, success = self.rest.request(
                 f'{job_url.strip("/")}/{build_number}/api/json', 'get', is_endpoint=False
             )
             if not success:
-                fail_out('Failed to request build info')
+                raise RequestError('Failed to request build info')
 
         # Check if found item type/class is a build
         if build_info['_class'] not in JenkinsItemClasses.BUILD.value['class_type']:
-            fail_out(f'Build found, but failed to match build type/class. This item is "{build_info["_class"]}"')
+            raise NotFoundError(
+                f'Build found, but failed to match build type/class. This item is "{build_info["_class"]}"'
+            )
 
         # Add additional derived information
         if 'timestamp' in build_info:
@@ -200,7 +204,7 @@ class Build:
         elif job_url:
             pass
         else:
-            fail_out('Failed to find build status text. Specify build url, job name, or job url')
+            raise ValidationError('Failed to find build status text. Specify build url, job name, or job url')
         logger.debug(f'Job name: {job_name}')
 
         # Requesting all queue and searching queue (NOTE: Could use Server object)
@@ -209,7 +213,7 @@ class Build:
         logger.debug(f'Number of queued items found: {len(queue_all["items"])}')
         queue_matches = utility.queue_find(queue_all, job_name=job_name, job_url=job_url)
         if not queue_matches:
-            fail_out('Failed to find running or queued builds')
+            raise NotFoundError('Failed to find running or queued builds')
         queue_info = queue_matches[0]
 
         if not queue_info:
@@ -265,7 +269,7 @@ class Build:
                 '   - Build may not exist, is queued, or you are not authorized to abort',
                 '   - For more details run with --debug',
             ]
-            failures_out(messages)
+            raise RequestError('. '.join(messages))
 
         logger.debug('Successfully aborted build')
 
@@ -302,7 +306,7 @@ class Build:
         logger.debug(f'Deleting build: {url} ...')
         request_url = f'{url.strip("/")}/doDelete'
         if not self.rest.request(request_url, 'post', is_endpoint=False)[2]:
-            fail_out('Failed to delete build. Build may not exist or is queued')
+            raise RequestError('Failed to delete build. Build may not exist or is queued')
 
         return utility.build_url_to_build_number(build_url=url)
 
@@ -338,14 +342,14 @@ class Build:
         request_url = f'{build_url.strip("/")}/wfapi/describe'
         return_content, _, return_success = self.rest.request(request_url, 'get', is_endpoint=False)
         if not return_success or not return_content:
-            fail_out('Failed to get build stages. This may not be a staged build')
+            raise RequestError('Failed to get build stages. This may not be a staged build')
 
         # Getting the stage items
         # FIXME: When --url <job> and no build number is passed, it will just get the job describe, not build info
         if 'stages' in return_content:
             build_stage_list = return_content['stages']
         else:
-            fail_out('Failed to find "stages" key in build info. This may not be a staged build')
+            raise RequestError('Failed to find "stages" key in build info. This may not be a staged build')
 
         # Add additional derived information for each step
         for stage_info in build_stage_list:
@@ -429,13 +433,13 @@ class Build:
             try:
                 with requests.get(request_url, auth=auth, stream=True, timeout=10) as open_request:
                     open_request.raise_for_status()
-                    with open(os.path.join(download_dir, filename), 'wb') as open_file:
+                    with open(Path(download_dir) / filename, 'wb') as open_file:
                         for chunk in open_request.iter_content(chunk_size=8192):
                             if chunk:
                                 open_file.write(chunk)
                 logger.debug('Successfully download build logs to file')
             except Exception as error:
-                fail_out(f'Failed to download or save logs for build. Exception: {error}')
+                raise RequestError(f'Failed to download or save logs for build. Exception: {error}')
         elif not follow:
             # Show build logs in console
             logger.debug('Fetching logs from server ...')
@@ -443,7 +447,7 @@ class Build:
                 request_url, 'get', is_endpoint=False, json_content=False
             )
             if not return_success or not return_content:
-                fail_out('Failed to get console logs. Build may not exist or is queued')
+                raise RequestError('Failed to get console logs. Build may not exist or is queued')
 
             # If tail/last part of the log was specified
             if tail:
@@ -504,7 +508,9 @@ class Build:
                     while True:
                         headers = self.rest.request(request_url, 'head', is_endpoint=False, json_content=False)[1]
                         if 'content-length' not in headers:
-                            fail_out(f'Failed to find "content-length" key in server response headers: {headers}')
+                            raise RequestError(
+                                f'Failed to find "content-length" key in server response headers: {headers}'
+                            )
                         content_length_sample_1 = int(headers['Content-Length'])
                         sleep(1)
                         headers = self.rest.request(request_url, 'head', is_endpoint=False, json_content=False)[1]
@@ -564,7 +570,7 @@ class Build:
         logger.debug(f'Opening build in web browser: "{build_url}" ...')
         success = utility.browser_open(url=build_url)
         if not success:
-            fail_out('Failed to open build in web browser')
+            raise RequestError('Failed to open build in web browser')
         logger.debug('Successfully opened build in web browser')
 
         return success
@@ -590,7 +596,7 @@ class Build:
             logger.debug(f'Build URL passed: {build_url}')
             build_url = utility.build_url_complete(build_url)
             if not self.rest.request(f'{build_url.strip("/")}/api/json', 'head', is_endpoint=False)[2]:
-                fail_out(f'Failed to find build. The build may not exist: {build_url}')
+                raise RequestError(f'Failed to find build. The build may not exist: {build_url}')
             url = build_url
         else:
             logger.debug('No build URL passed. Getting build information ...')
@@ -600,7 +606,7 @@ class Build:
         logger.debug(f'Starting monitor for: "{url}" ...')
         success = self.build_monitor.monitor_start(build_url=url, sound=sound)
         if not success:
-            fail_out('Failed to start build monitor')
+            raise RequestError('Failed to start build monitor')
         logger.debug('Successfully started build monitor')
 
         return success
@@ -634,7 +640,7 @@ class Build:
         # Check if item has any parameter actions
         parameter_actions = utility.get_item_action(build_info, 'hudson.model.ParametersAction')
         if not parameter_actions:
-            fail_out('This build does not have any build parameters')
+            raise NotFoundError('This build does not have any build parameters')
 
         # Get the parameter definitions
         parameters = parameter_actions[0]['parameters']
@@ -693,7 +699,7 @@ class Build:
             logger.debug(f'Build queue URL: {queue_location}')
             logger.debug(f'Build queue ID: {build_queue_number}')
         else:
-            fail_out('Failed to trigger build. Failed to send request')
+            raise RequestError('Failed to trigger build. Failed to send request')
 
         return build_queue_number
 
@@ -722,10 +728,10 @@ class Build:
         """
         build_url_1 = utility.build_url_complete(build_url_1)
         if not build_url_1:
-            fail_out('Failed to parse provided BUILD_URL_1. Please check specified arguments')
+            raise ValidationError('Failed to parse provided BUILD_URL_1. Please check specified arguments')
         build_url_2 = utility.build_url_complete(build_url_2)
         if not build_url_2:
-            fail_out('Failed to parse provided BUILD_URL_2. Please check specified arguments')
+            raise ValidationError('Failed to parse provided BUILD_URL_2. Please check specified arguments')
 
         logger.debug(f'Getting build {"LOGS" if logs else "INFO"} diff for the following two builds:')
         logger.debug(f'    - Build 1:   {build_url_1}')
@@ -736,13 +742,13 @@ class Build:
                 f'{build_url_1.strip("/")}/consoleText', 'get', is_endpoint=False, json_content=False
             )
             if not success:
-                fail_out(f'Failed to fetch logs for build "{build_url_1}"')
+                raise RequestError(f'Failed to fetch logs for build "{build_url_1}"')
 
             build_logs_2, _, success = self.rest.request(
                 f'{build_url_2.strip("/")}/consoleText', 'get', is_endpoint=False, json_content=False
             )
             if not success:
-                fail_out(f'Failed to fetch logs for build "{build_url_2}"')
+                raise RequestError(f'Failed to fetch logs for build "{build_url_2}"')
 
             diff_show(
                 build_logs_1,
