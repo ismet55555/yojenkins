@@ -1,18 +1,44 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+import sys
 
 block_cipher = None
 
+# Exclude platform-specific packages that don't apply to the build host
+excludes = []
+if sys.platform != 'win32':
+    excludes.extend([
+        'pywin32', 'pypiwin32', 'win32api', 'win32com',
+        'windows_curses', 'pywintypes', 'win32security',
+    ])
 
 a = Analysis(['yojenkins/__main__.py'],
              pathex=[],
              binaries=[],
              datas=[],
-             hiddenimports=[],
+             hiddenimports=[
+                 'yaml',
+                 'click',
+                 'click_help_colors',
+                 'coloredlogs',
+                 'defusedxml',
+                 'defusedxml.ElementTree',
+                 'json2xml',
+                 'json2xml.json2xml',
+                 'jenkins',
+                 'requests_futures',
+                 'requests_futures.sessions',
+                 'tomli',
+                 'tomli_w',
+                 'xmltodict',
+                 'yaspin',
+                 'yaspin.spinners',
+                 'pkg_resources.py2_warn',
+             ],
              hookspath=[],
              hooksconfig={},
              runtime_hooks=[],
-             excludes=[],
+             excludes=excludes,
              win_no_prefer_redirects=False,
              win_private_assemblies=False,
              cipher=block_cipher,

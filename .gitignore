@@ -176,3 +176,6 @@ config.yaml
 docs/site/**
 
 NOTES.md
+
+# Claude Code local settings (machine-specific permissions)
+.claude/settings.local.json

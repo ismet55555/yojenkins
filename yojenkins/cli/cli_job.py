@@ -9,7 +9,7 @@ import xmltodict
 
 from yojenkins.cli import cli_utility as cu
 from yojenkins.cli.cli_utility import log_to_history
-from yojenkins.utility.utility import print2, wait_for_build_and_follow_logs
+from yojenkins.utility.utility import browser_open, print2, wait_for_build_and_follow_logs, wait_for_build_and_monitor
 
 # Getting the logger reference
 logger = logging.getLogger()
@@ -22,6 +22,7 @@ def info(profile: str, token: str, job: str, **kwargs) -> None:
     Args:
         TODO
     """
+    job = cu.resolve_stdin(job) if job else job
     yj_obj = cu.config_yo_jenkins(profile, token)
     if cu.is_full_url(job):
         data = yj_obj.job.info(job_url=job)
@@ -142,7 +143,7 @@ def build_exist(profile: str, token: str, job: str, build_number: int) -> None:
 
 
 @log_to_history
-def build(profile: str, token: str, job: str, parameter: tuple, follow_logs: bool) -> None:
+def build(profile: str, token: str, job: str, parameter: tuple, follow_logs: bool, monitor: bool = False) -> None:
     """Build a job
 
     Args:
@@ -151,6 +152,7 @@ def build(profile: str, token: str, job: str, parameter: tuple, follow_logs: boo
         job:         The job name under which the build is located
         parameter:   Specify key-value parameter. Can use multiple times. Use once per parameter
         follow_logs: Waits for the job build, then follows resulting logs
+        monitor:     Waits for the job build, then opens build monitor UI
     """
     yj_obj = cu.config_yo_jenkins(profile, token)
 
@@ -161,6 +163,9 @@ def build(profile: str, token: str, job: str, parameter: tuple, follow_logs: boo
         data = yj_obj.job.build_trigger(job_url=job, paramters=parameters)
     else:
         data = yj_obj.job.build_trigger(job_name=job, paramters=parameters)
+    if monitor:
+        wait_for_build_and_monitor(yj_obj, data)
+        return
     if not follow_logs:
         click.secho(f'success. queue number: {data}', fg='bright_green', bold=True)
         return
@@ -192,11 +197,11 @@ def browser(profile: str, token: str, job: str) -> None:
     Args:
         TODO
     """
-    yj_obj = cu.config_yo_jenkins(profile, token)
     if cu.is_full_url(job):
-        yj_obj.job.browser_open(job_url=job)
-    else:
-        yj_obj.job.browser_open(job_name=job)
+        browser_open(job)
+        return
+    yj_obj = cu.config_yo_jenkins(profile, token)
+    yj_obj.job.browser_open(job_name=job)
 
 
 @log_to_history

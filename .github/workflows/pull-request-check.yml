@@ -37,10 +37,12 @@ jobs:
 
       - name: Push changes
         if: steps.git-check.outputs.modified == 'true'
+        env:
+          GIT_AUTH_TOKEN: ${{ secrets.YO_JENKINS_YAPF }}
         run: |
           git config --global user.name 'Ruff Formatter'
           git config --global user.email 'ruff_formatter@users.noreply.github.com'
-          git remote set-url origin https://x-access-token:${{ secrets.YO_JENKINS_YAPF }}@github.com/${{ github.repository }}
+          git remote set-url origin "https://x-access-token:${GIT_AUTH_TOKEN}@github.com/${{ github.repository }}"
           git commit -am "Ruff formatting and linting automated changes"
           git push
 
@@ -94,6 +96,9 @@ jobs:
 
       - name: Build the package
         run: pipenv run python setup.py install --verbose
+
+      - name: Run Tests with Coverage
+        run: pipenv run pytest -v --cov=yojenkins --cov-report=term-missing --cov-fail-under=90 -m "not docker"
 
       - name: Testing --help
         run: pipenv run yojenkins --help

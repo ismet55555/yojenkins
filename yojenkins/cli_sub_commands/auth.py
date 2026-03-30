@@ -1,5 +1,5 @@
 """Auth click sub-command"""
-# pylint: skip-file
+
 
 import click
 from click_help_colors import HelpColorsCommand
@@ -91,7 +91,6 @@ def show(debug, **kwargs):
 def verify(debug, **kwargs):
     """Check if current credentials can authenticate with server"""
     set_debug_log_level(debug)
-    del kwargs['token']
     cli_auth.verify(**translate_kwargs(kwargs))
 
 
@@ -105,9 +104,3 @@ def user(debug, **kwargs):
     cli_auth.user(**translate_kwargs(kwargs))
 
 
-# @auth.command(short_help='\tWipe all credentials for this device')
-# @cli_decorators.debug
-# def wipe(debug):
-#     """Wipe all credentials for this device"""
-#     set_debug_log_level(debug)
-#     click.secho('TODO :-/', fg='yellow')
