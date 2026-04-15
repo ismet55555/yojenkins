@@ -91,7 +91,6 @@ def show(debug, **kwargs):
 def verify(debug, **kwargs):
     """Check if current credentials can authenticate with server"""
     set_debug_log_level(debug)
-    del kwargs['token']
     cli_auth.verify(**translate_kwargs(kwargs))
 
 
