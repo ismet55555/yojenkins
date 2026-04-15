@@ -1,10 +1,8 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+import sys
 
 block_cipher = None
-
-
-import sys
 
 hiddenimports = [
     'click',
