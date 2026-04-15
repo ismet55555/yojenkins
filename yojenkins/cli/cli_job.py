@@ -9,6 +9,7 @@ import xmltodict
 
 from yojenkins.cli import cli_utility as cu
 from yojenkins.cli.cli_utility import log_to_history
+from yojenkins.utility import utility
 from yojenkins.utility.utility import print2, wait_for_build_and_follow_logs
 
 # Getting the logger reference
@@ -187,15 +188,17 @@ def queue_check(profile: str, token: str, job: str, opt_id: bool, **kwargs) -> N
 
 @log_to_history
 def browser(profile: str, token: str, job: str) -> None:
-    """TODO Docstring
+    """Open job in web browser
 
     Args:
-        TODO
+        profile: The profile/account to use
+        token:   API Token for Jenkins server
+        job:     Job name or full job URL
     """
-    yj_obj = cu.config_yo_jenkins(profile, token)
     if cu.is_full_url(job):
-        yj_obj.job.browser_open(job_url=job)
+        utility.browser_open(url=job)
     else:
+        yj_obj = cu.config_yo_jenkins(profile, token)
         yj_obj.job.browser_open(job_name=job)
 
 

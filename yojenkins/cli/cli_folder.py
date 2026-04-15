@@ -9,6 +9,7 @@ import xmltodict
 
 from yojenkins.cli import cli_utility as cu
 from yojenkins.cli.cli_utility import log_to_history
+from yojenkins.utility import utility
 from yojenkins.utility.utility import print2
 
 # Getting the logger reference
@@ -131,12 +132,14 @@ def browser(profile: str, token: str, folder: str) -> None:
     """Open folder in web browser
 
     Args:
-        TODO
+        profile: The profile/account to use
+        token:   API Token for Jenkins server
+        folder:  Folder name or full folder URL
     """
-    yj_obj = cu.config_yo_jenkins(profile, token)
     if cu.is_full_url(folder):
-        yj_obj.folder.browser_open(folder_url=folder)
+        utility.browser_open(url=folder)
     else:
+        yj_obj = cu.config_yo_jenkins(profile, token)
         yj_obj.folder.browser_open(folder_name=folder)
 
 
