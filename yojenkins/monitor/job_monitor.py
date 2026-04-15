@@ -400,8 +400,6 @@ class JobMonitor(Monitor):
                 except RuntimeError:
                     logger.debug('Job info thread: executor shut down, exiting')
                     break
-                except Exception as error:
-                    logger.debug(f'Job info thread error: {error}')
 
             # Wait some time before checking again
             start_time = time()

@@ -511,8 +511,6 @@ class BuildMonitor(Monitor):
                 except RuntimeError:
                     logger.debug('Build info thread: executor shut down, exiting')
                     break
-                except Exception as error:
-                    logger.debug(f'Build info thread error: {error}')
 
             # Wait some time before checking again
             start_time = time()
@@ -590,8 +588,6 @@ class BuildMonitor(Monitor):
                 except RuntimeError:
                     logger.debug('Build stages thread: executor shut down, exiting')
                     break
-                except Exception as error:
-                    logger.debug(f'Build stages thread error: {error}')
 
             # Wait some time before checking again
             start_time = time()

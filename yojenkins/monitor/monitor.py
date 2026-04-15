@@ -280,8 +280,6 @@ class Monitor:
                 except RuntimeError:
                     logger.debug('Server status thread: executor shut down, exiting')
                     break
-                except Exception as error:
-                    logger.debug(f'Server status thread error: {error}')
 
             # Wait some time before checking again
             start_time = time()
