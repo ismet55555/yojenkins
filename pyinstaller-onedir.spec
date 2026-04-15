@@ -22,6 +22,9 @@ hiddenimports = [
     'yaspin',
 ]
 
+if sys.platform != 'win32':
+    hiddenimports.append('simpleaudio')
+
 excludes = []
 if sys.platform != 'win32':
     excludes += ['pywin32', 'pypiwin32', 'pyreadline', 'pyreadline3', 'windows-curses']
