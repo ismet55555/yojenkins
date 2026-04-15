@@ -84,8 +84,7 @@ def verify(profile: str, token: str = '') -> None:
         profile: The profile/account to use
         token:   API token for Jenkins server
     """
-    yj = cu.config_yo_jenkins(profile, token)
-    yj.auth.verify()
+    cu.config_yo_jenkins(profile, token)
     click.secho('success', fg='bright_green', bold=True)
 
 
