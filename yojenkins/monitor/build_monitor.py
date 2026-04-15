@@ -92,6 +92,7 @@ class BuildMonitor(Monitor):
         sound_notify_msg_show = False
         sound_notify_msg_box_timing = False
         status_sound_last = ''
+        stage_statuses_last = {}
 
         # User key input (ASCII value)
         keystroke = 0
@@ -296,6 +297,17 @@ class BuildMonitor(Monitor):
                     status_color = self.status_to_color(build_stage['status'])
 
                     mu.draw_text(scr, result_text.replace('_', ' '), y_row, x_col[3], color=self.color[status_color])
+
+                    # Play sound when stage transitions into PAUSED_PENDING_INPUT
+                    if sound and not self.playing_sound:
+                        stage_key = build_stage.get('id') or build_stage.get('name', str(i))
+                        prev_status = stage_statuses_last.get(stage_key)
+                        if prev_status != result_text and result_text == 'PAUSED_PENDING_INPUT':
+                            stage_sound = self.status_to_sound(result_text)
+                            if stage_sound:
+                                self.play_sound_thread_on(os.path.join(self.sound_directory, stage_sound))
+                        stage_statuses_last[stage_key] = result_text
+
                     y_row += 1
             else:
                 # Change the minimum window height limit (no stages section)
