@@ -504,9 +504,15 @@ class BuildMonitor(Monitor):
         # Loop until flags disable it
         while self.all_threads_enabled:
             if not self.paused:
-                self.server_interaction = True
-                with self._build_info_thread_lock:
-                    self.build_info_data = self.build.info(build_url=build_url)
+                try:
+                    self.server_interaction = True
+                    with self._build_info_thread_lock:
+                        self.build_info_data = self.build.info(build_url=build_url)
+                except RuntimeError:
+                    logger.debug('Build info thread: executor shut down, exiting')
+                    break
+                except Exception as error:
+                    logger.debug(f'Build info thread error: {error}')
 
             # Wait some time before checking again
             start_time = time()
@@ -577,9 +583,15 @@ class BuildMonitor(Monitor):
         # Loop until flags disable it
         while self.all_threads_enabled:
             if not self.paused:
-                self.server_interaction = True
-                with self._build_stages_thread_lock:
-                    self.build_stages_data = self.build.stage_list(build_url=build_url)[0]
+                try:
+                    self.server_interaction = True
+                    with self._build_stages_thread_lock:
+                        self.build_stages_data = self.build.stage_list(build_url=build_url)[0]
+                except RuntimeError:
+                    logger.debug('Build stages thread: executor shut down, exiting')
+                    break
+                except Exception as error:
+                    logger.debug(f'Build stages thread error: {error}')
 
             # Wait some time before checking again
             start_time = time()

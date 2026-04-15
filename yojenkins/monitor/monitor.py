@@ -273,10 +273,15 @@ class Monitor:
         # Loop until flags disable it
         while self.all_threads_enabled:
             if not self.paused:
-                # Get the build information
-                self.server_interaction = True
-                self.server_status_data['reachable'] = self.rest.is_reachable()
-                self.server_status_data['auth'] = self.auth.verify()
+                try:
+                    self.server_interaction = True
+                    self.server_status_data['reachable'] = self.rest.is_reachable()
+                    self.server_status_data['auth'] = self.auth.verify()
+                except RuntimeError:
+                    logger.debug('Server status thread: executor shut down, exiting')
+                    break
+                except Exception as error:
+                    logger.debug(f'Server status thread error: {error}')
 
             # Wait some time before checking again
             start_time = time()

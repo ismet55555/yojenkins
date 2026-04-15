@@ -393,9 +393,15 @@ class JobMonitor(Monitor):
         # Loop until flags disable it
         while self.all_threads_enabled:
             if not self.paused:
-                self.server_interaction = True
-                with self._job_info_thread_lock:
-                    self.job_info_data = self.job.info(job_url=job_url)
+                try:
+                    self.server_interaction = True
+                    with self._job_info_thread_lock:
+                        self.job_info_data = self.job.info(job_url=job_url)
+                except RuntimeError:
+                    logger.debug('Job info thread: executor shut down, exiting')
+                    break
+                except Exception as error:
+                    logger.debug(f'Job info thread error: {error}')
 
             # Wait some time before checking again
             start_time = time()
