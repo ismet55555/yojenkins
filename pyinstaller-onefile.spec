@@ -4,15 +4,37 @@
 block_cipher = None
 
 
+import sys
+
+hiddenimports = [
+    'click',
+    'click_help_colors',
+    'coloredlogs',
+    'docker',
+    'jenkins',
+    'json2xml',
+    'requests',
+    'requests_futures',
+    'toml',
+    'urllib3',
+    'xmltodict',
+    'yaml',
+    'yaspin',
+]
+
+excludes = []
+if sys.platform != 'win32':
+    excludes += ['pywin32', 'pypiwin32', 'pyreadline', 'pyreadline3', 'windows-curses']
+
 a = Analysis(['yojenkins/__main__.py'],
              pathex=[],
              binaries=[],
              datas=[],
-             hiddenimports=[],
+             hiddenimports=hiddenimports,
              hookspath=[],
              hooksconfig={},
              runtime_hooks=[],
-             excludes=[],
+             excludes=excludes,
              win_no_prefer_redirects=False,
              win_private_assemblies=False,
              cipher=block_cipher,
