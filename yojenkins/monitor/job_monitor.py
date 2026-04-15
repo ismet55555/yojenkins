@@ -453,7 +453,10 @@ class JobMonitor(Monitor):
         """
         logger.debug(f'Thread starting - Build info (INDEX: {build_data_index}, ID: {threading.get_ident()}) ...')
         self.server_interaction = True
-        self.builds_data[build_data_index] = self.build.info(build_url=build_url)
+        try:
+            self.builds_data[build_data_index] = self.build.info(build_url=build_url)
+        except RuntimeError:
+            logger.debug(f'Build info sub-thread {build_data_index}: executor shut down, exiting')
         logger.debug(f'Thread stopped - Build info (INDEX: {build_data_index}, ID: {threading.get_ident()})')
 
     def __thread_builds_data(self, monitor_interval: float) -> None:
